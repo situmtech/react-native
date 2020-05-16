@@ -1,4 +1,6 @@
 apply plugin: "com.android.application"
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 import com.android.build.OutputFile
 
@@ -213,6 +215,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${rootProject.ext.RNNKotlinVersion}"
 }
 
 // Run this once to be able to run the application with BUCK
