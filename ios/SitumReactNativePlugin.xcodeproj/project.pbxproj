@@ -8,13 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* SitumReactNativePluginTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SitumReactNativePluginTests.m */; };
-		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* SitumReactNativePluginTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SitumReactNativePluginTests.m */; };
 		7E1696C52470302200B43BC1 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E1696C32470302200B43BC1 /* Constants.m */; };
 		7E1696CA2470319B00B43BC1 /* SitumLocationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E1696C72470319B00B43BC1 /* SitumLocationWrapper.m */; };
@@ -49,12 +45,8 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* SitumReactNativePluginTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SitumReactNativePluginTests.m; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* SitumReactNativePlugin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SitumReactNativePlugin.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = SitumReactNativePlugin/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = SitumReactNativePlugin/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SitumReactNativePlugin/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SitumReactNativePlugin/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SitumReactNativePlugin/main.m; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* SitumReactNativePlugin-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SitumReactNativePlugin-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* SitumReactNativePlugin-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SitumReactNativePlugin-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		319AF8698A80301EB86E3A8C /* Pods-SitumReactNativePlugin-SitumReactNativePluginTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SitumReactNativePlugin-SitumReactNativePluginTests.release.xcconfig"; path = "Target Support Files/Pods-SitumReactNativePlugin-SitumReactNativePluginTests/Pods-SitumReactNativePlugin-SitumReactNativePluginTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -141,12 +133,8 @@
 				7E1696C42470302200B43BC1 /* Constants.h */,
 				7E1696C32470302200B43BC1 /* Constants.m */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
-				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
-				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
-				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = SitumReactNativePlugin;
 			sourceTree = "<group>";
@@ -544,9 +532,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				7E1696CA2470319B00B43BC1 /* SitumLocationWrapper.m in Sources */,
-				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				7E1696C52470302200B43BC1 /* Constants.m in Sources */,
 				7E1696CB2470319B00B43BC1 /* SitumPlugin.m in Sources */,
 			);
@@ -556,8 +542,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
-				2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -683,7 +667,6 @@
 					"\"${PODS_ROOT}/Headers/Public/YogaKit\"",
 					"\"${PODS_ROOT}/Headers/Public/glog\"",
 					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
-					"$(SRCROOT)/../node_modules/react-native-navigation/lib/ios",
 				);
 				INFOPLIST_FILE = SitumReactNativePlugin/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -738,7 +721,6 @@
 					"\"${PODS_ROOT}/Headers/Public/YogaKit\"",
 					"\"${PODS_ROOT}/Headers/Public/glog\"",
 					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
-					"$(SRCROOT)/../node_modules/react-native-navigation/lib/ios",
 				);
 				INFOPLIST_FILE = SitumReactNativePlugin/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.situmreactnativeplugin;
+package com.situm.plugin;
 
 import android.util.Log;
 
@@ -236,4 +236,5 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     public void removeRealTimeUpdates() {
 
     }
+
 }

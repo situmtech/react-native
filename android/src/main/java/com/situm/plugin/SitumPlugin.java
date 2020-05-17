@@ -1,6 +1,4 @@
-package com.situmreactnativeplugin;
-
-import com.facebook.react.bridge.ReactMethod;
+package com.situm.plugin;
 
 public interface SitumPlugin {
     void setApiKey(String email, String apiKey);

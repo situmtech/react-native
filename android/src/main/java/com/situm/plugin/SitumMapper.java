@@ -1,4 +1,4 @@
-package com.situmreactnativeplugin;
+package com.situm.plugin;
 
 import android.content.Context;
 import android.graphics.Bitmap;

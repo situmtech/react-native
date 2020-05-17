@@ -1,4 +1,4 @@
-package com.situmreactnativeplugin;
+package com.situm.plugin;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;

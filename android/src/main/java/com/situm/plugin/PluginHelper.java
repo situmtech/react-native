@@ -1,4 +1,4 @@
-package com.situmreactnativeplugin;
+package com.situm.plugin;
 
 import es.situm.sdk.SitumSdk;
 import es.situm.sdk.communication.CommunicationManager;
