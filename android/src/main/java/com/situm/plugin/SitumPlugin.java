@@ -1,5 +1,7 @@
 package com.situm.plugin;
 
+import com.facebook.react.bridge.ReadableMap;
+
 public interface SitumPlugin {
     void setApiKey(String email, String apiKey);
 
@@ -9,42 +11,42 @@ public interface SitumPlugin {
 
     void fetchBuildings();
 
-    void fetchBuildingInfo();
+    void fetchBuildingInfo(ReadableMap map);
 
-    void fetchGeofencesFromBuilding();
+    void fetchGeofencesFromBuilding(ReadableMap map);
 
-    void startPositioning();
+    void fetchFloorsFromBuilding(ReadableMap map);
+    
+    void fetchPoiCategories(ReadableMap map);
 
-    void stopPositioning();
+    void fetchPoiCategoryIconNormal(ReadableMap map);
 
-    void fetchPoiCategories();
+    void fetchPoiCategoryIconSelected(ReadableMap map);
 
-    void fetchFloorsFromBuilding();
+    void fetchIndoorPOIsFromBuilding(ReadableMap map);
 
-    void fetchIndoorPOIsFromBuilding();
+    void fetchOutdoorPOIsFromBuilding(ReadableMap map);
 
-    void fetchOutdoorPOIsFromBuilding();
+    void fetchEventsFromBuilding(ReadableMap map);
 
-    void fetchEventsFromBuilding();
+    void fetchMapFromFloor(ReadableMap map);
 
-    void fetchMapFromFloor();
+    void startPositioning(String callbackId);
 
-    void fetchPoiCategoryIconSelected();
+    void stopPositioning(String callbackId);
 
-    void invalidateCache();
+    void requestDirections(String callbackId);
 
-    void requestDirections();
+    void requestNavigationUpdates(String callbackId);
 
-    void requestNavigationUpdates();
-
-    void fetchPoiCategoryIconNormal();
-
-    void updateNavigationWithLocation();
+    void updateNavigationWithLocation(ReadableMap map);
 
     void removeNavigationUpdates();
 
-    void requestRealTimeUpdates();
+    void requestRealTimeUpdates(ReadableMap map);
 
     void removeRealTimeUpdates();
+
+    void invalidateCache();
 
 }

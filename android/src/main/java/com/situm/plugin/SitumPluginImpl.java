@@ -8,6 +8,7 @@ import android.util.Log;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 
 import androidx.annotation.NonNull;
 
@@ -102,139 +103,139 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void setApiKey(String email, String apiKey) {
-        Log.e(TAG, String.format("Email: %s", email));
+        Log.e(TAG, "setApiKey");
     }
 
     @Override
     @ReactMethod
     public void setUserPass(String email, String password) {
-
+        Log.e(TAG, "setUserPass");
     }
 
-    @Override
+    @Override 
     @ReactMethod
     public void setCacheMaxAge(int cacheAge) {
-
+        Log.e(TAG, "setCacheMaxAge");
     }
 
-    @Override
+    @Override 
     @ReactMethod
     public void fetchBuildings() {
-
+        Log.e(TAG, "fetchBuildings");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void fetchBuildingInfo() {
-
+    public void fetchBuildingInfo(ReadableMap map) {
+        Log.e(TAG, "fetchBuildingInfo");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void fetchGeofencesFromBuilding() {
-
+    public void fetchGeofencesFromBuilding(ReadableMap map) {
+        Log.e(TAG, "fetchGeofencesFromBuilding");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void startPositioning() {
-
+    public void fetchFloorsFromBuilding(ReadableMap map) {
+        Log.e(TAG, "fetchFloorsFromBuilding");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void stopPositioning() {
-
+    public void fetchPoiCategories(ReadableMap map) {
+        Log.e(TAG, "fetchPoiCategories");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void fetchPoiCategories() {
-
+    public void fetchPoiCategoryIconNormal(ReadableMap map) {
+        Log.e(TAG, "fetchPoiCategoryIconNormal");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void fetchFloorsFromBuilding() {
-
+    public void fetchPoiCategoryIconSelected(ReadableMap map) {
+        Log.e(TAG, "fetchPoiCategoryIconSelected");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void fetchIndoorPOIsFromBuilding() {
-
+    public void fetchIndoorPOIsFromBuilding(ReadableMap map) {
+        Log.e(TAG, "fetchIndoorPOIsFromBuilding");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void fetchOutdoorPOIsFromBuilding() {
-
+    public void fetchOutdoorPOIsFromBuilding(ReadableMap map) {
+        Log.e(TAG, "fetchOutdoorPOIsFromBuilding");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void fetchEventsFromBuilding() {
-
+    public void fetchEventsFromBuilding(ReadableMap map) {
+        Log.e(TAG, "fetchEventsFromBuilding");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void fetchMapFromFloor() {
-
+    public void fetchMapFromFloor(ReadableMap map) {
+        Log.e(TAG, "fetchMapFromFloor");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void fetchPoiCategoryIconSelected() {
-
+    public void startPositioning(String callbackId) {
+        Log.e(TAG, "startPositioning");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void invalidateCache() {
-
+    public void stopPositioning(String callbackId) {
+        Log.e(TAG, "stopPositioning");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void requestDirections() {
-
+    public void requestDirections(String callbackId) {
+        Log.e(TAG, "requestDirections");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void requestNavigationUpdates() {
-
+    public void requestNavigationUpdates(String callbackId) {
+        Log.e(TAG, "requestNavigationUpdates");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void fetchPoiCategoryIconNormal() {
-
+    public void updateNavigationWithLocation(ReadableMap map) {
+        Log.e(TAG, "updateNavigationWithLocation");
     }
 
-    @Override
-    @ReactMethod
-    public void updateNavigationWithLocation() {
-
-    }
-
-    @Override
+    @Override 
     @ReactMethod
     public void removeNavigationUpdates() {
-
+        Log.e(TAG, "removeNavigationUpdates");
     }
 
-    @Override
+    @Override 
     @ReactMethod
-    public void requestRealTimeUpdates() {
-
+    public void requestRealTimeUpdates(ReadableMap map) {
+        Log.e(TAG, "requestRealTimeUpdates");
     }
 
-    @Override
+    @Override 
     @ReactMethod
     public void removeRealTimeUpdates() {
+        Log.e(TAG, "removeRealTimeUpdates");
+    }
 
+    @Override 
+    @ReactMethod
+    public void invalidateCache() {
+        Log.e(TAG, "invalidateCache");
     }
 
 }
