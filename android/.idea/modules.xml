@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SitumReactNativePlugin.iml" filepath="$PROJECT_DIR$/SitumReactNativePlugin.iml" group="SitumReactNativePlugin" />
+      <module fileurl="file://$PROJECT_DIR$/../node_modules/react-native-navigation/lib/android/app/react-native-navigation.iml" filepath="$PROJECT_DIR$/../node_modules/react-native-navigation/lib/android/app/react-native-navigation.iml" group="SitumReactNativePlugin/react-native-navigation" />
+      <module fileurl="file://$PROJECT_DIR$/react-native-situm-plugin/react-native-situm-plugin.iml" filepath="$PROJECT_DIR$/react-native-situm-plugin/react-native-situm-plugin.iml" group="SitumReactNativePlugin/react-native-situm-plugin" />
+    </modules>
+  </component>
+</project>

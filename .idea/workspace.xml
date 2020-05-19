@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7b5547b5-ef71-4ec8-9da3-7943fc6a8083" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Constants.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Constants.m" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SitumLocationWrapper.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SitumLocationWrapper.m" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SitumPlugin.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SitumPlugin.m" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SitumReactNativePlugin.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/ios/SitumReactNativePlugin.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SitumReactNativePlugin.xcodeproj/project.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/ios/SitumReactNativePlugin.xcodeproj/project.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SitumReactNativePlugin.xcodeproj/xcshareddata/xcschemes/SitumReactNativePlugin-tvOS.xcscheme" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SitumReactNativePlugin.xcodeproj/xcshareddata/xcschemes/SitumReactNativePlugin.xcscheme" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1c7caPGAQAQpGJMeCo8QmMq8Y56" />
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7b5547b5-ef71-4ec8-9da3-7943fc6a8083" name="Default Changelist" comment="" />
+      <created>1589883134539</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1589883134539</updated>
+    </task>
+    <servers />
+  </component>
+</project>
