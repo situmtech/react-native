@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: org.ccil.cowan.tagsoup:tagsoup:1.2@jar">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/.m2/repository/org/ccil/cowan/tagsoup/tagsoup/1.2/tagsoup-1.2.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
