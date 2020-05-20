@@ -671,3 +671,9 @@ export class RealTimeRequest {
 export class RealTimeData {
   locations: Location[];
 }
+
+export class Situm {
+  static setApiKey(email: string, apiKey: string): void;
+}
+
+export declare const Situm: Situm;
