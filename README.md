@@ -1,0 +1,1 @@
+# situm-react-native-plugin
