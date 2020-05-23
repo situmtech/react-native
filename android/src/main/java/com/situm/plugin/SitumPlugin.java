@@ -1,13 +1,16 @@
 package com.situm.plugin;
 
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableMap;
 
 public interface SitumPlugin {
-    void setApiKey(String email, String apiKey);
+    void initSitumSDK();
 
-    void setUserPass(String email, String password);
+    void setApiKey(String email, String apiKey, Callback callback);
 
-    void setCacheMaxAge(int cacheAge);
+    void setUserPass(String email, String password, Callback callback);
+
+    void setCacheMaxAge(int cacheAge, Callback callback);
 
     void fetchBuildings();
 
@@ -16,7 +19,7 @@ public interface SitumPlugin {
     void fetchGeofencesFromBuilding(ReadableMap map);
 
     void fetchFloorsFromBuilding(ReadableMap map);
-    
+
     void fetchPoiCategories(ReadableMap map);
 
     void fetchPoiCategoryIconNormal(ReadableMap map);
