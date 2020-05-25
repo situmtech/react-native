@@ -26,7 +26,6 @@ After cloning the project, follow these steps to integrate and run with a react-
 
 ```json
 "dependencies": {
-	..
 	"react-native-situm-plugin": "file:../situm-react-native-plugin"
 }
 ```
