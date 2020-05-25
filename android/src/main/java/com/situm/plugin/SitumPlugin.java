@@ -4,6 +4,10 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableMap;
 
 public interface SitumPlugin {
+    String EVENT_LOCATION_CHANGED = "locationChanged";
+    String EVENT_LOCATION_ERROR = "locationError";
+    String EVENT_LOCATION_STATUS_CHANGED = "statusChanged";
+
     void initSitumSDK();
 
     void setApiKey(String email, String apiKey, Callback callback);
@@ -12,13 +16,19 @@ public interface SitumPlugin {
 
     void setCacheMaxAge(int cacheAge, Callback callback);
 
-    void fetchBuildings();
+    void fetchBuildings(Callback success, Callback error);
 
-    void fetchBuildingInfo(ReadableMap map);
+    void fetchBuildingInfo(ReadableMap map, Callback success, Callback error);
 
-    void fetchGeofencesFromBuilding(ReadableMap map);
+    void fetchFloorsFromBuilding(ReadableMap map, Callback success, Callback error);
 
-    void fetchFloorsFromBuilding(ReadableMap map);
+    void fetchMapFromFloor(ReadableMap map, Callback success, Callback error);
+    
+    void fetchGeofencesFromBuilding(ReadableMap map, Callback success, Callback error);
+
+    void startPositioning(ReadableMap map);
+
+    void stopPositioning(Callback success, Callback error);
 
     void fetchPoiCategories(ReadableMap map);
 
@@ -31,12 +41,6 @@ public interface SitumPlugin {
     void fetchOutdoorPOIsFromBuilding(ReadableMap map);
 
     void fetchEventsFromBuilding(ReadableMap map);
-
-    void fetchMapFromFloor(ReadableMap map);
-
-    void startPositioning(String callbackId);
-
-    void stopPositioning(String callbackId);
 
     void requestDirections(String callbackId);
 

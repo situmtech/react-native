@@ -1,15 +1,15 @@
-/**
- *
- */
 package com.situm.plugin;
 
 import android.util.Log;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,11 +18,9 @@ import es.situm.sdk.SitumSdk;
 
 public class SitumPluginImpl extends ReactContextBaseJavaModule implements SitumPlugin {
     private static final String TAG = "SitumPlugin";
-    private static final String PLUGIN_NAME = "SitumPlugin";
+    private static final String PLUGIN_NAME = "RNCSitumPlugin";
     private static ReactApplicationContext reactContext;
     private static volatile PluginHelper pluginInstance;
-    protected Callback callback;
-    private ResponseHelper responseHelper = new ResponseHelper();
 
     SitumPluginImpl(ReactApplicationContext context) {
         super(context);
@@ -46,6 +44,11 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     }
 
     @ReactMethod
+    public void test() {
+//        getPluginInstance().fetchBuildings(success, null);
+    }
+
+    @ReactMethod
     public void initSitumSDK() {
         SitumSdk.init(reactContext);
     }
@@ -53,64 +56,77 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void setApiKey(String email, String apiKey, Callback callback) {
-        boolean isSucceess = SitumSdk.configuration().setApiKey(email, apiKey);
-        this.callback = callback;
+        boolean isSuccess = SitumSdk.configuration().setApiKey(email, apiKey);
 
-        responseHelper.cleanResponse();
-        responseHelper.putBoolean("success", isSucceess);
-        responseHelper.invokeResponse(this.callback);
+        WritableMap response = Arguments.createMap();
+        response.putBoolean("success", isSuccess);
 
-        this.callback = null;
+        callback.invoke(response);
     }
 
     @Override
     @ReactMethod
     public void setUserPass(String email, String password, Callback callback) {
-        boolean isSucceess = SitumSdk.configuration().setUserPass(email, password);
-        this.callback = callback;
+        boolean isSuccess = SitumSdk.configuration().setUserPass(email, password);
 
-        responseHelper.cleanResponse();
-        responseHelper.putBoolean("success", isSucceess);
-        responseHelper.invokeResponse(this.callback);
+        WritableMap response = Arguments.createMap();
+        response.putBoolean("success", isSuccess);
 
-        this.callback = null;
+        callback.invoke(response);
     }
 
     @Override
     @ReactMethod
     public void setCacheMaxAge(int cacheAge, Callback callback) {
-        boolean isSucceess = SitumSdk.configuration().setCacheMaxAge(cacheAge, TimeUnit.SECONDS);
-        this.callback = callback;
+        boolean isSuccess = SitumSdk.configuration().setCacheMaxAge(cacheAge, TimeUnit.SECONDS);
 
-        responseHelper.cleanResponse();
-        responseHelper.putBoolean("success", isSucceess);
-        responseHelper.invokeResponse(this.callback);
+        WritableMap response = Arguments.createMap();
+        response.putBoolean("success", isSuccess);
 
-        this.callback = null;
+        callback.invoke(response);
+
     }
 
     @Override
     @ReactMethod
-    public void fetchBuildings() {
-        Log.e(TAG, "fetchBuildings");
+    public void fetchBuildings(Callback success, Callback error) {
+        getPluginInstance().fetchBuildings(success, error);
     }
 
     @Override
     @ReactMethod
-    public void fetchBuildingInfo(ReadableMap map) {
-        Log.e(TAG, "fetchBuildingInfo");
+    public void fetchBuildingInfo(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchBuildingInfo(map, success, error);
     }
 
     @Override
     @ReactMethod
-    public void fetchGeofencesFromBuilding(ReadableMap map) {
-        Log.e(TAG, "fetchGeofencesFromBuilding");
+    public void fetchFloorsFromBuilding(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchFloorsFromBuilding(map, success, error);
     }
 
     @Override
     @ReactMethod
-    public void fetchFloorsFromBuilding(ReadableMap map) {
-        Log.e(TAG, "fetchFloorsFromBuilding");
+    public void fetchMapFromFloor(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchMapFromFloor(map, success, error);
+    }
+
+    @Override
+    @ReactMethod
+    public void fetchGeofencesFromBuilding(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchGeofencesFromBuilding(map, success, error);
+    }
+
+    @Override
+    @ReactMethod
+    public void startPositioning(ReadableMap map) {
+        getPluginInstance().startPositioning(map, getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
+    }
+
+    @Override
+    @ReactMethod
+    public void stopPositioning(Callback success, Callback error) {
+        getPluginInstance().stopPositioning(success, error);
     }
 
     @Override
@@ -147,24 +163,6 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @ReactMethod
     public void fetchEventsFromBuilding(ReadableMap map) {
         Log.e(TAG, "fetchEventsFromBuilding");
-    }
-
-    @Override
-    @ReactMethod
-    public void fetchMapFromFloor(ReadableMap map) {
-        Log.e(TAG, "fetchMapFromFloor");
-    }
-
-    @Override
-    @ReactMethod
-    public void startPositioning(String callbackId) {
-        Log.e(TAG, "startPositioning");
-    }
-
-    @Override
-    @ReactMethod
-    public void stopPositioning(String callbackId) {
-        Log.e(TAG, "stopPositioning");
     }
 
     @Override
@@ -208,5 +206,6 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     public void invalidateCache() {
         Log.e(TAG, "invalidateCache");
     }
+
 
 }
