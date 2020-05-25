@@ -37,10 +37,10 @@ After cloning the project, follow these steps to integrate and run with a react-
 ```js
 import  SitumPlugin  from  "react-native-situm-plugin";
 
-	SitumPlugin.fetchFloorsFromBuilding(building,
-		(floors) => {...},
-		(error: string) => {...},
-	);
+   SitumPlugin.fetchFloorsFromBuilding(building,
+       (floors) => {...},
+       (error: string) => {...},
+   );
 ```
 
 ### Fetch Buildings
