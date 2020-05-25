@@ -39,7 +39,7 @@ import  SitumPlugin  from  "react-native-situm-plugin";
 
    SitumPlugin.fetchFloorsFromBuilding(building,
        (floors) => {...},
-       (error: string) => {...},
+       (error) => {...},
    );
 ```
 
@@ -48,13 +48,13 @@ import  SitumPlugin  from  "react-native-situm-plugin";
 ```js
 const getBuildings = () => {
   SitumPlugin.fetchBuildings(
-    (buildings: any) => {
+    (buildings) => {
       if (!buildings || buildings.length == 0)
         alert(
           'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
         );
     },
-    (error: any) => {},
+    (error) => {},
   );
 };
 ```
@@ -65,8 +65,8 @@ const getBuildings = () => {
 const getBuildingInfo = () => {
   SitumPlugin.fetchBuildingInfo(
     building,
-    (buildingInfo: any) => {},
-    (error: string) => {},
+    (buildingInfo) => {},
+    (error) => {},
   );
 };
 ```
@@ -77,8 +77,8 @@ const getBuildingInfo = () => {
 const getFloorsFromBuilding = () => {
   SitumPlugin.fetchFloorsFromBuilding(
     building,
-    (floors: any) => {},
-    (error: string) => {},
+    (floors) => {},
+    (error) => {},
   );
 };
 ```
@@ -86,11 +86,11 @@ const getFloorsFromBuilding = () => {
 ### Fetch Map image from Floor
 
 ```js
-const getMapFromFloor = (floor: any) => {
+const getMapFromFloor = (floor) => {
   SitumPlugin.fetchMapFromFloor(
     floor,
-    (map: any) => {},
-    (error: string) => {},
+    (map) => {},
+    (error) => {},
   );
 };
 ```
