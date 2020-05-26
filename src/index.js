@@ -4,7 +4,6 @@ import invariant from 'invariant';
 import {logError, warning} from './utils';
 
 let subscriptions = [];
-let updatesEnabled = false;
 
 const SitumPlugin = {
   initSitumSDK: function () {
@@ -115,13 +114,7 @@ const SitumPlugin = {
     error?: Function,
     options: LocationRequestOptions,
   ): number {
-    if (!updatesEnabled) {
-      console.log('startPositioning: Enabling updates.');
-      RNCSitumPlugin.startPositioning(options);
-      updatesEnabled = true;
-    } else {
-      console.log('startPositioning: Updates already enabled.');
-    }
+    RNCSitumPlugin.startPositioning(options);
     const subscriptionId = subscriptions.length;
     subscriptions.push([
       SitumPluginEventEmitter.addListener('locationChanged', location),
@@ -139,6 +132,7 @@ const SitumPlugin = {
     success: Function,
     error?: Function,
   ) {
+    console.log('stopPositioning for ID: ' + subscriptionId);
     const sub = subscriptions[subscriptionId];
     if (!sub) {
       // Silently exit when the watchID is invalid or already cleared
@@ -165,21 +159,21 @@ const SitumPlugin = {
   },
 
   stopPositioningUpdates: function (success: Function, error?: Function) {
-    if (updatesEnabled) {
-      RNCSitumPlugin.stopPositioning(success, error);
-      updatesEnabled = false;
-      for (let ii = 0; ii < subscriptions.length; ii++) {
-        const sub = subscriptions[ii];
-        if (sub) {
-          warning(false, 'Called stopObserving with existing subscriptions.');
-          sub[0].remove();
-          // array element refinements not yet enabled in Flow
-          const sub1 = sub[1];
-          sub1 && sub1.remove();
-        }
+    RNCSitumPlugin.stopPositioning(success, error);
+    for (let ii = 0; ii < subscriptions.length; ii++) {
+      const sub = subscriptions[ii];
+      if (sub) {
+        warning(
+          false,
+          'Called stopPositioningUpdates with existing subscriptions.',
+        );
+        sub[0].remove();
+        // array element refinements not yet enabled in Flow
+        const sub1 = sub[1];
+        sub1 && sub1.remove();
       }
-      subscriptions = [];
     }
+    subscriptions = [];
   },
 };
 
