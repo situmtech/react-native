@@ -223,6 +223,12 @@ export interface SitumPluginStatic {
     success: Function,
     error?: Function,
   ): void;
+  
+  requestDirections(
+    directionParams: Array<any>,
+    success: Function,
+    error?: Function,
+  ): void;
 }
 
 declare let SitumPlugin: SitumPluginStatic;

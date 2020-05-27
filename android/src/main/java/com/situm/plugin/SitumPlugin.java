@@ -1,6 +1,7 @@
 package com.situm.plugin;
 
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 
 public interface SitumPlugin {
@@ -23,12 +24,14 @@ public interface SitumPlugin {
     void fetchFloorsFromBuilding(ReadableMap map, Callback success, Callback error);
 
     void fetchMapFromFloor(ReadableMap map, Callback success, Callback error);
-    
+
     void fetchGeofencesFromBuilding(ReadableMap map, Callback success, Callback error);
 
     void startPositioning(ReadableMap map);
 
     void stopPositioning(Callback success, Callback error);
+
+    void requestDirections(ReadableArray requestArray, Callback success, Callback error);
 
     void fetchPoiCategories(ReadableMap map);
 
@@ -41,8 +44,6 @@ public interface SitumPlugin {
     void fetchOutdoorPOIsFromBuilding(ReadableMap map);
 
     void fetchEventsFromBuilding(ReadableMap map);
-
-    void requestDirections(String callbackId);
 
     void requestNavigationUpdates(String callbackId);
 

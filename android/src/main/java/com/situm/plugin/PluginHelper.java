@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
@@ -16,10 +18,12 @@ import org.json.JSONObject;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import es.situm.sdk.SitumSdk;
 import es.situm.sdk.communication.CommunicationManager;
+import es.situm.sdk.directions.DirectionsRequest;
 import es.situm.sdk.error.Error;
 import es.situm.sdk.location.LocationListener;
 import es.situm.sdk.location.LocationRequest;
@@ -42,6 +46,7 @@ import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_ERROR;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_STATUS_CHANGED;
 import static com.situm.plugin.utils.ReactNativeJson.convertJsonToArray;
 import static com.situm.plugin.utils.ReactNativeJson.convertJsonToMap;
+import static com.situm.plugin.utils.ReactNativeJson.convertMapToJson;
 
 public class PluginHelper {
 
@@ -283,8 +288,8 @@ public class PluginHelper {
             LocationRequest.Builder locationBuilder = new LocationRequest.Builder();
             SitumMapper.locationRequestJSONObjectToLocationRequest(jsonRequst, locationBuilder);
             LocationRequest locationRequest = locationBuilder.build();
-            
-            
+
+
             locationListener = new LocationListener() {
                 public void onLocationChanged(Location location) {
                     try {
@@ -360,6 +365,43 @@ public class PluginHelper {
 
             invokeCallback(success, map);
 
+        }
+    }
+
+    public void requestDirections(ReadableArray requestArray, Callback success, Callback error, ReactApplicationContext context) {
+        try {
+            JSONObject jsonBuilding = convertMapToJson(Objects.requireNonNull(requestArray.getMap(0)));
+            JSONObject jsonFrom = convertMapToJson(Objects.requireNonNull(requestArray.getMap(1)));
+            JSONObject jsonTo = convertMapToJson(Objects.requireNonNull(requestArray.getMap(2)));
+            JSONObject jsonOptions = null;
+            if (requestArray.size() >= 4) {
+                jsonOptions = convertMapToJson(Objects.requireNonNull(requestArray.getMap(3)));
+            }
+
+            DirectionsRequest directionRequest = SitumMapper.jsonObjectToDirectionsRequest(jsonBuilding, jsonFrom, jsonTo, null);
+
+            SitumSdk.directionsManager().requestDirections(directionRequest, new Handler<Route>() {
+                @Override
+                public void onSuccess(Route route) {
+                    try {
+                        PluginHelper.this.computedRoute = route;
+                        JSONObject jsonRoute = SitumMapper.routeToJsonObject(route, context);
+                        Log.i(TAG, "onSuccess: Route calculated successfully" + route);
+                        invokeCallback(success, convertJsonToMap(jsonRoute));
+                    } catch (JSONException e) {
+                        invokeCallback(error, e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(Error e) {
+                    Log.e(TAG, "onError:" + e.getMessage());
+                    invokeCallback(error, e.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            invokeCallback(error, e.getMessage());
         }
     }
 
@@ -832,42 +874,7 @@ public class PluginHelper {
         getNavigationManagerInstance().removeUpdates(); // TODO: Incorporate sending a result to the exterior
     }
 
-    public void requestDirections(final CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
-        try {
-            JSONObject jsonoBuilding = args.getJSONObject(0);
-            JSONObject jsonoFrom = args.getJSONObject(1);
-            JSONObject jsonoTo = args.getJSONObject(2);
-            JSONObject jsonoOptions = null;
-            if (args.length() >= 4) {
-                jsonoOptions = args.getJSONObject(3);
-            }
-            DirectionsRequest directionRequest =
-                    SitumMapper.jsonObjectToDirectionsRequest(jsonoBuilding, jsonoFrom, jsonoTo, jsonoOptions);
-            SitumSdk.directionsManager().requestDirections(directionRequest, new Handler<Route>() {
-                @Override
-                public void onSuccess(Route route) {
-                    try {
-                        PluginHelper.this.computedRoute = route;
-                        JSONObject jsonoRoute = SitumMapper.routeToJsonObject(route, cordova.getActivity());
-                        Log.i(TAG, "onSuccess: Route calculated successfully" + route);
-                        callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonoRoute));
-                    } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-                    }
-                }
-
-                @Override
-                public void onFailure(Error error) {
-                    Log.e(TAG, "onError:" + error.getMessage());
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-        }
-    }*/
+    */
 
 
     private void invokeCallback(Callback callback, Object args) {

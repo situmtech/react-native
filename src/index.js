@@ -120,7 +120,7 @@ const SitumPlugin = {
       SitumPluginEventEmitter.addListener('locationChanged', location),
       SitumPluginEventEmitter.addListener('statusChanged', status),
       error
-        ? SitumPluginEventEmitter.addListener('locationError', error)
+        ? SitumPluginEventEmitter.addListener('locationError', error || logError)
         : null,
     ]);
 
@@ -159,7 +159,7 @@ const SitumPlugin = {
   },
 
   stopPositioningUpdates: function (success: Function, error?: Function) {
-    RNCSitumPlugin.stopPositioning(success, error);
+    RNCSitumPlugin.stopPositioning(success, error || logError);
     for (let ii = 0; ii < subscriptions.length; ii++) {
       const sub = subscriptions[ii];
       if (sub) {
@@ -174,6 +174,23 @@ const SitumPlugin = {
       }
     }
     subscriptions = [];
+  },
+
+  requestDirections: function (
+    directionParams: Array,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.requestDirections(
+      directionParams,
+      success,
+      error || logError,
+    );
   },
 };
 

@@ -7,6 +7,7 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
@@ -131,6 +132,12 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
+    public void requestDirections(ReadableArray requestArray, Callback success, Callback error) {
+        getPluginInstance().requestDirections(requestArray, success,error, getReactApplicationContext());
+    }
+
+    @Override
+    @ReactMethod
     public void fetchPoiCategories(ReadableMap map) {
         Log.e(TAG, "fetchPoiCategories");
     }
@@ -163,12 +170,6 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @ReactMethod
     public void fetchEventsFromBuilding(ReadableMap map) {
         Log.e(TAG, "fetchEventsFromBuilding");
-    }
-
-    @Override
-    @ReactMethod
-    public void requestDirections(String callbackId) {
-        Log.e(TAG, "requestDirections");
     }
 
     @Override
