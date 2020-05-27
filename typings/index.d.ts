@@ -160,6 +160,99 @@ export type Point = {
   isOutdoor: boolean;
 };
 
+/**
+ * @name
+ * Route
+ * @description
+ * Route between two points.
+ * @property {RouteStep[]} edges - Ordered list of steps to go to the goal point
+ * @property {RouteStep} firstStep - First step
+ * @property {Point} from - Point where the route starts.
+ * @property {Indication} indications - Ordered list of instructions to go to the destination
+ * @property {RouteStep} lastStep - Last step
+ * @property {Point[]} nodes - A collection of points of the route (not ordered)
+ * @property {Point[]} points - List of ordered points of the route
+ * @property {Point} to - Last point and goal of the route.
+ * @property {RouteStep[]} steps - Ordered list of steps to go to the goal point
+ * @property {RouteSegment[]} segments - List of segments formed by consecutive points and a floor identifier
+ */
+
+export type Route = {
+  edges: RouteStep[];
+  firstStep: RouteStep;
+  from: Point;
+  indications: Indication;
+  lastStep: RouteStep;
+  nodes: Point[];
+  points: Point[];
+  to: Point;
+  steps: RouteStep[];
+  segments: RouteSegment[];
+}
+
+/**
+ * @name
+ * RouteStep
+ * @description
+ * A fragment of a route, described by the initial point from and the last point to of the fragment, and some information about the step within the route.
+ * @property {number} distance - Distance between from and to in meters.
+ * @property {number} distanceToGoal - Distance in meters between the start point of this step (from) and the last point in the route ('to' of the last step).
+ * @property {Point} from - Start point of this step.
+ * @property {number} id - Position of this RouteStep in the list of steps (Route.steps) of the route to which it belongs.
+ * @property {Point} to - End point of this step.
+ * @property {boolean} isFirst - Returns true if this is the first step in the route.
+ * @property {boolean} isLast - Returns true if this is the last step in the route.
+ */
+
+export type RouteStep = {
+  distance: number;
+  distanceToGoal: number;
+  from: Point;
+  id: number;
+  to: Point;
+  isFirst: boolean;
+  isLast: boolean;
+}
+
+/**
+ * @name
+ * RouteSegment
+ * @description
+ * A fragment of a route, described by a floor identifier and a list of consecutive points from the same floor
+ * @property {string} floorIdentifier - Identifier of the floor containing the points in this segment
+ * @property {Point[]} points - Consecutive points in the same floor forming a path
+ */
+
+export type RouteSegment = {
+  floorIdentifier: string;
+  points: Point[];
+}
+
+/**
+ * @name
+ * Indication
+ * @description
+ * Represents the instruction that a user should follow when on a RouteStep to continue the route.
+ * @property {number} distance - The distance between the origin and destination
+ * @property {number} distanceToNextLevel - The number of levels between the origin and destination
+ * @property {string} indicationType - The Indication.Action of the instruction as String
+ * @property {number} orientation - The angle a user should change his direction in order to go from the origin to the destination.
+ * @property {string} orientationType - The Indication.Orientation of the instruction as String
+ * @property {number} stepIdxDestination - The index of the indication's step of destination.
+ * @property {number} stepIdxOrigin - The index of the indication's step of origin
+ * @property {boolean} neededLevelChange - If the user should change the level in order to arrive to destination
+ */
+
+export type Indication = {
+  distance: number;
+  distanceToNextLevel: number;
+  indicationType: string;
+  orientation: number;
+  orientationType: string;
+  stepIdxDestination: number;
+  stepIdxOrigin: number;
+  neededLevelChange: boolean;
+}
 
 export type LocationRequestOptions = {
   buildingIdentifier?: string
@@ -167,6 +260,7 @@ export type LocationRequestOptions = {
   useBle?: boolean;
   useForegroundService?: number;
 };
+
 
 export interface SitumPluginStatic {
 

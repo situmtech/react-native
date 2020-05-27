@@ -45,11 +45,6 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     }
 
     @ReactMethod
-    public void test() {
-//        getPluginInstance().fetchBuildings(success, null);
-    }
-
-    @ReactMethod
     public void initSitumSDK() {
         SitumSdk.init(reactContext);
     }

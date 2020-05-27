@@ -609,25 +609,28 @@ class SitumMapper {
     }
 
     static Point pointJsonObjectToPoint(JSONObject jo, JSONObject joBuilding) throws JSONException, ParseException {
-        Building building = null;
-        Point point = null;
+
+        Building building = buildingJsonObjectToBuilding(joBuilding);
+        CoordinateConverter coordinateConverter = new CoordinateConverter(building.getDimensions(), building.getCenter(),
+                building.getRotation());
 
         if (!jo.has(COORDINATE)) {
-            building = buildingJsonObjectToBuilding(joBuilding);
             JSONObject joCartesianCoordinate = jo.getJSONObject(CARTESIAN_COORDINATE);
             CartesianCoordinate cartesianCoordinate = cartesianCoordinateJsonObjectToCartesianCoordinate(
                     joCartesianCoordinate);
-            CoordinateConverter coordinateConverter = new CoordinateConverter(building.getDimensions(), building.getCenter(),
-                    building.getRotation());
             Coordinate coordinate = coordinateConverter.toCoordinate(cartesianCoordinate);
             JSONObject joCoordinate = coordinateToJsonObject(coordinate);
             jo.put(COORDINATE, joCoordinate);
+        }else if(!jo.has(CARTESIAN_COORDINATE))  {
+            JSONObject joCoordinate = jo.getJSONObject(COORDINATE);
+            Coordinate coordinate = coordinateJsonObjectToCoordinate((joCoordinate));
+            CartesianCoordinate cartesianCoordinate = coordinateConverter.toCartesianCoordinate(coordinate);
+            JSONObject joCartesianCoordinate = cartesianCoordinateToJsonObject(cartesianCoordinate);
+            jo.put(CARTESIAN_COORDINATE, joCartesianCoordinate);
         }
-
-        point = new Point(jo.getString(BUILDING_IDENTIFIER), jo.getString(FLOOR_IDENTIFIER),
-                coordinateJsonObjectToCoordinate(jo.getJSONObject(COORDINATE)),
-                cartesianCoordinateJsonObjectToCartesianCoordinate(jo.getJSONObject(CARTESIAN_COORDINATE)));
-        return point;
+        return new Point(jo.getString(BUILDING_IDENTIFIER), jo.getString(FLOOR_IDENTIFIER),
+                 coordinateJsonObjectToCoordinate(jo.getJSONObject(COORDINATE)),
+                 cartesianCoordinateJsonObjectToCartesianCoordinate(jo.getJSONObject(CARTESIAN_COORDINATE)));
     }
 
     // CartesianCoordinate
