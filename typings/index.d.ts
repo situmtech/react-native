@@ -307,7 +307,7 @@ export interface SitumPluginStatic {
 
   startPositioning(
     building: Building,
-    location: Function,
+    location: (location: Location) => void,
     status: Function,
     error?: Function,
   ): number;
@@ -320,7 +320,7 @@ export interface SitumPluginStatic {
   
   requestDirections(
     directionParams: Array<any>,
-    success: Function,
+    success: (route: Route) => void,
     error?: Function,
   ): void;
 }

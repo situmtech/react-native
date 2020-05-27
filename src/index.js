@@ -120,7 +120,10 @@ const SitumPlugin = {
       SitumPluginEventEmitter.addListener('locationChanged', location),
       SitumPluginEventEmitter.addListener('statusChanged', status),
       error
-        ? SitumPluginEventEmitter.addListener('locationError', error || logError)
+        ? SitumPluginEventEmitter.addListener(
+            'locationError',
+            error || logError,
+          )
         : null,
     ]);
 
@@ -132,7 +135,6 @@ const SitumPlugin = {
     success: Function,
     error?: Function,
   ) {
-    console.log('stopPositioning for ID: ' + subscriptionId);
     const sub = subscriptions[subscriptionId];
     if (!sub) {
       // Silently exit when the watchID is invalid or already cleared
