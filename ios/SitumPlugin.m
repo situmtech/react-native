@@ -20,7 +20,7 @@ static NSString *DEFAULT_SITUM_LOG = @"SitumSDK >>: ";
 
 @implementation SitumPlugin
 
-RCT_EXPORT_MODULE();
+RCT_EXPORT_MODULE(RNCSitumPlugin);
 
 @synthesize computedRoute = _computedRoute;
 
