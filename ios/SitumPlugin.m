@@ -12,6 +12,17 @@ static BOOL IS_LOG_ENABLED = NO;
 
 static NSString *DEFAULT_SITUM_LOG = @"SitumSDK >>: ";
 
+@interface SitumPluginRequest : NSObject
+
+@property (nonatomic, copy) RCTResponseSenderBlock successBlock;
+@property (nonatomic, copy) RCTResponseSenderBlock errorBlock;
+
+@end
+
+@implementation SitumPluginRequest
+
+@end
+
 @interface SitumPlugin() {}
 
 @property (nonatomic, strong) SITRoute *computedRoute;
@@ -25,18 +36,34 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 @synthesize computedRoute = _computedRoute;
 
 
-
-RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey)
+RCT_EXPORT_METHOD(initSitumSDK)
 {
-    NSLog(@"Email: %@, API Key: %@", email, apiKey);
+    // only specific to Android at the moment
 }
 
-RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass)
+RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCallback:(RCTResponseSenderBlock)successBlock)
+{
+    BOOL success = [SITServices provideAPIKey:apiKey forEmail:email];
+    
+    NSDictionary *response = @{@"success":success ? @"true" : @"false"};
+    successBlock(@[[NSNull null], response]);
+
+    if (IS_LOG_ENABLED) {
+        NSArray *allPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [allPaths objectAtIndex:0];
+        NSString *pathForLog = [documentsDirectory stringByAppendingPathComponent:@"logging.txt"];
+        freopen([pathForLog cStringUsingEncoding:NSASCIIStringEncoding],"a+",stderr);
+
+        NSLog(@"%@", [NSString stringWithFormat: @"%@ Logging ios calls", DEFAULT_SITUM_LOG]);
+    }
+}
+
+RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass withCallback:(RCTResponseSenderBlock)successBlock)
 {
     NSLog(@"Email: %@, Password: %@", email, pass);
 }
 
-RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge)
+RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(RCTResponseSenderBlock)successBlock)
 {
     NSLog(@"Cache Age: %ii", cacheMaxAge);
 }
