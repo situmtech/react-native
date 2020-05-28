@@ -240,11 +240,11 @@ When you are no longer interested on Navigation Updates you should call this met
 
 ## License
 
-Situm-Cordova-Plugin is licensed under [MIT License](https://opensource.org/licenses/MIT)
+Situm-React-Native-Plugin is licensed under [MIT License](https://opensource.org/licenses/MIT)
 
 ## More information
 
-More info is available at our [Developers Page](http://developers.situm.es/pages/mobile/react-native/).
+More info is available at our [Developers Page](http://developers.situm.com/pages/mobile/react-native/).
 
 ## Support information
 For any question or bug report, please send an email to [support@situm.com](mailto:support@situm.com)
