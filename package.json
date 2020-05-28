@@ -2,7 +2,6 @@
   "name": "react-native-situm-plugin",
   "version": "0.0.1",
   "private": false,
-
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/runtime": "^7.6.2",
