@@ -246,6 +246,21 @@ RCT_EXPORT_METHOD(fetchMapFromFloor:(NSDictionary *)floorJO withSuccessCallback:
     }];
 }
 
+RCT_EXPORT_METHOD(startPositioning:(NSString *)locationCallbackId)
+{
+    NSLog(@"startPositioning");
+}
+
+RCT_EXPORT_METHOD(stopPositioning:(NSString *)locationCallbackId)
+{
+    NSLog(@"stopPositioning");
+}
+
+RCT_EXPORT_METHOD(requestDirections:(NSString *)routeCallbackId)
+{
+    NSLog(@"requestDirections");
+}
+
 RCT_EXPORT_METHOD(fetchGeofencesFromBuilding:(NSDictionary *)buildingJO)
 {
     NSLog(@"fetchGeofencesFromBuilding");
@@ -279,21 +294,6 @@ RCT_EXPORT_METHOD(fetchOutdoorPOIsFromBuilding:(NSDictionary *)buildingJO)
 RCT_EXPORT_METHOD(fetchEventsFromBuilding:(NSDictionary *)buildingJO)
 {
     NSLog(@"fetchEventsFromBuilding");
-}
-
-RCT_EXPORT_METHOD(startPositioning:(NSString *)locationCallbackId)
-{
-    NSLog(@"startPositioning");
-}
-
-RCT_EXPORT_METHOD(stopPositioning:(NSString *)locationCallbackId)
-{
-    NSLog(@"stopPositioning");
-}
-
-RCT_EXPORT_METHOD(requestDirections:(NSString *)routeCallbackId)
-{
-    NSLog(@"requestDirections");
 }
 
 RCT_EXPORT_METHOD(requestNavigationUpdates:(NSString *)navigationProgressCallbackId)
