@@ -74,6 +74,7 @@
 // Dimensions
 
 - (NSDictionary *) dimensionsToJsonObject:(SITDimensions *) dimensions;
+- (SITDimensions *) jsonObjectToDimensions:(NSDictionary *) json ;
 
 // Bounds
 

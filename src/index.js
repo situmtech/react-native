@@ -91,28 +91,25 @@ const SitumPlugin = {
     );
   },
 
-  startPositioning: async function (
+  requestAuthorization: function () {
+    RNCSitumPlugin.requestAuthorization();
+  },
+
+  startPositioning: function (
     location: Function,
     status: Function,
     error?: Function,
-    options: LocationRequestOptions,
+    options?: LocationRequestOptions,
   ) {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-    let subId = -1;
-    if (granted === 'granted') {
-      subId = this.startPositioningUpdates(location, status, error, options);
-    } else {
-      console.log('ACCESS_FINE_LOCATION permission denied');
-    }
-    return subId;
+    this.requestAuthorization();
+    return this.startPositioningUpdates(location, status, error, options);
   },
+
   startPositioningUpdates: function (
     location: Function,
     status: Function,
     error?: Function,
-    options: LocationRequestOptions,
+    options?: LocationRequestOptions,
   ): number {
     RNCSitumPlugin.startPositioning(options);
     const subscriptionId = subscriptions.length;
