@@ -306,10 +306,10 @@ export interface SitumPluginStatic {
   ): void;
 
   startPositioning(
-    building: Building,
     location: (location: Location) => void,
     status: Function,
     error?: Function,
+    locationOptions: LocationRequestOptions,
   ): number;
 
   stopPositioning(
