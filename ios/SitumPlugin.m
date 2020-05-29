@@ -10,6 +10,7 @@ static NSString *Accessible=@"accessible";
 
 static BOOL IS_LOG_ENABLED = NO;
 
+
 static NSString *DEFAULT_SITUM_LOG = @"SitumSDK >>: ";
 
 //@interface SitumPluginRequest : NSObject
@@ -31,7 +32,14 @@ static NSString *DEFAULT_SITUM_LOG = @"SitumSDK >>: ";
 
 @implementation SitumPlugin
 
+    BOOL _positioningUpdates;
+
 RCT_EXPORT_MODULE(RNCSitumPlugin);
+
+- (NSArray<NSString *> *)supportedEvents
+{
+  return @[@"locationChanged", @"statusChanged", @"locationError"];
+}
 
 @synthesize computedRoute = _computedRoute;
 
@@ -246,14 +254,20 @@ RCT_EXPORT_METHOD(fetchMapFromFloor:(NSDictionary *)floorJO withSuccessCallback:
     }];
 }
 
-RCT_EXPORT_METHOD(startPositioning:(NSString *)locationCallbackId)
+RCT_EXPORT_METHOD(startPositioning:(NSDictionary *)request)
 {
-    NSLog(@"startPositioning");
+       SITLocationRequest *locationRequest = [SitumLocationWrapper.shared dictToLocationRequest:request];
+       
+       [[SITLocationManager sharedInstance] requestLocationUpdates:locationRequest];
+       [[SITLocationManager sharedInstance] setDelegate:self];
+    
+    _positioningUpdates = YES;
 }
 
 RCT_EXPORT_METHOD(stopPositioning:(NSString *)locationCallbackId)
 {
-    NSLog(@"stopPositioning");
+    [[SITLocationManager sharedInstance] removeUpdates];
+    _positioningUpdates = NO;
 }
 
 RCT_EXPORT_METHOD(requestDirections:(NSString *)routeCallbackId)
@@ -324,6 +338,31 @@ RCT_EXPORT_METHOD(removeRealTimeUpdates)
 RCT_EXPORT_METHOD(invalidateCache)
 {
     NSLog(@"invalidateCache");
+}
+
+// SITLocationDelegate methods
+
+- (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
+      didUpdateLocation:(nonnull SITLocation *)location {
+    if (location) {
+        NSDictionary *locationJO = [SitumLocationWrapper.shared locationToJsonObject:location];
+        
+        if (_positioningUpdates) {
+          [self sendEventWithName:@"locationChanged" body:locationJO];
+        }
+    }
+}
+
+- (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
+       didFailWithError: (NSError * _Nullable)error {
+    [self sendEventWithName:@"locationError" body:error.description];
+}
+
+- (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
+         didUpdateState:(SITLocationState)state {
+    NSDictionary *locationChanged = [SitumLocationWrapper.shared locationStateToJsonObject:state];
+    
+    [self sendEventWithName:@"statusChanged" body:locationChanged.copy];
 }
 
 
