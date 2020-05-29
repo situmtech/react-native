@@ -1,13 +1,7 @@
 {
   "name": "react-native-situm-plugin",
   "version": "0.0.1",
-  "private": true,
-  "react-native": "src/index.js",
-  "main": "/src/index.js",
-  "peerDependencies":{
-    "react": "*",
-    "react-native": "*"
-  },
+  "private": false,
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/runtime": "^7.6.2",
