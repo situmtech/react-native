@@ -2,7 +2,7 @@
 #import <React/RCTEventEmitter.h>
 #import <SitumSDK/SitumSDK.h>
 
-@interface SitumPlugin : NSObject <RCTBridgeModule> {
+@interface SitumPlugin : RCTEventEmitter {
     NSMutableDictionary *buildingsStored;
     NSMutableDictionary *floorStored;
     NSMutableDictionary *eventStored;

@@ -234,6 +234,46 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     return jo;
 }
 
+- (SITLocationRequest *) dictToLocationRequest: (NSDictionary *) dict {
+    NSNumber *useDeadReckoning = nil;
+    NSNumber *useGps = nil;
+    NSString *buildingId;
+    NSString *realtimeUpdateInterval;
+    NSNumber *interval = nil;
+    NSNumber *smallestDisplacement = nil;
+    NSNumber *useBarometer = nil;
+    SITRealtimeUpdateInterval realtimeInterval = 0;
+    
+    if (buildingId == nil) {
+        buildingId = [NSString stringWithFormat:@"%@", [dict valueForKey:@"buildingIdentifier"]];
+    }
+    
+    SITLocationRequest *locationRequest = [[SITLocationRequest alloc] initWithBuildingId:buildingId];
+    if (useDeadReckoning != nil) {
+        [locationRequest setUseDeadReckoning:[useDeadReckoning boolValue]];
+        
+    }
+    if(useGps != nil) {
+        [locationRequest setUseGps:[useGps boolValue]];
+    }
+    
+    if(interval != nil) {
+      [locationRequest setInterval:[interval intValue]];
+    }
+
+    if (smallestDisplacement != nil) {
+        [locationRequest setSmallestDisplacement:[smallestDisplacement floatValue]];
+    }
+
+    if(useBarometer != nil) {
+      [locationRequest setUseBarometer: [useBarometer boolValue]];
+    }
+
+    if (realtimeInterval != 0) {
+        [locationRequest setUpdateInterval:realtimeInterval];
+    }
+    return locationRequest;
+}
 
 - (SITLocationRequest *) jsonObjectToLocationRequest: (NSArray *) json {
     NSDictionary *buildingJO;
