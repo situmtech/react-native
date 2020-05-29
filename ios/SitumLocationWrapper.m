@@ -163,20 +163,20 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     [jo setObject:emptyStrCheck(building.userIdentifier) forKey:@"userIdentifier"];
     [jo setObject:emptyStrCheck(building.identifier) forKey:@"identifier"];
     [jo setObject:emptyStrCheck(building.identifier) forKey:@"buildingIdentifier"];
-
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:kDateFormat];
-
+    
     [jo setObject:emptyStrCheck([dateFormatter stringFromDate:building.createdAt])
            forKey:@"createdAt"];
-
+    
     [jo setObject:emptyStrCheck([dateFormatter stringFromDate:building.updatedAt])
            forKey:@"updatedAt"];
-
+    
     if (building.customFields) {
-         [jo setObject:building.customFields forKey:@"customFields"];
+        [jo setObject:building.customFields forKey:@"customFields"];
     }
-
+    
     return jo.copy;
 }
 
@@ -185,7 +185,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     NSMutableArray *ja = [[NSMutableArray alloc] init];
     for (SITFloor *obj in floors) {
         NSDictionary *floorJson = [self floorToJsonObject:obj];
-       
+        
         [ja addObject:floorJson];
     }
     return ja;
@@ -196,7 +196,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     NSMutableArray *ja = [[NSMutableArray alloc] init];
     for (SITPOI *obj in array) {
         NSDictionary *json = [self poiToJsonObject:obj];
-       
+        
         [ja addObject:json];
     }
     return ja;
@@ -207,7 +207,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     NSMutableArray *ja = [[NSMutableArray alloc] init];
     for (SITEvent *obj in array) {
         NSDictionary *json = [self eventToJsonObject:obj];
-       
+        
         [ja addObject:json];
     }
     return ja;
@@ -218,7 +218,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 - (NSDictionary *) buildingInfoToJsonObject:(SITBuildingInfo *)buildingInfo
 {
     NSMutableDictionary *jo  = [[NSMutableDictionary alloc] init];
-
+    
     // Building
     [jo setObject:[self buildingToJsonObject:buildingInfo.building] forKey:@"building"];
     // Floors
@@ -258,17 +258,17 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     }
     
     if(interval != nil) {
-      [locationRequest setInterval:[interval intValue]];
+        [locationRequest setInterval:[interval intValue]];
     }
-
+    
     if (smallestDisplacement != nil) {
         [locationRequest setSmallestDisplacement:[smallestDisplacement floatValue]];
     }
-
+    
     if(useBarometer != nil) {
-      [locationRequest setUseBarometer: [useBarometer boolValue]];
+        [locationRequest setUseBarometer: [useBarometer boolValue]];
     }
-
+    
     if (realtimeInterval != 0) {
         [locationRequest setUpdateInterval:realtimeInterval];
     }
@@ -342,17 +342,17 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     }
     
     if(interval != nil) {
-      [locationRequest setInterval:[interval intValue]];
+        [locationRequest setInterval:[interval intValue]];
     }
-
+    
     if (smallestDisplacement != nil) {
         [locationRequest setSmallestDisplacement:[smallestDisplacement floatValue]];
     }
-
+    
     if(useBarometer != nil) {
-      [locationRequest setUseBarometer: [useBarometer boolValue]];
+        [locationRequest setUseBarometer: [useBarometer boolValue]];
     }
-
+    
     if (realtimeInterval != 0) {
         [locationRequest setUpdateInterval:realtimeInterval];
     }
@@ -382,7 +382,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 }
 
 - (NSDictionary *) locationStateToJsonObject:(SITLocationState) state {
-
+    
     NSMutableDictionary *jo  = [[NSMutableDictionary alloc] init];
     [jo setValue: [self locationStateToString:state] forKey: @"statusName"];
     NSNumber *status = [NSNumber numberWithInt:state];
@@ -419,14 +419,14 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 // Geofence
 - (NSDictionary *)geofenceToJsonObject:(SITGeofence *)geofence {
     NSMutableDictionary *jo  = [[NSMutableDictionary alloc] init];
-
+    
     // Complete implementation
     [jo setObject:emptyStrCheck(geofence.identifier) forKey:@"identifier"];
     [jo setObject:emptyStrCheck(geofence.buildingIdentifier) forKey:@"buildingIdentifier"];
     [jo setObject:emptyStrCheck(geofence.floorIdentifier) forKey:@"floorIdentifier"];
     
     [jo setObject:emptyStrCheck(geofence.name) forKey:@"name"];
-
+    
     // Polygon Points
     [jo setObject:[self pointsToJsonArray:geofence.polygonPoints] forKey:@"polygonPoints"];
     
@@ -438,16 +438,16 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     
     [jo setObject:emptyStrCheck([dateFormatter stringFromDate:geofence.updatedAt])
            forKey:@"updatedAt"];
-
+    
     if (geofence.customFields) {
         [jo setObject:geofence.customFields forKey:@"customFields"];
     } else {
         [jo setObject:[NSDictionary new] forKey:@"customFields"];
     }
     [jo setObject:emptyStrCheck(geofence.infoHtml) forKey:@"infoHtml"];
-
-
-
+    
+    
+    
     return jo;
 }
 
@@ -467,26 +467,26 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     [jo setObject:emptyStrCheck(floor.name) forKey:@"name"];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:kDateFormat];
-
+    
     [jo setObject:emptyStrCheck([dateFormatter stringFromDate:floor.createdAt])
            forKey:@"createdAt"];
-
+    
     [jo setObject:emptyStrCheck([dateFormatter stringFromDate:floor.updatedAt])
            forKey:@"updatedAt"];
-
+    
     return jo.copy;
 }
 
 - (SITFloor *) jsonObjectToFloor:(NSDictionary *) nsFloor {
     SITFloor *floor  = [[SITFloor alloc] init];
-
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:kDateFormat];
-
+    
     floor.createdAt = [dateFormatter dateFromString:nsFloor[@"createdAt"]];
-
+    
     floor.updatedAt = [dateFormatter dateFromString:nsFloor[@"updatedAt"]];
-
+    
     floor.scale = [[nsFloor objectForKey:@"scale"] doubleValue];
     floor.mapURL = [[SITURL alloc] initWithDirection:[nsFloor objectForKey:@"mapUrl"]];;
     floor.level = [[nsFloor objectForKey:@"level"] intValue];
@@ -515,7 +515,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     if (event.conversion != nil) {
         jo[@"conversion"] = [self circleAreaToJsonObject:event.conversion];
     }
-
+    
     jo[@"conversionArea"] = [self conversionAreaToJsonObject:event.conversionArea];
     jo[@"customFields"] = event.customFields != nil ? event.customFields : [NSDictionary new];
     
@@ -581,7 +581,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     
     [jo setObject:emptyStrCheck([dateFormatter stringFromDate:poi.updatedAt])
            forKey:@"updatedAt"];
-
+    
     if (poi.customFields) {
         [jo setObject:poi.customFields forKey:@"customFields"];
     } else {
@@ -628,7 +628,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     
     kSITQualityValues quality = [(NSString*)[jo valueForKey: @"quality"] isEqualToString: @"HIGH"] ? kSITHigh : kSITLow;
     kSITQualityValues bearingQuality = [(NSString*)[jo valueForKey: @"bearingQuality"] isEqualToString: @"HIGH"] ? kSITHigh : kSITLow;
-
+    
     float accuracy = [(NSNumber*)[jo objectForKey:@"accuracy"] floatValue];
     
     SITLocation *location = [[SITLocation alloc] initWithTimestamp:timestamp position:position bearing:bearing cartesianBearing:cartesianBearing quality:quality accuracy:accuracy provider:[jo objectForKey:@"provider"]];
@@ -641,6 +641,16 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     [jo setObject:[NSNumber numberWithDouble:coordinate.latitude] forKey:@"latitude"];
     [jo setObject:[NSNumber numberWithDouble:coordinate.longitude] forKey:@"longitude"];
     return jo.copy;
+}
+- (CLLocationCoordinate2D) jsonObjectToCoordinate:(NSDictionary *) json {
+    double latitude = [(NSNumber*)[json valueForKey:@"latitude"] doubleValue];
+    double longitude = [(NSNumber*)[json valueForKey:@"longitude"] doubleValue];
+    
+    
+    CLLocationCoordinate2D coordinate;
+    coordinate.latitude = latitude;
+    coordinate.longitude = longitude;
+    return coordinate;
 }
 
 // Coordinate
@@ -716,43 +726,72 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 }
 
 - (SITDirectionsRequest *) jsonObjectToDirectionsRequest: (NSArray *) json {
-    NSDictionary* fromLocation = (NSDictionary*)[json objectAtIndex:1];
-    NSDictionary* toPOI = (NSDictionary*)[json objectAtIndex:2];
-    NSDictionary* options = (NSDictionary*)[json objectAtIndex:3];
+    NSDictionary* buildingJO = (NSDictionary*)[json objectAtIndex:0];
+    NSDictionary* from = (NSDictionary*)[json objectAtIndex:1];
+    NSMutableDictionary* fromPoint = [from mutableCopy];
+    NSDictionary* to = (NSDictionary*)[json objectAtIndex:2];
+    NSMutableDictionary* toPoint = [to mutableCopy];
     
-    SITLocation *location = [SitumLocationWrapper.shared locationJsonObjectToLocation:fromLocation];
-    SITPoint *endPoint = [SitumLocationWrapper.shared pointJsonObjectToPoint:[toPOI objectForKey:@"position"]];
+    NSDictionary* options = nil;
+    if(json.count>3)
+        (NSDictionary*)[json objectAtIndex:3];
     
-    SITDirectionsRequest *directionsRequest = [[SITDirectionsRequest alloc] initWithLocation: location withDestination: endPoint];
+    NSDictionary* dimensionsJO = (NSDictionary*)[buildingJO objectForKey:@"dimensions"];
+    NSDictionary* centerJo = (NSDictionary*)[buildingJO objectForKey:@"center"];
     
-    NSNumber *accessible;
-    BOOL minimizeFloorChanges = false;
-    NSString *accessibilityModeValue = nil;
-    if(options) {
-        accessible = (NSNumber*)[options valueForKey: @"accessible"];
-        if (accessible == nil) {
-            accessible = (NSNumber*)[options valueForKey: @"accessibleRoute"];
-        }
-        accessibilityModeValue = options[@"accessibilityMode"];
-        minimizeFloorChanges = [(NSNumber*)[options valueForKey: @"minimizeFloorChanges"] boolValue];
-    }
+    SITDimensions *dimensions = [self jsonObjectToDimensions:dimensionsJO];
+    CLLocationCoordinate2D center = [self jsonObjectToCoordinate:centerJo];
     
-    if (accessibilityModeValue != nil) {
-        SITAccessibilityMode accessibilityMode;
-        if ([accessibilityModeValue isEqualToString:@"CHOOSE_SHORTEST"]) {
-            accessibilityMode = kSITChooseShortest;
-        } else if ([accessibilityModeValue isEqualToString:@"ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES"]) {
-            accessibilityMode = kSITOnlyNotAccessibleFloorChanges;
-        } else {
-            accessibilityMode = kSITOnlyAccessible;
-        }
-        [directionsRequest setAccessibility:accessibilityMode];
-    } else if (accessible != nil) {
-        
-        [directionsRequest setAccessible: [accessible boolValue]];
-    }
+    float rotation =[[buildingJO valueForKey:@"rotation"] floatValue];
     
-    [directionsRequest setMinimizeFloorChanges: minimizeFloorChanges];
+    SITAngle *angle = [[SITAngle alloc] initWithRadians:rotation];
+    SITCoordinateConverter *converter = [[SITCoordinateConverter alloc]initWithDimensions:dimensions center:center rotation:angle];
+    
+    NSLog(@"building properties::: dimensions:: width: %f, height: %f; rotation: %f; angle: %@", dimensions.width, dimensions.height, rotation, angle);
+    
+    CLLocationCoordinate2D fromCoordinate = [self jsonObjectToCoordinate:(NSDictionary*)[fromPoint objectForKey:@"coordinate"]];
+    [fromPoint setObject:[self cartesianCoordinateToJsonObject:[converter toCartesianCoordinate:fromCoordinate]] forKey:@"cartesianCoordinate"];
+    
+    CLLocationCoordinate2D toCoordinate = [self jsonObjectToCoordinate:(NSDictionary*)[toPoint objectForKey:@"coordinate"]];
+    [toPoint setObject:[self cartesianCoordinateToJsonObject:[converter toCartesianCoordinate:toCoordinate]] forKey:@"cartesianCoordinate"];
+    
+    
+    SITPoint *startPoint = [SitumLocationWrapper.shared pointJsonObjectToPoint:fromPoint];
+    SITPoint *endPoint = [SitumLocationWrapper.shared pointJsonObjectToPoint:toPoint];
+    
+    
+    SITDirectionsRequest *directionsRequest = [[SITDirectionsRequest alloc] initWithOrigin: startPoint withDestination: endPoint];
+    
+    
+    //
+    //    NSNumber *accessible;
+    //    BOOL minimizeFloorChanges = false;
+    //    NSString *accessibilityModeValue = nil;
+    //    if(options) {
+    //        accessible = (NSNumber*)[options valueForKey: @"accessible"];
+    //        if (accessible == nil) {
+    //            accessible = (NSNumber*)[options valueForKey: @"accessibleRoute"];
+    //        }
+    //        accessibilityModeValue = options[@"accessibilityMode"];
+    //        minimizeFloorChanges = [(NSNumber*)[options valueForKey: @"minimizeFloorChanges"] boolValue];
+    //    }
+    //
+    //    if (accessibilityModeValue != nil) {
+    //        SITAccessibilityMode accessibilityMode;
+    //        if ([accessibilityModeValue isEqualToString:@"CHOOSE_SHORTEST"]) {
+    //            accessibilityMode = kSITChooseShortest;
+    //        } else if ([accessibilityModeValue isEqualToString:@"ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES"]) {
+    //            accessibilityMode = kSITOnlyNotAccessibleFloorChanges;
+    //        } else {
+    //            accessibilityMode = kSITOnlyAccessible;
+    //        }
+    //        [directionsRequest setAccessibility:accessibilityMode];
+    //    } else if (accessible != nil) {
+    //
+    //        [directionsRequest setAccessible: [accessible boolValue]];
+    //    }
+    //
+    //    [directionsRequest setMinimizeFloorChanges: minimizeFloorChanges];
     return directionsRequest;
 }
 
@@ -764,6 +803,13 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     [jo setObject:[NSNumber numberWithDouble:dimensions.width] forKey:@"width"];
     [jo setObject:[NSNumber numberWithDouble:dimensions.height] forKey:@"height"];
     return jo.copy;
+}
+
+- (SITDimensions *) jsonObjectToDimensions:(NSDictionary *) json {
+    double width = [(NSNumber*)[json valueForKey:@"width"] doubleValue];
+    double height = [(NSNumber*)[json valueForKey:@"height"] doubleValue];
+    SITDimensions *dimension  = [[SITDimensions alloc] initWithWidth:width height:height];
+    return dimension;
 }
 
 // Bounds
@@ -788,17 +834,17 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 
 - (NSDictionary *) conversionAreaToJsonObject:(SITRectangularArea *) ca {
     NSMutableDictionary *jo  = [[NSMutableDictionary alloc] init];
-        
+    
     if (ca == nil) {
-            ca = [SITRectangularArea new];
-       }
-
+        ca = [SITRectangularArea new];
+    }
+    
     jo[@"topLeft"] = [self indoorPointToJsonObject:ca.topLeft];
     jo[@"topRight"] = [self indoorPointToJsonObject:ca.topRight];
     jo[@"bottomRight"] = [self indoorPointToJsonObject:ca.bottomRight];
     jo[@"bottomLeft"] = [self indoorPointToJsonObject:ca.bottomLeft];
     jo[@"floorIdentifier"] = ca.center.level_identifier != nil ? ca.center.level_identifier : @(0);
-        
+    
     return jo.copy;
 }
 
@@ -818,51 +864,51 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 // Route
 
 - (NSDictionary *) routeToJsonObject:(SITRoute *) route {
-  
+    
     NSMutableDictionary *jo  = [[NSMutableDictionary alloc] init];
-
+    
     NSMutableArray *stepsJsonArray = [[NSMutableArray alloc] init];
     for (SITRouteStep *routeStep in route.routeSteps) {
         [stepsJsonArray addObject:[self routeStepToJsonObject:routeStep]];
     }
-
+    
     NSMutableArray *pointsJsonArray = [[NSMutableArray alloc] init];
     for(SITPoint* point in route.points) {
-      [pointsJsonArray addObject:[self pointToJsonObject: point]];
+        [pointsJsonArray addObject:[self pointToJsonObject: point]];
     }
-
+    
     NSMutableArray *indicationsJsonArray = [[NSMutableArray alloc] init];
     for (SITIndication *indication in route.indications) {
         [indicationsJsonArray addObject:[self indicationToJsonObject:indication]];
     }
-
+    
     NSMutableArray* segmentsJsonArray = [NSMutableArray new];
     for(SITRouteSegment* segment in route.segments) {
-      [segmentsJsonArray addObject: [self routeSegmentToJsonObject: segment]];
+        [segmentsJsonArray addObject: [self routeSegmentToJsonObject: segment]];
     }
-
+    
     [jo setObject: [self pointToJsonObject:route.origin] forKey:@"from"];
     [jo setObject: [self pointToJsonObject:route.destination] forKey:@"to"];
     [jo setObject: stepsJsonArray.copy forKey:@"steps"];
     [jo setObject: pointsJsonArray.copy forKey:@"points"];
     [jo setObject: indicationsJsonArray.copy forKey:@"indications"];
     [jo setObject: segmentsJsonArray.copy forKey: @"segments"];
-
+    
     if (route.routeSteps.count == 0) return jo; // No steps on the route
-
-
+    
+    
     [jo setObject:stepsJsonArray.copy forKey:@"edges"];
     [jo setObject:stepsJsonArray.firstObject forKey:@"firstStep"];
     [jo setObject:stepsJsonArray.lastObject forKey:@"lastStep"];
     [jo setObject:pointsJsonArray forKey:@"nodes"];
-
+    
     return jo.copy;
 }
 
 // RouteSegment
 
 - (NSDictionary*) routeSegmentToJsonObject: (SITRouteSegment*) segment {
-
+    
     NSMutableDictionary* jo = [NSMutableDictionary new];
     [jo setObject: segment.floorIdentifier forKey: @"floorIdentifier"];
     NSMutableArray* pointsJO = [NSMutableArray new];
@@ -870,7 +916,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         [pointsJO addObject: [self pointToJsonObject: point]];
     }
     [jo setObject: pointsJO forKey: @"points"];
-
+    
     return [jo copy];
 }
 
@@ -939,17 +985,17 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 
 - (NSDictionary *) navigationProgressToJsonObject:(SITNavigationProgress *) navigationProgress {
     NSMutableDictionary *jo  = [[NSMutableDictionary alloc] init];
-
+    
     NSMutableArray *pointsJsonArray = [[NSMutableArray alloc] init];
     for(SITPoint* point in navigationProgress.points) {
-      [pointsJsonArray addObject:[self pointToJsonObject: point]];
+        [pointsJsonArray addObject:[self pointToJsonObject: point]];
     }
-
+    
     NSMutableArray* segmentsJsonArray = [NSMutableArray new];
     for(SITRouteSegment* segment in navigationProgress.segments) {
-      [segmentsJsonArray addObject: [self routeSegmentToJsonObject: segment]];
+        [segmentsJsonArray addObject: [self routeSegmentToJsonObject: segment]];
     }
-
+    
     [jo setObject: pointsJsonArray forKey: @"points"];
     [jo setObject: segmentsJsonArray forKey: @"segments"];
     [jo setObject:[self pointToJsonObject:navigationProgress.closestPointToRoute] forKey:@"closestPointInRoute"];
@@ -972,28 +1018,28 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 - (SITRealTimeRequest *)realtimeRequestFromJson:(NSDictionary *)jo
 {
     SITRealTimeRequest *request = [[SITRealTimeRequest alloc] init];
-
+    
     NSDictionary *buildingJO = [jo valueForKey:@"building"];
     
     
     request.buildingIdentifier = [buildingJO valueForKey:@"identifier"];
     request.updateInterval = [[jo valueForKey:@"pollTime"] integerValue];
-
+    
     return request;
 }
 
 - (NSDictionary *)jsonFromRealtimeData:(SITRealTimeData *)realtimeData
 {
     NSMutableDictionary *jo  = [[NSMutableDictionary alloc] init];
-
+    
     NSMutableArray *locations = [[NSMutableArray alloc]init];
-
+    
     for (SITLocation *location in realtimeData.locations) {
         [locations addObject:[self locationToJsonObject:location]];
     }
-
+    
     [jo setObject:locations forKey:@"locations"];
-
+    
     return jo;
 } 
 

@@ -1,7 +1,44 @@
 #import "SitumPlugin.h"
 #import "SitumLocationWrapper.h"
 
+#import <React/RCTAssert.h>
+#import <React/RCTBridge.h>
+#import <React/RCTConvert.h>
+#import <React/RCTEventDispatcher.h>
+#import <React/RCTLog.h>
 
+typedef NS_ENUM(NSInteger, RNCSitumAuthorizationLevel) {
+    RNCSitumAuthorizationLevelDefault,
+    RNCSitumAuthorizationLevelWhenInUse,
+    RNCSitumAuthorizationLevelAlways,
+};
+
+typedef struct {
+    BOOL skipPermissionRequests;
+    RNCSitumAuthorizationLevel authorizationLevel;
+} RNCSitumConfiguration;
+
+
+@implementation RCTConvert (RNCSitumAuthorizationLevel)
+RCT_ENUM_CONVERTER(RNCSitumAuthorizationLevel, (@{
+    @"whenInUse": @(RNCSitumAuthorizationLevelWhenInUse),
+    @"always": @(RNCSitumAuthorizationLevelAlways)}),
+                   RNCSitumAuthorizationLevelDefault, integerValue)
+@end
+
+@implementation RCTConvert(RNCSitumConfiguration)
+
++ (RNCSitumConfiguration)RNCSitumConfiguration:(id)json
+{
+    NSDictionary<NSString *, id> *options = [RCTConvert NSDictionary:json];
+    
+    return (RNCSitumConfiguration) {
+        .skipPermissionRequests = [RCTConvert BOOL:options[@"skipPermissionRequests"]],
+        .authorizationLevel = [RCTConvert  RNCSitumAuthorizationLevel:options[@"authorizationLevel"]]
+    };
+}
+
+@end
 
 static NSString *ResultsKey = @"results";
 
@@ -24,6 +61,18 @@ static NSString *DEFAULT_SITUM_LOG = @"SitumSDK >>: ";
 //
 //@end
 
+
+@interface RNCSitumRequest : NSObject
+
+@property (nonatomic, copy) RCTResponseSenderBlock successBlock;
+@property (nonatomic, copy) RCTResponseSenderBlock errorBlock;
+
+@end
+
+@implementation RNCSitumRequest
+
+@end
+
 @interface SitumPlugin() {}
 
 @property (nonatomic, strong) SITRoute *computedRoute;
@@ -32,13 +81,21 @@ static NSString *DEFAULT_SITUM_LOG = @"SitumSDK >>: ";
 
 @implementation SitumPlugin
 
-    BOOL _positioningUpdates;
+BOOL _positioningUpdates;
+CLLocationManager *_locationManager;
+RNCSitumConfiguration _locationConfiguration;
+RNCSitumRequest *routeRequest;
 
 RCT_EXPORT_MODULE(RNCSitumPlugin);
 
+- (dispatch_queue_t)methodQueue
+{
+    return dispatch_get_main_queue();
+}
+
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"locationChanged", @"statusChanged", @"locationError"];
+    return @[@"locationChanged", @"statusChanged", @"locationError"];
 }
 
 @synthesize computedRoute = _computedRoute;
@@ -256,23 +313,49 @@ RCT_EXPORT_METHOD(fetchMapFromFloor:(NSDictionary *)floorJO withSuccessCallback:
 
 RCT_EXPORT_METHOD(startPositioning:(NSDictionary *)request)
 {
-       SITLocationRequest *locationRequest = [SitumLocationWrapper.shared dictToLocationRequest:request];
-       
-       [[SITLocationManager sharedInstance] requestLocationUpdates:locationRequest];
-       [[SITLocationManager sharedInstance] setDelegate:self];
+    SITLocationRequest *locationRequest = [SitumLocationWrapper.shared dictToLocationRequest:request];
     
     _positioningUpdates = YES;
+    [[SITLocationManager sharedInstance] requestLocationUpdates:locationRequest];
+    [[SITLocationManager sharedInstance] setDelegate:self];
+    
+    
 }
 
-RCT_EXPORT_METHOD(stopPositioning:(NSString *)locationCallbackId)
+RCT_EXPORT_METHOD(stopPositioning:(NSString *)locationCallbackId withCallback:(RCTResponseSenderBlock)callback)
 {
-    [[SITLocationManager sharedInstance] removeUpdates];
     _positioningUpdates = NO;
+    [[SITLocationManager sharedInstance] removeUpdates];
+    
 }
 
-RCT_EXPORT_METHOD(requestDirections:(NSString *)routeCallbackId)
+RCT_EXPORT_METHOD(requestDirections: (NSArray *)requestArray withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
-    NSLog(@"requestDirections");
+    
+    if (routesStored == nil) {
+        routesStored = [[NSMutableDictionary alloc] init];
+    }
+    
+    SITDirectionsRequest* directionsRequest = [SitumLocationWrapper.shared jsonObjectToDirectionsRequest:requestArray];
+    
+    
+    if (directionsRequest == nil) {
+        errorBlock(@[@"Unable to parse request"]);
+        return;
+    }
+    if (IS_LOG_ENABLED) {
+        NSLog(@"Start point properties: %@, cartesian coordinate:: x: %f, y: %f, ", directionsRequest.origin, directionsRequest.origin.cartesianCoordinate.x, directionsRequest.origin.cartesianCoordinate.y);
+        
+        NSLog(@"End point properties: %@, cartesian coordinate:: x: %f, y: %f, ", directionsRequest.destination, directionsRequest.destination.cartesianCoordinate.x, directionsRequest.destination.cartesianCoordinate.y);
+    }
+    
+    routeRequest = [RNCSitumRequest new];
+    routeRequest.successBlock = successBlock;
+    routeRequest.errorBlock = errorBlock;
+    
+    [SITDirectionsManager sharedInstance].delegate = self;
+    [[SITDirectionsManager sharedInstance] requestDirections:directionsRequest];
+    
 }
 
 RCT_EXPORT_METHOD(fetchGeofencesFromBuilding:(NSDictionary *)buildingJO)
@@ -340,6 +423,42 @@ RCT_EXPORT_METHOD(invalidateCache)
     NSLog(@"invalidateCache");
 }
 
+RCT_EXPORT_METHOD(requestAuthorization){
+    if (!_locationManager) {
+        _locationManager = [CLLocationManager new];
+        _locationManager.delegate = self;
+    }
+    BOOL wantsAlways = NO;
+    BOOL wantsWhenInUse = NO;
+    if (_locationConfiguration.authorizationLevel == RNCSitumAuthorizationLevelDefault) {
+        if ([[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSLocationAlwaysUsageDescription"] &&
+            [_locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+            wantsAlways = YES;
+        } else if ([[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSLocationWhenInUseUsageDescription"] &&
+                   [_locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+            wantsWhenInUse = YES;
+        }
+    } else if (_locationConfiguration.authorizationLevel == RNCSitumAuthorizationLevelAlways) {
+        wantsAlways = YES;
+    } else if (_locationConfiguration.authorizationLevel == RNCSitumAuthorizationLevelWhenInUse) {
+        wantsWhenInUse = YES;
+    }
+    
+    // Request location access permission
+    if (wantsAlways) {
+        [_locationManager requestAlwaysAuthorization];
+        
+        // On iOS 9+ we also need to enable background updates
+        NSArray *backgroundModes  = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
+        if (backgroundModes && [backgroundModes containsObject:@"location"]) {
+            if ([_locationManager respondsToSelector:@selector(setAllowsBackgroundLocationUpdates:)]) {
+                [_locationManager setAllowsBackgroundLocationUpdates:YES];
+            }
+        }
+    } else if (wantsWhenInUse) {
+        [_locationManager requestWhenInUseAuthorization];
+    }
+}
 // SITLocationDelegate methods
 
 - (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
@@ -348,22 +467,58 @@ RCT_EXPORT_METHOD(invalidateCache)
         NSDictionary *locationJO = [SitumLocationWrapper.shared locationToJsonObject:location];
         
         if (_positioningUpdates) {
-          [self sendEventWithName:@"locationChanged" body:locationJO];
+            [self sendEventWithName:@"locationChanged" body:locationJO];
         }
     }
 }
 
 - (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
        didFailWithError: (NSError * _Nullable)error {
-    [self sendEventWithName:@"locationError" body:error.description];
+    
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:error.description forKey:@"message"];
+    
+    if (_positioningUpdates) {
+        [self sendEventWithName:@"locationError" body:error.description];
+    }
 }
 
 - (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
          didUpdateState:(SITLocationState)state {
-    NSDictionary *locationChanged = [SitumLocationWrapper.shared locationStateToJsonObject:state];
     
-    [self sendEventWithName:@"statusChanged" body:locationChanged.copy];
+    NSDictionary *locationChanged = [SitumLocationWrapper.shared locationStateToJsonObject:state];
+    if (_positioningUpdates) {
+        [self sendEventWithName:@"statusChanged" body:locationChanged.copy];
+    }
 }
+
+// SITDirectionsDelegate
+
+- (void)directionsManager:(id<SITDirectionsInterface>)manager
+ didFailProcessingRequest:(SITDirectionsRequest *)request
+                withError:(NSError *)error {
+    
+    self.computedRoute = nil; // if something fails then the previous computedRoute is clean
+    
+    //    if(directionRequest.errorBlock){
+    routeRequest.errorBlock(@[error.description]);
+    //    }
+}
+
+- (void)directionsManager:(id<SITDirectionsInterface>)manager
+        didProcessRequest:(SITDirectionsRequest *)request
+             withResponse:(SITRoute *)route {
+    
+    NSString * timestamp = [NSString stringWithFormat:@"%f",[[NSDate date] timeIntervalSince1970] * 1000];
+    
+    NSMutableDictionary *routeJO = [[SitumLocationWrapper.shared routeToJsonObject:route] mutableCopy];
+    [routesStored setObject:route forKey:timestamp];
+    
+    self.computedRoute = route; // We store the computed route in order to insert it into the navigation component if neccessary
+    
+    routeRequest.successBlock(@[routeJO.copy]);
+}
+
 
 
 @end
