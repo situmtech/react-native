@@ -322,7 +322,7 @@ RCT_EXPORT_METHOD(startPositioning:(NSDictionary *)request)
     
 }
 
-RCT_EXPORT_METHOD(stopPositioning:(NSString *)locationCallbackId withCallback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(stopPositioning:(RCTResponseSenderBlock)callback)
 {
     _positioningUpdates = NO;
     [[SITLocationManager sharedInstance] removeUpdates];
@@ -418,9 +418,12 @@ RCT_EXPORT_METHOD(removeRealTimeUpdates)
     NSLog(@"removeRealTimeUpdates");
 }
 
-RCT_EXPORT_METHOD(invalidateCache)
+RCT_EXPORT_METHOD(invalidateCache:(RCTResponseSenderBlock)callback)
 {
-    NSLog(@"invalidateCache");
+    NSMutableDictionary *obj = [[NSMutableDictionary alloc] init];
+    [[SITCommunicationManager sharedManager] clearCache];
+    callback(@[obj.copy]);
+    
 }
 
 RCT_EXPORT_METHOD(requestAuthorization){

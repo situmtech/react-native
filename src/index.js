@@ -191,6 +191,10 @@ const SitumPlugin = {
       error || logError,
     );
   },
+
+  invalidateCache: function (callback?: Function) {
+    RNCSitumPlugin.invalidateCache(callback);
+  },
 };
 
 module.exports = SitumPlugin;
