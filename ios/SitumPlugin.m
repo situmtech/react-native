@@ -363,9 +363,30 @@ RCT_EXPORT_METHOD(fetchGeofencesFromBuilding:(NSDictionary *)buildingJO)
     NSLog(@"fetchGeofencesFromBuilding");
 }
 
-RCT_EXPORT_METHOD(fetchPoiCategories:(NSDictionary *)buildingJO)
+RCT_EXPORT_METHOD(fetchPoiCategories:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
-    NSLog(@"fetchPoiCategories");
+    if (categoryStored == nil) {
+        categoryStored = [[NSMutableDictionary alloc] init];
+    }
+    
+    [[SITCommunicationManager sharedManager] fetchCategoriesWithOptions:nil withCompletion:^(NSArray *categories, NSError *error) {
+        if (!error) {
+            NSMutableArray *ja = [[NSMutableArray alloc] init];
+            for (SITPOICategory *obj in categories) {
+                [ja addObject:[SitumLocationWrapper.shared poiCategoryToJsonObject:obj]];
+                [categoryStored setObject:obj forKey:[NSString stringWithFormat:@"%@", obj.name]];
+            }
+            if (categories.count == 0) {
+                if(errorBlock)
+                    errorBlock(@[@"You have no categories"]);
+            } else {
+                successBlock(@[ja.copy]);
+            }
+        } else {
+            if(errorBlock)
+                errorBlock(@[error.description]);
+        }
+    }];
 }
 
 RCT_EXPORT_METHOD(fetchPoiCategoryIconNormal:(NSDictionary *)buildingJO)

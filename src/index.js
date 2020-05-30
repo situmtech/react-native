@@ -192,6 +192,15 @@ const SitumPlugin = {
     );
   },
 
+  fetchPoiCategories: function (success: Function, error?: Function) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchPoiCategories(success, error || logError);
+  },
+
   invalidateCache: function (callback?: Function) {
     RNCSitumPlugin.invalidateCache(callback);
   },
