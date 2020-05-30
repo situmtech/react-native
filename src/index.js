@@ -201,6 +201,23 @@ const SitumPlugin = {
     RNCSitumPlugin.fetchPoiCategories(success, error || logError);
   },
 
+  fetchPoiCategoryIconNormal: function (
+    category: any,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchPoiCategoryIconNormal(
+      category,
+      success,
+      error || logError,
+    );
+  },
+
   invalidateCache: function (callback?: Function) {
     RNCSitumPlugin.invalidateCache(callback);
   },

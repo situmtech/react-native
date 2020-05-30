@@ -389,9 +389,32 @@ RCT_EXPORT_METHOD(fetchPoiCategories:(RCTResponseSenderBlock)successBlock errorC
     }];
 }
 
-RCT_EXPORT_METHOD(fetchPoiCategoryIconNormal:(NSDictionary *)buildingJO)
+RCT_EXPORT_METHOD(fetchPoiCategoryIconNormal:(NSDictionary *)categoryJO withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
-    NSLog(@"fetchPoiCategoryIconNormal");
+    
+    if (categoryStored == nil) {
+        categoryStored = [[NSMutableDictionary alloc] init];
+    }
+    
+    SITPOICategory *category = [[SitumLocationWrapper shared] poiCategoryFromJsonObject:categoryJO];
+    
+    [[SITCommunicationManager sharedManager] fetchSelected:false iconForCategory:category withCompletion:^(NSData *data, NSError *error) {
+        if (!error) {
+            if (data == nil) {
+                if(errorBlock){
+                    errorBlock(@[@"Icon not found"]);
+                }
+            } else {
+                UIImage *icon = [UIImage imageWithData:data];
+                NSDictionary * dict = [[SitumLocationWrapper shared] bitmapToJsonObject:icon];
+                successBlock(@[dict]);
+            }
+        } else {
+            if(errorBlock){
+                errorBlock(@[error.description]);
+            }
+        }
+    }];
 }
 
 RCT_EXPORT_METHOD(fetchPoiCategoryIconSelected:(NSDictionary *)buildingJO)
