@@ -79,17 +79,16 @@ In this we assume you have already created an hybrid application with React Nati
 
 ### 1) Integrate project from Github
 
-After cloning the project, follow these steps to integrate and run with a react-native app.
+```shell
+yarn add https://github.com/situmtech/situm-react-native-plugin.git
 
-1. Add the plugin as a dependency in your `package.json` file.
+#OR
 
-```json
-"dependencies": {
-	"react-native-situm-plugin": "file:../situm-react-native-plugin"
-}
+npm install --save https://github.com/situmtech/situm-react-native-plugin.git
 ```
 
-2. Execute `yarn`
+Note: As of now the SDK is available only on Github. When updating the SDK, make sure to delete the existing one from `node_modules/react-native-situm-plugin`. 
+
 
 ### 2) Integrate plugin into project from npm (Pending) 
 
@@ -116,21 +115,52 @@ NOTE: This plugin is currently under development. There may be method not implem
 
 Log in into your Situm Account. This key is generated in Situm Dashboard. Return true if apiKey was set successfully, otherwise false
 
+```js
+SitumPlugin.setApiKey("SITUM_EMAIL","SITUM_API_KEY")
+```
+
 #### - setUserPass
 
 Provides user's email and password.
+```js
+SitumPlugin.setUserPass("SITUM_EMAIL","SITUM_USER_PASSWORD")
+```
 
 #### - setCacheMaxAge
 
 Sets the maximum age of a cached response in seconds.
+```js
+SitumPlugin.setCacheMaxAge(1*60*60) // 1 hour
+```
 
 #### - startPositioning
 
 Starts the positioning system.
+```js
+const locationOptions = {
+  buildingIdentifier: building.buildingIdentifier,
+};
+
+const subscriptionId = SitumPlugin.startPositioning(
+  (location: any) => {
+    console.log(JSON.stringy(location))
+  },
+  (status: any) => {
+    console.log(JSON.stringy(status))
+  },
+  (error: string) => {
+    console.log(error)
+  },
+  locationOptions
+)
+```
 
 #### - stopPositioning
 
-Stop the positioning system on current active listener.
+Stop the positioning system on current active listener. Make sure to pass `subscriptionId` received from start positioning updates for those particular listeners.
+```js
+SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
+```
 
 #### - fetchBuildings
 
@@ -223,7 +253,39 @@ Invalidate all the resources in the cache.
 #### - requestDirections
 
 Calculates a route between two points.
+```js
+const points = [
+  {
+    floorIdentifier: floor.floorIdentifier,
+    buildingIdentifier: building.buildingIdentifier,
+    coordinate: {latitude:41.37968, longitude:2.1460623},
+  },
+  {
+    floorIdentifier: floor.floorIdentifier,
+    buildingIdentifier: building.buildingIdentifier,
+    coordinate: {latitude:41.375566, longitude:2.1467063},
+  }
+];
 
+SitumPlugin.requestDirections(
+  [building, ...points],
+  (route: any) => {
+    let latlngs = [];
+    for (let segment of route.segments) {
+      for (let point of segment.points) {
+        latlngs.push({
+          latitude: point.coordinate.latitude,
+          longitude: point.coordinate.longitude,
+        });
+      }
+    }
+    setPolylineLatlng(latlngs);
+  },
+  (error: string) => {
+    console.log(error);
+  }
+);
+```
 
 #### - requestNavigationUpdates
 
