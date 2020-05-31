@@ -218,6 +218,23 @@ const SitumPlugin = {
     );
   },
 
+  fetchPoiCategoryIconSelected: function (
+    category: any,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchPoiCategoryIconSelected(
+      category,
+      success,
+      error || logError,
+    );
+  },
+
   invalidateCache: function (callback?: Function) {
     RNCSitumPlugin.invalidateCache(callback);
   },

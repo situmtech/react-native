@@ -33,11 +33,11 @@ public interface SitumPlugin {
 
     void requestDirections(ReadableArray requestArray, Callback success, Callback error);
 
-    void fetchPoiCategories(ReadableMap map);
+    void fetchPoiCategories(Callback success, Callback error);
 
-    void fetchPoiCategoryIconNormal(ReadableMap map);
+    void fetchPoiCategoryIconNormal(ReadableMap map, Callback success, Callback error);
 
-    void fetchPoiCategoryIconSelected(ReadableMap map);
+    void fetchPoiCategoryIconSelected(ReadableMap map, Callback success, Callback error);
 
     void fetchIndoorPOIsFromBuilding(ReadableMap map);
 

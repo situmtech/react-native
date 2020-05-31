@@ -32,6 +32,7 @@ import es.situm.sdk.model.cartography.Building;
 import es.situm.sdk.model.cartography.BuildingInfo;
 import es.situm.sdk.model.cartography.Floor;
 import es.situm.sdk.model.cartography.Geofence;
+import es.situm.sdk.model.cartography.PoiCategory;
 import es.situm.sdk.model.directions.Route;
 import es.situm.sdk.model.location.Location;
 import es.situm.sdk.navigation.NavigationListener;
@@ -405,6 +406,96 @@ public class PluginHelper {
         }
     }
 
+    public void fetchPoiCategories(Callback success, Callback error) {
+        getCommunicationManagerInstance().fetchPoiCategories(new Handler<Collection<PoiCategory>>() {
+            @Override
+            public void onSuccess(Collection<PoiCategory> poiCategories) {
+                try {
+                    Log.d(PluginHelper.TAG, "onSuccess: POI Categories fetched successfully.");
+                    JSONArray jsonaPoiCategories = new JSONArray();
+                    for (PoiCategory poiCategory : poiCategories) {
+                        Log.i(PluginHelper.TAG, "onSuccess: " + poiCategory.getCode() + " - " + poiCategory.getName());
+                        JSONObject jsonoPoiCategory = SitumMapper.poiCategoryToJsonObject(poiCategory);
+                        jsonaPoiCategories.put(jsonoPoiCategory);
+                    }
+                    if (poiCategories.isEmpty()) {
+                        Log.e(PluginHelper.TAG, "onSuccess: you have no categories defined for POIs");
+                    }
+                    invokeCallback(success,convertJsonToArray(jsonaPoiCategories));
+                } catch (JSONException e) {
+                    invokeCallback(error, e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Error e) {
+                Log.e(PluginHelper.TAG, "onFailure:" + e);
+                invokeCallback(error, e.getMessage());
+            }
+        });
+    }
+
+    public void fetchPoiCategoryIconNormal(ReadableMap categoryMap, Callback success, Callback error) {
+        try {
+            JSONObject jsonoCategory = convertMapToJson(categoryMap);
+            PoiCategory category = SitumMapper.poiCategoryFromJsonObject(jsonoCategory);
+            getCommunicationManagerInstance().fetchPoiCategoryIconNormal(category, new Handler<Bitmap>() {
+                @Override
+                public void onSuccess(Bitmap bitmap) {
+                    try {
+                        Log.d(PluginHelper.TAG, "onSuccess: Poi icon fetched successfully");
+                        JSONObject jsonoMap = SitumMapper.bitmapToString(bitmap);
+                        invokeCallback(success, convertJsonToMap(jsonoMap));
+                    } catch (JSONException e) {
+                        invokeCallback(error, e.getMessage());
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Error e) {
+                    Log.e(PluginHelper.TAG, "onFailure: " + e);
+                    invokeCallback(error, e.getMessage());
+
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected error in situm POI response", e.getCause());
+            invokeCallback(error, e.getMessage());
+
+        }
+    }
+
+    public void fetchPoiCategoryIconSelected(ReadableMap categoryMap, Callback success, Callback error) {
+        try {
+            JSONObject jsonoCategory = convertMapToJson(categoryMap);
+            PoiCategory category = SitumMapper.poiCategoryFromJsonObject(jsonoCategory);
+            getCommunicationManagerInstance().fetchPoiCategoryIconSelected(category, new Handler<Bitmap>() {
+                @Override
+                public void onSuccess(Bitmap bitmap) {
+                    try {
+                        Log.d(PluginHelper.TAG, "onSuccess: Poi icon fetched successfully");
+                        JSONObject jsonoMap = SitumMapper.bitmapToString(bitmap);
+                        invokeCallback(success, convertJsonToMap(jsonoMap));
+                    } catch (JSONException e) {
+                        invokeCallback(error, e.getMessage());
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Error e) {
+                    Log.e(PluginHelper.TAG, "onFailure: " + e);
+                    invokeCallback(error, e.getMessage());
+
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected error in situm POI response", e.getCause());
+            invokeCallback(error, e.getMessage());
+        }
+    }
+
 /*
     public void fetchIndoorPOIsFromBuilding(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
             final CallbackContext callbackContext) {
@@ -486,94 +577,6 @@ public class PluginHelper {
                     });
         } catch (Exception e) {
             Log.e(TAG, "Unexpected error in poi response", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-        }
-    }
-
-    public void fetchPoiCategories(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
-        getCommunicationManagerInstance().fetchPoiCategories(new Handler<Collection<PoiCategory>>() {
-            @Override
-            public void onSuccess(Collection<PoiCategory> poiCategories) {
-                try {
-                    Log.d(PluginHelper.TAG, "onSuccess: POI Categories fetched successfully.");
-                    JSONArray jsonaPoiCategories = new JSONArray();
-                    for (PoiCategory poiCategory : poiCategories) {
-                        Log.i(PluginHelper.TAG, "onSuccess: " + poiCategory.getCode() + " - " + poiCategory.getName());
-                        JSONObject jsonoPoiCategory = SitumMapper.poiCategoryToJsonObject(poiCategory);
-                        jsonaPoiCategories.put(jsonoPoiCategory);
-                    }
-                    if (poiCategories.isEmpty()) {
-                        Log.e(PluginHelper.TAG, "onSuccess: you have no categories defined for POIs");
-                    }
-                    callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonaPoiCategories));
-                } catch (JSONException e) {
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-                }
-            }
-
-            @Override
-            public void onFailure(Error error) {
-                Log.e(PluginHelper.TAG, "onFailure:" + error);
-                callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
-            }
-        });
-    }
-
-    public void fetchPoiCategoryIconNormal(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
-        try {
-            JSONObject jsonoCategory = args.getJSONObject(0);
-            PoiCategory category = SitumMapper.poiCategoryFromJsonObject(jsonoCategory);
-            getCommunicationManagerInstance().fetchPoiCategoryIconNormal(category, new Handler<Bitmap>() {
-                @Override
-                public void onSuccess(Bitmap bitmap) {
-                    try {
-                        Log.d(PluginHelper.TAG, "onSuccess: Poi icon fetched successfully");
-                        JSONObject jsonoMap = SitumMapper.bitmapToString(bitmap);
-                        callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonoMap));
-                    } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-                    }
-                }
-
-                @Override
-                public void onFailure(Error error) {
-                    Log.e(PluginHelper.TAG, "onFailure: " + error);
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
-                }
-            });
-        } catch (Exception e) {
-            Log.e(TAG, "Unexpected error in situm POI response", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-        }
-    }
-
-    public void fetchPoiCategoryIconSelected(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
-        try {
-            JSONObject jsonoCategory = args.getJSONObject(0);
-            PoiCategory category = SitumMapper.poiCategoryFromJsonObject(jsonoCategory);
-            getCommunicationManagerInstance().fetchPoiCategoryIconSelected(category, new Handler<Bitmap>() {
-                @Override
-                public void onSuccess(Bitmap bitmap) {
-                    try {
-                        Log.d(PluginHelper.TAG, "onSuccess: Poi icon fetched successfully");
-                        JSONObject jsonoMap = SitumMapper.bitmapToString(bitmap);
-                        callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonoMap));
-                    } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-                    }
-                }
-
-                @Override
-                public void onFailure(Error error) {
-                    Log.e(PluginHelper.TAG, "onFailure: " + error);
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
-                }
-            });
-        } catch (Exception e) {
-            Log.e(TAG, "Unexpected error in situm POI response", e.getCause());
             callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
         }
     }
