@@ -137,20 +137,20 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
-    public void fetchPoiCategories(ReadableMap map) {
-        Log.e(TAG, "fetchPoiCategories");
+    public void fetchPoiCategories(Callback success, Callback error) {
+        getPluginInstance().fetchPoiCategories( success, error);
     }
 
     @Override
     @ReactMethod
-    public void fetchPoiCategoryIconNormal(ReadableMap map) {
-        Log.e(TAG, "fetchPoiCategoryIconNormal");
+    public void fetchPoiCategoryIconNormal(ReadableMap map,Callback success, Callback error) {
+        getPluginInstance().fetchPoiCategoryIconNormal(map, success, error);
     }
 
     @Override
     @ReactMethod
-    public void fetchPoiCategoryIconSelected(ReadableMap map) {
-        Log.e(TAG, "fetchPoiCategoryIconSelected");
+    public void fetchPoiCategoryIconSelected(ReadableMap map,Callback success, Callback error) {
+        getPluginInstance().fetchPoiCategoryIconSelected(map, success, error);
     }
 
     @Override
