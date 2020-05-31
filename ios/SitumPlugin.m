@@ -81,7 +81,7 @@ static NSString *DEFAULT_SITUM_LOG = @"SitumSDK >>: ";
 
 @implementation SitumPlugin
 
-BOOL _positioningUpdates;
+BOOL _positioningUpdates, _navigationUpdates;
 CLLocationManager *_locationManager;
 RNCSitumConfiguration _locationConfiguration;
 RNCSitumRequest *routeRequest;
@@ -95,7 +95,7 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"locationChanged", @"statusChanged", @"locationError"];
+    return @[@"locationChanged", @"statusChanged", @"locationError", @"navigationUpdated", @"navigationError"];
 }
 
 @synthesize computedRoute = _computedRoute;
@@ -506,19 +506,97 @@ RCT_EXPORT_METHOD(fetchEventsFromBuilding:(NSDictionary *)buildingJO)
     NSLog(@"fetchEventsFromBuilding");
 }
 
-RCT_EXPORT_METHOD(requestNavigationUpdates:(NSString *)navigationProgressCallbackId)
+RCT_EXPORT_METHOD(requestNavigationUpdates:(NSDictionary *)options)
 {
-    NSLog(@"requestNavigationUpdates");
+    NSNumber* distanceToChangeFloorThreshold;
+    NSNumber* distanceToChangeIndicationThreshold;
+    NSNumber* distanceToGoalThreshold;
+    NSNumber* outsideRouteThreshold;
+    NSNumber* indicationsInterval;
+    NSNumber* timeToFirstIndication;
+    NSNumber* roundIndicationsStep;
+    NSNumber* timeToIgnoreUnexpectedFloorChanges;
+    
+    // Processing configuration parameters
+    distanceToChangeFloorThreshold = (NSNumber*)[options objectForKey:@"distanceToFloorChangeThreshold"];
+    distanceToChangeIndicationThreshold = (NSNumber*)[options objectForKey:@"distanceToChangeIndicationThreshold"];
+    distanceToGoalThreshold = (NSNumber*)[options objectForKey:@"distanceToGoalThreshold"];
+    outsideRouteThreshold = (NSNumber*)[options objectForKey:@"outsideRouteThreshold"];
+    indicationsInterval = (NSNumber*)[options objectForKey:@"indicationsInterval"];
+    timeToFirstIndication = (NSNumber*)[options objectForKey:@"timeToFirstIndication"];
+    roundIndicationsStep = (NSNumber*)[options objectForKey:@"roundIndicationsStep"];
+    timeToIgnoreUnexpectedFloorChanges = (NSNumber*)[options objectForKey:@"timeToIgnoreUnexpectedFloorChanges"];
+    
+    SITRoute *routeObj = self.computedRoute;
+    if (routeObj) {
+        SITNavigationRequest *navigationRequest = [[SITNavigationRequest alloc] initWithRoute:routeObj];
+        if (distanceToChangeIndicationThreshold != nil) {
+            NSInteger value = [distanceToChangeIndicationThreshold integerValue];
+            [navigationRequest setDistanceToChangeIndicationThreshold: value];
+            NSLog(@"%@", [NSString stringWithFormat: @"navigationRequest.distanceToChangeIndicationThreshold: %ld", navigationRequest.distanceToChangeIndicationThreshold]);
+        }
+        if (distanceToChangeFloorThreshold != nil) {
+            NSInteger value = [distanceToChangeFloorThreshold integerValue];
+            [navigationRequest setDistanceToChangeFloorThreshold: value];
+            NSLog(@"%@", [NSString stringWithFormat: @"navigationRequest.distanceToChangeFloorThreshold: %ld", navigationRequest.distanceToFloorChangeThreshold]);
+        }
+        if (distanceToGoalThreshold != nil) {
+            NSInteger value = [distanceToGoalThreshold integerValue];
+            [navigationRequest setDistanceToGoalThreshold: value];
+            NSLog(@"%@", [NSString stringWithFormat: @"navigationRequest.distanceToGoalThreshold: %ld", navigationRequest.distanceToGoalThreshold]);
+        }
+        if (outsideRouteThreshold != nil) {
+            NSInteger value = [outsideRouteThreshold integerValue];
+            [navigationRequest setOutsideRouteThreshold: value];
+            NSLog(@"%@", [NSString stringWithFormat: @"navigationRequest.outsideRouteThreshold: %ld", navigationRequest.outsideRouteThreshold]);
+        }
+        if (indicationsInterval != nil) {
+            NSInteger value = [indicationsInterval integerValue];
+            [navigationRequest setIndicationsInterval: value];
+            NSLog(@"%@", [NSString stringWithFormat: @"navigationRequest.indicationsInterval: %ld", navigationRequest.indicationsInterval]);
+        }
+        if (timeToFirstIndication != nil) {
+            NSInteger value = [timeToFirstIndication integerValue];
+            [navigationRequest setTimeToFirstIndication: value];
+            NSLog(@"%@", [NSString stringWithFormat: @"navigationRequest.timeToFirstIndication: %ld", navigationRequest.timeToFirstIndication]);
+        }
+        if (roundIndicationsStep != nil) {
+            NSInteger value = [roundIndicationsStep integerValue];
+            [navigationRequest setRoundIndicationsStep: value];
+            NSLog(@"%@", [NSString stringWithFormat: @"navigationRequest.roundIndicationsStep: %ld", navigationRequest.roundIndicationsStep]);
+        }
+        if (timeToIgnoreUnexpectedFloorChanges != nil) {
+            NSInteger value = [timeToIgnoreUnexpectedFloorChanges integerValue];
+            [navigationRequest setTimeToIgnoreUnexpectedFloorChanges: value];
+            NSLog(@"%@", [NSString stringWithFormat: @"navigationRequest.timeToIgnoreUnexpectedFloorChanges: %ld", navigationRequest.timeToIgnoreUnexpectedFloorChanges]);
+        }
+        
+        _navigationUpdates = YES;
+        [[SITNavigationManager sharedManager]  setDelegate:self]; // Configure delegation first
+        [[SITNavigationManager sharedManager] requestNavigationUpdates:navigationRequest];
+        
+        
+    }
 }
 
-RCT_EXPORT_METHOD(updateNavigationWithLocation:(NSDictionary *)lastLocation)
+RCT_EXPORT_METHOD(updateNavigationWithLocation:(NSDictionary *)location  withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
-    NSLog(@"updateNavigationWithLocation");
+    @try {
+        [[SITNavigationManager sharedManager] updateWithLocation:location];
+        
+        successBlock(@[@"Navigation updated"]);
+    }
+    @catch (NSException *exception) {
+        if(errorBlock){
+            errorBlock(@[exception.reason]);
+        }
+    }
 }
 
-RCT_EXPORT_METHOD(removeNavigationUpdates)
+RCT_EXPORT_METHOD(removeNavigationUpdates:(RCTResponseSenderBlock)callbackBlock)
 {
-    NSLog(@"removeNavigationUpdates");
+    _navigationUpdates = NO;
+    [[SITNavigationManager sharedManager] removeUpdates];
 }
 
 RCT_EXPORT_METHOD(requestRealTimeUpdates:(NSDictionary *)realtimeRequest)
@@ -635,6 +713,49 @@ RCT_EXPORT_METHOD(requestAuthorization){
     routeRequest.successBlock(@[routeJO.copy]);
 }
 
+// SITNavigationDelegate
+
+
+- (void)navigationManager:(id<SITNavigationInterface>)navigationManager
+         didFailWithError:(NSError *)error {
+    if (_navigationUpdates) {
+        [self sendEventWithName:@"navigationError" body:error.description];
+    }
+}
+
+- (void)navigationManager:(id<SITNavigationInterface>)navigationManager
+        didUpdateProgress:(SITNavigationProgress *)progress
+                  onRoute:(SITRoute *)route {
+    NSMutableDictionary *navigationJO = [NSMutableDictionary dictionaryWithDictionary:[SitumLocationWrapper.shared navigationProgressToJsonObject:progress]];
+    [navigationJO setValue:@"progress" forKey:@"type"];
+    
+    if (_navigationUpdates) {
+        [self sendEventWithName:@"navigationUpdates" body:navigationJO.copy];
+    }
+}
+
+- (void)navigationManager:(id<SITNavigationInterface>)navigationManager
+destinationReachedOnRoute:(SITRoute *)route {
+    NSMutableDictionary *navigationJO = [[NSMutableDictionary alloc] init];
+    [navigationJO setValue:@"destinationReached" forKey:@"type"];
+    [navigationJO setValue:@"Destination reached" forKey:@"message"];
+    
+    if (_navigationUpdates) {
+        [self sendEventWithName:@"navigationUpdates" body:navigationJO.copy];
+    }
+}
+
+
+- (void)navigationManager:(id<SITNavigationInterface>)navigationManager
+         userOutsideRoute:(SITRoute *)route {
+    NSMutableDictionary *navigationJO = [[NSMutableDictionary alloc] init];
+    [navigationJO setValue:@"userOutsideRoute" forKey:@"type"];
+    [navigationJO setValue:@"User outside route" forKey:@"message"];
+    
+    if (_navigationUpdates) {
+        [self sendEventWithName:@"navigationUpdates" body:navigationJO.copy];
+    }
+}
 
 
 @end
