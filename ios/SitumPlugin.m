@@ -358,9 +358,56 @@ RCT_EXPORT_METHOD(requestDirections: (NSArray *)requestArray withSuccessCallback
     
 }
 
-RCT_EXPORT_METHOD(fetchGeofencesFromBuilding:(NSDictionary *)buildingJO)
+RCT_EXPORT_METHOD(fetchGeofencesFromBuilding:(NSDictionary *)buildingJO withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
-    NSLog(@"fetchGeofencesFromBuilding");
+    NSString *operation = @"Fetching geofences request";
+    if (IS_LOG_ENABLED) {
+        NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ with parameters: %@", DEFAULT_SITUM_LOG, operation, buildingJO]);
+    }
+    
+    NSString *buildingId = [buildingJO valueForKey:@"identifier"];
+    SITBuilding *building = [[SITBuilding alloc]init];
+    building.identifier = buildingId;
+    
+    [[SITCommunicationManager sharedManager] fetchGeofencesFromBuilding:building
+                                                            withOptions:nil
+                                                         withCompletion:^(id  _Nullable array, NSError * _Nullable error) {
+        if (error) {
+            if (IS_LOG_ENABLED) {
+                NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ error : %@ retrieving geofences on building: %@", DEFAULT_SITUM_LOG, operation, error, buildingJO]);
+            }
+            if(errorBlock){
+                errorBlock(@[error.description]);
+            }
+            
+            return;
+        }
+        
+        // A success has been returned
+        if (IS_LOG_ENABLED) {
+            NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ responded", DEFAULT_SITUM_LOG, operation]);
+        }
+        
+        NSMutableArray *ja = [[NSMutableArray alloc] init];
+        if (IS_LOG_ENABLED) {
+            NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ results: %@", DEFAULT_SITUM_LOG, operation, array]);
+        }
+        for (SITGeofence *obj in array) {
+            NSDictionary *jsonObject = [SitumLocationWrapper.shared geofenceToJsonObject:obj];
+            if (IS_LOG_ENABLED) {
+                NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ parsed floor: %@", DEFAULT_SITUM_LOG, operation, jsonObject]);
+            }
+            [ja addObject:jsonObject];
+            if (IS_LOG_ENABLED) {
+                NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ json array has : %@", DEFAULT_SITUM_LOG, operation, ja]);
+            }
+        }
+        
+        if (IS_LOG_ENABLED) {
+            NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ retrieved geofences: %@ on building: %@", DEFAULT_SITUM_LOG, operation, array, buildingJO]);
+        }
+        //successBlock(@[ja.copy]);
+    }];
 }
 
 RCT_EXPORT_METHOD(fetchPoiCategories:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
