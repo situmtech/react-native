@@ -1,9 +1,9 @@
-import {PermissionsAndroid} from 'react-native';
 import {RNCSitumPlugin, SitumPluginEventEmitter} from './nativeInterface';
 import invariant from 'invariant';
 import {logError, warning} from './utils';
 
-let subscriptions = [];
+let positioningSubscriptions = [];
+let navigationSubscriptions = [];
 
 const SitumPlugin = {
   initSitumSDK: function () {
@@ -111,9 +111,9 @@ const SitumPlugin = {
     error?: Function,
     options?: LocationRequestOptions,
   ): number {
-    RNCSitumPlugin.startPositioning(options);
-    const subscriptionId = subscriptions.length;
-    subscriptions.push([
+    RNCSitumPlugin.startPositioning(options || {});
+    const subscriptionId = positioningSubscriptions.length;
+    positioningSubscriptions.push([
       SitumPluginEventEmitter.addListener('locationChanged', location),
       SitumPluginEventEmitter.addListener('statusChanged', status),
       error
@@ -132,7 +132,7 @@ const SitumPlugin = {
     success: Function,
     error?: Function,
   ) {
-    const sub = subscriptions[subscriptionId];
+    const sub = positioningSubscriptions[subscriptionId];
     if (!sub) {
       // Silently exit when the watchID is invalid or already cleared
       // This is consistent with timers
@@ -144,11 +144,11 @@ const SitumPlugin = {
     const sub2 = sub[2];
     sub2 && sub2.remove(); //locationError if exists
 
-    subscriptions[subscriptionId] = undefined;
+    positioningSubscriptions[subscriptionId] = undefined;
 
     let noSubscriptions = true;
-    for (let ii = 0; ii < subscriptions.length; ii++) {
-      if (subscriptions[ii]) {
+    for (let ii = 0; ii < positioningSubscriptions.length; ii++) {
+      if (positioningSubscriptions[ii]) {
         noSubscriptions = false; // still valid subscriptions on other screens maybe
       }
     }
@@ -159,8 +159,8 @@ const SitumPlugin = {
 
   stopPositioningUpdates: function (success: Function, error?: Function) {
     RNCSitumPlugin.stopPositioning(success, error || logError);
-    for (let ii = 0; ii < subscriptions.length; ii++) {
-      const sub = subscriptions[ii];
+    for (let ii = 0; ii < positioningSubscriptions.length; ii++) {
+      const sub = positioningSubscriptions[ii];
       if (sub) {
         warning(
           false,
@@ -172,7 +172,7 @@ const SitumPlugin = {
         sub1 && sub1.remove();
       }
     }
-    subscriptions = [];
+    positioningSubscriptions = [];
   },
 
   requestDirections: function (
@@ -233,6 +233,48 @@ const SitumPlugin = {
       success,
       error || logError,
     );
+  },
+
+  requestNavigationUpdates: function (
+    navigationUpdates: Function,
+    error?: Function,
+    options?: LocationRequestOptions,
+  ) {
+    RNCSitumPlugin.requestNavigationUpdates(options || {});
+    navigationSubscriptions.push([
+      SitumPluginEventEmitter.addListener(
+        'navigationUpdated',
+        navigationUpdates,
+      ),
+      error
+        ? SitumPluginEventEmitter.addListener(
+            'navigationError',
+            error || logError,
+          )
+        : null,
+    ]);
+  },
+
+  updateNavigationWithLocation: function (
+    location,
+    success: Function,
+    error?: Function,
+  ) {
+    if (navigationSubscriptions.length === 0) {
+      error('No active navigation!!');
+      return;
+    }
+
+    RNCSitumPlugin.updateNavigationWithLocation(
+      location,
+      success,
+      error || logError,
+    );
+  },
+
+  removeNavigationUpdates: function (callback?: Function) {
+    navigationSubscriptions = [];
+    RNCSitumPlugin.removeNavigationUpdates(callback);
   },
 
   invalidateCache: function (callback?: Function) {

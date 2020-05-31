@@ -138,18 +138,18 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void fetchPoiCategories(Callback success, Callback error) {
-        getPluginInstance().fetchPoiCategories( success, error);
+        getPluginInstance().fetchPoiCategories(success, error);
     }
 
     @Override
     @ReactMethod
-    public void fetchPoiCategoryIconNormal(ReadableMap map,Callback success, Callback error) {
+    public void fetchPoiCategoryIconNormal(ReadableMap map, Callback success, Callback error) {
         getPluginInstance().fetchPoiCategoryIconNormal(map, success, error);
     }
 
     @Override
     @ReactMethod
-    public void fetchPoiCategoryIconSelected(ReadableMap map,Callback success, Callback error) {
+    public void fetchPoiCategoryIconSelected(ReadableMap map, Callback success, Callback error) {
         getPluginInstance().fetchPoiCategoryIconSelected(map, success, error);
     }
 
@@ -173,20 +173,20 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
-    public void requestNavigationUpdates(String callbackId) {
-        Log.e(TAG, "requestNavigationUpdates");
+    public void requestNavigationUpdates(ReadableMap options) {
+        getPluginInstance().requestNavigationUpdates(options, getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class), getReactApplicationContext());
     }
 
     @Override
     @ReactMethod
-    public void updateNavigationWithLocation(ReadableMap map) {
-        Log.e(TAG, "updateNavigationWithLocation");
+    public void updateNavigationWithLocation(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().updateNavigationWithLocation(map, success, error);
     }
 
     @Override
     @ReactMethod
-    public void removeNavigationUpdates() {
-        Log.e(TAG, "removeNavigationUpdates");
+    public void removeNavigationUpdates(Callback callback) {
+        getPluginInstance().removeNavigationUpdates(callback);
     }
 
     @Override
