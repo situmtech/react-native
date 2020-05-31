@@ -274,7 +274,7 @@ const SitumPlugin = {
 
   removeNavigationUpdates: function (callback?: Function) {
     navigationSubscriptions = [];
-    RNCSitumPlugin.removeNavigationUpdates(callback);
+    RNCSitumPlugin.removeNavigationUpdates(callback || warning);
   },
 
   invalidateCache: function (callback?: Function) {
