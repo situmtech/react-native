@@ -27,13 +27,10 @@ android {
 dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    implementation('es.situm:situm-sdk:2.43.0@aar') {
+    implementation('es.situm:situm-sdk:2.46.2@aar') {
         transitive = true
     }
-
-    implementation 'com.google.android.gms:play-services-maps:16.0.0'
-    implementation 'com.google.android.gms:play-services-location:16.0.0'
-
+    
     //Tests dependencies
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-web:3.0.2'
