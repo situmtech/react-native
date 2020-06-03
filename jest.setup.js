@@ -12,6 +12,7 @@ NativeModules.RNCSitumPlugin = {
   setApiKey: jest.fn(),
   setUserPass: jest.fn(),
   setCacheMaxAge: jest.fn(),
+  requestAuthorization: jest.fn(),
 
   // Buildings
   fetchBuildings: jest.fn(),
