@@ -87,10 +87,43 @@ yarn add https://github.com/situmtech/situm-react-native-plugin.git
 npm install --save https://github.com/situmtech/situm-react-native-plugin.git
 ```
 
-Note: As of now the SDK is available only on Github. When updating the SDK, make sure to delete the existing one from `node_modules/react-native-situm-plugin`. 
+Make sure to delete `node_modulles/` at `project/node_modules/react-native-situm-plugin/node_modules`.
+
+Note: As of now the SDK is available only on Github. When updating the SDK, make sure to delete the existing one from `node_modules/react-native-situm-plugin`.
 
 
 ### 2) Integrate plugin into project from npm (Pending) 
+
+### Android
+
+Add the follow repository in your project gradle file
+
+```groovy
+allprojects {
+    repositories {
+        maven {
+            url "https://repo.situm.es/artifactory/libs-release-local"
+        }
+    }
+}
+```
+
+### iOS
+Add depedency in `PodFile`
+
+```js
+  target 'YourApp' do
+
+    pod 'ReactNativeSitumPlugin', :path => '../node_modules/react-native-situm-plugin/ReactNativeSitumPlugin.podspec'
+
+  end
+```
+
+You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/docs/linking-libraries-ios.html#step-3))
+
+```
+  $(SRCROOT)/../node_modules/react-native-navigation/lib/ios
+```
 
 ## Using the Plugin
 
@@ -142,13 +175,16 @@ const locationOptions = {
 };
 
 const subscriptionId = SitumPlugin.startPositioning(
-  (location: any) => {
+  (location) => {
+    //returns location object
     console.log(JSON.stringy(location))
   },
-  (status: any) => {
+  (status) => {
+    //returns positioning status
     console.log(JSON.stringy(status))
   },
   (error: string) => {
+    // returns an error string
     console.log(error)
   },
   locationOptions
@@ -170,12 +206,15 @@ Download all the buildings for the current user.
 const getBuildings = () => {
   SitumPlugin.fetchBuildings(
     (buildings) => {
+      // returns list of buildings
       if (!buildings || buildings.length == 0)
         alert(
           'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
         );
     },
-    (error) => {},
+    (error) => {
+      // returns an error string
+    },
   );
 };
 ```
@@ -188,8 +227,12 @@ Download the information (floors, pois, ...) of a building.
 const getBuildingInfo = () => {
   SitumPlugin.fetchBuildingInfo(
     building,
-    (buildingInfo) => {},
-    (error) => {},
+    (buildingInfo) => {
+      // returns a building info object
+    },
+    (error) => {
+      // returns an error string
+    },
   );
 };
 ```
@@ -202,8 +245,12 @@ Download all the floors of a building.
 const getFloorsFromBuilding = () => {
   SitumPlugin.fetchFloorsFromBuilding(
     building,
-    (floors) => {},
-    (error) => {},
+    (floors) => {
+      // returns list of floors
+    },
+    (error) => {
+      // returns an error string
+    },
   );
 };
 ```
@@ -232,8 +279,12 @@ Download the map image of a floor.
 const getMapFromFloor = (floor) => {
   SitumPlugin.fetchMapFromFloor(
     floor,
-    (map) => {},
-    (error) => {},
+    (map) => {
+      // map image in Base64 format
+    },
+    (error) => {
+      // returns error string
+    },
   );
 };
 ```
@@ -270,6 +321,7 @@ const points = [
 SitumPlugin.requestDirections(
   [building, ...points],
   (route: any) => {
+    // returns route object
     let latlngs = [];
     for (let segment of route.segments) {
       for (let point of segment.points) {
@@ -282,6 +334,7 @@ SitumPlugin.requestDirections(
     setPolylineLatlng(latlngs);
   },
   (error: string) => {
+    // returns error string
     console.log(error);
   }
 );
