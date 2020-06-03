@@ -1,9 +1,37 @@
 package com.situm.plugin;
 
+import android.graphics.Bitmap;
+import android.util.Log;
+
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.situm.plugin.utils.ReactNativeJson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
 import es.situm.sdk.SitumSdk;
 import es.situm.sdk.communication.CommunicationManager;
+import es.situm.sdk.directions.DirectionsRequest;
+import es.situm.sdk.error.Error;
 import es.situm.sdk.location.LocationListener;
 import es.situm.sdk.location.LocationRequest;
+import es.situm.sdk.location.LocationStatus;
+import es.situm.sdk.model.cartography.Building;
+import es.situm.sdk.model.cartography.BuildingInfo;
+import es.situm.sdk.model.cartography.Floor;
+import es.situm.sdk.model.cartography.Geofence;
 import es.situm.sdk.model.directions.Route;
 import es.situm.sdk.model.location.Location;
 import es.situm.sdk.navigation.NavigationListener;
@@ -11,6 +39,14 @@ import es.situm.sdk.navigation.NavigationManager;
 import es.situm.sdk.navigation.NavigationRequest;
 import es.situm.sdk.realtime.RealTimeListener;
 import es.situm.sdk.realtime.RealTimeManager;
+import es.situm.sdk.utils.Handler;
+
+import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_CHANGED;
+import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_ERROR;
+import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_STATUS_CHANGED;
+import static com.situm.plugin.utils.ReactNativeJson.convertJsonToArray;
+import static com.situm.plugin.utils.ReactNativeJson.convertJsonToMap;
+import static com.situm.plugin.utils.ReactNativeJson.convertMapToJson;
 
 public class PluginHelper {
 
@@ -29,6 +65,7 @@ public class PluginHelper {
 
     private Route computedRoute;
     private Location computedLocation;
+
 
     private CommunicationManager getCommunicationManagerInstance() {
         if (cmInstance == null) { //Check for the first time
@@ -67,158 +104,308 @@ public class PluginHelper {
     public void setNavigationManager(NavigationManager navigationManager) {
         nmInstance = navigationManager;
     }
-/*
-    public void fetchBuildings(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
+
+    public void fetchBuildings(Callback success, Callback error) {
         try {
-           getCommunicationManagerInstance().fetchBuildings(new Handler<Collection<Building>>() {
+            getCommunicationManagerInstance().fetchBuildings(new Handler<Collection<Building>>() {
                 public void onSuccess(Collection<Building> buildings) {
                     try {
                         Log.d(PluginHelper.TAG, "onSuccess: Buildings fetched successfully.");
-                        JSONArray jsonaBuildings = new JSONArray();
+                        JSONArray jsonArrayBuildings = new JSONArray();
 
                         for (Building building : buildings) {
                             Log.i(PluginHelper.TAG,
                                     "onSuccess: " + building.getIdentifier() + " - " + building.getName());
-                            JSONObject jsonoBuilding = SitumMapper.buildingToJsonObject(building);
-                            jsonaBuildings.put(jsonoBuilding);
+                            JSONObject jsonBuilding = SitumMapper.buildingToJsonObject(building);
+                            jsonArrayBuildings.put(jsonBuilding);
                         }
+
                         if (buildings.isEmpty()) {
                             Log.e(PluginHelper.TAG, "onSuccess: you have no buildings. Create one in the Dashboard");
                         }
-                        callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonaBuildings));
+
+                        invokeCallback(success, convertJsonToArray(jsonArrayBuildings));
                     } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+                        invokeCallback(error, e.getMessage());
                     }
                 }
 
-                public void onFailure(Error error) {
-                    Log.e(PluginHelper.TAG, "onFailure:" + error);
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
+                @Override
+                public void onFailure(Error e) {
+                    Log.e(PluginHelper.TAG, "onFailure:" + e);
+                    invokeCallback(error, e.getMessage());
                 }
             });
         } catch (Exception e) {
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+            invokeCallback(error, e.getMessage());
         }
     }
 
     // building, floors, events, indoorPois, outdoorPois, ¿geofences? ¿Paths?
-    public void fetchBuildingInfo(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) 
-    {
+    public void fetchBuildingInfo(ReadableMap buildingMap, Callback success, Callback error) {
         try {
-            JSONObject jsonoBuilding = args.getJSONObject(0);
-            Building building = SitumMapper.buildingJsonObjectToBuilding(jsonoBuilding);
+            JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
+            Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
 
             getCommunicationManagerInstance().fetchBuildingInfo(building, new Handler<BuildingInfo>() {
                 @Override
                 public void onSuccess(BuildingInfo object) {
                     try {
                         Log.d(PluginHelper.TAG, "onSuccess: building info fetched successfully.");
-                        
-                        
+
+
                         JSONObject jsonObject = SitumMapper.buildingInfoToJsonObject(object); // Include geofences to parse ? This needs to be on sdk
 
-                        callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonObject));
+                        invokeCallback(success, ReactNativeJson.convertJsonToMap(jsonObject));
                     } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+                        invokeCallback(error, e.getMessage());
                     }
                 }
 
                 @Override
-                public void onFailure(Error error) {
-                    Log.e(PluginHelper.TAG, "onFailure:" + error);
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
+                public void onFailure(Error e) {
+                    Log.e(PluginHelper.TAG, "onFailure:" + e);
+                    invokeCallback(error, e.getMessage());
                 }
             });
 
         } catch (Exception e) {
             Log.e(TAG, "Unexpected error in building info response", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+            invokeCallback(error, e.getMessage());
         }
     }
 
-    public void fetchGeofencesFromBuilding(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) 
-    {
+
+    public void fetchFloorsFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
         try {
-            JSONObject jsonoBuilding = args.getJSONObject(0);
-            Building building = SitumMapper.buildingJsonObjectToBuilding(jsonoBuilding);
+            JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
+            Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
+
+            getCommunicationManagerInstance().fetchFloorsFromBuilding(building, new Handler<Collection<Floor>>() {
+                @Override
+                public void onSuccess(Collection<Floor> floors) {
+                    try {
+                        Log.d(PluginHelper.TAG, "onSuccess: Floors fetched successfully.");
+                        JSONArray jsonArrayFloors = new JSONArray();
+
+                        for (Floor floor : floors) {
+                            Log.i(PluginHelper.TAG, "onSuccess: " + floor.getIdentifier());
+                            JSONObject jsonFloor = SitumMapper.floorToJsonObject(floor);
+                            jsonArrayFloors.put(jsonFloor);
+                        }
+                        if (floors.isEmpty()) {
+                            Log.e(PluginHelper.TAG, "onSuccess: you have no floors defined for this building");
+                        }
+                        invokeCallback(success, convertJsonToArray(jsonArrayFloors));
+                    } catch (JSONException e) {
+                        invokeCallback(error, e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(Error e) {
+                    Log.e(PluginHelper.TAG, "onFailure:" + e);
+                    invokeCallback(error, e.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected error in floor response", e.getCause());
+            invokeCallback(error, e.getMessage());
+        }
+    }
+
+    public void fetchMapFromFloor(ReadableMap buildingMap, Callback success, Callback error) {
+        try {
+            JSONObject jsonFloor = ReactNativeJson.convertMapToJson(buildingMap);
+            Floor floor = SitumMapper.floorJsonObjectToFloor(jsonFloor);
+
+            getCommunicationManagerInstance().fetchMapFromFloor(floor, new Handler<Bitmap>() {
+                @Override
+                public void onSuccess(Bitmap bitmap) {
+                    try {
+                        Log.d(PluginHelper.TAG, "onSuccess: Map fetched successfully");
+                        invokeCallback(success, SitumMapper.bitmapToString(bitmap).getString("data"));
+                    } catch (JSONException e) {
+                        invokeCallback(error, e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(Error e) {
+                    Log.e(PluginHelper.TAG, "onFailure: " + error);
+                    invokeCallback(error, e.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected error in map download", e.getCause());
+            invokeCallback(error, e.getMessage());
+        }
+    }
+
+    public void fetchGeofencesFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
+        try {
+            JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
+            Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
 
             getCommunicationManagerInstance().fetchGeofencesFromBuilding(building, new Handler<List<Geofence>>() {
                 @Override
                 public void onSuccess(List<Geofence> geofences) {
                     try {
                         Log.d(PluginHelper.TAG, "onSuccess: Geofences fetched successfully.");
-                        JSONArray jsonaGeofences = new JSONArray();
+                        JSONArray jsonArrayGeofences = new JSONArray();
 
                         for (Geofence geofence : geofences) {
                             Log.i(PluginHelper.TAG, "onSuccess: " + geofence.getIdentifier());
                             JSONObject jsonoGeofence = SitumMapper.geofenceToJsonObject(geofence);
-                            jsonaGeofences.put(jsonoGeofence);
+                            jsonArrayGeofences.put(jsonoGeofence);
                         }
                         if (geofences.isEmpty()) {
                             Log.e(PluginHelper.TAG, "onSuccess: you have no geofences defined for this building");
                         }
-                        callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonaGeofences));
+                        invokeCallback(success, convertJsonToArray(jsonArrayGeofences));
                     } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+                        invokeCallback(error, e.getMessage());
                     }
                 }
 
                 @Override
-                public void onFailure(Error error) {
-                    Log.e(PluginHelper.TAG, "onFailure:" + error);
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
+                public void onFailure(Error e) {
+                    Log.e(PluginHelper.TAG, "onFailure:" + e);
+                    invokeCallback(error, e.getMessage());
                 }
             });
 
         } catch (Exception e) {
             Log.e(TAG, "Unexpected error in building info response", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+            invokeCallback(error, e.getMessage());
         }
     }
 
-    public void fetchFloorsFromBuilding(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
-        try {
-            JSONObject jsonoBuilding = args.getJSONObject(0);
-            Building building = SitumMapper.buildingJsonObjectToBuilding(jsonoBuilding);
-            getCommunicationManagerInstance().fetchFloorsFromBuilding(building, new Handler<Collection<Floor>>() {
-                @Override
-                public void onSuccess(Collection<Floor> floors) {
-                    try {
-                        Log.d(PluginHelper.TAG, "onSuccess: Floors fetched successfully.");
-                        
-                        // TODO 19/11/19:     jo.put(FLOORS, arrayFromFloors(buildingInfo.getFloors()));
-                        JSONArray jsonaFloors = new JSONArray();
 
-                        for (Floor floor : floors) {
-                            Log.i(PluginHelper.TAG, "onSuccess: " + floor.getIdentifier());
-                            JSONObject jsonoFloor = SitumMapper.floorToJsonObject(floor);
-                            jsonaFloors.put(jsonoFloor);
-                        }
-                        if (floors.isEmpty()) {
-                            Log.e(PluginHelper.TAG, "onSuccess: you have no floors defined for this building");
-                        }
-                        callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonaFloors));
+    public void startPositioning(final ReadableMap locationRequestMap, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
+        try {
+            JSONObject jsonRequst = ReactNativeJson.convertMapToJson(locationRequestMap);
+            LocationRequest.Builder locationBuilder = new LocationRequest.Builder();
+            SitumMapper.locationRequestJSONObjectToLocationRequest(jsonRequst, locationBuilder);
+            LocationRequest locationRequest = locationBuilder.build();
+
+
+            locationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    try {
+                        PluginHelper.this.computedLocation = location; // This is for testing purposes
+                        Log.i(PluginHelper.TAG, "onLocationChanged() called with: location = [" + location + "]");
+                        JSONObject jsonObject = SitumMapper.locationToJsonObject(location);
+
+                        eventEmitter.emit(EVENT_LOCATION_CHANGED, convertJsonToMap(jsonObject));
+
                     } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+                        eventEmitter.emit(EVENT_LOCATION_ERROR, e.getMessage());
+                    }
+                }
+
+                public void onStatusChanged(@NonNull LocationStatus status) {
+                    try {
+                        Log.i(PluginHelper.TAG, "onStatusChanged() called with: status = [" + status + "]");
+                        JSONObject jsonObject = SitumMapper.locationStatusToJsonObject(status);
+                        eventEmitter.emit(EVENT_LOCATION_STATUS_CHANGED, convertJsonToMap(jsonObject));
+                    } catch (JSONException e) {
+                        eventEmitter.emit(EVENT_LOCATION_ERROR, e.getMessage());
+                    }
+                }
+
+                public void onError(@NonNull Error error) {
+                    Log.e(PluginHelper.TAG, "onError() called with: error = [" + error + "]");
+                    locationListener = null;
+                    eventEmitter.emit(EVENT_LOCATION_ERROR, error.getMessage());
+                    /*switch (error.getCode()) {
+                        case 8001:
+                            requestLocationPermission(cordova);
+                            return;
+                        case 8002:
+                            showLocationSettings(cordova);
+                            return;
+                        default:
+                            return;
+                    }*/
+                }
+            };
+            try {
+                SitumSdk.locationManager().requestLocationUpdates(locationRequest, locationListener);
+            } catch (Exception e) {
+                Log.e(PluginHelper.TAG, "onError() called with: error = [" + e + "]");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected error building response", e.getCause());
+            eventEmitter.emit(EVENT_LOCATION_ERROR, e.getMessage());
+        }
+    }
+
+    public void stopPositioning(Callback success, Callback error) {
+
+        if (locationListener != null) {
+            try {
+                SitumSdk.locationManager().removeUpdates(locationListener);
+                locationListener = null;
+
+                WritableMap map = Arguments.createMap();
+                map.putBoolean("success", true);
+                map.putString("message", "Stopped Successfully");
+                invokeCallback(success, map);
+
+            } catch (Exception e) {
+                invokeCallback(error, e.getMessage());
+            }
+        } else {
+            Log.i(TAG, "stopPositioning: location listener is not started.");
+
+            WritableMap map = Arguments.createMap();
+            map.putBoolean("success", true);
+            map.putString("message", "Already disabled");
+
+            invokeCallback(success, map);
+
+        }
+    }
+
+    public void requestDirections(ReadableArray requestArray, Callback success, Callback error, ReactApplicationContext context) {
+        try {
+            JSONObject jsonBuilding = convertMapToJson(Objects.requireNonNull(requestArray.getMap(0)));
+            JSONObject jsonFrom = convertMapToJson(Objects.requireNonNull(requestArray.getMap(1)));
+            JSONObject jsonTo = convertMapToJson(Objects.requireNonNull(requestArray.getMap(2)));
+            JSONObject jsonOptions = null;
+            if (requestArray.size() >= 4) {
+                jsonOptions = convertMapToJson(Objects.requireNonNull(requestArray.getMap(3)));
+            }
+
+            DirectionsRequest directionRequest = SitumMapper.jsonObjectToDirectionsRequest(jsonBuilding, jsonFrom, jsonTo, null);
+
+            SitumSdk.directionsManager().requestDirections(directionRequest, new Handler<Route>() {
+                @Override
+                public void onSuccess(Route route) {
+                    try {
+                        PluginHelper.this.computedRoute = route;
+                        JSONObject jsonRoute = SitumMapper.routeToJsonObject(route, context);
+                        Log.i(TAG, "onSuccess: Route calculated successfully" + route);
+                        invokeCallback(success, convertJsonToMap(jsonRoute));
+                    } catch (JSONException e) {
+                        invokeCallback(error, e.getMessage());
                     }
                 }
 
                 @Override
-                public void onFailure(Error error) {
-                    Log.e(PluginHelper.TAG, "onFailure:" + error);
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
+                public void onFailure(Error e) {
+                    Log.e(TAG, "onError:" + e.getMessage());
+                    invokeCallback(error, e.getMessage());
                 }
             });
         } catch (Exception e) {
-            Log.e(TAG, "Unexpected error in floor response", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+            e.printStackTrace();
+            invokeCallback(error, e.getMessage());
         }
     }
 
+/*
     public void fetchIndoorPOIsFromBuilding(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
             final CallbackContext callbackContext) {
         try {
@@ -235,7 +422,7 @@ public class PluginHelper {
                                 for (Poi poi : pois) {
                                     Log.i(PluginHelper.TAG,
                                             "onSuccess: " + poi.getIdentifier() + " - " + poi.getName() + "-" + poi.getCustomFields());
-                                    
+
                                     Log.d(PluginHelper.TAG, "Some log that should appear");
                                     JSONObject jsonoPoi = SitumMapper.poiToJsonObject(poi);
                                     jsonaPois.put(jsonoPoi);
@@ -430,114 +617,6 @@ public class PluginHelper {
         }
     }
 
-    public void fetchMapFromFloor(CordovaInterface cordova, CordovaWebView webView, final JSONArray args,
-            final CallbackContext callbackContext) {
-        try {
-            JSONObject jsonoFloor = args.getJSONObject(0);
-            Floor floor = SitumMapper.floorJsonObjectToFloor(jsonoFloor);
-            getCommunicationManagerInstance().fetchMapFromFloor(floor, new Handler<Bitmap>() {
-                @Override
-                public void onSuccess(Bitmap bitmap) {
-                    try {
-                        Log.d(PluginHelper.TAG, "onSuccess: Map fetched successfully");
-                        JSONObject jsonoMap = SitumMapper.bitmapToString(bitmap);
-                        callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonoMap));
-                    } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-                    }
-                }
-
-                @Override
-                public void onFailure(Error error) {
-                    Log.e(PluginHelper.TAG, "onFailure: " + error);
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
-                }
-            });
-        } catch (Exception e) {
-            Log.e(TAG, "Unexpected error in map download", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-        }
-    }
-
-    public void startPositioning(final CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
-        try {
-            JSONObject jsonoBuilding = args.getJSONObject(0);
-            String sBuildingName = jsonoBuilding.getString(SitumMapper.BUILDING_NAME);
-            LocationRequest locationRequest = SitumMapper.locationRequestJSONObjectToLocationRequest(args);
-
-            Log.i(TAG, "startPositioning: starting positioning in " + sBuildingName);
-            locationListener = new LocationListener() {
-                public void onLocationChanged(Location location) {
-                    try {
-                        PluginHelper.this.computedLocation = location; // This is for testing purposes
-                        Log.i(PluginHelper.TAG, "onLocationChanged() called with: location = [" + location + "]");
-                        JSONObject jsonObject = SitumMapper.locationToJsonObject(location);
-                        PluginResult result = new PluginResult(Status.OK, jsonObject);
-                        result.setKeepCallback(true);
-                        callbackContext.sendPluginResult(result);
-                    } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-                    }
-                }
-
-                public void onStatusChanged(@NonNull LocationStatus status) {
-                    try {
-                        Log.i(PluginHelper.TAG, "onStatusChanged() called with: status = [" + status + "]");
-                        JSONObject jsonObject = SitumMapper.locationStatusToJsonObject(status);
-                        PluginResult result = new PluginResult(Status.OK, jsonObject);
-                        result.setKeepCallback(true);
-                        callbackContext.sendPluginResult(result);
-                    } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-                    }
-                }
-
-                public void onError(@NonNull Error error) {
-                    Log.e(PluginHelper.TAG, "onError() called with: error = [" + error + "]");
-                    locationListener = null;
-                    PluginResult result = new PluginResult(Status.ERROR, error.getMessage());
-                    result.setKeepCallback(true);
-                    callbackContext.sendPluginResult(result);
-                    switch (error.getCode()) {
-                    case 8001:
-                        requestLocationPermission(cordova);
-                        return;
-                    case 8002:
-                        showLocationSettings(cordova);
-                        return;
-                    default:
-                        return;
-                    }
-                }
-            };
-            try {
-                SitumSdk.locationManager().requestLocationUpdates(locationRequest, locationListener);
-            } catch (Exception e) {
-                Log.e(PluginHelper.TAG, "onError() called with: error = [" + e + "]");
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Unexpected error building response", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-        }
-    }
-
-    public void stopPositioning(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            CallbackContext callbackContext) {
-        if (locationListener != null) {
-            try {
-                SitumSdk.locationManager().removeUpdates(locationListener);
-                locationListener = null;
-                callbackContext.sendPluginResult(new PluginResult(Status.OK, "Success"));
-            } catch (Exception e) {
-                callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-            }
-        } else {
-            Log.i(TAG, "stopPositioning: location listener is not started.");
-            callbackContext.sendPluginResult(new PluginResult(Status.OK, "Allready disabled"));
-        }
-    }
-
     private void showLocationSettings(CordovaInterface cordova) {
         Toast.makeText(cordova.getActivity(), "You must enable location", Toast.LENGTH_LONG).show();
         cordova.getActivity().startActivityForResult(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"), 0);
@@ -560,7 +639,7 @@ public class PluginHelper {
     }
 
     public void requestNavigationUpdates(final CordovaInterface cordova,
-     CordovaWebView webView, 
+     CordovaWebView webView,
      JSONArray args,
      final CallbackContext callbackContext) {
             // 1) Parse and check arguments
@@ -650,8 +729,8 @@ public class PluginHelper {
                         }
                         PluginResult result = new PluginResult(Status.OK, jsonProgress ); // TODO: Change this to return an object with valid information
                         result.setKeepCallback(true);
-                        callbackContext.sendPluginResult(result);        
-    
+                        callbackContext.sendPluginResult(result);
+
                     } catch (Exception e) {
                         //TODO: handle exception
                         Log.d(TAG, "On Error parsing progress: " + progress);
@@ -672,7 +751,7 @@ public class PluginHelper {
                     }
                     PluginResult result = new PluginResult(Status.OK,jsonResult);
                     result.setKeepCallback(true);
-                    callbackContext.sendPluginResult(result);        
+                    callbackContext.sendPluginResult(result);
                 };
 
                 public void onUserOutsideRoute() {
@@ -686,10 +765,10 @@ public class PluginHelper {
                     }
                     PluginResult result = new PluginResult(Status.OK,jsonResult);
                     result.setKeepCallback(true);
-                    callbackContext.sendPluginResult(result);        
+                    callbackContext.sendPluginResult(result);
                 }
             };
-            
+
             // 3)  Connect interfaces and connect callback back to js
             getNavigationManagerInstance().requestNavigationUpdates(navigationRequest, navigationListener); // Be carefull with exceptions
 
@@ -700,9 +779,9 @@ public class PluginHelper {
     }
 
     public void requestRealTimeUpdates(final CordovaInterface cordova,
-     CordovaWebView webView, 
+     CordovaWebView webView,
      JSONArray args,
-     final CallbackContext callbackContext) { 
+     final CallbackContext callbackContext) {
         try {
             // Convert request to native
             JSONObject jsonRequest = args.getJSONObject(0);
@@ -711,7 +790,7 @@ public class PluginHelper {
             // Call
 
             realtimeListener = new RealTimeListener() {
-                
+
                 @Override
                 public void onUserLocations(RealTimeData realTimeData) {
                     Log.d(TAG, "Success retrieving realtime data" + realTimeData);
@@ -723,12 +802,12 @@ public class PluginHelper {
                         // Send it back to (removing user information)
                         PluginResult result = new PluginResult(Status.OK,jsonResult);
                         result.setKeepCallback(true);
-                        callbackContext.sendPluginResult(result);        
+                        callbackContext.sendPluginResult(result);
                     } catch (Exception e) {
                         Log.d(TAG, "Error  exception realtime data" + e);
                     }
-                    
-                    
+
+
                 }
 
                 @Override
@@ -754,18 +833,18 @@ public class PluginHelper {
      }
 
      public void removeRealTimeUpdates(CordovaInterface cordova,
-    CordovaWebView webView, 
+    CordovaWebView webView,
     JSONArray args,
     final CallbackContext callbackContext) {
-        // 
+        //
         Log.i(TAG, "Remove realtime updates");
         getRealtimeManagerInstance().removeRealTimeUpdates(); // TODO: Incorporate sending a result to the exterior
     }
 
-    // Initialize Navigation Component 
+    // Initialize Navigation Component
 
     public void updateNavigationWithLocation(CordovaInterface cordova,
-    CordovaWebView webView, 
+    CordovaWebView webView,
     JSONArray args,
     final CallbackContext callbackContext) {
         try {
@@ -778,7 +857,7 @@ public class PluginHelper {
             Log.i(TAG, "UpdateNavigation with Location: " + actualLocation);
 
             // 3) Connect interfaces
-            getNavigationManagerInstance().updateWithLocation(actualLocation); 
+            getNavigationManagerInstance().updateWithLocation(actualLocation);
             callbackContext.sendPluginResult(new PluginResult(Status.OK, "Navigation updated"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -787,48 +866,21 @@ public class PluginHelper {
     }
 
     public void removeNavigationUpdates(CordovaInterface cordova,
-    CordovaWebView webView, 
+    CordovaWebView webView,
     JSONArray args,
     final CallbackContext callbackContext) {
-        // 
+        //
         Log.i(TAG, "Remove navigation updates");
         getNavigationManagerInstance().removeUpdates(); // TODO: Incorporate sending a result to the exterior
     }
 
-    public void requestDirections(final CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
-        try {
-            JSONObject jsonoBuilding = args.getJSONObject(0);
-            JSONObject jsonoFrom = args.getJSONObject(1);
-            JSONObject jsonoTo = args.getJSONObject(2);
-            JSONObject jsonoOptions = null;
-            if (args.length() >= 4) {
-                jsonoOptions = args.getJSONObject(3);
-            }
-            DirectionsRequest directionRequest =
-                    SitumMapper.jsonObjectToDirectionsRequest(jsonoBuilding, jsonoFrom, jsonoTo, jsonoOptions);
-            SitumSdk.directionsManager().requestDirections(directionRequest, new Handler<Route>() {
-                @Override
-                public void onSuccess(Route route) {
-                    try {
-                        PluginHelper.this.computedRoute = route;
-                        JSONObject jsonoRoute = SitumMapper.routeToJsonObject(route, cordova.getActivity());
-                        Log.i(TAG, "onSuccess: Route calculated successfully" + route);
-                        callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonoRoute));
-                    } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-                    }
-                }
+    */
 
-                @Override
-                public void onFailure(Error error) {
-                    Log.e(TAG, "onError:" + error.getMessage());
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+
+    private void invokeCallback(Callback callback, Object args) {
+        if (callback != null) {
+            callback.invoke(args);
         }
-    }*/
+    }
+
 }

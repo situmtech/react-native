@@ -2,46 +2,41 @@
   "name": "react-native-situm-plugin",
   "version": "0.0.1",
   "private": false,
-  "dependencies": {
-    "react": "16.11.0",
-    "react-native": "0.62.2"
+  "react-native": "src/index.js",
+  "main": "/src/index.js",
+  "peerDependencies":{
+    "react": "*",
+    "react-native": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/runtime": "^7.6.2",
+    "babel-core": "^7.0.0-bridge.0",
     "@react-native-community/eslint-config": "^1.0.0",
-    "@types/jest": "^24.0.24",
-    "@types/react-native": "^0.62.0",
-    "@types/react-test-renderer": "16.9.2",
-    "@typescript-eslint/eslint-plugin": "^2.27.0",
-    "@typescript-eslint/parser": "^2.27.0",
     "babel-jest": "^24.9.0",
+    "babel-plugin-module-resolver": "^3.2.0",
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
-    "metro-react-native-babel-preset": "^0.58.0",
+    "metro-react-native-babel-preset": "^0.56.0",
     "prettier": "^2.0.4",
-    "react-native-dotenv": "^0.2.0",
     "react-test-renderer": "16.11.0",
-    "typescript": "^3.8.3"
+    "react": "16.8.3",
+    "react-native": "0.59.10"
   },
+  "dependencies":{},
   "jest": {
     "preset": "react-native",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
     ]
   },
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "test": "jest",
+    "test": "yarn validate:eslint && yarn test:jest",
+    "test:jest": "jest /src --no-watchman",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "build:bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/",
-    "build:bundleDebug": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ "
+    "validate:eslint": "eslint 'src/**/*.js'"
   }
 }

@@ -1,22 +1,38 @@
 package com.situm.plugin;
 
+import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 
 public interface SitumPlugin {
-    void setApiKey(String email, String apiKey);
+    String EVENT_LOCATION_CHANGED = "locationChanged";
+    String EVENT_LOCATION_ERROR = "locationError";
+    String EVENT_LOCATION_STATUS_CHANGED = "statusChanged";
 
-    void setUserPass(String email, String password);
+    void initSitumSDK();
 
-    void setCacheMaxAge(int cacheAge);
+    void setApiKey(String email, String apiKey, Callback callback);
 
-    void fetchBuildings();
+    void setUserPass(String email, String password, Callback callback);
 
-    void fetchBuildingInfo(ReadableMap map);
+    void setCacheMaxAge(int cacheAge, Callback callback);
 
-    void fetchGeofencesFromBuilding(ReadableMap map);
+    void fetchBuildings(Callback success, Callback error);
 
-    void fetchFloorsFromBuilding(ReadableMap map);
-    
+    void fetchBuildingInfo(ReadableMap map, Callback success, Callback error);
+
+    void fetchFloorsFromBuilding(ReadableMap map, Callback success, Callback error);
+
+    void fetchMapFromFloor(ReadableMap map, Callback success, Callback error);
+
+    void fetchGeofencesFromBuilding(ReadableMap map, Callback success, Callback error);
+
+    void startPositioning(ReadableMap map);
+
+    void stopPositioning(Callback success, Callback error);
+
+    void requestDirections(ReadableArray requestArray, Callback success, Callback error);
+
     void fetchPoiCategories(ReadableMap map);
 
     void fetchPoiCategoryIconNormal(ReadableMap map);
@@ -29,14 +45,6 @@ public interface SitumPlugin {
 
     void fetchEventsFromBuilding(ReadableMap map);
 
-    void fetchMapFromFloor(ReadableMap map);
-
-    void startPositioning(String callbackId);
-
-    void stopPositioning(String callbackId);
-
-    void requestDirections(String callbackId);
-
     void requestNavigationUpdates(String callbackId);
 
     void updateNavigationWithLocation(ReadableMap map);
@@ -48,5 +56,7 @@ public interface SitumPlugin {
     void removeRealTimeUpdates();
 
     void invalidateCache();
+
+    void requestAuthorization();
 
 }

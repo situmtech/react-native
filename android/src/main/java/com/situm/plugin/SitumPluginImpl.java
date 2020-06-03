@@ -1,20 +1,29 @@
-/**
- *
- */
 package com.situm.plugin;
 
+import android.Manifest;
+import android.os.Build;
 import android.util.Log;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.PromiseImpl;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.permissions.PermissionsModule;
+
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
+import es.situm.sdk.SitumSdk;
 
 public class SitumPluginImpl extends ReactContextBaseJavaModule implements SitumPlugin {
     private static final String TAG = "SitumPlugin";
-    private static final String PLUGIN_NAME = "SitumPlugin";
+    private static final String PLUGIN_NAME = "RNCSitumPlugin";
     private static ReactApplicationContext reactContext;
     private static volatile PluginHelper pluginInstance;
 
@@ -33,209 +42,216 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         return pluginInstance;
     }
 
-
-//    public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
-//        Log.d(TAG, "execute: " + action);
-//        if (action.equalsIgnoreCase("setApiKey")) {
-//            String email = args.getString(0);
-//            String apiKey = args.getString(1);
-//            es.situm.sdk.SitumSdk.configuration().setApiKey(email, apiKey);
-//        } else if (action.equalsIgnoreCase("setUserPass")) {
-//            String email = args.getString(0);
-//            String password = args.getString(1);
-//            es.situm.sdk.SitumSdk.configuration().setUserPass(email, password);
-//        } else if (action.equalsIgnoreCase("setCacheMaxAge")) {
-//            Integer cacheAge = args.getInt(0);
-//            Log.d(TAG, "Setting cache max age to " + cacheAge + " seconds");
-//            es.situm.sdk.SitumSdk.configuration().setCacheMaxAge(cacheAge, TimeUnit.SECONDS);
-//        } else if (action.equalsIgnoreCase("fetchBuildings")) {
-//            getPluginInstance().fetchBuildings(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("fetchBuildingInfo")) {
-//            getPluginInstance().fetchBuildingInfo(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("fetchGeofencesFromBuilding")) {
-//            getPluginInstance().fetchGeofencesFromBuilding(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("startPositioning")) {
-//            getPluginInstance().startPositioning(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("stopPositioning")) {
-//            getPluginInstance().stopPositioning(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("fetchPoiCategories")) {
-//            getPluginInstance().fetchPoiCategories(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("fetchFloorsFromBuilding")) {
-//            getPluginInstance().fetchFloorsFromBuilding(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("fetchIndoorPOIsFromBuilding")) {
-//            getPluginInstance().fetchIndoorPOIsFromBuilding(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("fetchOutdoorPOIsFromBuilding")) {
-//            getPluginInstance().fetchOutdoorPOIsFromBuilding(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("fetchEventsFromBuilding")) {
-//            getPluginInstance().fetchEventsFromBuilding(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("fetchMapFromFloor")) {
-//            getPluginInstance().fetchMapFromFloor(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("fetchPoiCategoryIconNormal")) {
-//            getPluginInstance().fetchPoiCategoryIconNormal(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("fetchPoiCategoryIconSelected")) {
-//            getPluginInstance().fetchPoiCategoryIconSelected(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("invalidateCache")) {
-//            getPluginInstance().invalidateCache(callbackContext);
-//        } else if (action.equalsIgnoreCase("requestDirections")) {
-//            getPluginInstance().requestDirections(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("requestNavigationUpdates")) {
-//            getPluginInstance().requestNavigationUpdates(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("updateNavigationWithLocation")) {
-//            getPluginInstance().updateNavigationWithLocation(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("removeNavigationUpdates")) {
-//            getPluginInstance().removeNavigationUpdates(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("requestRealTimeUpdates")) {
-//            getPluginInstance().requestRealTimeUpdates(cordova, webView, args, callbackContext);
-//        } else if (action.equalsIgnoreCase("removeRealTimeUpdates")) {
-//            getPluginInstance().removeRealTimeUpdates(cordova, webView, args, callbackContext);
-//        } else {
-//            getPluginInstance().returnDefaultResponse(callbackContext);
-//        }
-//        return true;
-//    }
-
     @NonNull
     @Override
     public String getName() {
         return PLUGIN_NAME;
     }
 
-    @Override
     @ReactMethod
-    public void setApiKey(String email, String apiKey) {
-        Log.e(TAG, "setApiKey");
+    public void initSitumSDK() {
+        SitumSdk.init(reactContext);
     }
 
     @Override
     @ReactMethod
-    public void setUserPass(String email, String password) {
-        Log.e(TAG, "setUserPass");
+    public void setApiKey(String email, String apiKey, Callback callback) {
+        boolean isSuccess = SitumSdk.configuration().setApiKey(email, apiKey);
+
+        WritableMap response = Arguments.createMap();
+        response.putBoolean("success", isSuccess);
+
+        callback.invoke(response);
     }
 
-    @Override 
+    @Override
     @ReactMethod
-    public void setCacheMaxAge(int cacheAge) {
-        Log.e(TAG, "setCacheMaxAge");
+    public void setUserPass(String email, String password, Callback callback) {
+        boolean isSuccess = SitumSdk.configuration().setUserPass(email, password);
+
+        WritableMap response = Arguments.createMap();
+        response.putBoolean("success", isSuccess);
+
+        callback.invoke(response);
     }
 
-    @Override 
+    @Override
     @ReactMethod
-    public void fetchBuildings() {
-        Log.e(TAG, "fetchBuildings");
+    public void setCacheMaxAge(int cacheAge, Callback callback) {
+        boolean isSuccess = SitumSdk.configuration().setCacheMaxAge(cacheAge, TimeUnit.SECONDS);
+
+        WritableMap response = Arguments.createMap();
+        response.putBoolean("success", isSuccess);
+
+        callback.invoke(response);
+
     }
 
-    @Override 
+    @Override
     @ReactMethod
-    public void fetchBuildingInfo(ReadableMap map) {
-        Log.e(TAG, "fetchBuildingInfo");
+    public void fetchBuildings(Callback success, Callback error) {
+        getPluginInstance().fetchBuildings(success, error);
     }
 
-    @Override 
+    @Override
     @ReactMethod
-    public void fetchGeofencesFromBuilding(ReadableMap map) {
-        Log.e(TAG, "fetchGeofencesFromBuilding");
+    public void fetchBuildingInfo(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchBuildingInfo(map, success, error);
     }
 
-    @Override 
+    @Override
     @ReactMethod
-    public void fetchFloorsFromBuilding(ReadableMap map) {
-        Log.e(TAG, "fetchFloorsFromBuilding");
+    public void fetchFloorsFromBuilding(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchFloorsFromBuilding(map, success, error);
     }
 
-    @Override 
+    @Override
+    @ReactMethod
+    public void fetchMapFromFloor(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchMapFromFloor(map, success, error);
+    }
+
+    @Override
+    @ReactMethod
+    public void fetchGeofencesFromBuilding(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchGeofencesFromBuilding(map, success, error);
+    }
+
+    @Override
+    @ReactMethod
+    public void startPositioning(ReadableMap map) {
+        getPluginInstance().startPositioning(map, getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
+    }
+
+    @Override
+    @ReactMethod
+    public void stopPositioning(Callback success, Callback error) {
+        getPluginInstance().stopPositioning(success, error);
+    }
+
+    @Override
+    @ReactMethod
+    public void requestDirections(ReadableArray requestArray, Callback success, Callback error) {
+        getPluginInstance().requestDirections(requestArray, success, error, getReactApplicationContext());
+    }
+
+    @Override
     @ReactMethod
     public void fetchPoiCategories(ReadableMap map) {
         Log.e(TAG, "fetchPoiCategories");
     }
 
-    @Override 
+    @Override
     @ReactMethod
     public void fetchPoiCategoryIconNormal(ReadableMap map) {
         Log.e(TAG, "fetchPoiCategoryIconNormal");
     }
 
-    @Override 
+    @Override
     @ReactMethod
     public void fetchPoiCategoryIconSelected(ReadableMap map) {
         Log.e(TAG, "fetchPoiCategoryIconSelected");
     }
 
-    @Override 
+    @Override
     @ReactMethod
     public void fetchIndoorPOIsFromBuilding(ReadableMap map) {
         Log.e(TAG, "fetchIndoorPOIsFromBuilding");
     }
 
-    @Override 
+    @Override
     @ReactMethod
     public void fetchOutdoorPOIsFromBuilding(ReadableMap map) {
         Log.e(TAG, "fetchOutdoorPOIsFromBuilding");
     }
 
-    @Override 
+    @Override
     @ReactMethod
     public void fetchEventsFromBuilding(ReadableMap map) {
         Log.e(TAG, "fetchEventsFromBuilding");
     }
 
-    @Override 
-    @ReactMethod
-    public void fetchMapFromFloor(ReadableMap map) {
-        Log.e(TAG, "fetchMapFromFloor");
-    }
-
-    @Override 
-    @ReactMethod
-    public void startPositioning(String callbackId) {
-        Log.e(TAG, "startPositioning");
-    }
-
-    @Override 
-    @ReactMethod
-    public void stopPositioning(String callbackId) {
-        Log.e(TAG, "stopPositioning");
-    }
-
-    @Override 
-    @ReactMethod
-    public void requestDirections(String callbackId) {
-        Log.e(TAG, "requestDirections");
-    }
-
-    @Override 
+    @Override
     @ReactMethod
     public void requestNavigationUpdates(String callbackId) {
         Log.e(TAG, "requestNavigationUpdates");
     }
 
-    @Override 
+    @Override
     @ReactMethod
     public void updateNavigationWithLocation(ReadableMap map) {
         Log.e(TAG, "updateNavigationWithLocation");
     }
 
-    @Override 
+    @Override
     @ReactMethod
     public void removeNavigationUpdates() {
         Log.e(TAG, "removeNavigationUpdates");
     }
 
-    @Override 
+    @Override
     @ReactMethod
     public void requestRealTimeUpdates(ReadableMap map) {
         Log.e(TAG, "requestRealTimeUpdates");
     }
 
-    @Override 
+    @Override
     @ReactMethod
     public void removeRealTimeUpdates() {
         Log.e(TAG, "removeRealTimeUpdates");
     }
 
-    @Override 
+    @Override
     @ReactMethod
     public void invalidateCache() {
         Log.e(TAG, "invalidateCache");
     }
+
+    @Override
+    @ReactMethod
+    public void requestAuthorization() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            final PermissionsModule perms = getReactApplicationContext().getNativeModule(PermissionsModule.class);
+
+            final Callback onPermissionGranted = new Callback() {
+                @Override
+                public void invoke(Object... args) {
+                    String result = (String) args[0];
+                    if (!result.equals("granted")) {
+                        Log.e(TAG, "Location permission was not granted.");
+                    }
+                }
+            };
+
+            final Callback onPermissionDenied = new Callback() {
+                @Override
+                public void invoke(Object... args) {
+                    Log.e(TAG, "Failed to request location permission.");
+                }
+            };
+
+            Callback onPermissionCheckFailed = new Callback() {
+                @Override
+                public void invoke(Object... args) {
+
+                    Log.e(TAG, "Failed to check location permission.");
+                }
+            };
+
+            Callback onPermissionChecked = new Callback() {
+                @Override
+                public void invoke(Object... args) {
+                    boolean hasPermission = (boolean) args[0];
+
+                    if (!hasPermission) {
+                        perms.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, new PromiseImpl(onPermissionGranted, onPermissionDenied));
+                    }
+                }
+            };
+
+            perms.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, new PromiseImpl(onPermissionChecked, onPermissionCheckFailed));
+        }
+    }
+
 
 }

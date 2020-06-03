@@ -42,6 +42,7 @@
 - (NSDictionary *) geofenceToJsonObject:(SITGeofence *)geofence;
 
 // Location
+- (SITLocationRequest *) dictToLocationRequest: (NSDictionary *) dict;
 - (SITLocationRequest *) jsonObjectToLocationRequest: (NSArray *) json;
 - (NSDictionary *) locationToJsonObject:(SITLocation *) location;
 - (NSString*) locationStateToString:(SITLocationState) state;
@@ -73,6 +74,7 @@
 // Dimensions
 
 - (NSDictionary *) dimensionsToJsonObject:(SITDimensions *) dimensions;
+- (SITDimensions *) jsonObjectToDimensions:(NSDictionary *) json ;
 
 // Bounds
 

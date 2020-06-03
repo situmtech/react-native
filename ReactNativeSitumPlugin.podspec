@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
 
   s.dependency "React"
-  s.dependency "SitumSDK", "2.37.0"
+  s.dependency "SitumSDK", "2.44.0"
 
 end
 
