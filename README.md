@@ -79,19 +79,51 @@ In this we assume you have already created an hybrid application with React Nati
 
 ### 1) Integrate project from Github
 
-After cloning the project, follow these steps to integrate and run with a react-native app.
+```shell
+yarn add https://github.com/situmtech/situm-react-native-plugin.git
 
-1. Add the plugin as a dependency in your `package.json` file.
+#OR
 
-```json
-"dependencies": {
-	"react-native-situm-plugin": "file:../situm-react-native-plugin"
+npm install --save https://github.com/situmtech/situm-react-native-plugin.git
+```
+
+Make sure to delete `node_modulles/` at `project/node_modules/react-native-situm-plugin/node_modules`.
+
+Note: As of now the SDK is available only on Github. When updating the SDK, make sure to delete the existing one from `node_modules/react-native-situm-plugin`.
+
+
+### 2) Integrate plugin into project from npm (Pending) 
+
+### Android
+
+Add the follow repository in your project gradle file
+
+```groovy
+allprojects {
+    repositories {
+        maven {
+            url "https://repo.situm.es/artifactory/libs-release-local"
+        }
+    }
 }
 ```
 
-2. Execute `yarn`
+### iOS
+Add depedency in `PodFile`
 
-### 2) Integrate plugin into project from npm (Pending) 
+```js
+  target 'YourApp' do
+
+    pod 'ReactNativeSitumPlugin', :path => '../node_modules/react-native-situm-plugin/ReactNativeSitumPlugin.podspec'
+
+  end
+```
+
+You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/docs/linking-libraries-ios.html#step-3))
+
+```
+  $(SRCROOT)/../node_modules/react-native-navigation/lib/ios
+```
 
 ## Using the Plugin
 
@@ -116,21 +148,55 @@ NOTE: This plugin is currently under development. There may be method not implem
 
 Log in into your Situm Account. This key is generated in Situm Dashboard. Return true if apiKey was set successfully, otherwise false
 
+```js
+SitumPlugin.setApiKey("SITUM_EMAIL","SITUM_API_KEY")
+```
+
 #### - setUserPass
 
 Provides user's email and password.
+```js
+SitumPlugin.setUserPass("SITUM_EMAIL","SITUM_USER_PASSWORD")
+```
 
 #### - setCacheMaxAge
 
 Sets the maximum age of a cached response in seconds.
+```js
+SitumPlugin.setCacheMaxAge(1*60*60) // 1 hour
+```
 
 #### - startPositioning
 
 Starts the positioning system.
+```js
+const locationOptions = {
+  buildingIdentifier: building.buildingIdentifier,
+};
+
+const subscriptionId = SitumPlugin.startPositioning(
+  (location) => {
+    //returns location object
+    console.log(JSON.stringy(location))
+  },
+  (status) => {
+    //returns positioning status
+    console.log(JSON.stringy(status))
+  },
+  (error: string) => {
+    // returns an error string
+    console.log(error)
+  },
+  locationOptions
+)
+```
 
 #### - stopPositioning
 
-Stop the positioning system on current active listener.
+Stop the positioning system on current active listener. Make sure to pass `subscriptionId` received from start positioning updates for those particular listeners.
+```js
+SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
+```
 
 #### - fetchBuildings
 
@@ -140,12 +206,15 @@ Download all the buildings for the current user.
 const getBuildings = () => {
   SitumPlugin.fetchBuildings(
     (buildings) => {
+      // returns list of buildings
       if (!buildings || buildings.length == 0)
         alert(
           'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
         );
     },
-    (error) => {},
+    (error) => {
+      // returns an error string
+    },
   );
 };
 ```
@@ -158,8 +227,12 @@ Download the information (floors, pois, ...) of a building.
 const getBuildingInfo = () => {
   SitumPlugin.fetchBuildingInfo(
     building,
-    (buildingInfo) => {},
-    (error) => {},
+    (buildingInfo) => {
+      // returns a building info object
+    },
+    (error) => {
+      // returns an error string
+    },
   );
 };
 ```
@@ -172,8 +245,12 @@ Download all the floors of a building.
 const getFloorsFromBuilding = () => {
   SitumPlugin.fetchFloorsFromBuilding(
     building,
-    (floors) => {},
-    (error) => {},
+    (floors) => {
+      // returns list of floors
+    },
+    (error) => {
+      // returns an error string
+    },
   );
 };
 ```
@@ -202,8 +279,12 @@ Download the map image of a floor.
 const getMapFromFloor = (floor) => {
   SitumPlugin.fetchMapFromFloor(
     floor,
-    (map) => {},
-    (error) => {},
+    (map) => {
+      // map image in Base64 format
+    },
+    (error) => {
+      // returns error string
+    },
   );
 };
 ```
@@ -223,7 +304,41 @@ Invalidate all the resources in the cache.
 #### - requestDirections
 
 Calculates a route between two points.
+```js
+const points = [
+  {
+    floorIdentifier: floor.floorIdentifier,
+    buildingIdentifier: building.buildingIdentifier,
+    coordinate: {latitude:41.37968, longitude:2.1460623},
+  },
+  {
+    floorIdentifier: floor.floorIdentifier,
+    buildingIdentifier: building.buildingIdentifier,
+    coordinate: {latitude:41.375566, longitude:2.1467063},
+  }
+];
 
+SitumPlugin.requestDirections(
+  [building, ...points],
+  (route: any) => {
+    // returns route object
+    let latlngs = [];
+    for (let segment of route.segments) {
+      for (let point of segment.points) {
+        latlngs.push({
+          latitude: point.coordinate.latitude,
+          longitude: point.coordinate.longitude,
+        });
+      }
+    }
+    setPolylineLatlng(latlngs);
+  },
+  (error: string) => {
+    // returns error string
+    console.log(error);
+  }
+);
+```
 
 #### - requestNavigationUpdates
 
