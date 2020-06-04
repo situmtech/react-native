@@ -2,6 +2,7 @@ package com.situm.plugin;
 
 import android.Manifest;
 import android.os.Build;
+import android.telecom.Call;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -204,7 +205,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void invalidateCache() {
-        Log.e(TAG, "invalidateCache");
+        getPluginInstance().invalidateCache();
     }
 
     @Override

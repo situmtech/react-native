@@ -648,6 +648,10 @@ public class PluginHelper {
         invokeCallback(callback, map);
     }
 
+    public void invalidateCache() {
+        getCommunicationManagerInstance().invalidateCache();
+    }
+
 /*
     public void fetchIndoorPOIsFromBuilding(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
             final CallbackContext callbackContext) {
@@ -787,12 +791,6 @@ public class PluginHelper {
         Log.e(TAG, message);
         callbackContext.sendPluginResult(new PluginResult(Status.OK, message));
     }
-
-    public void invalidateCache(CallbackContext callbackContext) {
-        getCommunicationManagerInstance().invalidateCache();
-        callbackContext.sendPluginResult(new PluginResult(Status.OK, "Cache invalidated"));
-    }
-
 
 
     public void requestRealTimeUpdates(final CordovaInterface cordova,

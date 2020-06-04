@@ -57,4 +57,11 @@ describe('Test Setup SDK', () => {
       NativeModules.RNCSitumPlugin.requestAuthorization.mock.calls.length,
     ).toEqual(1);
   });
+
+  it('should call invalidate cache', () => {
+    SitumPlugin.invalidateCache();
+    expect(
+      NativeModules.RNCSitumPlugin.invalidateCache.mock.calls.length,
+    ).toEqual(1);
+  });
 });
