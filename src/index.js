@@ -1,6 +1,6 @@
 import {RNCSitumPlugin, SitumPluginEventEmitter} from './nativeInterface';
 import invariant from 'invariant';
-import {logError, warning} from './utils';
+import {logError} from './utils';
 
 let positioningSubscriptions = [];
 let navigationSubscriptions = [];
@@ -102,7 +102,12 @@ const SitumPlugin = {
     options?: LocationRequestOptions,
   ) {
     this.requestAuthorization();
-    return this.startPositioningUpdates(location, status, error, options);
+    return this.startPositioningUpdates(
+      location,
+      status,
+      error || logError,
+      options || {},
+    );
   },
 
   startPositioningUpdates: function (
@@ -153,7 +158,7 @@ const SitumPlugin = {
       }
     }
     if (noSubscriptions) {
-      this.stopPositioningUpdates();
+      this.stopPositioningUpdates(success, error);
     }
   },
 
@@ -162,10 +167,7 @@ const SitumPlugin = {
     for (let ii = 0; ii < positioningSubscriptions.length; ii++) {
       const sub = positioningSubscriptions[ii];
       if (sub) {
-        warning(
-          false,
-          'Called stopPositioningUpdates with existing subscriptions.',
-        );
+        logError('Called stopPositioningUpdates with existing subscriptions.');
         sub[0].remove();
         // array element refinements not yet enabled in Flow
         const sub1 = sub[1];
@@ -274,7 +276,7 @@ const SitumPlugin = {
 
   removeNavigationUpdates: function (callback?: Function) {
     navigationSubscriptions = [];
-    RNCSitumPlugin.removeNavigationUpdates(callback || warning);
+    RNCSitumPlugin.removeNavigationUpdates(callback || logError);
   },
 
   invalidateCache: function () {
