@@ -12,6 +12,7 @@
   * [Using the Plugin](#using-the-plugin)
     + [Accessing plugin object](#accessing-plugin-object)
     + [Methods](#methods)
+      - [initSitumSDK](#--initsitumsdk)
       - [setApiKey](#--setapikey)
       - [setUserPass](#--setuserpass)
       - [setCacheMaxAge](#--setcachemaxage)
@@ -92,11 +93,11 @@ Make sure to delete `node_modulles/` at `project/node_modules/react-native-situm
 Note: As of now the SDK is available only on Github. When updating the SDK, make sure to delete the existing one from `node_modules/react-native-situm-plugin`.
 
 
-### 2) Integrate plugin into project from npm (Pending) 
+### 2) Integrate plugin into project from npm  
 
 ### Android
 
-Add the follow repository in your project gradle file
+You may need to add the follow repository in your project gradle file
 
 ```groovy
 allprojects {
@@ -109,7 +110,7 @@ allprojects {
 ```
 
 ### iOS
-Add depedency in `PodFile`
+You may need to add depedency in `PodFile`
 
 ```js
   target 'YourApp' do
@@ -143,6 +144,14 @@ import  SitumPlugin  from  "react-native-situm-plugin";
 ### Methods
 
 NOTE: This plugin is currently under development. There may be method not implemented yet. Also there may be some API changes as development progresses.
+
+### - initSitumSDK
+
+Method that initialize the SDK. This method needs to be called once before using the rest of the methods.
+
+```js
+SitumPlugin.initSitumSDK();
+```
 
 #### - setApiKey
 
