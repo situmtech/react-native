@@ -57,4 +57,6 @@ public interface SitumPlugin {
 
     void invalidateCache();
 
+    void requestAuthorization();
+
 }

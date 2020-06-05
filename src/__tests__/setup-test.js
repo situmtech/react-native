@@ -50,4 +50,11 @@ describe('Test Setup SDK', () => {
       NativeModules.RNCSitumPlugin.setCacheMaxAge.mock.calls[0][0],
     ).toStrictEqual(expect.any(Number));
   });
+
+  it('should request permissions/authorization for location requests', () => {
+    SitumPlugin.requestAuthorization();
+    expect(
+      NativeModules.RNCSitumPlugin.requestAuthorization.mock.calls.length,
+    ).toEqual(1);
+  });
 });
