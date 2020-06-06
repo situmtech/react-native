@@ -324,6 +324,54 @@ export interface SitumPluginStatic {
     error?: Function,
   ): void;
 
+  fetchPoiCategories (success: Function, error?: Function) :void;
+
+  fetchPoiCategoryIconNormal (
+    category: any,
+    success: Function,
+    error?: Function,
+  )  :void;
+
+  fetchPoiCategoryIconSelected (
+    category: any,
+    success: Function,
+    error?: Function,
+  )  :void;
+
+  requestNavigationUpdates (
+    navigationUpdates: Function,
+    error?: Function,
+    options?: LocationRequestOptions,
+  )  :void;
+
+  updateNavigationWithLocation (
+    location,
+    success: Function,
+    error?: Function,
+  )  :void;
+
+  removeNavigationUpdates (callback?: Function)  :void;
+
+  fetchIndoorPOIsFromBuilding (
+    building: any,
+    success: Function,
+    error?: Function,
+  )  :void;
+
+  fetchOutdoorPOIsFromBuilding (
+    building: any,
+    success: Function,
+    error?: Function,
+  ) :void;
+
+  fetchEventsFromBuilding (
+    building: any,
+    success: Function,
+    error?: Function,
+  )  :void;
+
+  checkIfPointInsideGeofence (request: any, callback?: Function)  :void;
+
   invalidateCache(callback: Function): void;
 }
 

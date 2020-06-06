@@ -156,20 +156,20 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
-    public void fetchIndoorPOIsFromBuilding(ReadableMap map) {
-        Log.e(TAG, "fetchIndoorPOIsFromBuilding");
+    public void fetchIndoorPOIsFromBuilding(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchIndoorPOIsFromBuilding(map, success, error);
     }
 
     @Override
     @ReactMethod
-    public void fetchOutdoorPOIsFromBuilding(ReadableMap map) {
-        Log.e(TAG, "fetchOutdoorPOIsFromBuilding");
+    public void fetchOutdoorPOIsFromBuilding(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchOutdoorPOIsFromBuilding(map, success, error);
     }
 
     @Override
     @ReactMethod
-    public void fetchEventsFromBuilding(ReadableMap map) {
-        Log.e(TAG, "fetchEventsFromBuilding");
+    public void fetchEventsFromBuilding(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchEventsFromBuilding(map, success, error);
     }
 
     @Override
@@ -200,6 +200,12 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @ReactMethod
     public void removeRealTimeUpdates() {
         Log.e(TAG, "removeRealTimeUpdates");
+    }
+
+    @Override
+    @ReactMethod
+    public void checkIfPointInsideGeofence(ReadableMap map, Callback callback) {
+        getPluginInstance().checkIfPointIsInsideGeoFence(map, callback);
     }
 
     @Override

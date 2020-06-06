@@ -21,6 +21,10 @@ NativeModules.RNCSitumPlugin = {
   fetchFloorsFromBuilding: jest.fn(),
   fetchMapFromFloor: jest.fn(),
   fetchGeofencesFromBuilding: jest.fn(),
+  checkIfPointInsideGeofence: jest.fn(),
+  fetchIndoorPOIsFromBuilding: jest.fn(),
+  fetchOutdoorPOIsFromBuilding: jest.fn(),
+  fetchEventsFromBuilding: jest.fn(),
 
   // Positioning
   startPositioning: jest.fn(),
