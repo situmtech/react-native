@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.summary       = "Situm react native plugin"
   s.homepage     = "https://github.com/author/situm-react-native-plugin.git"
   s.license      = "TODO"
-  s.author             = { "Noman Rafique" => "nomrafique@gmail.com" }
+  s.author       = { "Noman Rafique" => "nomrafique@gmail.com" }
   s.platform     = :ios, "8.0"
   s.source       = { :http => 'file:' + __dir__ + '/' } 
   s.source_files  = "ios/*.{h,m}"
@@ -16,6 +16,7 @@ Pod::Spec.new do |s|
 
   s.dependency "React"
   s.dependency "SitumSDK", "2.44.0"
+  s.dependency "GoogleMaps", "3.5.0"
 
 end
 

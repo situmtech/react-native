@@ -473,7 +473,7 @@ class SitumMapper {
         jo.put(POSITION, pointToJsonObject(poi.getPosition()));
         jo.put(IS_INDOOR, poi.isIndoor());
         jo.put(IS_OUTDOOR, poi.isOutdoor());
-        jo.put(POI_CATEGORY, poi.getCategory().getCode());
+        jo.put(POI_CATEGORY, poiCategoryToJsonObject(poi.getCategory()));
         jo.put(INFO_HTML, poi.getInfoHtml());
         jo.put(CUSTOM_FIELDS, mapStringToJsonObject(poi.getCustomFields()));
         jo.put(CREATED_AT, dateFormat.format(poi.getCreatedAt()));
