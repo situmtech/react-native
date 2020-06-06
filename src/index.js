@@ -279,6 +279,66 @@ const SitumPlugin = {
     RNCSitumPlugin.removeNavigationUpdates(callback || logError);
   },
 
+  fetchIndoorPOIsFromBuilding: function (
+    building: any,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchIndoorPOIsFromBuilding(
+      building,
+      success,
+      error || logError,
+    );
+  },
+
+  fetchOutdoorPOIsFromBuilding: function (
+    building: any,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchOutdoorPOIsFromBuilding(
+      building,
+      success,
+      error || logError,
+    );
+  },
+
+  fetchEventsFromBuilding: function (
+    building: any,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchEventsFromBuilding(
+      building,
+      success,
+      error || logError,
+    );
+  },
+
+  checkIfPointInsideGeofence: function (request: any, callback?: Function) {
+    invariant(
+      typeof callback === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.checkIfPointInsideGeofence(request, callback);
+  },
+
   invalidateCache: function () {
     RNCSitumPlugin.invalidateCache();
   },

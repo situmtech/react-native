@@ -42,11 +42,11 @@ public interface SitumPlugin {
 
     void fetchPoiCategoryIconSelected(ReadableMap map, Callback success, Callback error);
 
-    void fetchIndoorPOIsFromBuilding(ReadableMap map);
+    void fetchIndoorPOIsFromBuilding(ReadableMap map, Callback success, Callback error);
 
-    void fetchOutdoorPOIsFromBuilding(ReadableMap map);
+    void fetchOutdoorPOIsFromBuilding(ReadableMap map, Callback success, Callback error);
 
-    void fetchEventsFromBuilding(ReadableMap map);
+    void fetchEventsFromBuilding(ReadableMap map, Callback success, Callback error);
 
     void requestNavigationUpdates(ReadableMap map);
 
@@ -57,6 +57,8 @@ public interface SitumPlugin {
     void requestRealTimeUpdates(ReadableMap map);
 
     void removeRealTimeUpdates();
+
+    void checkIfPointInsideGeofence(ReadableMap map, Callback callback);
 
     void invalidateCache();
 

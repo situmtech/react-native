@@ -2,6 +2,7 @@ package com.situm.plugin;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -16,9 +17,15 @@ import com.situm.plugin.utils.ReactNativeJson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Polygon;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -33,7 +40,9 @@ import es.situm.sdk.model.cartography.Building;
 import es.situm.sdk.model.cartography.BuildingInfo;
 import es.situm.sdk.model.cartography.Floor;
 import es.situm.sdk.model.cartography.Geofence;
+import es.situm.sdk.model.cartography.Poi;
 import es.situm.sdk.model.cartography.PoiCategory;
+import es.situm.sdk.model.cartography.Point;
 import es.situm.sdk.model.directions.Route;
 import es.situm.sdk.model.location.Location;
 import es.situm.sdk.model.navigation.NavigationProgress;
@@ -43,6 +52,7 @@ import es.situm.sdk.navigation.NavigationRequest;
 import es.situm.sdk.realtime.RealTimeListener;
 import es.situm.sdk.realtime.RealTimeManager;
 import es.situm.sdk.utils.Handler;
+import es.situm.sdk.v1.SitumEvent;
 
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_CHANGED;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_ERROR;
@@ -57,6 +67,8 @@ public class PluginHelper {
 
     private static final String TAG = "PluginHelper";
 
+    private GeometryFactory geometryFactory = new GeometryFactory();
+
     private LocationListener locationListener;
     private LocationRequest locationRequest;
     private NavigationListener navigationListener;
@@ -70,7 +82,7 @@ public class PluginHelper {
 
     private Route computedRoute;
     private Location computedLocation;
-
+    private Map<Geofence, Polygon> geofencePolygonMap = new HashMap<>();
 
     private CommunicationManager getCommunicationManagerInstance() {
         if (cmInstance == null) { //Check for the first time
@@ -268,6 +280,8 @@ public class PluginHelper {
                             Log.e(PluginHelper.TAG, "onSuccess: you have no geofences defined for this building");
                         }
                         invokeCallback(success, convertJsonToArray(jsonArrayGeofences));
+
+                        createAndAssignPolygonsToGeofences(geofences);
                     } catch (JSONException e) {
                         invokeCallback(error, e.getMessage());
                     }
@@ -648,15 +662,9 @@ public class PluginHelper {
         invokeCallback(callback, map);
     }
 
-    public void invalidateCache() {
-        getCommunicationManagerInstance().invalidateCache();
-    }
-
-/*
-    public void fetchIndoorPOIsFromBuilding(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
+    public void fetchIndoorPOIsFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
         try {
-            JSONObject jsonoBuilding = args.getJSONObject(0);
+            JSONObject jsonoBuilding = convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonoBuilding);
             getCommunicationManagerInstance().fetchIndoorPOIsFromBuilding(building, new HashMap<String, Object>(),
                     new Handler<Collection<Poi>>() {
@@ -678,28 +686,27 @@ public class PluginHelper {
                                     Log.e(PluginHelper.TAG,
                                             "onSuccess: you have no indoor pois defined for this building");
                                 }
-                                callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonaPois));
+                                invokeCallback(success, convertJsonToArray(jsonaPois));
                             } catch (JSONException e) {
-                                callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+                                invokeCallback(error, e.getMessage());
                             }
                         }
 
                         @Override
-                        public void onFailure(Error error) {
-                            Log.e(PluginHelper.TAG, "onFailure:" + error);
-                            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
+                        public void onFailure(Error e) {
+                            Log.e(PluginHelper.TAG, "onFailure:" + e);
+                            invokeCallback(error, e.getMessage());
                         }
                     });
         } catch (Exception e) {
             Log.e(TAG, "Unexpected error in poi response", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+            invokeCallback(error, e.getMessage());
         }
     }
 
-    public void fetchOutdoorPOIsFromBuilding(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
+    public void fetchOutdoorPOIsFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
         try {
-            JSONObject jsonoBuilding = args.getJSONObject(0);
+            JSONObject jsonoBuilding = convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonoBuilding);
             getCommunicationManagerInstance().fetchOutdoorPOIsFromBuilding(building, new HashMap<String, Object>(),
                     new Handler<Collection<Poi>>() {
@@ -719,28 +726,27 @@ public class PluginHelper {
                                     Log.e(PluginHelper.TAG,
                                             "onSuccess: you have no outdoor pois defined for this building");
                                 }
-                                callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonaPois));
+                                invokeCallback(success, convertJsonToArray(jsonaPois));
                             } catch (JSONException e) {
-                                callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+                                invokeCallback(error, e.getMessage());
                             }
                         }
 
                         @Override
-                        public void onFailure(Error error) {
-                            Log.e(PluginHelper.TAG, "onFailure:" + error);
-                            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
+                        public void onFailure(Error e) {
+                            Log.e(PluginHelper.TAG, "onFailure:" + e);
+                            invokeCallback(error, e.getMessage());
                         }
                     });
         } catch (Exception e) {
             Log.e(TAG, "Unexpected error in poi response", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+            invokeCallback(error, e.getMessage());
         }
     }
 
-    public void fetchEventsFromBuilding(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
+    public void fetchEventsFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
         try {
-            JSONObject jsonoBuilding = args.getJSONObject(0);
+            JSONObject jsonoBuilding = convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonoBuilding);
             getCommunicationManagerInstance().fetchEventsFromBuilding(building, new HashMap<String, Object>(),
                     new Handler<Collection<SitumEvent>>() {
@@ -758,23 +764,75 @@ public class PluginHelper {
                                 if (situmEvents.isEmpty()) {
                                     Log.e(PluginHelper.TAG, "onSuccess: you have no events defined for this building");
                                 }
-                                callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonaEvents));
+                                invokeCallback(success, convertJsonToArray(jsonaEvents));
                             } catch (JSONException e) {
-                                callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+                                invokeCallback(error, e.getMessage());
                             }
                         }
 
                         @Override
-                        public void onFailure(Error error) {
-                            Log.e(PluginHelper.TAG, "onFailure:" + error);
-                            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
+                        public void onFailure(Error e) {
+                            Log.e(PluginHelper.TAG, "onFailure:" + e);
+                            invokeCallback(error, e.getMessage());
                         }
                     });
         } catch (Exception e) {
-            Log.e(TAG, "Unexpected error in situm event response", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
+            Log.e(TAG, "Unexpected error in poi response", e.getCause());
+            invokeCallback(error, e.getMessage());
         }
     }
+
+    public void checkIfPointIsInsideGeoFence(ReadableMap map, Callback callback) {
+        if (geofencePolygonMap.isEmpty()) {
+            return;
+        }
+
+        try {
+            String floorId = null;
+            if (map.hasKey("floorIdentifier")) {
+                floorId = map.getString("floorIdentifier");
+            }
+            ReadableMap latLngMap = map.getMap("coordinate");
+            org.locationtech.jts.geom.Point point = geometryFactory.createPoint(new Coordinate(latLngMap.getDouble("latitude"), latLngMap.getDouble("longitude")));
+
+            Geofence geofence = null;
+
+            for (Map.Entry<Geofence, Polygon> entry : geofencePolygonMap.entrySet()) {
+                if (!TextUtils.isEmpty(floorId) && !entry.getKey().getFloorIdentifier().equals(floorId)) {
+                    continue;
+                }
+                if (point.within(entry.getValue())) {
+                    geofence = entry.getKey();
+                    Log.i(TAG, "The point is inside the geofence: " + entry.getKey().getName());
+                }
+            }
+
+            WritableMap responseMap = Arguments.createMap();
+            responseMap.putBoolean("isInsideGeofence", geofence != null);
+            if (geofence != null) {
+                WritableMap geofenceMap = Arguments.createMap();
+                geofenceMap.putString("name", geofence.getName());
+                geofenceMap.putString("identifier", geofence.getIdentifier());
+
+                responseMap.putMap("geofence", geofenceMap);
+            }
+
+            invokeCallback(callback, responseMap);
+
+        } catch (Exception e) {
+            WritableMap error = Arguments.createMap();
+            error.putString("error", e.getMessage());
+            invokeCallback(callback, error);
+        }
+    }
+
+    public void invalidateCache() {
+        geofencePolygonMap = new HashMap<>();
+        getCommunicationManagerInstance().invalidateCache();
+    }
+
+/*
+
 
     private void showLocationSettings(CordovaInterface cordova) {
         Toast.makeText(cordova.getActivity(), "You must enable location", Toast.LENGTH_LONG).show();
@@ -863,6 +921,23 @@ public class PluginHelper {
 
 
     */
+
+    private void createAndAssignPolygonsToGeofences(List<Geofence> geofences) {
+        if (geofences.isEmpty()) {
+            return;
+        }
+        for (Geofence geofence : geofences) {
+            List<Coordinate> jtsCoordinates = new ArrayList<>();
+            for (Point point : geofence.getPolygonPoints()) {
+                Coordinate coordinate = new Coordinate(point.getCoordinate().getLatitude(), point.getCoordinate().getLongitude());
+                jtsCoordinates.add(coordinate);
+            }
+            if (!jtsCoordinates.isEmpty()) {
+                Polygon polygon = geometryFactory.createPolygon(jtsCoordinates.toArray(new Coordinate[0]));
+                geofencePolygonMap.put(geofence, polygon);
+            }
+        }
+    }
 
 
     private void invokeCallback(Callback callback, Object args) {
