@@ -1,4 +1,5 @@
-# Situm React Native Plugin &middot; [![npm](https://img.shields.io/npm/dm/situm-cordova-plugin-official.svg)](https://www.npmjs.com/package/situm-cordova-plugin-official) [![npm](https://img.shields.io/npm/v/situm-cordova-plugin-official.svg)](https://www.npmjs.com/package/situm-cordova-plugin-official) [![npm](https://img.shields.io/npm/l/situm-cordova-plugin-official.svg)](https://opensource.org/licenses/MIT)
+# Situm React Native Plugin &middot; [![npm](https://img.shields.io/npm/dm/react-native-situm-plugin.svg)](https://www.npmjs.com/package/react-native-situm-plugin) [![npm](https://img.shields.io/npm/v/react-native-situm-plugin.svg)](https://www.npmjs.com/package/react-native-situm-plugin) [![npm](https://img.shields.io/github/license/situmtech/situm-react-native-plugin.svg)](https://opensource.org/licenses/MIT)
+
 
 [![](https://situm.es/assets/svg/logo-situm.svg)](https://www.situm.com)
 
@@ -95,9 +96,17 @@ Note: As of now the SDK is available only on Github. When updating the SDK, make
 
 ### 2) Integrate plugin into project from npm  
 
+```shell
+yarn add react-native-situm-plugin
+
+#OR
+
+npm install --save react-native-situm-plugin
+```
+
 ### Android
 
-You may need to add the follow repository in your project gradle file
+You'll need to add the follow repository in your project gradle file
 
 ```groovy
 allprojects {
@@ -110,7 +119,7 @@ allprojects {
 ```
 
 ### iOS
-You may need to add depedency in `PodFile`
+You'll need to add depedency in `PodFile`
 
 ```js
   target 'YourApp' do
@@ -123,7 +132,7 @@ You may need to add depedency in `PodFile`
 You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/docs/linking-libraries-ios.html#step-3))
 
 ```
-  $(SRCROOT)/../node_modules/react-native-navigation/lib/ios
+  $(SRCROOT)/../node_modules/react-native-situm-plugin/lib/ios
 ```
 
 ## Using the Plugin
