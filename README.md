@@ -31,6 +31,10 @@
       - [requestNavigationUpdates](#--requestnavigationupdates)
       - [updateNavigationWithLocation](#--updatenavigationwithlocation)
       - [removeNavigationUpdates](#--removenavigationupdates)
+      - [requestRealTimeUpdates](#--requestRealTimeUpdates)
+      - [removeRealTimeUpdates](#--removeRealTimeUpdates)
+      - [checkIfPointInsideGeofence](#--checkIfPointInsideGeofence)
+      - [requestAuthorization](#--requestAuthorization)
   * [License](#license)
   * [More information](#more-information)
   * [Support information](#support-information)
@@ -259,14 +263,55 @@ const getFloorsFromBuilding = () => {
 
 Download the indoor POIs of a building.
 
+```js
+const getPOIsFromBuilding = () => {
+  SitumPlugin.fetchIndoorPOIsFromBuilding(
+    building,
+    (pois) => {
+    // returns list of POIs
+   },
+    (error) => {
+      //returns error string
+    }
+  );
+};
+```
+
 #### - fetchOutdoorPOIsFromBuilding
 
 Download the outdoor POIs of a building.
+
+```js
+const getPOIsFromBuilding = () => {
+  SitumPlugin.fetchOutdoorPOIsFromBuilding(
+    building,
+    (pois) => {
+    // returns list of POIs
+   },
+    (error) => {
+      //returns error string
+    }
+  );
+};
+```
 
 #### - fetchEventsFromBuilding
 
 Download the events of a building.
 
+```js
+const getEventsFromBuilding = () => {
+ SitumPlugin.fetchEventsFromBuilding(
+    building,
+    (events: any) => {
+    // returns list of events
+   },
+    (error) => {
+      //returns error string
+    }
+  );
+};
+```
 #### - fetchPoiCategories
 
 Get all POI categories, download and cache their icons asynchronously.
@@ -421,6 +466,53 @@ When you are no longer interested on Navigation Updates you should call this met
 
 ```js
 SitumPlugin.removeNavigationUpdates();
+```
+
+#### - requestRealTimeUpdates
+
+Emits the real time location of devices 
+
+```js
+const requestRealtime = () => {
+  SitumPlugin.requestRealTimeUpdates(
+    (locations) => {
+      // returns list of locations
+    },
+    (error) => {
+      // returns error string
+    },
+    { building: building, pollTime: 3000 }
+    );
+  };
+```
+
+#### - removeRealTimeUpdates
+
+When you are no longer interested on realtime location Updates you should call this method to remove internal allocated resources.
+
+```js
+SitumPlugin.removeRealTimeUpdates();
+```
+
+#### - checkIfPointInsideGeofence
+
+Checks if a point on the map is inside a geofence
+
+```js
+SitumPlugin.checkIfPointInsideGeofence(
+  { coordinate: coordinate },
+  (response) => {
+    // returns geofence name and id if point is inside a geofence
+  }
+);
+```
+
+#### - requestAuthorization
+
+Request location permissions on Android & iOS
+
+```js
+SitumPlugin.requestAuthorization()
 ```
 
 
