@@ -70,7 +70,7 @@ static NSString *DEFAULT_SITUM_LOG = @"SitumSDK >>: ";
 
 @implementation SitumPlugin
 
-BOOL _positioningUpdates, _navigationUpdates;
+BOOL _positioningUpdates, _navigationUpdates, _realtimeUpdates;
 CLLocationManager *_locationManager;
 RNCSitumConfiguration _locationConfiguration;
 RNCSitumRequest *routeRequest;
@@ -84,7 +84,7 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"locationChanged", @"statusChanged", @"locationError", @"navigationUpdated", @"navigationError"];
+    return @[@"locationChanged", @"statusChanged", @"locationError", @"navigationUpdated", @"navigationError", @"realtimeUpdated", @"realtimeError"];
 }
 
 @synthesize computedRoute = _computedRoute;
@@ -652,12 +652,20 @@ RCT_EXPORT_METHOD(removeNavigationUpdates:(RCTResponseSenderBlock)callbackBlock)
 
 RCT_EXPORT_METHOD(requestRealTimeUpdates:(NSDictionary *)realtimeRequest)
 {
-    NSLog(@"requestRealTimeUpdates");
+    SITRealTimeRequest *request = [SitumLocationWrapper.shared realtimeRequestFromJson:realtimeRequest];
+    
+    _realtimeUpdates = YES;
+    
+    [[SITRealTimeManager sharedManager] requestRealTimeUpdates:request];
+    [SITRealTimeManager sharedManager].delegate = self;
+    
 }
 
 RCT_EXPORT_METHOD(removeRealTimeUpdates)
 {
-    NSLog(@"removeRealTimeUpdates");
+    NSLog(@"REMOVING UPDATESSSS");
+    _realtimeUpdates = NO;
+    [[SITRealTimeManager sharedManager] removeRealTimeUpdates];
 }
 
 RCT_EXPORT_METHOD(invalidateCache)
@@ -701,6 +709,27 @@ RCT_EXPORT_METHOD(requestAuthorization){
         [_locationManager requestWhenInUseAuthorization];
     }
 }
+
+// SITRealtimeDelegate methods
+- (void)realTimeManager:(id <SITRealTimeInterface> _Nonnull)realTimeManager
+ didUpdateUserLocations:(SITRealTimeData *  _Nonnull)realTimeData
+{
+    // SITRealTimeData to json
+    NSDictionary *realtimeInfo = [SitumLocationWrapper.shared jsonFromRealtimeData:realTimeData];
+    NSLog(@"ADDDDDED UPDATESSSS");
+    if (_realtimeUpdates) {
+        [self sendEventWithName:@"realtimeUpdated" body:realtimeInfo.copy];
+    }
+}
+
+- (void)realTimeManager:(id <SITRealTimeInterface>  _Nonnull)realTimeManager
+       didFailWithError:(NSError *  _Nonnull)error
+{
+    if (_realtimeUpdates) {
+        [self sendEventWithName:@"realtimeError" body:error.description];
+    }
+}
+
 // SITLocationDelegate methods
 
 - (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
