@@ -117,6 +117,40 @@ export type Floor = {
 
 /**
  * @name
+ * POI
+ * @description
+ * Point of Interest, associated to a building, regardless of whether it's place inside or outside the building.
+ * @property {string} identifier - The unique identifier of the resource
+ * @property {string} buildingIdentifier - Identifier of building to which the POI belongs.
+ * @property {CartesianCoordinate} cartesianCoordinate - Cartesian coordinate of this position, relative to building {@link Bounds}.
+ * @property {Coordinate} coordinate - Geographical coordinate of this position
+ * @property {string} floorIdentifier - If this POI is outside the building (isOutdoor == true), this field has no meaning.
+ * @property {string} poiName - A name for the POI, appropriate for display to the user.
+ * @property {Point} position - {@link Point} where the point is located.
+ * @property {boolean} isIndoor - Whether the POI is placed outside the building or not.
+ * @property {boolean} isOutdoor - Whether the POI is placed outside the building or not.
+ * @property {PoiCategory} category - Category of the POI
+ * @property {string} infoHtml - Additional information about POI, in HTML
+ * @property {object} customFields - Map of custom fields, indexed by their name.
+ */
+
+export type Poi = {
+  identifier: string;
+  buildingIdentifier: string;
+  cartesianCoordinate: CartesianCoordinate;
+  coordinate: Coordinate;
+  floorIdentifier: string;
+  poiName: string;
+  position: Point;
+  isIndoor: boolean;
+  isOutdoor: boolean;
+  category: PoiCategory;
+  infoHtml: string;
+  customFields: object;
+};
+
+/**
+ * @name
  * Geofence
  * @description
  * Point of Interest, associated to a building, regardless of whether it's place inside or outside the building.
@@ -136,6 +170,26 @@ export type Geofence = {
   infoHtml: string;
   polygonPoints: Point[];
   customFields: object;
+};
+
+/**
+ * @name
+ * PoiCategory
+ * @description
+ * Category of Point of Interest.
+ * @property {string} poiCategoryCode - Unique code of the category
+ * @property {string} poiCategoryName - The category name appropriate for display to the user
+ * @property {string} icon_selected - The selected icon url
+ * @property {string} icon_unselected - The unselected icon url
+ * @property {boolean} public - Whether the category is public or not
+ */
+
+export type PoiCategory = {
+  poiCategoryCode: string;
+  poiCategoryName: string;
+  icon_selected: string;
+  icon_unselected: string;
+  isPublic: boolean;
 };
 
 /**
@@ -188,7 +242,7 @@ export type Route = {
   to: Point;
   steps: RouteStep[];
   segments: RouteSegment[];
-}
+};
 
 /**
  * @name
@@ -212,7 +266,7 @@ export type RouteStep = {
   to: Point;
   isFirst: boolean;
   isLast: boolean;
-}
+};
 
 /**
  * @name
@@ -226,7 +280,7 @@ export type RouteStep = {
 export type RouteSegment = {
   floorIdentifier: string;
   points: Point[];
-}
+};
 
 /**
  * @name
@@ -252,18 +306,292 @@ export type Indication = {
   stepIdxDestination: number;
   stepIdxOrigin: number;
   neededLevelChange: boolean;
-}
-
-export type LocationRequestOptions = {
-  buildingIdentifier?: string
-  useWifi?: boolean;
-  useBle?: boolean;
-  useForegroundService?: number;
 };
 
+/**
+ * @name
+ * NavigationProgress
+ * @description
+ * Provides information of the progress of a user while following a route.
+ * @property {Point} closestPointInRoute - Closest point in the route from the user location provided . @deprecated Use closestLocationInRoute instead.
+ * @property {Location} closestLocationInRoute - Closest location in the route from the user location provided .
+ * @property {number} distanceToClosestPointInRoute - Distance between the real user location (provided to updateWithLocation(Location)) and the closest route location.
+ * @property {Indication} currentIndication - The current indication.
+ * @property {Indication} nextIndication - The next indication.
+ * @property {number} currentStepIndex - The index of the closest route step to the user, where closestLocationInRoute is.
+ * @property {number} distanceToGoal -  The distance in meters from closestLocationInRoute to route's goal point.
+ * @property {number} distanceToEndStep - The distance in meters to go from closestLocationInRoute to the end of the current step.
+ * @property {number} timeToEndStep - The estimated time to go from closestLocationInRoute to the end of the current route step,  considering a speed of 1 meter/second.
+ * @property {number} timeToGoal - The estimated time to go from closestLocationInRoute to the goal/end of route, considering a speed of 1 meter/second.
+ * @property {RouteStep} routeStep - The closest route step to the user, where closestLocationInRoute is.
+ * @property {Point[]} points - List of ordered points of the remaining route
+ * @property {RouteSegment[]} segments - List of segments formed by consecutive points and a floor identifier
+ */
+
+export type NavigationProgress = {
+  closestPointInRoute: Point;
+  closestLocationInRoute: Location;
+  distanceToClosestPointInRoute: number;
+  currentIndication: number;
+  nextIndication: Indication;
+  currentStepIndex: number;
+  distanceToGoal: number;
+  distanceToEndStep: number;
+  timeToEndStep: number;
+  timeToGoal: number;
+  routeStep: RouteStep;
+  points: Point[];
+  segments: RouteSegment[];
+};
+
+/**
+ * @name
+ * SitumEvent
+ * @description
+ * An event: POI with radius, conversion area and asociated statistics. It is intended for usage in marketing apps.
+ * @property {number} buildingIdentifier - The identifier of the building this floor belongs to. Deprecated, use trigger.center.buildingIdentifier instead
+ * @property {number} identifier - Unique identifier of the SitumEvent.
+ * @property {number} floorIdentifier - The identifier of the floor this event is located at. @deprecated, use trigger.center.floorIdentifier instead
+ * @property {string} infoHtml - Information contained into the event, in HTML format.
+ * @property {SitumConversionArea} conversionArea - Location where the event is located. @deprecated, use conversion instead
+ * @property {Circle} conversion - Location where the event is located.
+ * @property {Circle} trigger - Location where the event should be fired
+ * @property {object} customFields - Key-value pairs that allow to extend and fully customize the information associated with the event.
+ * @property {number} radius - Radius of the event associated area. @deprecated, use trigger.radius instead
+ * @property {string} name - Name of the event
+ * @property {number} x - Center of the event in the x-axis. @deprecated, use trigger.center.cartesianCoordinate.x instead
+ * @property {number} y - Center of the event in the y-axis. @deprecated, use trigger.center.cartesianCoordinate.y instead
+ */
+
+export type SitumEvent = {
+  buildingIdentifier: number;
+  identifier: number;
+  floorIdentifier: number;
+  infoHtml: string;
+  conversionArea: SitumConversionArea;
+  conversion: Circle;
+  trigget: Circle;
+  customFields: object;
+  radius: number;
+  name: string;
+  x: number;
+  y: number;
+};
+
+/**
+ * @name
+ * SitumConversionArea
+ * @description
+ * A rectangular area of a floor defining the conversion area of an event
+ * @property {number} floorIdentifier - The identifier of the floor the SitumConversionArea is located at.
+ * @property {object} topLeft - Top-left corner
+ * @property {object} topRight - Top-right corner
+ * @property {object} bottomLeft - Bottom-left corner
+ * @property {object} bottomRight - Bottom-right corner
+ */
+
+export type SitumConversionArea = {
+  floorIdentifier: number;
+  topLeft: object;
+  topRight: object;
+  bottomLeft: object;
+  bottomRight: object;
+};
+
+/**
+ * @name
+ * Circle
+ * @description
+ * A circular area
+ * @property {Point} center - The center of the circle
+ * @property {number} radius - The radius of the circle
+ */
+
+export type Circle = {
+  center: Point;
+  radius: number;
+};
+
+/**
+ * @name
+ * LocationOptions
+ * @description
+ * A data object that contains parameters for the location service, LocationManager.
+ * @property {number} buildingIdentifier - Identifier of the building on which the positioning will be started
+ * @property {number} interval - Default interval (in milliseconds) to notify location updates
+ * @property {string} indoorProvider - Default indoor provider. Possible values are INPHONE and SUPPORT
+ * @property {boolean} useBle - Defines whether or not to use BLE for positioning
+ * @property {boolean} useWifi - Defines whether or not to use Wi-Fi for positioning
+ * @property {boolean} useGps - Defines whether or not to use the GPS for indoor positioning
+ * @property {boolean} useBarometer - Defines whether or not to use barometer for indoor positioning
+ * @property {string} motionMode - Default motion mode. Possible values are BY_CAR, BY_FOOT and RADIOMAX
+ * @property {boolean} useForegroundService - Defines whether or not to activate the {@link http://developers.situm.es/pages/android/using_situm_sdk_background.html foreground service}
+ * @property {boolean} useDeadReckoning - Defines whether ot not to use dead reckoning to get fast position updates using only the inertial sensors, between the server position updates.
+ * @property {OutdoorLocationOptions} outdoorLocationOptions - Outdoor location options. Only used in an indoor/outdoor request
+ * @property {BeaconFilter[]} beaconFilters - Beacon filters to be handled during scan time, otherwise only Situm beacons will be scanned. Can be invoked multiple times to add as much beacon filters as you want @deprecated The SitumSDK now does it automatically
+ * @property {number} smallestDisplacement - Default smallest displacement to nofiy location updates
+ * @property {string} realtimeUpdateInterval - Default interval to send locations to the Realtime. Possible values are REALTIME, FAST, NORMAL, SLOW and BATTERY_SAVER
+ * @property {boolean} autoEnableBleDuringPositioning - Set if the BLE should be re-enabled during positioning if the ble is used. Android only
+ */
+
+export type LocationOptions = {
+  buildingIdentifier: number;
+  interval: number;
+  indoorProvider: string;
+  useBle: boolean;
+  useWifi: boolean;
+  useGps: boolean;
+  useBarometer: boolean;
+  motionMode: string;
+  useForegroundService: boolean;
+  useDeadReckoning: boolean;
+  outdoorLocationOptions: OutdoorLocationOptions;
+  beaconFilters: BeaconFilter[];
+  smallestDisplacement: number;
+  realtimeUpdateInterval: string;
+  autoEnableBleDuringPositioning: boolean;
+};
+
+/**
+ * @name
+ * LocationRequest
+ * @description
+ * A data object that contains parameters for the location service, LocationManager.
+ * @type {array}
+ * @property {Building} building 0 - Building on which the positioning will be started
+ * @property {LocationOptions} locationOptions 1 - Location options.
+ */
+
+export type LocationRequest = {
+  building: Building;
+  locationOptions: LocationOptions;
+};
+
+/**
+ * @name
+ * NavigationRequest
+ * @description
+ * A data object that contains parameters for the navigation service, NavigationManager.
+ * @property {number} distanceToChangeIndicationThreshold - Distance threshold from when the next indication is considered reached.
+ * @property {number} distanceToFloorChangeThreshold - Distance threshold from when a floor change is considered reached.
+ * @property {number} distanceToGoalThreshold - Distance threshold from when the goal is considered reached.
+ * @property {number} distanceToIgnoreFirstIndication - Maximum distance to ignore the first indication when navigating a route (Only available for Android).
+ * @property {number} ignoreLowQualityLocations - Set if low quality locations should be ignored. (Only available for Android).
+ * @property {number} indicationsInterval - Time to wait between indications.
+ * @property {number} outsideRouteThreshold - Set the distance to consider the use is outside of the route. A type=userOutsideRoute will be sent trough the NavigationListener .
+ * @property {number} roundIndicationsStep - Step that will be used to round indications distance.
+ * @property {number} timeToFirstIndication - Time to wait until the first indication is returned.
+ * @property {number} timeToIgnoreUnexpectedFloorChanges - Time (in millis) to ignore the locations received during navigation, when the next indication is a floor change, if the locations are in a wrong floor (not in origin or destination floors).
+ */
+
+export type NavigationRequest = {
+  distanceToIgnoreFirstIndication: number;
+  ignoreLowQualityLocations: number;
+  distanceToGoalThreshold: number;
+  outsideRouteThreshold: number;
+  distanceToFloorChangeThreshold: number;
+  distanceToChangeIndicationThreshold: number;
+  indicationsInterval: number;
+  timeToFirstIndication: number;
+  roundIndicationsStep: number;
+  timeToIgnoreUnexpectedFloorChanges: number;
+};
+
+/**
+ * @name
+ * DirectionsRequest
+ * @description
+ * A data object that contains the request for directions.
+ * @property {Building} positioningBuilding
+ * @property {Point|Location} from - Current user's position as the starting point of the route.
+ * @property {Point|POI} to - Point to, where the route should end.
+ * @property {DirectionsOptions} options - Options that can be added to the request.
+ */
+
+export type DirectionsRequest = {
+  positioningBuilding: Building;
+  from: Point | Location;
+  to: Point | Poi;
+  options: DirectionsOptions;
+};
+
+/**
+ * @name
+ * DirectionsOptions
+ * @description
+ * A data object that contains the directions options.
+ * @property {boolean} minimizeFloorChanges - Defines wheter or not the route should be calculated minimizing the floor changes even if the result is longer.
+ * @property {boolean} accessibleRoute - Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false). @deprecated, use accessibilityMode
+ * @property {boolean} accessible - Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false). @deprecated, use accessibilityMode
+ * @property {string} accessibilityMode - Defines the accessibility mode of the route. Possible values are: CHOOSE_SHORTEST, ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES, ONLY_ACCESSIBLE
+ * @property {number} startingAngle - Current user's orientation in degrees.
+ */
+
+export type DirectionsOptions = {
+  minimizeFloorChanges: boolean;
+  accessibleRoute: boolean;
+  accessible: boolean;
+  assebilityMode: string;
+  startingAngle: number;
+};
+
+/**
+ * @name
+ * OutdoorLocationOptions
+ * @description
+ * Outdoor location options are only used in indoor-outdoor mode (Only available for Android)
+ * @property {boolean} continuousMode - Environment detection continuous mode (true) or burst mode (false).
+ * @property {boolean} userDefinedThreshold
+ * @property {number} burstInterval - Interval to scan for GPS and detect the environment (in seconds).
+ * @property {number} averageSnrThreshold
+ */
+
+export type OutdoorLocationOptions = {
+  continuousMode: boolean;
+  userDefinedThreshold: boolean;
+  burstInterval: number;
+  averageSnrThreshold: number;
+};
+
+/**
+ * @name
+ * BeaconFilter
+ * @description
+ * Represents a BLE filter. Now the only field is the BLE proximity UUID
+ * @property {string} uuid - Assigns the proximity UUID
+ */
+
+export type BeaconFilter = {
+  uuid: string;
+};
+
+/**
+ * @name
+ * RealTimeRequest
+ * @description
+ * A data object that contains the parameters to process realtime data of the users.
+ * @property {Building} building object
+ * @property {int} pollTime - Interval in milliseconds (minimum is 3000ms).
+ */
+
+export type RealTimeRequest = {
+  building: Building;
+  pollTime: number;
+};
+
+/**
+ * @name
+ * RealTimeData
+ * @description
+ * A data object that contains information of the location of users in realtime.
+ * @property {Array<Location>} locations object
+ */
+
+export type RealTimeData = {
+  locations: Location[];
+};
 
 export interface SitumPluginStatic {
-
   initSitumSDK(): void;
 
   setApiKey(
@@ -309,7 +637,7 @@ export interface SitumPluginStatic {
     location: (location: Location) => void,
     status: Function,
     error?: Function,
-    locationOptions: LocationRequestOptions,
+    locationOptions: LocationOptions,
   ): number;
 
   stopPositioning(
@@ -317,60 +645,68 @@ export interface SitumPluginStatic {
     success: Function,
     error?: Function,
   ): void;
-  
+
   requestDirections(
     directionParams: Array<any>,
     success: (route: Route) => void,
     error?: Function,
   ): void;
 
-  fetchPoiCategories (success: Function, error?: Function) :void;
+  fetchPoiCategories(success: Function, error?: Function): void;
 
-  fetchPoiCategoryIconNormal (
-    category: any,
+  fetchPoiCategoryIconNormal(
+    category: PoiCategory,
     success: Function,
     error?: Function,
-  )  :void;
+  ): void;
 
-  fetchPoiCategoryIconSelected (
-    category: any,
+  fetchPoiCategoryIconSelected(
+    category: PoiCategory,
     success: Function,
     error?: Function,
-  )  :void;
+  ): void;
 
-  requestNavigationUpdates (
+  requestNavigationUpdates(
     navigationUpdates: Function,
     error?: Function,
-    options?: LocationRequestOptions,
-  )  :void;
+    options?: LocationOptions,
+  ): void;
 
-  updateNavigationWithLocation (
+  updateNavigationWithLocation(
     location,
     success: Function,
     error?: Function,
-  )  :void;
+  ): void;
 
-  removeNavigationUpdates (callback?: Function)  :void;
+  removeNavigationUpdates(callback?: Function): void;
 
-  fetchIndoorPOIsFromBuilding (
-    building: any,
+  fetchIndoorPOIsFromBuilding(
+    building: Building,
     success: Function,
     error?: Function,
-  )  :void;
+  ): void;
 
-  fetchOutdoorPOIsFromBuilding (
-    building: any,
+  fetchOutdoorPOIsFromBuilding(
+    building: Building,
     success: Function,
     error?: Function,
-  ) :void;
+  ): void;
 
-  fetchEventsFromBuilding (
-    building: any,
+  fetchEventsFromBuilding(
+    building: Building,
     success: Function,
     error?: Function,
-  )  :void;
+  ): void;
 
-  checkIfPointInsideGeofence (request: any, callback?: Function)  :void;
+  requestRealTimeUpdates(
+    navigationUpdates: Function,
+    error?: Function,
+    request?: RealTimeRequest,
+  ): void;
+
+  removeRealTimeUpdates(callback?: Function): void;
+
+  checkIfPointInsideGeofence(request: any, callback?: Function): void;
 
   invalidateCache(callback: Function): void;
 }
