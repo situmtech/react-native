@@ -43,6 +43,10 @@ NativeModules.RNCSitumPlugin = {
   requestNavigationUpdates: jest.fn(),
   updateNavigationWithLocation: jest.fn(),
   removeNavigationUpdates: jest.fn(),
+
+  // Realtime
+  requestRealTimeUpdates: jest.fn(),
+  removeRealTimeUpdates: jest.fn(),
 };
 
 // Reset the mocks before each test

@@ -46,11 +46,13 @@ import es.situm.sdk.model.cartography.Point;
 import es.situm.sdk.model.directions.Route;
 import es.situm.sdk.model.location.Location;
 import es.situm.sdk.model.navigation.NavigationProgress;
+import es.situm.sdk.model.realtime.RealTimeData;
 import es.situm.sdk.navigation.NavigationListener;
 import es.situm.sdk.navigation.NavigationManager;
 import es.situm.sdk.navigation.NavigationRequest;
 import es.situm.sdk.realtime.RealTimeListener;
 import es.situm.sdk.realtime.RealTimeManager;
+import es.situm.sdk.realtime.RealTimeRequest;
 import es.situm.sdk.utils.Handler;
 import es.situm.sdk.v1.SitumEvent;
 
@@ -59,6 +61,8 @@ import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_ERROR;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_STATUS_CHANGED;
 import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_ERROR;
 import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_UPDATE;
+import static com.situm.plugin.SitumPlugin.EVENT_REALTIME_ERROR;
+import static com.situm.plugin.SitumPlugin.EVENT_REALTIME_UPDATE;
 import static com.situm.plugin.utils.ReactNativeJson.convertJsonToArray;
 import static com.situm.plugin.utils.ReactNativeJson.convertJsonToMap;
 import static com.situm.plugin.utils.ReactNativeJson.convertMapToJson;
@@ -782,6 +786,58 @@ public class PluginHelper {
         }
     }
 
+
+    public void requestRealTimeUpdates(ReadableMap options, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
+        try {
+            // Convert request to native
+            JSONObject jsonRequest = convertMapToJson(options);
+            RealTimeRequest request = SitumMapper.jsonObjectRealtimeRequest(jsonRequest);
+            // Call
+
+            realtimeListener = new RealTimeListener() {
+
+                @Override
+                public void onUserLocations(RealTimeData realTimeData) {
+                    Log.d(TAG, "Success retrieving realtime data" + realTimeData);
+
+                    try {
+                        // Parse information
+                        JSONObject jsonResult = SitumMapper.realtimeDataToJson(realTimeData);
+
+                        eventEmitter.emit(EVENT_REALTIME_UPDATE,convertJsonToMap(jsonResult));
+                    } catch (Exception e) {
+                        Log.d(TAG, "Error  exception realtime data" + e);
+                        eventEmitter.emit(EVENT_REALTIME_ERROR, e.getMessage());
+                    }
+
+
+                }
+
+                @Override
+                public void onError(Error e) {
+                    Log.e(TAG, "Error request realtime data" + e);
+                    eventEmitter.emit(EVENT_REALTIME_ERROR, e.getMessage());
+                }
+
+            };
+            try {
+                getRealtimeManagerInstance().requestRealTimeUpdates(request, realtimeListener);
+            } catch (Exception e) {
+                Log.e(PluginHelper.TAG, "onError() called with: error = [" + e + "]");
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "exception: " + e);
+
+            e.printStackTrace();
+            eventEmitter.emit(EVENT_REALTIME_ERROR, e.getMessage());
+        }
+    }
+
+    public void removeRealTimeUpdates() {
+        Log.i(TAG, "Remove realtime updates");
+        getRealtimeManagerInstance().removeRealTimeUpdates();
+    }
+
     public void checkIfPointIsInsideGeoFence(ReadableMap map, Callback callback) {
         if (geofencePolygonMap.isEmpty()) {
             return;
@@ -830,97 +886,6 @@ public class PluginHelper {
         geofencePolygonMap = new HashMap<>();
         getCommunicationManagerInstance().invalidateCache();
     }
-
-/*
-
-
-    private void showLocationSettings(CordovaInterface cordova) {
-        Toast.makeText(cordova.getActivity(), "You must enable location", Toast.LENGTH_LONG).show();
-        cordova.getActivity().startActivityForResult(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"), 0);
-    }
-
-    private void requestLocationPermission(CordovaInterface cordova) {
-        ActivityCompat.requestPermissions(cordova.getActivity(),
-                new String[] { "android.permission.ACCESS_COARSE_LOCATION" }, 0);
-    }
-
-    public void returnDefaultResponse(CallbackContext callbackContext) {
-        String message = "Error function name not found";
-        Log.e(TAG, message);
-        callbackContext.sendPluginResult(new PluginResult(Status.OK, message));
-    }
-
-
-    public void requestRealTimeUpdates(final CordovaInterface cordova,
-     CordovaWebView webView,
-     JSONArray args,
-     final CallbackContext callbackContext) {
-        try {
-            // Convert request to native
-            JSONObject jsonRequest = args.getJSONObject(0);
-
-            RealTimeRequest request = SitumMapper.jsonObjectRealtimeRequest(jsonRequest);
-            // Call
-
-            realtimeListener = new RealTimeListener() {
-
-                @Override
-                public void onUserLocations(RealTimeData realTimeData) {
-                    Log.d(TAG, "Success retrieving realtime data" + realTimeData);
-
-                    try {
-                        // Parse information
-                        JSONObject jsonResult = SitumMapper.realtimeDataToJson(realTimeData);
-
-                        // Send it back to (removing user information)
-                        PluginResult result = new PluginResult(Status.OK,jsonResult);
-                        result.setKeepCallback(true);
-                        callbackContext.sendPluginResult(result);
-                    } catch (Exception e) {
-                        Log.d(TAG, "Error  exception realtime data" + e);
-                    }
-
-
-                }
-
-                @Override
-                public void onError(Error error) {
-                    Log.e(TAG, "Error request realtime data" + error);
-                    PluginResult result = new PluginResult(Status.ERROR, error.getMessage());
-                    result.setKeepCallback(true);
-                    callbackContext.sendPluginResult(result);
-                }
-
-            };
-            try {
-                getRealtimeManagerInstance().requestRealTimeUpdates(request, realtimeListener);
-            } catch (Exception e) {
-                Log.e(PluginHelper.TAG, "onError() called with: error = [" + e + "]");
-            }
-        } catch (Exception e) {
-            Log.d(TAG, "exception: " + e);
-
-            e.printStackTrace();
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-        }
-     }
-
-     public void removeRealTimeUpdates(CordovaInterface cordova,
-    CordovaWebView webView,
-    JSONArray args,
-    final CallbackContext callbackContext) {
-        //
-        Log.i(TAG, "Remove realtime updates");
-        getRealtimeManagerInstance().removeRealTimeUpdates(); // TODO: Incorporate sending a result to the exterior
-    }
-
-    // Initialize Navigation Component
-
-
-
-
-
-    */
 
     private void createAndAssignPolygonsToGeofences(List<Geofence> geofences) {
         if (geofences.isEmpty()) {

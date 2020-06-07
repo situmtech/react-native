@@ -193,13 +193,13 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void requestRealTimeUpdates(ReadableMap map) {
-        Log.e(TAG, "requestRealTimeUpdates");
+        getPluginInstance().requestRealTimeUpdates(map, getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
     }
 
     @Override
     @ReactMethod
     public void removeRealTimeUpdates() {
-        Log.e(TAG, "removeRealTimeUpdates");
+        getPluginInstance().removeRealTimeUpdates();
     }
 
     @Override

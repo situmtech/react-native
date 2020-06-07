@@ -4,6 +4,7 @@ import {logError} from './utils';
 
 let positioningSubscriptions = [];
 let navigationSubscriptions = [];
+let realtimeSubscriptions = [];
 
 const SitumPlugin = {
   initSitumSDK: function () {
@@ -328,6 +329,28 @@ const SitumPlugin = {
       success,
       error || logError,
     );
+  },
+
+  requestRealTimeUpdates: function (
+    navigationUpdates: Function,
+    error?: Function,
+    options?: any,
+  ) {
+    RNCSitumPlugin.requestRealTimeUpdates(options || {});
+    realtimeSubscriptions.push([
+      SitumPluginEventEmitter.addListener('realtimeUpdated', navigationUpdates),
+      error
+        ? SitumPluginEventEmitter.addListener(
+            'realtimeError',
+            error || logError,
+          )
+        : null,
+    ]);
+  },
+
+  removeRealTimeUpdates: function (callback?: Function) {
+    realtimeSubscriptions = [];
+    RNCSitumPlugin.removeRealTimeUpdates();
   },
 
   checkIfPointInsideGeofence: function (request: any, callback?: Function) {
