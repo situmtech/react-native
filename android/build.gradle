@@ -1,11 +1,5 @@
 apply plugin: 'com.android.library'
 
-repositories {
-    maven {
-        url "https://repo.situm.es/artifactory/libs-release-local"
-    }
-
-}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion

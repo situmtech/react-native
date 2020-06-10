@@ -2,6 +2,7 @@ package com.situm.plugin;
 
 import android.Manifest;
 import android.os.Build;
+import android.telecom.Call;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -137,20 +138,20 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
-    public void fetchPoiCategories(ReadableMap map) {
-        Log.e(TAG, "fetchPoiCategories");
+    public void fetchPoiCategories(Callback success, Callback error) {
+        getPluginInstance().fetchPoiCategories(success, error);
     }
 
     @Override
     @ReactMethod
-    public void fetchPoiCategoryIconNormal(ReadableMap map) {
-        Log.e(TAG, "fetchPoiCategoryIconNormal");
+    public void fetchPoiCategoryIconNormal(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchPoiCategoryIconNormal(map, success, error);
     }
 
     @Override
     @ReactMethod
-    public void fetchPoiCategoryIconSelected(ReadableMap map) {
-        Log.e(TAG, "fetchPoiCategoryIconSelected");
+    public void fetchPoiCategoryIconSelected(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchPoiCategoryIconSelected(map, success, error);
     }
 
     @Override
@@ -173,20 +174,20 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
-    public void requestNavigationUpdates(String callbackId) {
-        Log.e(TAG, "requestNavigationUpdates");
+    public void requestNavigationUpdates(ReadableMap options) {
+        getPluginInstance().requestNavigationUpdates(options, getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class), getReactApplicationContext());
     }
 
     @Override
     @ReactMethod
-    public void updateNavigationWithLocation(ReadableMap map) {
-        Log.e(TAG, "updateNavigationWithLocation");
+    public void updateNavigationWithLocation(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().updateNavigationWithLocation(map, success, error);
     }
 
     @Override
     @ReactMethod
-    public void removeNavigationUpdates() {
-        Log.e(TAG, "removeNavigationUpdates");
+    public void removeNavigationUpdates(Callback callback) {
+        getPluginInstance().removeNavigationUpdates(callback);
     }
 
     @Override
@@ -204,7 +205,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void invalidateCache() {
-        Log.e(TAG, "invalidateCache");
+        getPluginInstance().invalidateCache();
     }
 
     @Override
