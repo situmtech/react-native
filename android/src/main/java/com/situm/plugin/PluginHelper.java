@@ -792,6 +792,10 @@ public class PluginHelper {
         callbackContext.sendPluginResult(new PluginResult(Status.OK, message));
     }
 
+    public void invalidateCache(CallbackContext callbackContext) {
+        getCommunicationManagerInstance().invalidateCache();
+        callbackContext.sendPluginResult(new PluginResult(Status.OK, "Cache invalidated"));
+    }
 
     public void requestRealTimeUpdates(final CordovaInterface cordova,
      CordovaWebView webView,
