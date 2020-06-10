@@ -614,7 +614,6 @@ RCT_EXPORT_METHOD(invalidateCache:(RCTResponseSenderBlock)callback)
     NSMutableDictionary *obj = [[NSMutableDictionary alloc] init];
     [[SITCommunicationManager sharedManager] clearCache];
     callback(@[obj.copy]);
-    
 }
 
 RCT_EXPORT_METHOD(requestAuthorization){
