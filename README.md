@@ -289,6 +289,19 @@ Download the events of a building.
 
 Get all POI categories, download and cache their icons asynchronously.
 
+```js
+ const getPoiCategories = () => {
+    SitumPlugin.fetchPoiCategories(
+      (categories) => {
+        // returns list of categories
+      },
+      (error) => {
+        //returns error string
+      }
+    );
+  };
+```
+
 #### - fetchMapFromFloor
 
 Download the map image of a floor.
@@ -311,13 +324,46 @@ const getMapFromFloor = (floor) => {
 
 Get the normal category icon for a POICategory.
 
+```js
+const getPoiCategoryIconNormal = (category) => {
+    SitumPlugin.fetchPoiCategoryIconNormal(
+      category,
+      (icon) => {
+        // returns base64 icon
+      },
+      (error) => {
+        //returns error string
+      }
+    );
+  };
+  ```
+
 #### - fetchPoiCategoryIconSelected
 
 Get the selected category icon for a POICategory.
 
+```js
+const getPoiCategoryIconSelected = (category) => {
+    SitumPlugin.fetchPoiCategoryIconSelected(
+      category,
+      (icon) => {
+        // returns base64 icon
+      },
+      (error) => {
+        //returns error string
+      }
+    );
+  };
+  ```
+
+
 #### - invalidateCache
 
 Invalidate all the resources in the cache.
+
+```js
+SitumPlugin.invalidateCache();
+```
 
 #### - requestDirections
 
@@ -338,7 +384,7 @@ const points = [
 
 SitumPlugin.requestDirections(
   [building, ...points],
-  (route: any) => {
+  (route) => {
     // returns route object
     let latlngs = [];
     for (let segment of route.segments) {
@@ -351,7 +397,7 @@ SitumPlugin.requestDirections(
     }
     setPolylineLatlng(latlngs);
   },
-  (error: string) => {
+  (error) => {
     // returns error string
     console.log(error);
   }
@@ -362,13 +408,38 @@ SitumPlugin.requestDirections(
 
 Necessary step to request progress. Alone this method does not provide progress object. You must feed navigation API with location, as indicated on updateNavigationWithLocation section.
 
+```js
+const requestNavigationUpdates = () => {
+  SitumPlugin.requestNavigationUpdates(
+    (navigation) => {
+      //returns navigation object
+    },
+    (error) => {
+      //returns error string
+    },
+    {
+      distanceToGoalThreshold: 3,
+      outsideRouteThreshold: 50
+    }
+    );
+  };
+```
+
 #### - updateNavigationWithLocation
     
 Usually, position variable should be one of the locations provided by the system on the [startPositioning](#--startpositioning) function.
 
+```js
+SitumPlugin.updateNavigationWithLocation(currentLocation)
+```
+
 #### - removeNavigationUpdates
 
 When you are no longer interested on Navigation Updates you should call this method to remove internal allocated resources.
+
+```js
+SitumPlugin.removeNavigationUpdates();
+```
 
 
 ## License
