@@ -276,11 +276,11 @@ const SitumPlugin = {
 
   removeNavigationUpdates: function (callback?: Function) {
     navigationSubscriptions = [];
-    RNCSitumPlugin.removeNavigationUpdates(callback || logError);
+    RNCSitumPlugin.removeNavigationUpdates(callback || warning);
   },
 
-  invalidateCache: function () {
-    RNCSitumPlugin.invalidateCache();
+  invalidateCache: function (callback?: Function) {
+    RNCSitumPlugin.invalidateCache(callback);
   },
 };
 

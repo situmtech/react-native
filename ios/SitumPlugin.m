@@ -609,9 +609,11 @@ RCT_EXPORT_METHOD(removeRealTimeUpdates)
     NSLog(@"removeRealTimeUpdates");
 }
 
-RCT_EXPORT_METHOD(invalidateCache)
+RCT_EXPORT_METHOD(invalidateCache:(RCTResponseSenderBlock)callback)
 {
+    NSMutableDictionary *obj = [[NSMutableDictionary alloc] init];
     [[SITCommunicationManager sharedManager] clearCache];
+    callback(@[obj.copy]);
 }
 
 RCT_EXPORT_METHOD(requestAuthorization){
