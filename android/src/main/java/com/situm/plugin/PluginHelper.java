@@ -1,5 +1,6 @@
 package com.situm.plugin;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -32,8 +33,10 @@ import es.situm.sdk.model.cartography.Building;
 import es.situm.sdk.model.cartography.BuildingInfo;
 import es.situm.sdk.model.cartography.Floor;
 import es.situm.sdk.model.cartography.Geofence;
+import es.situm.sdk.model.cartography.PoiCategory;
 import es.situm.sdk.model.directions.Route;
 import es.situm.sdk.model.location.Location;
+import es.situm.sdk.model.navigation.NavigationProgress;
 import es.situm.sdk.navigation.NavigationListener;
 import es.situm.sdk.navigation.NavigationManager;
 import es.situm.sdk.navigation.NavigationRequest;
@@ -44,6 +47,8 @@ import es.situm.sdk.utils.Handler;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_CHANGED;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_ERROR;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_STATUS_CHANGED;
+import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_ERROR;
+import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_UPDATE;
 import static com.situm.plugin.utils.ReactNativeJson.convertJsonToArray;
 import static com.situm.plugin.utils.ReactNativeJson.convertJsonToMap;
 import static com.situm.plugin.utils.ReactNativeJson.convertMapToJson;
@@ -318,16 +323,7 @@ public class PluginHelper {
                     Log.e(PluginHelper.TAG, "onError() called with: error = [" + error + "]");
                     locationListener = null;
                     eventEmitter.emit(EVENT_LOCATION_ERROR, error.getMessage());
-                    /*switch (error.getCode()) {
-                        case 8001:
-                            requestLocationPermission(cordova);
-                            return;
-                        case 8002:
-                            showLocationSettings(cordova);
-                            return;
-                        default:
-                            return;
-                    }*/
+
                 }
             };
             try {
@@ -403,6 +399,257 @@ public class PluginHelper {
             e.printStackTrace();
             invokeCallback(error, e.getMessage());
         }
+    }
+
+    public void fetchPoiCategories(Callback success, Callback error) {
+        getCommunicationManagerInstance().fetchPoiCategories(new Handler<Collection<PoiCategory>>() {
+            @Override
+            public void onSuccess(Collection<PoiCategory> poiCategories) {
+                try {
+                    Log.d(PluginHelper.TAG, "onSuccess: POI Categories fetched successfully.");
+                    JSONArray jsonaPoiCategories = new JSONArray();
+                    for (PoiCategory poiCategory : poiCategories) {
+                        Log.i(PluginHelper.TAG, "onSuccess: " + poiCategory.getCode() + " - " + poiCategory.getName());
+                        JSONObject jsonoPoiCategory = SitumMapper.poiCategoryToJsonObject(poiCategory);
+                        jsonaPoiCategories.put(jsonoPoiCategory);
+                    }
+                    if (poiCategories.isEmpty()) {
+                        Log.e(PluginHelper.TAG, "onSuccess: you have no categories defined for POIs");
+                    }
+                    invokeCallback(success, convertJsonToArray(jsonaPoiCategories));
+                } catch (JSONException e) {
+                    invokeCallback(error, e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Error e) {
+                Log.e(PluginHelper.TAG, "onFailure:" + e);
+                invokeCallback(error, e.getMessage());
+            }
+        });
+    }
+
+    public void fetchPoiCategoryIconNormal(ReadableMap categoryMap, Callback success, Callback error) {
+        try {
+            JSONObject jsonoCategory = convertMapToJson(categoryMap);
+            PoiCategory category = SitumMapper.poiCategoryFromJsonObject(jsonoCategory);
+            getCommunicationManagerInstance().fetchPoiCategoryIconNormal(category, new Handler<Bitmap>() {
+                @Override
+                public void onSuccess(Bitmap bitmap) {
+                    try {
+                        Log.d(PluginHelper.TAG, "onSuccess: Poi icon fetched successfully");
+                        JSONObject jsonoMap = SitumMapper.bitmapToString(bitmap);
+                        invokeCallback(success, convertJsonToMap(jsonoMap));
+                    } catch (JSONException e) {
+                        invokeCallback(error, e.getMessage());
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Error e) {
+                    Log.e(PluginHelper.TAG, "onFailure: " + e);
+                    invokeCallback(error, e.getMessage());
+
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected error in situm POI response", e.getCause());
+            invokeCallback(error, e.getMessage());
+
+        }
+    }
+
+    public void fetchPoiCategoryIconSelected(ReadableMap categoryMap, Callback success, Callback error) {
+        try {
+            JSONObject jsonoCategory = convertMapToJson(categoryMap);
+            PoiCategory category = SitumMapper.poiCategoryFromJsonObject(jsonoCategory);
+            getCommunicationManagerInstance().fetchPoiCategoryIconSelected(category, new Handler<Bitmap>() {
+                @Override
+                public void onSuccess(Bitmap bitmap) {
+                    try {
+                        Log.d(PluginHelper.TAG, "onSuccess: Poi icon fetched successfully");
+                        JSONObject jsonoMap = SitumMapper.bitmapToString(bitmap);
+                        invokeCallback(success, convertJsonToMap(jsonoMap));
+                    } catch (JSONException e) {
+                        invokeCallback(error, e.getMessage());
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Error e) {
+                    Log.e(PluginHelper.TAG, "onFailure: " + e);
+                    invokeCallback(error, e.getMessage());
+
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected error in situm POI response", e.getCause());
+            invokeCallback(error, e.getMessage());
+        }
+    }
+
+    public void requestNavigationUpdates(ReadableMap options, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter, Context context) {
+        // 1) Parse and check arguments
+
+        if (this.computedRoute == null) {
+            Log.d(TAG, "Situm >> There is not an stored route so you are not allowed to navigate");
+            eventEmitter.emit(EVENT_NAVIGATION_ERROR, "Compute a valid route with requestDirections before trying to navigate within a route");
+            return;
+        }
+        // try??
+        Route route = this.computedRoute; // args.getJSONObject(0); // Retrieve route from arguments, we do this since Route object has internal properties that we do not want to expose
+        // 2) Build Navigation Arguments
+        // 2.1) Build Navigation Request
+        Log.d(TAG, "requestNavigationUpdates executed: passed route: " + route);
+        NavigationRequest.Builder builder = new NavigationRequest.Builder().route(route);
+
+        try {
+            JSONObject navigationJSONOptions = convertMapToJson(options);
+
+            if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_IGNORE_FIRST_INDICATION)) {
+                Double distanceToIgnoreFirstIndication = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_IGNORE_FIRST_INDICATION);
+                builder.distanceToIgnoreFirstIndication(distanceToIgnoreFirstIndication);
+            }
+
+            if (navigationJSONOptions.has(SitumMapper.OUTSIDE_ROUTE_THRESHOLD)) {
+                Double outsideRouteThreshold = navigationJSONOptions.getDouble(SitumMapper.OUTSIDE_ROUTE_THRESHOLD);
+                builder.outsideRouteThreshold(outsideRouteThreshold);
+            }
+
+            if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_GOAL_THRESHOLD)) {
+                Double distanceToGoalThreshold = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_GOAL_THRESHOLD);
+                builder.distanceToGoalThreshold(distanceToGoalThreshold);
+            }
+
+            if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_CHANGE_FLOOR_THRESHOLD)) {
+                Double distanceToChangeFloorThreshold = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_CHANGE_FLOOR_THRESHOLD);
+                builder.distanceToChangeFloorThreshold(distanceToChangeFloorThreshold);
+            }
+
+            if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_CHANGE_INDICATION_THRESHOLD)) {
+                Double distanceToChangeIndicationThreshold = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_CHANGE_INDICATION_THRESHOLD);
+                builder.distanceToChangeIndicationThreshold(distanceToChangeIndicationThreshold);
+            }
+
+            if (navigationJSONOptions.has(SitumMapper.INDICATIONS_INTERVAL)) {
+                Long indicationsInterval = navigationJSONOptions.getLong(SitumMapper.INDICATIONS_INTERVAL);
+                builder.indicationsInterval(indicationsInterval);
+            }
+
+            if (navigationJSONOptions.has(SitumMapper.TIME_TO_FIRST_INDICATION)) {
+                Long timeToFirstIndication = navigationJSONOptions.getLong(SitumMapper.TIME_TO_FIRST_INDICATION);
+                builder.timeToFirstIndication(timeToFirstIndication);
+            }
+
+            if (navigationJSONOptions.has(SitumMapper.ROUND_INDICATION_STEP)) {
+                Integer roundIndicationsStep = navigationJSONOptions.getInt(SitumMapper.ROUND_INDICATION_STEP);
+                builder.roundIndicationsStep(roundIndicationsStep);
+            }
+
+            if (navigationJSONOptions.has(SitumMapper.TIME_TO_IGNORE_UNEXPECTED_FLOOR_CHANGES)) {
+                Integer timeToIgnoreUnexpectedFloorChanges = navigationJSONOptions.getInt(SitumMapper.TIME_TO_IGNORE_UNEXPECTED_FLOOR_CHANGES);
+                builder.timeToIgnoreUnexpectedFloorChanges(timeToIgnoreUnexpectedFloorChanges);
+            }
+
+            if (navigationJSONOptions.has(SitumMapper.IGNORE_LOW_QUALITY_LOCATIONS)) {
+                Boolean ignoreLowQualityLocations = navigationJSONOptions.getBoolean(SitumMapper.IGNORE_LOW_QUALITY_LOCATIONS);
+                builder.ignoreLowQualityLocations(ignoreLowQualityLocations);
+            }
+
+        } catch (Exception e) {
+            //TODO: handle exception
+            Log.d(TAG, "Situm >> Unable to retrieve navigation options. Applying default ones");
+        }
+
+        navigationRequest = builder.build();
+
+        // 2.2) Build Navigation Callback
+        navigationListener = new NavigationListener() {
+            public void onProgress(NavigationProgress progress) {
+                Log.d(TAG, "On progress received: " + progress);
+                try {
+                    JSONObject jsonProgress = SitumMapper.navigationProgressToJsonObject(progress, context);
+                    try {
+                        jsonProgress.put("type", "progress");
+                    } catch (JSONException e) {
+                        Log.e(TAG, "error inserting type in navigation progress");
+                    }
+                    eventEmitter.emit(EVENT_NAVIGATION_UPDATE, convertJsonToMap(jsonProgress));
+
+                } catch (Exception e) {
+                    Log.d(TAG, "On Error parsing progress: " + progress);
+                    eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
+                }
+            }
+
+            ;
+
+            public void onDestinationReached() {
+                Log.d(TAG, "On destination reached: ");
+                JSONObject jsonResult = new JSONObject();
+                try {
+                    jsonResult.put("type", "destinationReached");
+                    jsonResult.put("message", "Destination reached");
+                    eventEmitter.emit(EVENT_NAVIGATION_UPDATE, convertJsonToMap(jsonResult));
+                } catch (JSONException e) {
+                    Log.e(TAG, "error inserting type in destination reached");
+                }
+
+            }
+
+            ;
+
+            public void onUserOutsideRoute() {
+                Log.d(TAG, "On user outside route: ");
+                JSONObject jsonResult = new JSONObject();
+                try {
+                    jsonResult.put("type", "userOutsideRoute");
+                    jsonResult.put("message", "User outside route");
+                    eventEmitter.emit(EVENT_NAVIGATION_UPDATE, convertJsonToMap(jsonResult));
+
+                } catch (JSONException e) {
+                    Log.e(TAG, "error inserting type in user outside route");
+                }
+
+            }
+        };
+
+        getNavigationManagerInstance().requestNavigationUpdates(navigationRequest, navigationListener);
+
+    }
+
+    public void updateNavigationWithLocation(ReadableMap locationMap, Callback success, Callback error) {
+        try {
+            // 1) Check for location arguments
+            JSONObject jsonLocation = convertMapToJson(locationMap);
+
+            // 2) Create a Location Object from argument
+            Location actualLocation = SitumMapper.jsonLocationObjectToLocation(jsonLocation); // Location Objet from JSON
+            // Location actualLocation = PluginHelper.computedLocation;
+            Log.i(TAG, "UpdateNavigation with Location: " + actualLocation);
+
+            // 3) Connect interfaces
+            getNavigationManagerInstance().updateWithLocation(actualLocation);
+            invokeCallback(success, "Navigation updated");
+        } catch (Exception e) {
+            e.printStackTrace();
+            invokeCallback(error, e.getMessage());
+        }
+    }
+
+    public void removeNavigationUpdates(Callback callback) {
+        Log.i(TAG, "Remove navigation updates");
+        boolean success = getNavigationManagerInstance().removeUpdates();
+        WritableMap map = Arguments.createMap();
+        map.putBoolean("success", success);
+        invokeCallback(callback, map);
+    }
+
+    public void invalidateCache() {
+        getCommunicationManagerInstance().invalidateCache();
     }
 
 /*
@@ -490,94 +737,6 @@ public class PluginHelper {
         }
     }
 
-    public void fetchPoiCategories(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
-        getCommunicationManagerInstance().fetchPoiCategories(new Handler<Collection<PoiCategory>>() {
-            @Override
-            public void onSuccess(Collection<PoiCategory> poiCategories) {
-                try {
-                    Log.d(PluginHelper.TAG, "onSuccess: POI Categories fetched successfully.");
-                    JSONArray jsonaPoiCategories = new JSONArray();
-                    for (PoiCategory poiCategory : poiCategories) {
-                        Log.i(PluginHelper.TAG, "onSuccess: " + poiCategory.getCode() + " - " + poiCategory.getName());
-                        JSONObject jsonoPoiCategory = SitumMapper.poiCategoryToJsonObject(poiCategory);
-                        jsonaPoiCategories.put(jsonoPoiCategory);
-                    }
-                    if (poiCategories.isEmpty()) {
-                        Log.e(PluginHelper.TAG, "onSuccess: you have no categories defined for POIs");
-                    }
-                    callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonaPoiCategories));
-                } catch (JSONException e) {
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-                }
-            }
-
-            @Override
-            public void onFailure(Error error) {
-                Log.e(PluginHelper.TAG, "onFailure:" + error);
-                callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
-            }
-        });
-    }
-
-    public void fetchPoiCategoryIconNormal(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
-        try {
-            JSONObject jsonoCategory = args.getJSONObject(0);
-            PoiCategory category = SitumMapper.poiCategoryFromJsonObject(jsonoCategory);
-            getCommunicationManagerInstance().fetchPoiCategoryIconNormal(category, new Handler<Bitmap>() {
-                @Override
-                public void onSuccess(Bitmap bitmap) {
-                    try {
-                        Log.d(PluginHelper.TAG, "onSuccess: Poi icon fetched successfully");
-                        JSONObject jsonoMap = SitumMapper.bitmapToString(bitmap);
-                        callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonoMap));
-                    } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-                    }
-                }
-
-                @Override
-                public void onFailure(Error error) {
-                    Log.e(PluginHelper.TAG, "onFailure: " + error);
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
-                }
-            });
-        } catch (Exception e) {
-            Log.e(TAG, "Unexpected error in situm POI response", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-        }
-    }
-
-    public void fetchPoiCategoryIconSelected(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
-            final CallbackContext callbackContext) {
-        try {
-            JSONObject jsonoCategory = args.getJSONObject(0);
-            PoiCategory category = SitumMapper.poiCategoryFromJsonObject(jsonoCategory);
-            getCommunicationManagerInstance().fetchPoiCategoryIconSelected(category, new Handler<Bitmap>() {
-                @Override
-                public void onSuccess(Bitmap bitmap) {
-                    try {
-                        Log.d(PluginHelper.TAG, "onSuccess: Poi icon fetched successfully");
-                        JSONObject jsonoMap = SitumMapper.bitmapToString(bitmap);
-                        callbackContext.sendPluginResult(new PluginResult(Status.OK, jsonoMap));
-                    } catch (JSONException e) {
-                        callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-                    }
-                }
-
-                @Override
-                public void onFailure(Error error) {
-                    Log.e(PluginHelper.TAG, "onFailure: " + error);
-                    callbackContext.sendPluginResult(new PluginResult(Status.ERROR, error.getMessage()));
-                }
-            });
-        } catch (Exception e) {
-            Log.e(TAG, "Unexpected error in situm POI response", e.getCause());
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-        }
-    }
-
     public void fetchEventsFromBuilding(CordovaInterface cordova, CordovaWebView webView, JSONArray args,
             final CallbackContext callbackContext) {
         try {
@@ -636,146 +795,6 @@ public class PluginHelper {
     public void invalidateCache(CallbackContext callbackContext) {
         getCommunicationManagerInstance().invalidateCache();
         callbackContext.sendPluginResult(new PluginResult(Status.OK, "Cache invalidated"));
-    }
-
-    public void requestNavigationUpdates(final CordovaInterface cordova,
-     CordovaWebView webView,
-     JSONArray args,
-     final CallbackContext callbackContext) {
-            // 1) Parse and check arguments
-
-            if (this.computedRoute == null) {
-                Log.d(TAG, "Situm >> There is not an stored route so you are not allowed to navigate");
-                callbackContext.sendPluginResult(new PluginResult(Status.ERROR, "Compute a valid route with requestDirections before trying to navigate within a route"));
-                return;
-            }
-            // try??
-            Route route = this.computedRoute; // args.getJSONObject(0); // Retrieve route from arguments, we do this since Route object has internal properties that we do not want to expose
-            // 2) Build Navigation Arguments
-            // 2.1) Build Navigation Request
-            Log.d(TAG,"requestNavigationUpdates executed: passed route: " +  route);
-            NavigationRequest.Builder builder = new NavigationRequest.Builder().route(route);
-
-            try {
-                JSONObject navigationJSONOptions = args.getJSONObject(0); // Route should be the first parameter
-
-                if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_IGNORE_FIRST_INDICATION)) {
-                    Double distanceToIgnoreFirstIndication = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_IGNORE_FIRST_INDICATION);
-                    builder.distanceToIgnoreFirstIndication(distanceToIgnoreFirstIndication);
-                }
-
-                if (navigationJSONOptions.has(SitumMapper.OUTSIDE_ROUTE_THRESHOLD)) {
-                    Double outsideRouteThreshold = navigationJSONOptions.getDouble(SitumMapper.OUTSIDE_ROUTE_THRESHOLD);
-                    builder.outsideRouteThreshold(outsideRouteThreshold);
-                }
-
-                if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_GOAL_THRESHOLD)) {
-                    Double distanceToGoalThreshold = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_GOAL_THRESHOLD);
-                    builder.distanceToGoalThreshold(distanceToGoalThreshold);
-                }
-
-                if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_CHANGE_FLOOR_THRESHOLD)) {
-                    Double distanceToChangeFloorThreshold = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_CHANGE_FLOOR_THRESHOLD);
-                    builder.distanceToChangeFloorThreshold(distanceToChangeFloorThreshold);
-                }
-
-                if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_CHANGE_INDICATION_THRESHOLD)) {
-                    Double distanceToChangeIndicationThreshold = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_CHANGE_INDICATION_THRESHOLD);
-                    builder.distanceToChangeIndicationThreshold(distanceToChangeIndicationThreshold);
-                }
-
-                if (navigationJSONOptions.has(SitumMapper.INDICATIONS_INTERVAL)) {
-                    Long indicationsInterval = navigationJSONOptions.getLong(SitumMapper.INDICATIONS_INTERVAL);
-                    builder.indicationsInterval(indicationsInterval);
-                }
-
-                if (navigationJSONOptions.has(SitumMapper.TIME_TO_FIRST_INDICATION)) {
-                    Long timeToFirstIndication = navigationJSONOptions.getLong(SitumMapper.TIME_TO_FIRST_INDICATION);
-                    builder.timeToFirstIndication(timeToFirstIndication);
-                }
-
-                if (navigationJSONOptions.has(SitumMapper.ROUND_INDICATION_STEP)) {
-                    Integer roundIndicationsStep = navigationJSONOptions.getInt(SitumMapper.ROUND_INDICATION_STEP);
-                    builder.roundIndicationsStep(roundIndicationsStep);
-                }
-
-                if (navigationJSONOptions.has(SitumMapper.TIME_TO_IGNORE_UNEXPECTED_FLOOR_CHANGES)) {
-                    Integer timeToIgnoreUnexpectedFloorChanges = navigationJSONOptions.getInt(SitumMapper.TIME_TO_IGNORE_UNEXPECTED_FLOOR_CHANGES);
-                    builder.timeToIgnoreUnexpectedFloorChanges(timeToIgnoreUnexpectedFloorChanges);
-                }
-
-                if (navigationJSONOptions.has(SitumMapper.IGNORE_LOW_QUALITY_LOCATIONS)) {
-                    Boolean ignoreLowQualityLocations = navigationJSONOptions.getBoolean(SitumMapper.IGNORE_LOW_QUALITY_LOCATIONS);
-                    builder.ignoreLowQualityLocations(ignoreLowQualityLocations);
-                }
-
-            } catch (Exception e) {
-                //TODO: handle exception
-                Log.d(TAG, "Situm >> Unable to retrieve navigation options. Applying default ones");
-            }
-
-            navigationRequest = builder.build();
-
-            // 2.2) Build Navigation Callback
-            navigationListener = new NavigationListener()   {
-                public void onProgress(NavigationProgress progress) {
-                    Log.d(TAG, "On progress received: " + progress);
-                    try {
-                        JSONObject jsonProgress = SitumMapper.navigationProgressToJsonObject(progress, cordova.getActivity());
-                        try {
-                            jsonProgress.put("type", "progress");
-                        } catch (JSONException e) {
-                            Log.e(TAG, "error inserting type in navigation progress");
-                        }
-                        PluginResult result = new PluginResult(Status.OK, jsonProgress ); // TODO: Change this to return an object with valid information
-                        result.setKeepCallback(true);
-                        callbackContext.sendPluginResult(result);
-
-                    } catch (Exception e) {
-                        //TODO: handle exception
-                        Log.d(TAG, "On Error parsing progress: " + progress);
-                        PluginResult result = new PluginResult(Status.ERROR, e.getMessage());
-                        result.setKeepCallback(true);
-                        callbackContext.sendPluginResult(result);
-                    }
-                };
-
-                public void onDestinationReached() {
-                    Log.d(TAG, "On destination reached: ");
-                    JSONObject jsonResult = new JSONObject();
-                    try {
-                        jsonResult.put("type", "destinationReached");
-                        jsonResult.put("message", "Destination reached");
-                        } catch (JSONException e) {
-                        Log.e(TAG, "error inserting type in destination reached");
-                    }
-                    PluginResult result = new PluginResult(Status.OK,jsonResult);
-                    result.setKeepCallback(true);
-                    callbackContext.sendPluginResult(result);
-                };
-
-                public void onUserOutsideRoute() {
-                    Log.d(TAG, "On user outside route: " );
-                    JSONObject jsonResult = new JSONObject();
-                    try {
-                        jsonResult.put("type", "userOutsideRoute");
-                        jsonResult.put("message", "User outside route");
-                    } catch (JSONException e) {
-                        Log.e(TAG, "error inserting type in user outside route");
-                    }
-                    PluginResult result = new PluginResult(Status.OK,jsonResult);
-                    result.setKeepCallback(true);
-                    callbackContext.sendPluginResult(result);
-                }
-            };
-
-            // 3)  Connect interfaces and connect callback back to js
-            getNavigationManagerInstance().requestNavigationUpdates(navigationRequest, navigationListener); // Be carefull with exceptions
-
-            PluginResult result = new PluginResult(Status.OK, "Requested navigation successfully"); // TODO: Change this to return an object with valid information
-            result.setKeepCallback(true);
-            callbackContext.sendPluginResult(result);
-
     }
 
     public void requestRealTimeUpdates(final CordovaInterface cordova,
@@ -843,36 +862,9 @@ public class PluginHelper {
 
     // Initialize Navigation Component
 
-    public void updateNavigationWithLocation(CordovaInterface cordova,
-    CordovaWebView webView,
-    JSONArray args,
-    final CallbackContext callbackContext) {
-        try {
-            // 1) Check for location arguments
-            JSONObject jsonLocation = args.getJSONObject(0); // What if json is not specified?
 
-            // 2) Create a Location Object from argument
-            Location actualLocation = SitumMapper.jsonLocationObjectToLocation(jsonLocation); // Location Objet from JSON
-                // Location actualLocation = PluginHelper.computedLocation;
-            Log.i(TAG, "UpdateNavigation with Location: " + actualLocation);
 
-            // 3) Connect interfaces
-            getNavigationManagerInstance().updateWithLocation(actualLocation);
-            callbackContext.sendPluginResult(new PluginResult(Status.OK, "Navigation updated"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            callbackContext.sendPluginResult(new PluginResult(Status.ERROR, e.getMessage()));
-        }
-    }
 
-    public void removeNavigationUpdates(CordovaInterface cordova,
-    CordovaWebView webView,
-    JSONArray args,
-    final CallbackContext callbackContext) {
-        //
-        Log.i(TAG, "Remove navigation updates");
-        getNavigationManagerInstance().removeUpdates(); // TODO: Incorporate sending a result to the exterior
-    }
 
     */
 

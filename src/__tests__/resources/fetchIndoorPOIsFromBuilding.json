@@ -1,0 +1,574 @@
+[
+  {
+    "identifier": "15457",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 39.7509433959792,
+      "y": 35.5247557150279
+    },
+    "coordinate": {
+      "latitude": 42.8722146084972,
+      "longitude": -8.56327280402184
+    },
+    "floorIdentifier": "5764",
+    "poiName": "Elevator",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 39.7509433959792,
+        "y": 35.5247557150279
+      },
+      "coordinate": {
+        "latitude": 42.8722146084972,
+        "longitude": -8.56327280402184
+      },
+      "floorIdentifier": "5764",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15458",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 11.2239939381576,
+      "y": 11.1284778861098
+    },
+    "coordinate": {
+      "latitude": 42.8724760484865,
+      "longitude": -8.56298178434372
+    },
+    "floorIdentifier": "5763",
+    "poiName": "Main Parking",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 11.2239939381576,
+        "y": 11.1284778861098
+      },
+      "coordinate": {
+        "latitude": 42.8724760484865,
+        "longitude": -8.56298178434372
+      },
+      "floorIdentifier": "5763",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {
+      "building": "1051"
+    }
+  },
+  {
+    "identifier": "15459",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 11.209644096689,
+      "y": 36.5324627968819
+    },
+    "coordinate": {
+      "latitude": 42.8722509742764,
+      "longitude": -8.56292679905891
+    },
+    "floorIdentifier": "5763",
+    "poiName": "Secondary Parking",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 11.209644096689,
+        "y": 36.5324627968819
+      },
+      "coordinate": {
+        "latitude": 42.8722509742764,
+        "longitude": -8.56292679905891
+      },
+      "floorIdentifier": "5763",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {
+      "1001": "1011 "
+    }
+  },
+  {
+    "identifier": "15460",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 61.9002062990592,
+      "y": 27.7308646597906
+    },
+    "coordinate": {
+      "latitude": 42.8722485171298,
+      "longitude": -8.56355644762516
+    },
+    "floorIdentifier": "5762",
+    "poiName": "backend",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 61.9002062990592,
+        "y": 27.7308646597906
+      },
+      "coordinate": {
+        "latitude": 42.8722485171298,
+        "longitude": -8.56355644762516
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15461",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 56.5411482205288,
+      "y": 33.2385574775082
+    },
+    "coordinate": {
+      "latitude": 42.8722082199122,
+      "longitude": -8.56348000466824
+    },
+    "floorIdentifier": "5762",
+    "poiName": "SITUM TECHNOLOGIES",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 56.5411482205288,
+        "y": 33.2385574775082
+      },
+      "coordinate": {
+        "latitude": 42.8722082199122,
+        "longitude": -8.56348000466824
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15462",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 35.0666341946793,
+      "y": 35.4763487115217
+    },
+    "coordinate": {
+      "latitude": 42.8722224713702,
+      "longitude": -8.56321647763252
+    },
+    "floorIdentifier": "5763",
+    "poiName": "Toilet",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 35.0666341946793,
+        "y": 35.4763487115217
+      },
+      "coordinate": {
+        "latitude": 42.8722224713702,
+        "longitude": -8.56321647763252
+      },
+      "floorIdentifier": "5763",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15463",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 5.53319423802731,
+      "y": 20.6888023286302
+    },
+    "coordinate": {
+      "latitude": 42.8724003686035,
+      "longitude": -8.56289260089397
+    },
+    "floorIdentifier": "5765",
+    "poiName": "Situm Tech",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 5.53319423802731,
+        "y": 20.6888023286302
+      },
+      "coordinate": {
+        "latitude": 42.8724003686035,
+        "longitude": -8.56289260089397
+      },
+      "floorIdentifier": "5765",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {
+      "Situm": "Category Custom"
+    }
+  },
+  {
+    "identifier": "15464",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 33.5082360498973,
+      "y": 37.0310847285386
+    },
+    "coordinate": {
+      "latitude": 42.87221116849,
+      "longitude": -8.56319434940815
+    },
+    "floorIdentifier": "5762",
+    "poiName": "Toilet",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 33.5082360498973,
+        "y": 37.0310847285386
+      },
+      "coordinate": {
+        "latitude": 42.87221116849,
+        "longitude": -8.56319434940815
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15465",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 25.4036905642953,
+      "y": 14.4677525510005
+    },
+    "coordinate": {
+      "latitude": 42.8724239571484,
+      "longitude": -8.56314539909363
+    },
+    "floorIdentifier": "5763",
+    "poiName": "Main entrance",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 25.4036905642953,
+        "y": 14.4677525510005
+      },
+      "coordinate": {
+        "latitude": 42.8724239571484,
+        "longitude": -8.56314539909363
+      },
+      "floorIdentifier": "5763",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15466",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 56.2378243765452,
+      "y": 24.0862407342886
+    },
+    "coordinate": {
+      "latitude": 42.872289797179,
+      "longitude": -8.56349609792233
+    },
+    "floorIdentifier": "5762",
+    "poiName": "Situm Finance",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 56.2378243765452,
+        "y": 24.0862407342886
+      },
+      "coordinate": {
+        "latitude": 42.872289797179,
+        "longitude": -8.56349609792233
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15467",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 24.9054865949018,
+      "y": 25.9820718016188
+    },
+    "coordinate": {
+      "latitude": 42.8723227229127,
+      "longitude": -8.56311455368996
+    },
+    "floorIdentifier": "5763",
+    "poiName": "Backdoor",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 24.9054865949018,
+        "y": 25.9820718016188
+      },
+      "coordinate": {
+        "latitude": 42.8723227229127,
+        "longitude": -8.56311455368996
+      },
+      "floorIdentifier": "5763",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15468",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 35.2933015034018,
+      "y": 41.0928504443904
+    },
+    "coordinate": {
+      "latitude": 42.8721723455379,
+      "longitude": -8.56320708990097
+    },
+    "floorIdentifier": "5764",
+    "poiName": "Snack Bar",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 35.2933015034018,
+        "y": 41.0928504443904
+      },
+      "coordinate": {
+        "latitude": 42.8721723455379,
+        "longitude": -8.56320708990097
+      },
+      "floorIdentifier": "5764",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15469",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 38.1158876617535,
+      "y": 33.5436706235754
+    },
+    "coordinate": {
+      "latitude": 42.8722347571072,
+      "longitude": -8.56325738132
+    },
+    "floorIdentifier": "5765",
+    "poiName": "Elevator",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 38.1158876617535,
+        "y": 33.5436706235754
+      },
+      "coordinate": {
+        "latitude": 42.8722347571072,
+        "longitude": -8.56325738132
+      },
+      "floorIdentifier": "5765",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15470",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 34.8663384737215,
+      "y": 35.2903756498219
+    },
+    "coordinate": {
+      "latitude": 42.8722244370883,
+      "longitude": -8.56321446597576
+    },
+    "floorIdentifier": "5764",
+    "poiName": "Toilet",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 34.8663384737215,
+        "y": 35.2903756498219
+      },
+      "coordinate": {
+        "latitude": 42.8722244370883,
+        "longitude": -8.56321446597576
+      },
+      "floorIdentifier": "5764",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15471",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 65.112423454508,
+      "y": 23.9110330442689
+    },
+    "coordinate": {
+      "latitude": 42.8722772657384,
+      "longitude": -8.56360338628292
+    },
+    "floorIdentifier": "5762",
+    "poiName": "mobile",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 65.112423454508,
+        "y": 23.9110330442689
+      },
+      "coordinate": {
+        "latitude": 42.8722772657384,
+        "longitude": -8.56360338628292
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15472",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 39.5352141564841,
+      "y": 35.5633937878213
+    },
+    "coordinate": {
+      "latitude": 42.8722146084972,
+      "longitude": -8.56327012181282
+    },
+    "floorIdentifier": "5762",
+    "poiName": "Elevator",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 39.5352141564841,
+        "y": 35.5633937878213
+      },
+      "coordinate": {
+        "latitude": 42.8722146084972,
+        "longitude": -8.56327012181282
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {
+      "phone": "+32",
+      "pin": "2222",
+      "type": "elevator",
+      "beacons": "false"
+    }
+  },
+  {
+    "identifier": "15473",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 1.93100573553068,
+      "y": 23.8852031710234
+    },
+    "coordinate": {
+      "latitude": 42.8723777629061,
+      "longitude": -8.56284230947495
+    },
+    "floorIdentifier": "5762",
+    "poiName": "argos",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 1.93100573553068,
+        "y": 23.8852031710234
+      },
+      "coordinate": {
+        "latitude": 42.8723777629061,
+        "longitude": -8.56284230947495
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isIndoor": true,
+    "isOutdoor": false,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  }
+]

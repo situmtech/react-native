@@ -9,6 +9,9 @@ public interface SitumPlugin {
     String EVENT_LOCATION_ERROR = "locationError";
     String EVENT_LOCATION_STATUS_CHANGED = "statusChanged";
 
+    String EVENT_NAVIGATION_UPDATE = "navigationUpdated";
+    String EVENT_NAVIGATION_ERROR = "navigationError";
+
     void initSitumSDK();
 
     void setApiKey(String email, String apiKey, Callback callback);
@@ -33,11 +36,11 @@ public interface SitumPlugin {
 
     void requestDirections(ReadableArray requestArray, Callback success, Callback error);
 
-    void fetchPoiCategories(ReadableMap map);
+    void fetchPoiCategories(Callback success, Callback error);
 
-    void fetchPoiCategoryIconNormal(ReadableMap map);
+    void fetchPoiCategoryIconNormal(ReadableMap map, Callback success, Callback error);
 
-    void fetchPoiCategoryIconSelected(ReadableMap map);
+    void fetchPoiCategoryIconSelected(ReadableMap map, Callback success, Callback error);
 
     void fetchIndoorPOIsFromBuilding(ReadableMap map);
 
@@ -45,11 +48,11 @@ public interface SitumPlugin {
 
     void fetchEventsFromBuilding(ReadableMap map);
 
-    void requestNavigationUpdates(String callbackId);
+    void requestNavigationUpdates(ReadableMap map);
 
-    void updateNavigationWithLocation(ReadableMap map);
+    void updateNavigationWithLocation(ReadableMap map, Callback success, Callback error);
 
-    void removeNavigationUpdates();
+    void removeNavigationUpdates(Callback callback);
 
     void requestRealTimeUpdates(ReadableMap map);
 
