@@ -1,0 +1,68 @@
+[
+  {
+    "identifier": "15566",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 0,
+      "y": 0
+    },
+    "coordinate": {
+      "latitude": 42.8722686657287,
+      "longitude": -8.56253385543823
+    },
+    "floorIdentifier": "-1",
+    "poiName": "Campus",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 0,
+        "y": 0
+      },
+      "coordinate": {
+        "latitude": 42.8722686657287,
+        "longitude": -8.56253385543823
+      },
+      "floorIdentifier": "-1",
+      "isIndoor": false,
+      "isOutdoor": true
+    },
+    "isIndoor": false,
+    "isOutdoor": true,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  },
+  {
+    "identifier": "15567",
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 0,
+      "y": 0
+    },
+    "coordinate": {
+      "latitude": 42.8719217157653,
+      "longitude": -8.56313198804855
+    },
+    "floorIdentifier": "-1",
+    "poiName": "Roadway",
+    "position": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 0,
+        "y": 0
+      },
+      "coordinate": {
+        "latitude": 42.8719217157653,
+        "longitude": -8.56313198804855
+      },
+      "floorIdentifier": "-1",
+      "isIndoor": false,
+      "isOutdoor": true
+    },
+    "isIndoor": false,
+    "isOutdoor": true,
+    "category": "situm-default",
+    "infoHtml": "",
+    "customFields": {}
+  }
+]
