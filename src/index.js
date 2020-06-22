@@ -1,9 +1,9 @@
-import {PermissionsAndroid} from 'react-native';
 import {RNCSitumPlugin, SitumPluginEventEmitter} from './nativeInterface';
 import invariant from 'invariant';
-import {logError, warning} from './utils';
+import {logError} from './utils';
 
-let subscriptions = [];
+let positioningSubscriptions = [];
+let navigationSubscriptions = [];
 
 const SitumPlugin = {
   initSitumSDK: function () {
@@ -102,7 +102,12 @@ const SitumPlugin = {
     options?: LocationRequestOptions,
   ) {
     this.requestAuthorization();
-    return this.startPositioningUpdates(location, status, error, options);
+    return this.startPositioningUpdates(
+      location,
+      status,
+      error || logError,
+      options || {},
+    );
   },
 
   startPositioningUpdates: function (
@@ -111,9 +116,9 @@ const SitumPlugin = {
     error?: Function,
     options?: LocationRequestOptions,
   ): number {
-    RNCSitumPlugin.startPositioning(options);
-    const subscriptionId = subscriptions.length;
-    subscriptions.push([
+    RNCSitumPlugin.startPositioning(options || {});
+    const subscriptionId = positioningSubscriptions.length;
+    positioningSubscriptions.push([
       SitumPluginEventEmitter.addListener('locationChanged', location),
       SitumPluginEventEmitter.addListener('statusChanged', status),
       error
@@ -132,7 +137,7 @@ const SitumPlugin = {
     success: Function,
     error?: Function,
   ) {
-    const sub = subscriptions[subscriptionId];
+    const sub = positioningSubscriptions[subscriptionId];
     if (!sub) {
       // Silently exit when the watchID is invalid or already cleared
       // This is consistent with timers
@@ -144,35 +149,32 @@ const SitumPlugin = {
     const sub2 = sub[2];
     sub2 && sub2.remove(); //locationError if exists
 
-    subscriptions[subscriptionId] = undefined;
+    positioningSubscriptions[subscriptionId] = undefined;
 
     let noSubscriptions = true;
-    for (let ii = 0; ii < subscriptions.length; ii++) {
-      if (subscriptions[ii]) {
+    for (let ii = 0; ii < positioningSubscriptions.length; ii++) {
+      if (positioningSubscriptions[ii]) {
         noSubscriptions = false; // still valid subscriptions on other screens maybe
       }
     }
     if (noSubscriptions) {
-      this.stopPositioningUpdates();
+      this.stopPositioningUpdates(success, error);
     }
   },
 
   stopPositioningUpdates: function (success: Function, error?: Function) {
     RNCSitumPlugin.stopPositioning(success, error || logError);
-    for (let ii = 0; ii < subscriptions.length; ii++) {
-      const sub = subscriptions[ii];
+    for (let ii = 0; ii < positioningSubscriptions.length; ii++) {
+      const sub = positioningSubscriptions[ii];
       if (sub) {
-        warning(
-          false,
-          'Called stopPositioningUpdates with existing subscriptions.',
-        );
+        logError('Called stopPositioningUpdates with existing subscriptions.');
         sub[0].remove();
         // array element refinements not yet enabled in Flow
         const sub1 = sub[1];
         sub1 && sub1.remove();
       }
     }
-    subscriptions = [];
+    positioningSubscriptions = [];
   },
 
   requestDirections: function (
@@ -190,6 +192,95 @@ const SitumPlugin = {
       success,
       error || logError,
     );
+  },
+
+  fetchPoiCategories: function (success: Function, error?: Function) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchPoiCategories(success, error || logError);
+  },
+
+  fetchPoiCategoryIconNormal: function (
+    category: any,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchPoiCategoryIconNormal(
+      category,
+      success,
+      error || logError,
+    );
+  },
+
+  fetchPoiCategoryIconSelected: function (
+    category: any,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchPoiCategoryIconSelected(
+      category,
+      success,
+      error || logError,
+    );
+  },
+
+  requestNavigationUpdates: function (
+    navigationUpdates: Function,
+    error?: Function,
+    options?: LocationRequestOptions,
+  ) {
+    RNCSitumPlugin.requestNavigationUpdates(options || {});
+    navigationSubscriptions.push([
+      SitumPluginEventEmitter.addListener(
+        'navigationUpdated',
+        navigationUpdates,
+      ),
+      error
+        ? SitumPluginEventEmitter.addListener(
+            'navigationError',
+            error || logError,
+          )
+        : null,
+    ]);
+  },
+
+  updateNavigationWithLocation: function (
+    location,
+    success: Function,
+    error?: Function,
+  ) {
+    if (navigationSubscriptions.length === 0) {
+      error('No active navigation!!');
+      return;
+    }
+
+    RNCSitumPlugin.updateNavigationWithLocation(
+      location,
+      success,
+      error || logError,
+    );
+  },
+
+  removeNavigationUpdates: function (callback?: Function) {
+    navigationSubscriptions = [];
+    RNCSitumPlugin.removeNavigationUpdates(callback || warning);
+  },
+
+  invalidateCache: function (callback?: Function) {
+    RNCSitumPlugin.invalidateCache(callback);
   },
 };
 

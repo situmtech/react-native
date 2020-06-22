@@ -323,6 +323,8 @@ export interface SitumPluginStatic {
     success: (route: Route) => void,
     error?: Function,
   ): void;
+
+  invalidateCache(callback: Function): void;
 }
 
 declare let SitumPlugin: SitumPluginStatic;

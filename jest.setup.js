@@ -7,11 +7,12 @@ NativeModules.RNCSitumPlugin = {
   addListener: jest.fn(),
   removeListeners: jest.fn(),
 
-  // setup SDK
+  // Config SDK
   initSitumSDK: jest.fn(),
   setApiKey: jest.fn(),
   setUserPass: jest.fn(),
   setCacheMaxAge: jest.fn(),
+  invalidateCache: jest.fn(),
   requestAuthorization: jest.fn(),
 
   // Buildings
@@ -21,13 +22,23 @@ NativeModules.RNCSitumPlugin = {
   fetchMapFromFloor: jest.fn(),
   fetchGeofencesFromBuilding: jest.fn(),
 
-  //positioning
+  // Positioning
   startPositioning: jest.fn(),
   startPositioningUpdates: jest.fn(),
   stopPositioning: jest.fn(),
 
-  //directions, route
+  // Directions, route
   requestDirections: jest.fn(),
+
+  // POIs
+  fetchPoiCategories: jest.fn(),
+  fetchPoiCategoryIconNormal: jest.fn(),
+  fetchPoiCategoryIconSelected: jest.fn(),
+
+  // Navigations
+  requestNavigationUpdates: jest.fn(),
+  updateNavigationWithLocation: jest.fn(),
+  removeNavigationUpdates: jest.fn(),
 };
 
 // Reset the mocks before each test
