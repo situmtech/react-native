@@ -213,11 +213,12 @@ const SitumPlugin = {
       'Must provide a valid success callback.',
     );
 
-    RNCSitumPlugin.fetchPoiCategoryIconNormal(
-      category,
-      success,
-      error || logError,
-    );
+    // RNCSitumPlugin.fetchPoiCategoryIconNormal(
+    //   category,
+    //   success,
+    //   error || logError,
+    // );
+    console.log("TODO");
   },
 
   fetchPoiCategoryIconSelected: function (
@@ -229,12 +230,13 @@ const SitumPlugin = {
       typeof success === 'function',
       'Must provide a valid success callback.',
     );
-
-    RNCSitumPlugin.fetchPoiCategoryIconSelected(
-      category,
-      success,
-      error || logError,
-    );
+    //
+    // RNCSitumPlugin.fetchPoiCategoryIconSelected(
+    //   category,
+    //   success,
+    //   error || logError,
+    // );
+    console.log("TODO");
   },
 
   requestNavigationUpdates: function (
@@ -279,8 +281,8 @@ const SitumPlugin = {
     RNCSitumPlugin.removeNavigationUpdates(callback || warning);
   },
 
-  invalidateCache: function (callback?: Function) {
-    RNCSitumPlugin.invalidateCache(callback);
+  invalidateCache: function () {
+    RNCSitumPlugin.invalidateCache();
   },
 };
 
