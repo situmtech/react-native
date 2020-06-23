@@ -213,12 +213,11 @@ const SitumPlugin = {
       'Must provide a valid success callback.',
     );
 
-    // RNCSitumPlugin.fetchPoiCategoryIconNormal(
-    //   category,
-    //   success,
-    //   error || logError,
-    // );
-    console.log("TODO");
+    RNCSitumPlugin.fetchPoiCategoryIconNormal(
+      category,
+      success,
+      error || logError,
+    );
   },
 
   fetchPoiCategoryIconSelected: function (
@@ -230,13 +229,12 @@ const SitumPlugin = {
       typeof success === 'function',
       'Must provide a valid success callback.',
     );
-    //
-    // RNCSitumPlugin.fetchPoiCategoryIconSelected(
-    //   category,
-    //   success,
-    //   error || logError,
-    // );
-    console.log("TODO");
+
+    RNCSitumPlugin.fetchPoiCategoryIconSelected(
+      category,
+      success,
+      error || logError,
+    );
   },
 
   requestNavigationUpdates: function (
