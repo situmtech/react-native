@@ -5,6 +5,7 @@
 
 # node.js
 #
+coverage/
 node_modules/
 npm-debug.log
 yarn-error.log
@@ -29,4 +30,5 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
+
       

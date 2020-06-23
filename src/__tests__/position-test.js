@@ -2,12 +2,11 @@
 
 import {NativeModules} from 'react-native';
 import SitumPlugin from '..';
-import {warning} from '../utils';
+import {logError} from '../utils';
 
 jest.mock('../utils', () => {
   return {
     logError: jest.fn(),
-    warning: jest.fn(),
   };
 });
 describe('Test Positioning functions', () => {
@@ -89,7 +88,7 @@ describe('Test Positioning functions', () => {
 
   it('should stop positioning and warn about removing existing subscriptions', () => {
     const mockWarningCallback = jest.fn();
-    warning.mockImplementation(mockWarningCallback);
+    logError.mockImplementation(mockWarningCallback);
 
     SitumPlugin.startPositioningUpdates(
       () => {},

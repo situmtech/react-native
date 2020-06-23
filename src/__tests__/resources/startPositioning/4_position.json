@@ -1,0 +1,48 @@
+{
+  "accuracy": 4.978759765625,
+  "bearing": {
+    "degrees": 377.089663436474,
+    "degreesClockwise": -17.089663436473984,
+    "radians": 6.5814562022037455,
+    "radiansMinusPiPi": 0.29827089502415927
+  },
+  "bearingQuality": "LOW",
+  "buildingIdentifier": "3468",
+  "cartesianBearing": {
+    "degrees": 242.75607299804685,
+    "degreesClockwise": 117.24392700195315,
+    "radians": 4.23689275302762,
+    "radiansMinusPiPi": -2.0462925541519663
+  },
+  "cartesianCoordinate": {
+    "x": 59.19538879394531,
+    "y": 27.70305824279785
+  },
+  "coordinate": {
+    "latitude": 42.87225305601186,
+    "longitude": -8.56352392324924
+  },
+  "floorIdentifier": "5762",
+  "position": {
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 59.19538879394531,
+      "y": 27.70305824279785
+    },
+    "coordinate": {
+      "latitude": 42.87225305601186,
+      "longitude": -8.56352392324924
+    },
+    "floorIdentifier": "5762",
+    "isIndoor": true,
+    "isOutdoor": false
+  },
+  "provider": "SITUM_PROVIDER",
+  "quality": "LOW",
+  "hasBearing": false,
+  "timestamp": 1525334289892,
+  "hasCartesianBearing": false,
+  "isIndoor": true,
+  "isOutdoor": false,
+  "deviceId": "168162735961687"
+}

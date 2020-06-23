@@ -1,0 +1,176 @@
+[
+  {
+    "address": "",
+    "bounds": {
+      "northEast": {
+        "latitude": 42.88349364300396,
+        "longitude": -8.526463131952028
+      },
+      "northWest": {
+        "latitude": 42.88349364300396,
+        "longitude": -8.52891542531499
+      },
+      "southEast": {
+        "latitude": 42.881634818248784,
+        "longitude": -8.526463131952028
+      },
+      "southWest": {
+        "latitude": 42.881634818248784,
+        "longitude": -8.52891542531499
+      }
+    },
+    "boundsRotated": {
+      "northEast": {
+        "latitude": 42.88305456884705,
+        "longitude": -8.52605952534421
+      },
+      "northWest": {
+        "latitude": 42.88377703799093,
+        "longitude": -8.528306435391551
+      },
+      "southEast": {
+        "latitude": 42.88135142353652,
+        "longitude": -8.527072121688692
+      },
+      "southWest": {
+        "latitude": 42.8820738926804,
+        "longitude": -8.529319031736032
+      }
+    },
+    "center": {
+      "latitude": 42.8825642306337,
+      "longitude": -8.52768927812576
+    },
+    "dimensions": {
+      "width": 200.342693576894,
+      "height": 206.497621256452
+    },
+    "infoHtml": "",
+    "name": "C.C. Area Central",
+    "pictureThumbUrl": "/uploads/building/3465/e3b0678c-5c55-4845-b5d0-6c3b4c3a0e9c.jpg",
+    "pictureUrl": "/uploads/building/3465/e3b0678c-5c55-4845-b5d0-6c3b4c3a0e9c.jpg",
+    "rotation": -5.87100198345247,
+    "userIdentifier": "-1",
+    "buildingIdentifier": "3465",
+    "customFields": {
+      "beacons_uuids": "d6d6d97d-ab62-4a66-9a9b-e4dcca75869e, a3dca512-5ec3-494b-951e-d65d3a657e9d",
+      "pin": "2222"
+    }
+  },
+  {
+    "address": "Santiago de Compostela",
+    "bounds": {
+      "northEast": {
+        "latitude": 42.889923292071686,
+        "longitude": -8.523998596957476
+      },
+      "northWest": {
+        "latitude": 42.889923292071686,
+        "longitude": -8.52810741005307
+      },
+      "southEast": {
+        "latitude": 42.88779100762315,
+        "longitude": -8.523998596957476
+      },
+      "southWest": {
+        "latitude": 42.88779100762315,
+        "longitude": -8.52810741005307
+      }
+    },
+    "boundsRotated": {
+      "northEast": {
+        "latitude": 42.8893082013157,
+        "longitude": -8.52361445753739
+      },
+      "northWest": {
+        "latitude": 42.89039551626007,
+        "longitude": -8.52744797253027
+      },
+      "southEast": {
+        "latitude": 42.887318783984185,
+        "longitude": -8.524658034246784
+      },
+      "southWest": {
+        "latitude": 42.888406098928556,
+        "longitude": -8.528491549239662
+      }
+    },
+    "center": {
+      "latitude": 42.8888571498719,
+      "longitude": -8.52605300230789
+    },
+    "dimensions": {
+      "width": 335.639714341492,
+      "height": 236.876638131426
+    },
+    "infoHtml": "",
+    "name": "C.C. As Cancelas ",
+    "pictureThumbUrl": "/uploads/building/3467/01fe5cf4-b423-4859-bd00-52f26b96a833.png",
+    "pictureUrl": "/uploads/building/3467/01fe5cf4-b423-4859-bd00-52f26b96a833.png",
+    "rotation": -5.91504488059281,
+    "userIdentifier": "-1",
+    "buildingIdentifier": "3467",
+    "customFields": {
+      "pin": "2222"
+    }
+  },
+  {
+    "address": "",
+    "bounds": {
+      "northEast": {
+        "latitude": 42.87253907829066,
+        "longitude": -8.562817801731425
+      },
+      "northWest": {
+        "latitude": 42.87253907829066,
+        "longitude": -8.563687573151498
+      },
+      "southEast": {
+        "latitude": 42.87215551039662,
+        "longitude": -8.562817801731425
+      },
+      "southWest": {
+        "latitude": 42.87215551039662,
+        "longitude": -8.563687573151498
+      }
+    },
+    "boundsRotated": {
+      "northEast": {
+        "latitude": 42.8721021217466,
+        "longitude": -8.563634792306093
+      },
+      "northWest": {
+        "latitude": 42.8722149069941,
+        "longitude": -8.562778644442083
+      },
+      "southEast": {
+        "latitude": 42.87247968165883,
+        "longitude": -8.56372673044084
+      },
+      "southWest": {
+        "latitude": 42.87259246691492,
+        "longitude": -8.56287058257683
+      }
+    },
+    "center": {
+      "latitude": 42.8723472943445,
+      "longitude": -8.56325268745422
+    },
+    "dimensions": {
+      "width": 71.0686153823893,
+      "height": 42.6106416714803
+    },
+    "infoHtml": "<p>http://Prueba/actualizador/recibirAlarmas</p>",
+    "name": "Ed. Emprendia - Situm",
+    "pictureThumbUrl": "/uploads/building/3468/549e0d3d-31fa-40ec-bc4e-e3120037217a.jpg",
+    "pictureUrl": "/uploads/building/3468/549e0d3d-31fa-40ec-bc4e-e3120037217a.jpg",
+    "rotation": -3.31881803875501,
+    "userIdentifier": "-1",
+    "buildingIdentifier": "3468",
+    "customFields": {
+      "beacons_uuids": "00000000-0000-0000-0000-000000000000, d6d6d97d-ab62-4a66-9a9b-e4dcca75869e, a3dca512-5ec3-494b-951e-d65d3a657e9d",
+      "notification_url": "http://81.32.59.137:1026/v2/entities/Turtlebot/attrs",
+      "pin": "5555"
+    }
+  }
+]
