@@ -279,8 +279,8 @@ const SitumPlugin = {
     RNCSitumPlugin.removeNavigationUpdates(callback || warning);
   },
 
-  invalidateCache: function (callback?: Function) {
-    RNCSitumPlugin.invalidateCache(callback);
+  invalidateCache: function () {
+    RNCSitumPlugin.invalidateCache();
   },
 };
 
