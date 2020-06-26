@@ -38,5 +38,9 @@
     "test:jest": "jest /src --no-watchman",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "validate:eslint": "eslint 'src/**/*.js'"
+  },
+  "sdkVersions": {
+    "android": "2.60.0@aar",
+    "ios": "2.45.1"
   }
 }

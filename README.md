@@ -37,6 +37,7 @@
       - [removeRealTimeUpdates](#--removeRealTimeUpdates)
       - [checkIfPointInsideGeofence](#--checkIfPointInsideGeofence)
       - [requestAuthorization](#--requestAuthorization)
+      - [sdkVersions](#--sdkVersions)
   * [License](#license)
   * [More information](#more-information)
   * [Support information](#support-information)
@@ -531,6 +532,17 @@ Request location permissions on Android & iOS
 
 ```js
 SitumPlugin.requestAuthorization()
+```
+
+#### - sdkVersions
+
+Returns iOS, Android and react native SDK versions depending on the platform the app is running on. 
+
+```js
+SitumPlugin.sdkVersions(response=>{
+
+  // e.g. {ios: "2.45.0", android: "1.60@aar", react_native:"0.0.3"}
+});
 ```
 
 

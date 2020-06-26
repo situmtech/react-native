@@ -1,6 +1,8 @@
 import {RNCSitumPlugin, SitumPluginEventEmitter} from './nativeInterface';
 import invariant from 'invariant';
 import {logError} from './utils';
+import packageJson from './../package.json';
+import {Platform} from 'react-native';
 
 let positioningSubscriptions = [];
 let navigationSubscriptions = [];
@@ -364,6 +366,20 @@ const SitumPlugin = {
 
   invalidateCache: function () {
     RNCSitumPlugin.invalidateCache();
+  },
+
+  sdkVersions: function (callback: Function) {
+    var versions = {
+      react_native: packageJson.version,
+    };
+
+    if (Platform.OS === 'ios') {
+      versions.ios = packageJson.sdkVersions.ios;
+    } else {
+      versions.android = packageJson.sdkVersions.android;
+    }
+
+    callback(versions);
   },
 };
 
