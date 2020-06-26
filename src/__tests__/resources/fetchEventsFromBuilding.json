@@ -1,0 +1,201 @@
+[
+  {
+    "buildingIdentifier": 3468,
+    "identifier": 2124,
+    "name": "Evento de prueba con conversión",
+    "floorIdentifier": 5765,
+    "infoHtml": "<p>Fuuuu</p>",
+    "trigger": {
+      "center": {
+        "isIndoor": true,
+        "buildingIdentifier": "1051",
+        "coordinate": {
+          "longitude": -8.563611030578613,
+          "latitude": 42.872196197509766
+        },
+        "floorIdentifier": "1571",
+        "cartesianCoordinate": {
+          "x": 67.97866821289062,
+          "y": 32.9793701171875
+        },
+        "isOutdoor": false
+      },
+      "radius": 7.65508486729126
+    },
+    "conversionArea": {
+      "floorIdentifier": 5765,
+      "topLeft": "Point2f{ x=16.6862409484321, y=29.2273399479374}",
+      "topRight": "Point2f{ x=24.2493074510489, y=29.2273399479374}",
+      "bottomLeft": "Point2f{ x=16.6862409484321, y=21.6642734453206}",
+      "bottomRight": "Point2f{ x=24.2493074510489, y=21.6642734453206}"
+    },
+    "conversion": {
+      "center": {
+        "isIndoor": true,
+        "buildingIdentifier": "1051",
+        "coordinate": {
+          "longitude": -8.56306225061417,
+          "latitude": 42.8723345172012
+        },
+        "floorIdentifier": "1571",
+        "cartesianCoordinate": {
+          "x": 21.1289754744656,
+          "y": 25.849879822643
+        },
+        "isOutdoor": false
+      },
+      "radius": 3.7815332513084
+    },
+    "customFields": {},
+    "radius": 7.65508508682251,
+    "x": 67.2985661869065,
+    "y": 32.698399485956
+  },
+  {
+    "buildingIdentifier": 3468,
+    "identifier": 2123,
+    "name": "Zone_A",
+    "floorIdentifier": 5765,
+    "infoHtml": "<p>&nbsp;</p>",
+    "trigger": {
+      "center": {
+        "isIndoor": true,
+        "buildingIdentifier": "1051",
+        "coordinate": {
+          "longitude": -8.563283920288086,
+          "latitude": 42.87220764160156
+        },
+        "floorIdentifier": "1571",
+        "cartesianCoordinate": {
+          "x": 41.45732879638672,
+          "y": 36.58069610595703
+        },
+        "isOutdoor": false
+      },
+      "radius": 4.63736758529235
+    },
+    "conversionArea": {
+      "floorIdentifier": 0,
+      "topLeft": "Point2f{ x=0.0, y=0.0}",
+      "topRight": "Point2f{ x=0.0, y=0.0}",
+      "bottomLeft": "Point2f{ x=0.0, y=0.0}",
+      "bottomRight": "Point2f{ x=0.0, y=0.0}"
+    },
+    "customFields": {},
+    "radius": 4.6373677253723145,
+    "x": 40.7678555540749,
+    "y": 36.2300100528102
+  },
+  {
+    "buildingIdentifier": 3468,
+    "identifier": 2122,
+    "name": "Zone_B",
+    "floorIdentifier": 5765,
+    "infoHtml": "<p>&nbsp;</p>",
+    "conversionArea": {
+      "floorIdentifier": 0,
+      "topLeft": "Point2f{ x=0.0, y=0.0}",
+      "topRight": "Point2f{ x=0.0, y=0.0}",
+      "bottomLeft": "Point2f{ x=0.0, y=0.0}",
+      "bottomRight": "Point2f{ x=0.0, y=0.0}"
+    },
+    "customFields": {
+      "inbeacon_event_id": "1"
+    },
+    "radius": 6.73345947265625,
+    "x": 29.7554081641248,
+    "y": 26.3335853367725
+  },
+  {
+    "buildingIdentifier": 3468,
+    "identifier": 2121,
+    "name": "Zone_C",
+    "floorIdentifier": 5765,
+    "infoHtml": "<p>&nbsp;</p>",
+    "conversionArea": {
+      "floorIdentifier": 0,
+      "topLeft": "Point2f{ x=0.0, y=0.0}",
+      "topRight": "Point2f{ x=0.0, y=0.0}",
+      "bottomLeft": "Point2f{ x=0.0, y=0.0}",
+      "bottomRight": "Point2f{ x=0.0, y=0.0}"
+    },
+    "customFields": {
+      "inbeacon_event_id": "2"
+    },
+    "radius": 5.0654449462890625,
+    "x": 5.49053809800192,
+    "y": 23.2476749859086
+  },
+  {
+    "buildingIdentifier": 3468,
+    "identifier": 2120,
+    "name": "VISITA LA WEB DE SITUM",
+    "floorIdentifier": 5762,
+    "infoHtml": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><a href=\"http://www.situm.es\" rel=\"nofollow\">http://www.situm.es</a></p>\n<p><img class=\"fr-fin fr-dib\" alt=\"Image title\" src=\"https://dashboard.situm.es/uploads/rtf/906/e6d33424-58f1-4fcc-b457-6f6f41275d08.png\" width=\"300\" title=\"Image title\"></p>\n<p><br></p>\n</body></html>\n",
+    "conversionArea": {
+      "floorIdentifier": 0,
+      "topLeft": "Point2f{ x=0.0, y=0.0}",
+      "topRight": "Point2f{ x=0.0, y=0.0}",
+      "bottomLeft": "Point2f{ x=0.0, y=0.0}",
+      "bottomRight": "Point2f{ x=0.0, y=0.0}"
+    },
+    "customFields": {},
+    "radius": 1.7790932655334473,
+    "x": 40.5332169027118,
+    "y": 33.0552544160006
+  },
+  {
+    "buildingIdentifier": 3468,
+    "identifier": 2119,
+    "name": "Situm Tech",
+    "floorIdentifier": 5762,
+    "infoHtml": "<p><span contenteditable=\"false\" class=\"f-video-editor fr-fvn fr-tnv\"><iframe width=\"640\" height=\"360\" src=\"//www.youtube.com/embed/HrAU5lm-0Is\" frameborder=\"0\" allowfullscreen=\"\"></iframe></span></p>",
+    "conversionArea": {
+      "floorIdentifier": 5762,
+      "topLeft": "Point2f{ x=52.30954112223287, y=38.382815603118026}",
+      "topRight": "Point2f{ x=53.40242908265992, y=38.382815603118026}",
+      "bottomLeft": "Point2f{ x=52.30954112223287, y=37.28992764269098}",
+      "bottomRight": "Point2f{ x=53.40242908265992, y=37.28992764269098}"
+    },
+    "customFields": {},
+    "radius": 2.554884672164917,
+    "x": 61.4143055057337,
+    "y": 32.4766766877393
+  },
+  {
+    "buildingIdentifier": 3468,
+    "identifier": 2118,
+    "name": "Eventooo",
+    "floorIdentifier": 5762,
+    "infoHtml": "<p>aa</p>",
+    "conversionArea": {
+      "floorIdentifier": 5762,
+      "topLeft": "Point2f{ x=43.75787298571174, y=38.83664378927726}",
+      "topRight": "Point2f{ x=52.22406535865926, y=38.83664378927726}",
+      "bottomLeft": "Point2f{ x=43.75787298571174, y=30.370451416329743}",
+      "bottomRight": "Point2f{ x=52.22406535865926, y=30.370451416329743}"
+    },
+    "customFields": {},
+    "radius": 8.40263843536377,
+    "x": 51.0785514287599,
+    "y": 34.4387800138938
+  },
+  {
+    "buildingIdentifier": 3468,
+    "identifier": 2117,
+    "name": "Evento con imaxe",
+    "floorIdentifier": 5762,
+    "infoHtml": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><img class=\"fr-fin fr-dib\" alt=\"Image title\" src=\"https://dashboard.situm.es/uploads/rtf/8680/0c95db1c-8772-4d08-89e9-3779d0196237.png\" width=\"300\" title=\"Image title\"></p>\n<p><br></p>\n</body></html>\n",
+    "conversionArea": {
+      "floorIdentifier": 5762,
+      "topLeft": "Point2f{ x=7.5667120540507495, y=23.20767040283435}",
+      "topRight": "Point2f{ x=16.212438461435248, y=23.20767040283435}",
+      "bottomLeft": "Point2f{ x=7.5667120540507495, y=14.561943995449848}",
+      "bottomRight": "Point2f{ x=16.212438461435248, y=14.561943995449848}"
+    },
+    "customFields": {},
+    "radius": 42.064903259277344,
+    "x": 46.3544307421476,
+    "y": 28.574023171399
+  }
+]

@@ -1,0 +1,1167 @@
+{
+  "edges": [
+    {
+      "distance": 0.8100408930546814,
+      "distanceToGoal": 30.550161407861694,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 58.572593688964844,
+          "y": 27.644115447998047
+        },
+        "coordinate": {
+          "latitude": 42.872254566658526,
+          "longitude": -8.563516547736889
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 1,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 57.77776333034814,
+          "y": 27.800355485895068
+        },
+        "coordinate": {
+          "latitude": 42.8722544436486,
+          "longitude": -8.563506635536811
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": true,
+      "isLast": false
+    },
+    {
+      "distance": 4.900666732668731,
+      "distanceToGoal": 29.740120514807014,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 57.77776333034814,
+          "y": 27.800355485895068
+        },
+        "coordinate": {
+          "latitude": 42.8722544436486,
+          "longitude": -8.563506635536811
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 2,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 58.723,
+          "y": 32.609
+        },
+        "coordinate": {
+          "latitude": 42.87221033563324,
+          "longitude": -8.56350764727068
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 14.534193751288717,
+      "distanceToGoal": 24.839453782138282,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 58.723,
+          "y": 32.609
+        },
+        "coordinate": {
+          "latitude": 42.87221033563324,
+          "longitude": -8.56350764727068
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 3,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 44.555,
+          "y": 35.851
+        },
+        "coordinate": {
+          "latitude": 42.87220409371024,
+          "longitude": -8.563329973432605
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 2.0978450848430144,
+      "distanceToGoal": 10.305260030849565,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 44.555,
+          "y": 35.851
+        },
+        "coordinate": {
+          "latitude": 42.87220409371024,
+          "longitude": -8.563329973432605
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 4,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 42.478,
+          "y": 36.146
+        },
+        "coordinate": {
+          "latitude": 42.872204776025136,
+          "longitude": -8.563304315794491
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 2.4473046398027396,
+      "distanceToGoal": 8.207414946006551,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 42.478,
+          "y": 36.146
+        },
+        "coordinate": {
+          "latitude": 42.872204776025136,
+          "longitude": -8.563304315794491
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 5,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 40.916,
+          "y": 34.262
+        },
+        "coordinate": {
+          "latitude": 42.87222394844232,
+          "longitude": -8.563289563742694
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 2.447818824995018,
+      "distanceToGoal": 5.760110306203813,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 40.916,
+          "y": 34.262
+        },
+        "coordinate": {
+          "latitude": 42.87222394844232,
+          "longitude": -8.563289563742694
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 6,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.952,
+          "y": 35.723
+        },
+        "coordinate": {
+          "latitude": 42.87221411983018,
+          "longitude": -8.563262751558018
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 0.3774453602841057,
+      "distanceToGoal": 3.3122914812087947,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.952,
+          "y": 35.723
+        },
+        "coordinate": {
+          "latitude": 42.87221411983018,
+          "longitude": -8.563262751558018
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 7,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.919,
+          "y": 36.099
+        },
+        "coordinate": {
+          "latitude": 42.872210840588586,
+          "longitude": -8.56326154276224
+        },
+        "floorIdentifier": "5763",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 1.016112690600804,
+      "distanceToGoal": 2.934846120924689,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.919,
+          "y": 36.099
+        },
+        "coordinate": {
+          "latitude": 42.872210840588586,
+          "longitude": -8.56326154276224
+        },
+        "floorIdentifier": "5763",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 8,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.473,
+          "y": 37.012
+        },
+        "coordinate": {
+          "latitude": 42.87220345855959,
+          "longitude": -8.563254199930139
+        },
+        "floorIdentifier": "5764",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 1.9187334303238852,
+      "distanceToGoal": 1.9187334303238852,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.473,
+          "y": 37.012
+        },
+        "coordinate": {
+          "latitude": 42.87220345855959,
+          "longitude": -8.563254199930139
+        },
+        "floorIdentifier": "5764",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 9,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 39.996693182751144,
+          "y": 35.84585375639239
+        },
+        "coordinate": {
+          "latitude": 42.87221137334114,
+          "longitude": -8.563275071638948
+        },
+        "floorIdentifier": "5764",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": true
+    }
+  ],
+  "firstStep": {
+    "distance": 0.8100408930546814,
+    "distanceToGoal": 30.550161407861694,
+    "from": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 58.572593688964844,
+        "y": 27.644115447998047
+      },
+      "coordinate": {
+        "latitude": 42.872254566658526,
+        "longitude": -8.563516547736889
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "id": 1,
+    "TO": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 57.77776333034814,
+        "y": 27.800355485895068
+      },
+      "coordinate": {
+        "latitude": 42.8722544436486,
+        "longitude": -8.563506635536811
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isFirst": true,
+    "isLast": false
+  },
+  "from": {
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 58.572593688964844,
+      "y": 27.644115447998047
+    },
+    "coordinate": {
+      "latitude": 42.872254566658526,
+      "longitude": -8.563516547736889
+    },
+    "floorIdentifier": "5762",
+    "isIndoor": true,
+    "isOutdoor": false
+  },
+  "indications": [
+    {
+      "distance": 0.8100408930546814,
+      "distanceToNextLevel": 0,
+      "indicationType": "TURN",
+      "orientation": 1.721745459105593,
+      "orientationType": "LEFT",
+      "stepIdxDestination": 1,
+      "stepIdxOrigin": 1,
+      "neededLevelChange": false,
+      "humanReadableMessage": "Gira a la izquierda y avanza 1 metro"
+    },
+    {
+      "distance": 4.900666732668731,
+      "distanceToNextLevel": 0,
+      "indicationType": "TURN",
+      "orientation": -1.5707963267948952,
+      "orientationType": "RIGHT",
+      "stepIdxDestination": 2,
+      "stepIdxOrigin": 2,
+      "neededLevelChange": false,
+      "humanReadableMessage": "Gira a la derecha y avanza 5 metros"
+    },
+    {
+      "distance": 16.63203883613173,
+      "distanceToNextLevel": 0,
+      "indicationType": "TURN",
+      "orientation": 1.6238038262491077,
+      "orientationType": "LEFT",
+      "stepIdxDestination": 4,
+      "stepIdxOrigin": 3,
+      "neededLevelChange": false,
+      "humanReadableMessage": "Gira a la izquierda y avanza 17 metros"
+    },
+    {
+      "distance": 2.4473046398027396,
+      "distanceToNextLevel": 0,
+      "indicationType": "TURN",
+      "orientation": 1.0196573959929276,
+      "orientationType": "LEFT",
+      "stepIdxDestination": 5,
+      "stepIdxOrigin": 5,
+      "neededLevelChange": false,
+      "humanReadableMessage": "Gira a la izquierda y avanza 3 metros"
+    },
+    {
+      "distance": 2.447818824995018,
+      "distanceToNextLevel": 0,
+      "indicationType": "TURN",
+      "orientation": -1.5181485334766163,
+      "orientationType": "RIGHT",
+      "stepIdxDestination": 6,
+      "stepIdxOrigin": 6,
+      "neededLevelChange": false,
+      "humanReadableMessage": "Gira a la derecha y avanza 3 metros"
+    },
+    {
+      "distance": 0.3774453602841057,
+      "distanceToNextLevel": 1,
+      "indicationType": "CHANGE_FLOOR",
+      "orientation": -0.8436754434076233,
+      "orientationType": "RIGHT",
+      "stepIdxDestination": 7,
+      "stepIdxOrigin": 7,
+      "neededLevelChange": true,
+      "humanReadableMessage": "Sube al piso 0",
+      "nextLevel": 0
+    },
+    {
+      "distance": 2.934846120924689,
+      "distanceToNextLevel": 1,
+      "indicationType": "CHANGE_FLOOR",
+      "orientation": 0,
+      "orientationType": "STRAIGHT",
+      "stepIdxDestination": 9,
+      "stepIdxOrigin": 8,
+      "neededLevelChange": true,
+      "humanReadableMessage": "Sube al piso 1",
+      "nextLevel": 1
+    }
+  ],
+  "lastStep": {
+    "distance": 1.9187334303238852,
+    "distanceToGoal": 1.9187334303238852,
+    "from": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 38.473,
+        "y": 37.012
+      },
+      "coordinate": {
+        "latitude": 42.87220345855959,
+        "longitude": -8.563254199930139
+      },
+      "floorIdentifier": "5764",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "id": 9,
+    "TO": {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 39.996693182751144,
+        "y": 35.84585375639239
+      },
+      "coordinate": {
+        "latitude": 42.87221137334114,
+        "longitude": -8.563275071638948
+      },
+      "floorIdentifier": "5764",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    "isFirst": false,
+    "isLast": true
+  },
+  "nodes": [
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 58.572593688964844,
+        "y": 27.644115447998047
+      },
+      "coordinate": {
+        "latitude": 42.872254566658526,
+        "longitude": -8.563516547736889
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 57.77776333034814,
+        "y": 27.800355485895068
+      },
+      "coordinate": {
+        "latitude": 42.8722544436486,
+        "longitude": -8.563506635536811
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 58.723,
+        "y": 32.609
+      },
+      "coordinate": {
+        "latitude": 42.87221033563324,
+        "longitude": -8.56350764727068
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 44.555,
+        "y": 35.851
+      },
+      "coordinate": {
+        "latitude": 42.87220409371024,
+        "longitude": -8.563329973432605
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 42.478,
+        "y": 36.146
+      },
+      "coordinate": {
+        "latitude": 42.872204776025136,
+        "longitude": -8.563304315794491
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 40.916,
+        "y": 34.262
+      },
+      "coordinate": {
+        "latitude": 42.87222394844232,
+        "longitude": -8.563289563742694
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 38.952,
+        "y": 35.723
+      },
+      "coordinate": {
+        "latitude": 42.87221411983018,
+        "longitude": -8.563262751558018
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 38.919,
+        "y": 36.099
+      },
+      "coordinate": {
+        "latitude": 42.872210840588586,
+        "longitude": -8.56326154276224
+      },
+      "floorIdentifier": "5763",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 38.473,
+        "y": 37.012
+      },
+      "coordinate": {
+        "latitude": 42.87220345855959,
+        "longitude": -8.563254199930139
+      },
+      "floorIdentifier": "5764",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 39.996693182751144,
+        "y": 35.84585375639239
+      },
+      "coordinate": {
+        "latitude": 42.87221137334114,
+        "longitude": -8.563275071638948
+      },
+      "floorIdentifier": "5764",
+      "isIndoor": true,
+      "isOutdoor": false
+    }
+  ],
+  "points": [
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 58.572593688964844,
+        "y": 27.644115447998047
+      },
+      "coordinate": {
+        "latitude": 42.872254566658526,
+        "longitude": -8.563516547736889
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 57.77776333034814,
+        "y": 27.800355485895068
+      },
+      "coordinate": {
+        "latitude": 42.8722544436486,
+        "longitude": -8.563506635536811
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 58.723,
+        "y": 32.609
+      },
+      "coordinate": {
+        "latitude": 42.87221033563324,
+        "longitude": -8.56350764727068
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 44.555,
+        "y": 35.851
+      },
+      "coordinate": {
+        "latitude": 42.87220409371024,
+        "longitude": -8.563329973432605
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 42.478,
+        "y": 36.146
+      },
+      "coordinate": {
+        "latitude": 42.872204776025136,
+        "longitude": -8.563304315794491
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 40.916,
+        "y": 34.262
+      },
+      "coordinate": {
+        "latitude": 42.87222394844232,
+        "longitude": -8.563289563742694
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 38.952,
+        "y": 35.723
+      },
+      "coordinate": {
+        "latitude": 42.87221411983018,
+        "longitude": -8.563262751558018
+      },
+      "floorIdentifier": "5762",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 38.919,
+        "y": 36.099
+      },
+      "coordinate": {
+        "latitude": 42.872210840588586,
+        "longitude": -8.56326154276224
+      },
+      "floorIdentifier": "5763",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 38.473,
+        "y": 37.012
+      },
+      "coordinate": {
+        "latitude": 42.87220345855959,
+        "longitude": -8.563254199930139
+      },
+      "floorIdentifier": "5764",
+      "isIndoor": true,
+      "isOutdoor": false
+    },
+    {
+      "buildingIdentifier": "3468",
+      "cartesianCoordinate": {
+        "x": 39.996693182751144,
+        "y": 35.84585375639239
+      },
+      "coordinate": {
+        "latitude": 42.87221137334114,
+        "longitude": -8.563275071638948
+      },
+      "floorIdentifier": "5764",
+      "isIndoor": true,
+      "isOutdoor": false
+    }
+  ],
+  "TO": {
+    "buildingIdentifier": "3468",
+    "cartesianCoordinate": {
+      "x": 39.7509433959792,
+      "y": 35.5247557150279
+    },
+    "coordinate": {
+      "latitude": 42.8722146084972,
+      "longitude": -8.56327280402184
+    },
+    "floorIdentifier": "5764",
+    "isIndoor": true,
+    "isOutdoor": false
+  },
+  "steps": [
+    {
+      "distance": 0.8100408930546814,
+      "distanceToGoal": 30.550161407861694,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 58.572593688964844,
+          "y": 27.644115447998047
+        },
+        "coordinate": {
+          "latitude": 42.872254566658526,
+          "longitude": -8.563516547736889
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 1,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 57.77776333034814,
+          "y": 27.800355485895068
+        },
+        "coordinate": {
+          "latitude": 42.8722544436486,
+          "longitude": -8.563506635536811
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": true,
+      "isLast": false
+    },
+    {
+      "distance": 4.900666732668731,
+      "distanceToGoal": 29.740120514807014,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 57.77776333034814,
+          "y": 27.800355485895068
+        },
+        "coordinate": {
+          "latitude": 42.8722544436486,
+          "longitude": -8.563506635536811
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 2,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 58.723,
+          "y": 32.609
+        },
+        "coordinate": {
+          "latitude": 42.87221033563324,
+          "longitude": -8.56350764727068
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 14.534193751288717,
+      "distanceToGoal": 24.839453782138282,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 58.723,
+          "y": 32.609
+        },
+        "coordinate": {
+          "latitude": 42.87221033563324,
+          "longitude": -8.56350764727068
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 3,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 44.555,
+          "y": 35.851
+        },
+        "coordinate": {
+          "latitude": 42.87220409371024,
+          "longitude": -8.563329973432605
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 2.0978450848430144,
+      "distanceToGoal": 10.305260030849565,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 44.555,
+          "y": 35.851
+        },
+        "coordinate": {
+          "latitude": 42.87220409371024,
+          "longitude": -8.563329973432605
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 4,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 42.478,
+          "y": 36.146
+        },
+        "coordinate": {
+          "latitude": 42.872204776025136,
+          "longitude": -8.563304315794491
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 2.4473046398027396,
+      "distanceToGoal": 8.207414946006551,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 42.478,
+          "y": 36.146
+        },
+        "coordinate": {
+          "latitude": 42.872204776025136,
+          "longitude": -8.563304315794491
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 5,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 40.916,
+          "y": 34.262
+        },
+        "coordinate": {
+          "latitude": 42.87222394844232,
+          "longitude": -8.563289563742694
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 2.447818824995018,
+      "distanceToGoal": 5.760110306203813,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 40.916,
+          "y": 34.262
+        },
+        "coordinate": {
+          "latitude": 42.87222394844232,
+          "longitude": -8.563289563742694
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 6,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.952,
+          "y": 35.723
+        },
+        "coordinate": {
+          "latitude": 42.87221411983018,
+          "longitude": -8.563262751558018
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 0.3774453602841057,
+      "distanceToGoal": 3.3122914812087947,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.952,
+          "y": 35.723
+        },
+        "coordinate": {
+          "latitude": 42.87221411983018,
+          "longitude": -8.563262751558018
+        },
+        "floorIdentifier": "5762",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 7,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.919,
+          "y": 36.099
+        },
+        "coordinate": {
+          "latitude": 42.872210840588586,
+          "longitude": -8.56326154276224
+        },
+        "floorIdentifier": "5763",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 1.016112690600804,
+      "distanceToGoal": 2.934846120924689,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.919,
+          "y": 36.099
+        },
+        "coordinate": {
+          "latitude": 42.872210840588586,
+          "longitude": -8.56326154276224
+        },
+        "floorIdentifier": "5763",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 8,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.473,
+          "y": 37.012
+        },
+        "coordinate": {
+          "latitude": 42.87220345855959,
+          "longitude": -8.563254199930139
+        },
+        "floorIdentifier": "5764",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": false
+    },
+    {
+      "distance": 1.9187334303238852,
+      "distanceToGoal": 1.9187334303238852,
+      "from": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 38.473,
+          "y": 37.012
+        },
+        "coordinate": {
+          "latitude": 42.87220345855959,
+          "longitude": -8.563254199930139
+        },
+        "floorIdentifier": "5764",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "id": 9,
+      "TO": {
+        "buildingIdentifier": "3468",
+        "cartesianCoordinate": {
+          "x": 39.996693182751144,
+          "y": 35.84585375639239
+        },
+        "coordinate": {
+          "latitude": 42.87221137334114,
+          "longitude": -8.563275071638948
+        },
+        "floorIdentifier": "5764",
+        "isIndoor": true,
+        "isOutdoor": false
+      },
+      "isFirst": false,
+      "isLast": true
+    }
+  ],
+  "segments": [
+    {
+      "floorIdentifier": "5764",
+      "points": [
+        {
+          "buildingIdentifier": "3468",
+          "cartesianCoordinate": {
+            "x": 39.56327507163894,
+            "y": 35.097845084843014
+          },
+          "coordinate": {
+            "latitude": 42.6238038262491077,
+            "longitude": -8.9187334303238852
+          },
+          "floorIdentifier": "5764",
+          "isIndoor": true,
+          "isOutdoor": false
+        },
+        {
+          "buildingIdentifier": "3468",
+          "cartesianCoordinate": {
+            "x": 39.996693182751144,
+            "y": 35.84585375639239
+          },
+          "coordinate": {
+            "latitude": 42.87221137334114,
+            "longitude": -8.563275071638948
+          },
+          "floorIdentifier": "5764",
+          "isIndoor": true,
+          "isOutdoor": false
+        }
+      ]
+    },
+    {
+      "floorIdentifier": "5765",
+      "points": [
+        {
+          "buildingIdentifier": "3468",
+          "cartesianCoordinate": {
+            "x": 39.56327507163894,
+            "y": 35.097845084843014
+          },
+          "coordinate": {
+            "latitude": 42.6238038262491077,
+            "longitude": -8.9187334303238852
+          },
+          "floorIdentifier": "5765",
+          "isIndoor": true,
+          "isOutdoor": false
+        },
+        {
+          "buildingIdentifier": "3468",
+          "cartesianCoordinate": {
+            "x": 39.996693182751144,
+            "y": 35.84585375639239
+          },
+          "coordinate": {
+            "latitude": 42.87221137334114,
+            "longitude": -8.563275071638948
+          },
+          "floorIdentifier": "5765",
+          "isIndoor": true,
+          "isOutdoor": false
+        }
+      ]
+    }
+  ]
+}

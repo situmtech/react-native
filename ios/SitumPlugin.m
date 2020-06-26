@@ -670,6 +670,7 @@ RCT_EXPORT_METHOD(removeRealTimeUpdates)
 
 RCT_EXPORT_METHOD(invalidateCache)
 {
+    NSMutableDictionary *obj = [[NSMutableDictionary alloc] init];
     [[SITCommunicationManager sharedManager] clearCache];
 }
 
