@@ -12,6 +12,10 @@ public interface SitumPlugin {
     String EVENT_NAVIGATION_UPDATE = "navigationUpdated";
     String EVENT_NAVIGATION_ERROR = "navigationError";
 
+    String EVENT_REALTIME_ERROR = "realtimeError";
+    String EVENT_REALTIME_UPDATE = "realtimeUpdated";
+
+
     void initSitumSDK();
 
     void setApiKey(String email, String apiKey, Callback callback);
