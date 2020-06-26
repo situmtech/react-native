@@ -15,9 +15,7 @@ Pod::Spec.new do |s|
 
 
   s.dependency "React"
-
-  s.dependency "SitumSDK", "2.45.0"
-  s.dependency "GoogleMaps", "3.5.0"
+  s.dependency "SitumSDK", "2.45.1"
 
 end
 

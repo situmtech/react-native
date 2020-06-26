@@ -223,6 +223,7 @@ class SitumMapper {
     public static final String BUILDING = "building";
     public static final String FLOORS = "floors";
     public static final String EVENTS = "events";
+    public static final String GEOFENCES = "geofences";
     public static final String INDOOR_POIS = "indoorPOIs";
     public static final String OUTDOOR_POIS = "outdoorPOIs";
     public static final String LOCATIONS = "locations";
@@ -331,6 +332,15 @@ class SitumMapper {
         return array;
     }
 
+    static JSONArray arrayFromGeofences(Collection<Geofence> geofences) throws JSONException {
+        JSONArray array = new JSONArray();
+        for (Geofence geofence : geofences) {
+            JSONObject jsonoGeofence = geofenceToJsonObject(geofence);
+            array.put(jsonoGeofence);
+        }
+        return array;
+    }
+
     // Building Info
     static JSONObject buildingInfoToJsonObject(BuildingInfo buildingInfo) throws JSONException {
         JSONObject jo = new JSONObject();
@@ -346,6 +356,7 @@ class SitumMapper {
         // Events
         jo.put(EVENTS, arrayFromEvents(buildingInfo.getEvents()));
         // fetch geofences
+        jo.put(GEOFENCES, arrayFromGeofences(buildingInfo.getGeofences()));
 
         return jo;
     }

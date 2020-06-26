@@ -213,6 +213,16 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     return ja;
 }
 
+- (NSArray *)geofencesToJsonArray:(NSArray *)array
+{
+    NSMutableArray *ja = [[NSMutableArray alloc] init];
+    for (SITGeofence *obj in array) {
+        NSDictionary *json = [self geofenceToJsonObject:obj];
+        
+        [ja addObject:json];
+    }
+    return ja;
+}
 
 // Building Info
 - (NSDictionary *) buildingInfoToJsonObject:(SITBuildingInfo *)buildingInfo
@@ -230,6 +240,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     // Events
     [jo setObject:[self eventsToJsonArray:buildingInfo.events] forKey:@"events"];
     // Geofences?
+    [jo setObject:[self geofencesToJsonArray:buildingInfo.geofences] forKey:@"geofences"];
     
     return jo;
 }

@@ -1,0 +1,34 @@
+[
+  {
+    "altitude": 0,
+    "buildingIdentifier": "3468",
+    "level": -1,
+    "mapUrl": "https://dashboard.situm.es/uploads/floor/5762/b61bf2f5-af5f-415e-a34c-7826bf0440e2.png",
+    "scale": 17.785628623816095,
+    "floorIdentifier": "5762"
+  },
+  {
+    "altitude": 0,
+    "buildingIdentifier": "3468",
+    "level": 0,
+    "mapUrl": "https://dashboard.situm.es/uploads/floor/5763/9bca9927-b77d-4022-bdb4-f38d0d1f515b.png",
+    "scale": 17.785628623816095,
+    "floorIdentifier": "5763"
+  },
+  {
+    "altitude": 16,
+    "buildingIdentifier": "3468",
+    "level": 1,
+    "mapUrl": "https://dashboard.situm.es/uploads/floor/5764/e2e15d0f-78ab-4014-8196-3fd7fc41fd37.png",
+    "scale": 17.785628623816095,
+    "floorIdentifier": "5764"
+  },
+  {
+    "altitude": 30,
+    "buildingIdentifier": "3468",
+    "level": 2,
+    "mapUrl": "https://dashboard.situm.es/uploads/floor/5765/51fa780f-3360-4c08-8a29-4d29e4349d0e.png",
+    "scale": 17.785628623816095,
+    "floorIdentifier": "5765"
+  }
+]

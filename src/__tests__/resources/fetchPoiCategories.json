@@ -1,0 +1,72 @@
+[
+  {
+    "poiCategoryCode": "situm-coffee",
+    "poiCategoryName": "Cafetería",
+    "icon_selected": "/uploads/poicategoryselected/1/fcfb13c6-44e7-4b58-b568-780ef41628f1.png",
+    "icon_unselected": "/uploads/poicategory/1/b3d4b884-ed86-4ab5-929d-3e5a40502e56.png",
+    "public": true
+  },
+  {
+    "poiCategoryCode": "situm-elevator",
+    "poiCategoryName": "Ascensor",
+    "icon_selected": "/uploads/poicategoryselected/2/f43bbdb4-4844-4147-9a1f-e7db307bc439.png",
+    "icon_unselected": "/uploads/poicategory/2/9b3247fd-148d-4098-82a3-3e4d6e4deb33.png",
+    "public": true
+  },
+  {
+    "poiCategoryCode": "situm-entrance",
+    "poiCategoryName": "Acceso",
+    "icon_selected": "/uploads/poicategoryselected/3/4618b474-efb3-4152-b5c2-1ba2c2dabcc0.png",
+    "icon_unselected": "/uploads/poicategory/3/1999aa2f-c137-469d-83cd-4c3624bec39d.png",
+    "public": true
+  },
+  {
+    "poiCategoryCode": "situm-info",
+    "poiCategoryName": "Información",
+    "icon_selected": "/uploads/poicategoryselected/4/331a12fc-bef3-4b78-b5aa-6b2e98fc2b16.png",
+    "icon_unselected": "/uploads/poicategory/4/91f3a501-5f71-4a67-8ea3-b8e1a63eb911.png",
+    "public": true
+  },
+  {
+    "poiCategoryCode": "situm-parking",
+    "poiCategoryName": "Aparcamiento",
+    "icon_selected": "/uploads/poicategoryselected/5/77719daa-4e0e-468c-9ca6-05516053304d.png",
+    "icon_unselected": "/uploads/poicategory/5/c9858e94-c49a-4d3a-be3d-278168fa611a.png",
+    "public": true
+  },
+  {
+    "poiCategoryCode": "situm-ramp",
+    "poiCategoryName": "Rampa",
+    "icon_selected": "/uploads/poicategoryselected/6/8b1efad0-9e3c-4e47-941a-18ed88aecab4.png",
+    "icon_unselected": "/uploads/poicategory/6/e3c0d140-f2e9-4088-ab9f-77fa54c4adc7.png",
+    "public": true
+  },
+  {
+    "poiCategoryCode": "situm-shop",
+    "poiCategoryName": "Tienda",
+    "icon_selected": "/uploads/poicategoryselected/7/2038ed3a-d5c3-4aee-9ca5-2e994b717bcc.png",
+    "icon_unselected": "/uploads/poicategory/7/76bfcad9-5df2-4331-85a7-b51e03379883.png",
+    "public": true
+  },
+  {
+    "poiCategoryCode": "situm-stairs",
+    "poiCategoryName": "Escaleras",
+    "icon_selected": "/uploads/poicategoryselected/8/2c7aaeba-8695-4272-a35d-222675b9f788.png",
+    "icon_unselected": "/uploads/poicategory/8/5e81ef12-d5e4-4213-ad24-25db43ac2911.png",
+    "public": true
+  },
+  {
+    "poiCategoryCode": "situm-toilets",
+    "poiCategoryName": "Aseos",
+    "icon_selected": "/uploads/poicategoryselected/9/95a7f721-3a00-481e-8786-6126e8d6533e.png",
+    "icon_unselected": "/uploads/poicategory/9/5a6a82df-1b47-4afa-bf91-5c06427fb0a7.png",
+    "public": true
+  },
+  {
+    "poiCategoryCode": "situm-default",
+    "poiCategoryName": "Sin categoría",
+    "icon_selected": "/uploads/poicategoryselected/148/4c85ebd0-6ff2-4c1d-bad5-1f9f9eedc847.png",
+    "icon_unselected": "/uploads/poicategory/148/8ac8e04f-a6a0-4da5-a08d-02ec33ffdcfb.png",
+    "public": true
+  }
+]

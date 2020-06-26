@@ -277,7 +277,7 @@ const SitumPlugin = {
 
   removeNavigationUpdates: function (callback?: Function) {
     navigationSubscriptions = [];
-    RNCSitumPlugin.removeNavigationUpdates(callback || logError);
+    RNCSitumPlugin.removeNavigationUpdates(callback || warning);
   },
 
   fetchIndoorPOIsFromBuilding: function (
