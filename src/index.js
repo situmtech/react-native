@@ -132,11 +132,7 @@ const SitumPlugin = {
     return subscriptionId;
   },
 
-  stopPositioning: function (
-    subscriptionId: number,
-    success: Function,
-    error?: Function,
-  ) {
+  stopPositioning: function (subscriptionId: number, callback?: Function) {
     const sub = positioningSubscriptions[subscriptionId];
     if (!sub) {
       // Silently exit when the watchID is invalid or already cleared
@@ -158,12 +154,12 @@ const SitumPlugin = {
       }
     }
     if (noSubscriptions) {
-      this.stopPositioningUpdates(success, error);
+      this.stopPositioningUpdates(callback);
     }
   },
 
-  stopPositioningUpdates: function (success: Function, error?: Function) {
-    RNCSitumPlugin.stopPositioning(success, error || logError);
+  stopPositioningUpdates: function (callback?: Function) {
+    RNCSitumPlugin.stopPositioning(callback || logError);
     for (let ii = 0; ii < positioningSubscriptions.length; ii++) {
       const sub = positioningSubscriptions[ii];
       if (sub) {
