@@ -337,7 +337,7 @@ public class PluginHelper {
         }
     }
 
-    public void stopPositioning(Callback success, Callback error) {
+    public void stopPositioning(Callback callback) {
 
         if (locationListener != null) {
             try {
@@ -347,10 +347,10 @@ public class PluginHelper {
                 WritableMap map = Arguments.createMap();
                 map.putBoolean("success", true);
                 map.putString("message", "Stopped Successfully");
-                invokeCallback(success, map);
+                invokeCallback(callback, map);
 
             } catch (Exception e) {
-                invokeCallback(error, e.getMessage());
+                invokeCallback(callback, e.getMessage());
             }
         } else {
             Log.i(TAG, "stopPositioning: location listener is not started.");
@@ -359,7 +359,7 @@ public class PluginHelper {
             map.putBoolean("success", true);
             map.putString("message", "Already disabled");
 
-            invokeCallback(success, map);
+            invokeCallback(callback, map);
 
         }
     }
