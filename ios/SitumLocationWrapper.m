@@ -246,42 +246,40 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 }
 
 - (SITLocationRequest *) dictToLocationRequest: (NSDictionary *) dict {
-    NSNumber *useDeadReckoning = nil;
-    NSNumber *useGps = nil;
     NSString *buildingId;
-    NSString *realtimeUpdateInterval;
-    NSNumber *interval = nil;
-    NSNumber *smallestDisplacement = nil;
-    NSNumber *useBarometer = nil;
-    SITRealtimeUpdateInterval realtimeInterval = 0;
-    
-    if (buildingId == nil) {
-        buildingId = [NSString stringWithFormat:@"%@", [dict valueForKey:@"buildingIdentifier"]];
-    }
+
+    buildingId = [NSString stringWithFormat:@"%@", [dict valueForKey:@"buildingIdentifier"]];
     
     SITLocationRequest *locationRequest = [[SITLocationRequest alloc] initWithBuildingId:buildingId];
-    if (useDeadReckoning != nil) {
-        [locationRequest setUseDeadReckoning:[useDeadReckoning boolValue]];
+   
+    if ([dict valueForKey:@"useGlobalLocation"]) {
+        [locationRequest setUseGlobalLocation:[dict valueForKey:@"useGlobalLocation"]];
+           
+    }
+    
+    if ([dict valueForKey:@"useDeadReckoning"]) {
+        [locationRequest setUseDeadReckoning:[dict valueForKey:@"useDeadReckoning"]];
         
     }
-    if(useGps != nil) {
-        [locationRequest setUseGps:[useGps boolValue]];
+    
+    if([dict valueForKey:@"useGps"]) {
+        [locationRequest setUseGps:[dict valueForKey:@"useGps"]];
     }
     
-    if(interval != nil) {
-        [locationRequest setInterval:[interval intValue]];
+    if([dict valueForKey:@"interval"]) {
+        [locationRequest setInterval:[[dict valueForKey:@"interval"] intValue]];
     }
     
-    if (smallestDisplacement != nil) {
-        [locationRequest setSmallestDisplacement:[smallestDisplacement floatValue]];
+    if ([dict valueForKey:@"smallestDisplacement"]) {
+        [locationRequest setSmallestDisplacement:[[dict valueForKey:@"smallestDisplacement"] floatValue]];
     }
     
-    if(useBarometer != nil) {
-        [locationRequest setUseBarometer: [useBarometer boolValue]];
+    if([dict valueForKey:@"realtimeUpdateInterval"]) {
+        [locationRequest setUseBarometer:[dict valueForKey:@"useBarometer"]];
     }
     
-    if (realtimeInterval != 0) {
-        [locationRequest setUpdateInterval:realtimeInterval];
+    if ([dict valueForKey:@"realtimeUpdateInterval"]) {
+        [locationRequest setRealtimeUpdateInterval:[[dict valueForKey:@"realtimeUpdateInterval"] intValue]];
     }
     return locationRequest;
 }
