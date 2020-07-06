@@ -248,13 +248,37 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 - (SITLocationRequest *) dictToLocationRequest: (NSDictionary *) dict {
     NSString *buildingId;
 
-    buildingId = [NSString stringWithFormat:@"%@", [dict valueForKey:@"buildingIdentifier"]];
+    if ([dict valueForKey:@"buildingIdentifier"]) {
+        buildingId = [NSString stringWithFormat:@"%@", [dict valueForKey:@"buildingIdentifier"]];
+    }
     
     SITLocationRequest *locationRequest = [[SITLocationRequest alloc] initWithBuildingId:buildingId];
    
     if ([dict valueForKey:@"useGlobalLocation"]) {
         [locationRequest setUseGlobalLocation:[dict valueForKey:@"useGlobalLocation"]];
-           
+    }
+
+    // TODO: Make parser from external to internal options
+    if ([dict valueForKey:@"outdoorLocationOptions"]) {
+        SITOutdoorLocationOptions *outdoorLocationOptions= [SITOutdoorLocationOptions new];
+
+        NSDictionary *options = [dict valueForKey:@"outdoorLocationOptions"];
+
+        if ([options valueForKey: @"buildingDetector"]) {
+            NSString *bDetector =  [options valueForKey: @"buildingDetector"];
+
+            if ([bDetector isEqualToString:@"kSITBLE"]) { // ble, gps, others?
+                outdoorLocationOptions.buildingDetector = kSITBLE;
+            } else {
+                outdoorLocationOptions.buildingDetector = kSITGpsProximity;
+            }
+        }
+        // minimumOutdoorLocationAccuracy
+        if ([options valueForKey: @"minimumOutdoorLocationAccuracy"]) {
+            outdoorLocationOptions.minimumOutdoorLocationAccuracy = [[options valueForKey: @"minimumOutdoorLocationAccuracy"] intValue];
+        }
+        
+        locationRequest.outdoorLocationOptions = outdoorLocationOptions;           
     }
     
     if ([dict valueForKey:@"useDeadReckoning"]) {
