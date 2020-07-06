@@ -582,8 +582,8 @@ RCT_EXPORT_METHOD(requestNavigationUpdates:(NSDictionary *)options)
 RCT_EXPORT_METHOD(updateNavigationWithLocation:(NSDictionary *)location  withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
     @try {
-        [[SITNavigationManager sharedManager] updateWithLocation:location];
-
+        [[SITNavigationManager sharedManager] updateWithLocation:[SitumLocationWrapper.shared locationJsonObjectToLocation:location]];
+        
         successBlock(@[@"Navigation updated"]);
     }
     @catch (NSException *exception) {
@@ -728,7 +728,7 @@ RCT_EXPORT_METHOD(requestAuthorization){
     [navigationJO setValue:@"progress" forKey:@"type"];
 
     if (_navigationUpdates) {
-        [self sendEventWithName:@"navigationUpdates" body:navigationJO.copy];
+        [self sendEventWithName:@"navigationUpdated" body:navigationJO.copy];
     }
 }
 
@@ -739,7 +739,7 @@ destinationReachedOnRoute:(SITRoute *)route {
     [navigationJO setValue:@"Destination reached" forKey:@"message"];
 
     if (_navigationUpdates) {
-        [self sendEventWithName:@"navigationUpdates" body:navigationJO.copy];
+        [self sendEventWithName:@"navigationUpdated" body:navigationJO.copy];
     }
 }
 
@@ -751,7 +751,7 @@ destinationReachedOnRoute:(SITRoute *)route {
     [navigationJO setValue:@"User outside route" forKey:@"message"];
 
     if (_navigationUpdates) {
-        [self sendEventWithName:@"navigationUpdates" body:navigationJO.copy];
+        [self sendEventWithName:@"navigationUpdated" body:navigationJO.copy];
     }
 }
 
