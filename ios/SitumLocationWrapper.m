@@ -990,7 +990,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     [jo setObject:[NSNumber numberWithInteger:indication.destinationStepIndex] forKey:@"stepIdxDestination"];
     [jo setObject:[NSNumber numberWithInteger:indication.originStepIndex] forKey:@"stepIdxOrigin"];
     [jo setObject:[NSNumber numberWithBool:indication.needLevelChange] forKey:@"neededLevelChange"];
-    [jo setObject:[indication humanReadableMessage] forKey:@"humanReadableMessage"];
+    [jo setObject:([indication humanReadableMessage]) !=  nil ? [indication humanReadableMessage] : @""  forKey:@"humanReadableMessage"];
     if (indication.nextLevel == nil) {
         NSLog(@"Next level is nil");
     } else {

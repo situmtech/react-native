@@ -239,18 +239,20 @@ const SitumPlugin = {
     options?: LocationRequestOptions,
   ) {
     RNCSitumPlugin.requestNavigationUpdates(options || {});
-    navigationSubscriptions.push([
+    navigationSubscriptions.push(
       SitumPluginEventEmitter.addListener(
         'navigationUpdated',
         navigationUpdates,
       ),
+    );
+    navigationSubscriptions.push(
       error
         ? SitumPluginEventEmitter.addListener(
             'navigationError',
             error || logError,
           )
         : null,
-    ]);
+    );
   },
 
   updateNavigationWithLocation: function (
@@ -271,8 +273,12 @@ const SitumPlugin = {
   },
 
   removeNavigationUpdates: function (callback?: Function) {
+    for (let i = 0; i < navigationSubscriptions.length; i++) {
+      navigationSubscriptions[i].remove();
+    }
+
     navigationSubscriptions = [];
-    RNCSitumPlugin.removeNavigationUpdates(callback || warning);
+    RNCSitumPlugin.removeNavigationUpdates(callback || logError);
   },
 
   invalidateCache: function () {
