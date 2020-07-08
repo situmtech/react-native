@@ -126,8 +126,8 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
-    public void stopPositioning(Callback success, Callback error) {
-        getPluginInstance().stopPositioning(success, error);
+    public void stopPositioning(Callback callback) {
+        getPluginInstance().stopPositioning(callback);
     }
 
     @Override
