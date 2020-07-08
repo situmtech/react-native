@@ -32,7 +32,7 @@ public interface SitumPlugin {
 
     void startPositioning(ReadableMap map);
 
-    void stopPositioning(Callback success, Callback error);
+    void stopPositioning(Callback callback);
 
     void requestDirections(ReadableArray requestArray, Callback success, Callback error);
 
