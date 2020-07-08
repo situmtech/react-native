@@ -246,42 +246,64 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 }
 
 - (SITLocationRequest *) dictToLocationRequest: (NSDictionary *) dict {
-    NSNumber *useDeadReckoning = nil;
-    NSNumber *useGps = nil;
     NSString *buildingId;
-    NSString *realtimeUpdateInterval;
-    NSNumber *interval = nil;
-    NSNumber *smallestDisplacement = nil;
-    NSNumber *useBarometer = nil;
-    SITRealtimeUpdateInterval realtimeInterval = 0;
-    
-    if (buildingId == nil) {
+
+    if ([dict valueForKey:@"buildingIdentifier"]) {
         buildingId = [NSString stringWithFormat:@"%@", [dict valueForKey:@"buildingIdentifier"]];
     }
     
     SITLocationRequest *locationRequest = [[SITLocationRequest alloc] initWithBuildingId:buildingId];
-    if (useDeadReckoning != nil) {
-        [locationRequest setUseDeadReckoning:[useDeadReckoning boolValue]];
+   
+    if ([dict valueForKey:@"useGlobalLocation"]) {
+        [locationRequest setUseGlobalLocation:[dict valueForKey:@"useGlobalLocation"]];
+    }
+
+    // TODO: Make parser from external to internal options
+    if ([dict valueForKey:@"outdoorLocationOptions"]) {
+        SITOutdoorLocationOptions *outdoorLocationOptions= [SITOutdoorLocationOptions new];
+
+        NSDictionary *options = [dict valueForKey:@"outdoorLocationOptions"];
+
+        if ([options valueForKey: @"buildingDetector"]) {
+            NSString *bDetector =  [options valueForKey: @"buildingDetector"];
+
+            if ([bDetector isEqualToString:@"kSITBLE"]) { // ble, gps, others?
+                outdoorLocationOptions.buildingDetector = kSITBLE;
+            } else {
+                outdoorLocationOptions.buildingDetector = kSITGpsProximity;
+            }
+        }
+        // minimumOutdoorLocationAccuracy
+        if ([options valueForKey: @"minimumOutdoorLocationAccuracy"]) {
+            outdoorLocationOptions.minimumOutdoorLocationAccuracy = [[options valueForKey: @"minimumOutdoorLocationAccuracy"] intValue];
+        }
+        
+        locationRequest.outdoorLocationOptions = outdoorLocationOptions;           
+    }
+    
+    if ([dict valueForKey:@"useDeadReckoning"]) {
+        [locationRequest setUseDeadReckoning:[dict valueForKey:@"useDeadReckoning"]];
         
     }
-    if(useGps != nil) {
-        [locationRequest setUseGps:[useGps boolValue]];
+    
+    if([dict valueForKey:@"useGps"]) {
+        [locationRequest setUseGps:[dict valueForKey:@"useGps"]];
     }
     
-    if(interval != nil) {
-        [locationRequest setInterval:[interval intValue]];
+    if([dict valueForKey:@"interval"]) {
+        [locationRequest setInterval:[[dict valueForKey:@"interval"] intValue]];
     }
     
-    if (smallestDisplacement != nil) {
-        [locationRequest setSmallestDisplacement:[smallestDisplacement floatValue]];
+    if ([dict valueForKey:@"smallestDisplacement"]) {
+        [locationRequest setSmallestDisplacement:[[dict valueForKey:@"smallestDisplacement"] floatValue]];
     }
     
-    if(useBarometer != nil) {
-        [locationRequest setUseBarometer: [useBarometer boolValue]];
+    if([dict valueForKey:@"realtimeUpdateInterval"]) {
+        [locationRequest setUseBarometer:[dict valueForKey:@"useBarometer"]];
     }
     
-    if (realtimeInterval != 0) {
-        [locationRequest setUpdateInterval:realtimeInterval];
+    if ([dict valueForKey:@"realtimeUpdateInterval"]) {
+        [locationRequest setRealtimeUpdateInterval:[[dict valueForKey:@"realtimeUpdateInterval"] intValue]];
     }
     return locationRequest;
 }
@@ -968,7 +990,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     [jo setObject:[NSNumber numberWithInteger:indication.destinationStepIndex] forKey:@"stepIdxDestination"];
     [jo setObject:[NSNumber numberWithInteger:indication.originStepIndex] forKey:@"stepIdxOrigin"];
     [jo setObject:[NSNumber numberWithBool:indication.needLevelChange] forKey:@"neededLevelChange"];
-    [jo setObject:[indication humanReadableMessage] forKey:@"humanReadableMessage"];
+    [jo setObject:([indication humanReadableMessage]) !=  nil ? [indication humanReadableMessage] : @""  forKey:@"humanReadableMessage"];
     if (indication.nextLevel == nil) {
         NSLog(@"Next level is nil");
     } else {
