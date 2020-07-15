@@ -41,6 +41,6 @@
   },
   "sdkVersions": {
     "android": "2.60.0@aar",
-    "ios": "2.45.1"
+    "ios": "2.45.2"
   }
 }
