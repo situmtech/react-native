@@ -604,7 +604,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     [jo setObject:[self pointToJsonObject:poi.position] forKey:@"position"];
     [jo setObject:[NSNumber numberWithBool:poi.position.isIndoor] forKey:@"isIndoor"];
     [jo setObject:[NSNumber numberWithBool:poi.position.isOutdoor] forKey:@"isOutdoor"];
-    [jo setObject: poi.category.code forKey:@"category"];
+    [jo setObject: [self poiCategoryToJsonObject:poi.category] forKey:@"category"];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:kDateFormat];

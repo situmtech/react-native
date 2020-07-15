@@ -21,6 +21,10 @@ NativeModules.RNCSitumPlugin = {
   fetchFloorsFromBuilding: jest.fn(),
   fetchMapFromFloor: jest.fn(),
   fetchGeofencesFromBuilding: jest.fn(),
+  checkIfPointInsideGeofence: jest.fn(),
+  fetchIndoorPOIsFromBuilding: jest.fn(),
+  fetchOutdoorPOIsFromBuilding: jest.fn(),
+  fetchEventsFromBuilding: jest.fn(),
 
   // Positioning
   startPositioning: jest.fn(),
@@ -39,6 +43,10 @@ NativeModules.RNCSitumPlugin = {
   requestNavigationUpdates: jest.fn(),
   updateNavigationWithLocation: jest.fn(),
   removeNavigationUpdates: jest.fn(),
+
+  // Realtime
+  requestRealTimeUpdates: jest.fn(),
+  removeRealTimeUpdates: jest.fn(),
 };
 
 // Reset the mocks before each test
