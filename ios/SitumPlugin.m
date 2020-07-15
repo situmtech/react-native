@@ -50,17 +50,6 @@ static BOOL IS_LOG_ENABLED = NO;
 
 static NSString *DEFAULT_SITUM_LOG = @"SitumSDK >>: ";
 
-//@interface SitumPluginRequest : NSObject
-//
-//@property (nonatomic, copy) RCTResponseSenderBlock successBlock;
-//@property (nonatomic, copy) RCTResponseSenderBlock errorBlock;
-//
-//@end
-//
-//@implementation SitumPluginRequest
-//
-//@end
-
 
 @interface RNCSitumRequest : NSObject
 
@@ -81,7 +70,7 @@ static NSString *DEFAULT_SITUM_LOG = @"SitumSDK >>: ";
 
 @implementation SitumPlugin
 
-BOOL _positioningUpdates, _navigationUpdates;
+BOOL _positioningUpdates, _navigationUpdates, _realtimeUpdates;
 CLLocationManager *_locationManager;
 RNCSitumConfiguration _locationConfiguration;
 RNCSitumRequest *routeRequest;
@@ -95,7 +84,7 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"locationChanged", @"statusChanged", @"locationError", @"navigationUpdated", @"navigationError"];
+    return @[@"locationChanged", @"statusChanged", @"locationError", @"navigationUpdated", @"navigationError", @"realtimeUpdated", @"realtimeError"];
 }
 
 @synthesize computedRoute = _computedRoute;
@@ -491,19 +480,81 @@ RCT_EXPORT_METHOD(fetchPoiCategoryIconSelected:(NSDictionary *)categoryJO withSu
     }];
 }
 
-RCT_EXPORT_METHOD(fetchIndoorPOIsFromBuilding:(NSDictionary *)buildingJO)
+RCT_EXPORT_METHOD(fetchIndoorPOIsFromBuilding:(NSDictionary *)buildingJO withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
-    NSLog(@"fetchIndoorPOIsFromBuilding");
+    
+    if (poisStored == nil) {
+        poisStored = [[NSMutableDictionary alloc] init];
+    }
+    
+    [[SITCommunicationManager sharedManager] fetchPoisOfBuilding:[buildingJO valueForKey:@"identifier"]  withOptions:nil success:^(NSDictionary *mapping) {
+        NSArray *list = [mapping objectForKey:@"results"];
+        NSMutableArray *ja = [[NSMutableArray alloc] init];
+        for (SITPOI *obj in list) {
+            [ja addObject:[SitumLocationWrapper.shared poiToJsonObject:obj]];
+            [poisStored setObject:obj forKey:obj.name];
+        }
+        if (list.count == 0) {
+            errorBlock(@[@"You have no poi. Create one in the Dashboard"]);
+        } else {
+            successBlock(@[ja.copy]);
+        }
+    } failure:^(NSError *error) {
+        errorBlock(@[error.description]);
+    }];
 }
 
-RCT_EXPORT_METHOD(fetchOutdoorPOIsFromBuilding:(NSDictionary *)buildingJO)
+RCT_EXPORT_METHOD(fetchOutdoorPOIsFromBuilding:(NSDictionary *)buildingJO withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
-    NSLog(@"fetchOutdoorPOIsFromBuilding");
+    
+    if (poisStored == nil) {
+        poisStored = [[NSMutableDictionary alloc] init];
+    }
+    
+    [[SITCommunicationManager sharedManager] fetchOutdoorPoisOfBuilding:[buildingJO valueForKey:@"identifier"]  withOptions:nil success:^(NSDictionary *mapping) {
+        NSArray *list = [mapping objectForKey:@"results"];
+        NSMutableArray *ja = [[NSMutableArray alloc] init];
+        for (SITPOI *obj in list) {
+            [ja addObject:[SitumLocationWrapper.shared poiToJsonObject:obj]];
+            [poisStored setObject:obj forKey:obj.name];
+        }
+        if (list.count == 0) {
+            errorBlock(@[@"You have no poi. Create one in the Dashboard"]);
+        } else {
+            successBlock(@[ja.copy]);
+        }
+    } failure:^(NSError *error) {
+        errorBlock(@[error.description]);
+    }];
 }
 
-RCT_EXPORT_METHOD(fetchEventsFromBuilding:(NSDictionary *)buildingJO)
+RCT_EXPORT_METHOD(fetchEventsFromBuilding:(NSDictionary *)buildingJO withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
-    NSLog(@"fetchEventsFromBuilding");
+    
+    if (eventStored == nil) {
+        eventStored = [[NSMutableDictionary alloc] init];
+    }
+    
+    SITBuilding *building = [SITBuilding new];
+    building.identifier = buildingJO[@"identifier"];
+    
+    [[SITCommunicationManager sharedManager] fetchEventsFromBuilding:building withOptions:nil withCompletion:^SITHandler(NSArray<SITEvent *> *events, NSError *error) {
+        if (!error) {
+            NSMutableArray *ja = [[NSMutableArray alloc] init];
+            for (SITEvent *obj in events) {
+                [ja addObject:[SitumLocationWrapper.shared eventToJsonObject:obj]];
+                [eventStored setObject:obj forKey:[NSString stringWithFormat:@"%@", obj.name]];
+            }
+            if (events.count == 0) {
+                errorBlock(@[@"You have no events. Create one in the Dashboard"]);
+            } else {
+                successBlock(@[ja.copy]);
+            }
+        } else {
+            errorBlock(@[error.description]);
+        }
+        return false;
+    }];
 }
 
 RCT_EXPORT_METHOD(requestNavigationUpdates:(NSDictionary *)options)
@@ -601,12 +652,20 @@ RCT_EXPORT_METHOD(removeNavigationUpdates:(RCTResponseSenderBlock)callbackBlock)
 
 RCT_EXPORT_METHOD(requestRealTimeUpdates:(NSDictionary *)realtimeRequest)
 {
-    NSLog(@"requestRealTimeUpdates");
+    SITRealTimeRequest *request = [SitumLocationWrapper.shared realtimeRequestFromJson:realtimeRequest];
+    
+    _realtimeUpdates = YES;
+    
+    [[SITRealTimeManager sharedManager] requestRealTimeUpdates:request];
+    [SITRealTimeManager sharedManager].delegate = self;
+    
 }
 
 RCT_EXPORT_METHOD(removeRealTimeUpdates)
 {
-    NSLog(@"removeRealTimeUpdates");
+    NSLog(@"REMOVING UPDATESSSS");
+    _realtimeUpdates = NO;
+    [[SITRealTimeManager sharedManager] removeRealTimeUpdates];
 }
 
 RCT_EXPORT_METHOD(invalidateCache)
@@ -651,6 +710,27 @@ RCT_EXPORT_METHOD(requestAuthorization){
         [_locationManager requestWhenInUseAuthorization];
     }
 }
+
+// SITRealtimeDelegate methods
+- (void)realTimeManager:(id <SITRealTimeInterface> _Nonnull)realTimeManager
+ didUpdateUserLocations:(SITRealTimeData *  _Nonnull)realTimeData
+{
+    // SITRealTimeData to json
+    NSDictionary *realtimeInfo = [SitumLocationWrapper.shared jsonFromRealtimeData:realTimeData];
+    NSLog(@"ADDDDDED UPDATESSSS");
+    if (_realtimeUpdates) {
+        [self sendEventWithName:@"realtimeUpdated" body:realtimeInfo.copy];
+    }
+}
+
+- (void)realTimeManager:(id <SITRealTimeInterface>  _Nonnull)realTimeManager
+       didFailWithError:(NSError *  _Nonnull)error
+{
+    if (_realtimeUpdates) {
+        [self sendEventWithName:@"realtimeError" body:error.description];
+    }
+}
+
 // SITLocationDelegate methods
 
 - (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
