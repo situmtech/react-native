@@ -113,4 +113,96 @@ describe('Test buildings related data (list, info, floors)', () => {
       NativeModules.RNCSitumPlugin.fetchGeofencesFromBuilding.mock.calls[0][2],
     ).toBe(error);
   });
+
+  it('should check if point is in a geofence', () => {
+    const request = jest.mock();
+    const callback = () => {};
+
+    SitumPlugin.checkIfPointInsideGeofence(request, callback);
+
+    expect(
+      NativeModules.RNCSitumPlugin.checkIfPointInsideGeofence.mock.calls.length,
+    ).toEqual(1);
+
+    expect(
+      NativeModules.RNCSitumPlugin.checkIfPointInsideGeofence.mock.calls[0][0],
+    ).toBe(request);
+    expect(
+      NativeModules.RNCSitumPlugin.checkIfPointInsideGeofence.mock.calls[0][1],
+    ).toBe(callback);
+  });
+
+  it('should fetch indoor POIs from building and pass it to given callback', () => {
+    const building = jest.mock();
+    const success = () => {};
+    const error = () => {};
+
+    SitumPlugin.fetchIndoorPOIsFromBuilding(building, success, error);
+
+    expect(
+      NativeModules.RNCSitumPlugin.fetchIndoorPOIsFromBuilding.mock.calls
+        .length,
+    ).toEqual(1);
+
+    expect(
+      NativeModules.RNCSitumPlugin.fetchIndoorPOIsFromBuilding.mock.calls[0][0],
+    ).toBe(building);
+    expect(
+      NativeModules.RNCSitumPlugin.fetchIndoorPOIsFromBuilding.mock.calls[0][1],
+    ).toBe(success);
+
+    expect(
+      NativeModules.RNCSitumPlugin.fetchIndoorPOIsFromBuilding.mock.calls[0][2],
+    ).toBe(error);
+  });
+
+  it('should fetch outdoor POIs from building and pass it to given callback', () => {
+    const building = jest.mock();
+    const success = () => {};
+    const error = () => {};
+
+    SitumPlugin.fetchOutdoorPOIsFromBuilding(building, success, error);
+
+    expect(
+      NativeModules.RNCSitumPlugin.fetchOutdoorPOIsFromBuilding.mock.calls
+        .length,
+    ).toEqual(1);
+
+    expect(
+      NativeModules.RNCSitumPlugin.fetchOutdoorPOIsFromBuilding.mock
+        .calls[0][0],
+    ).toBe(building);
+    expect(
+      NativeModules.RNCSitumPlugin.fetchOutdoorPOIsFromBuilding.mock
+        .calls[0][1],
+    ).toBe(success);
+
+    expect(
+      NativeModules.RNCSitumPlugin.fetchOutdoorPOIsFromBuilding.mock
+        .calls[0][2],
+    ).toBe(error);
+  });
+
+  it('should fetch events from building and pass it to given callback', () => {
+    const building = jest.mock();
+    const success = () => {};
+    const error = () => {};
+
+    SitumPlugin.fetchEventsFromBuilding(building, success, error);
+
+    expect(
+      NativeModules.RNCSitumPlugin.fetchEventsFromBuilding.mock.calls.length,
+    ).toEqual(1);
+
+    expect(
+      NativeModules.RNCSitumPlugin.fetchEventsFromBuilding.mock.calls[0][0],
+    ).toBe(building);
+    expect(
+      NativeModules.RNCSitumPlugin.fetchEventsFromBuilding.mock.calls[0][1],
+    ).toBe(success);
+
+    expect(
+      NativeModules.RNCSitumPlugin.fetchEventsFromBuilding.mock.calls[0][2],
+    ).toBe(error);
+  });
 });

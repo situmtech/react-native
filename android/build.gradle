@@ -1,3 +1,4 @@
+import groovy.json.JsonSlurper
 apply plugin: 'com.android.library'
 
 
@@ -25,11 +26,19 @@ android {
 
 }
 
+def getAndroidSDKVersion() {
+
+    def inputFile = new File("$rootDir/../node_modules/react-native-situm-plugin/package.json")
+    def packageJson = new JsonSlurper().parseText(inputFile.text)
+    return packageJson["sdkVersions"]["android"]
+}
+
+
 dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    implementation('es.situm:situm-sdk:2.60.0@aar') {
+    implementation("es.situm:situm-sdk:${getAndroidSDKVersion()}") {
         transitive = true
     }
-  
+    implementation 'org.locationtech.jts:jts-core:1.16.1'
 }
