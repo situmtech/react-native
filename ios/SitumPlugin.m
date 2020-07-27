@@ -395,7 +395,7 @@ RCT_EXPORT_METHOD(fetchGeofencesFromBuilding:(NSDictionary *)buildingJO withSucc
         if (IS_LOG_ENABLED) {
             NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ retrieved geofences: %@ on building: %@", DEFAULT_SITUM_LOG, operation, array, buildingJO]);
         }
-        //successBlock(@[ja.copy]);
+        successBlock(@[ja.copy]);
     }];
 }
 
