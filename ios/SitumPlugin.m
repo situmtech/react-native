@@ -711,6 +711,12 @@ RCT_EXPORT_METHOD(requestAuthorization){
     }
 }
 
+RCT_EXPORT_METHOD(getDeviceId:(RCTResponseSenderBlock)callbackBlock)
+{
+    callbackBlock(@[@{@"deviceId": SITServices.deviceID}]);
+}
+
+
 // SITRealtimeDelegate methods
 - (void)realTimeManager:(id <SITRealTimeInterface> _Nonnull)realTimeManager
  didUpdateUserLocations:(SITRealTimeData *  _Nonnull)realTimeData
