@@ -12,6 +12,10 @@ public interface SitumPlugin {
     String EVENT_NAVIGATION_UPDATE = "navigationUpdated";
     String EVENT_NAVIGATION_ERROR = "navigationError";
 
+    String EVENT_REALTIME_ERROR = "realtimeError";
+    String EVENT_REALTIME_UPDATE = "realtimeUpdated";
+
+
     void initSitumSDK();
 
     void setApiKey(String email, String apiKey, Callback callback);
@@ -42,11 +46,11 @@ public interface SitumPlugin {
 
     void fetchPoiCategoryIconSelected(ReadableMap map, Callback success, Callback error);
 
-    void fetchIndoorPOIsFromBuilding(ReadableMap map);
+    void fetchIndoorPOIsFromBuilding(ReadableMap map, Callback success, Callback error);
 
-    void fetchOutdoorPOIsFromBuilding(ReadableMap map);
+    void fetchOutdoorPOIsFromBuilding(ReadableMap map, Callback success, Callback error);
 
-    void fetchEventsFromBuilding(ReadableMap map);
+    void fetchEventsFromBuilding(ReadableMap map, Callback success, Callback error);
 
     void requestNavigationUpdates(ReadableMap map);
 
@@ -57,6 +61,8 @@ public interface SitumPlugin {
     void requestRealTimeUpdates(ReadableMap map);
 
     void removeRealTimeUpdates();
+
+    void checkIfPointInsideGeofence(ReadableMap map, Callback callback);
 
     void invalidateCache();
 
