@@ -1,9 +1,12 @@
 import {RNCSitumPlugin, SitumPluginEventEmitter} from './nativeInterface';
 import invariant from 'invariant';
 import {logError} from './utils';
+import packageJson from './../package.json';
+import {Platform} from 'react-native';
 
 let positioningSubscriptions = [];
 let navigationSubscriptions = [];
+let realtimeSubscriptions = [];
 
 const SitumPlugin = {
   initSitumSDK: function () {
@@ -281,8 +284,104 @@ const SitumPlugin = {
     RNCSitumPlugin.removeNavigationUpdates(callback || logError);
   },
 
+  fetchIndoorPOIsFromBuilding: function (
+    building: any,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchIndoorPOIsFromBuilding(
+      building,
+      success,
+      error || logError,
+    );
+  },
+
+  fetchOutdoorPOIsFromBuilding: function (
+    building: any,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchOutdoorPOIsFromBuilding(
+      building,
+      success,
+      error || logError,
+    );
+  },
+
+  fetchEventsFromBuilding: function (
+    building: any,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.fetchEventsFromBuilding(
+      building,
+      success,
+      error || logError,
+    );
+  },
+
+  requestRealTimeUpdates: function (
+    navigationUpdates: Function,
+    error?: Function,
+    options?: any,
+  ) {
+    RNCSitumPlugin.requestRealTimeUpdates(options || {});
+    realtimeSubscriptions.push([
+      SitumPluginEventEmitter.addListener('realtimeUpdated', navigationUpdates),
+      error
+        ? SitumPluginEventEmitter.addListener(
+            'realtimeError',
+            error || logError,
+          )
+        : null,
+    ]);
+  },
+
+  removeRealTimeUpdates: function (callback?: Function) {
+    realtimeSubscriptions = [];
+    RNCSitumPlugin.removeRealTimeUpdates();
+  },
+
+  checkIfPointInsideGeofence: function (request: any, callback?: Function) {
+    invariant(
+      typeof callback === 'function',
+      'Must provide a valid success callback.',
+    );
+
+    RNCSitumPlugin.checkIfPointInsideGeofence(request, callback);
+  },
+
   invalidateCache: function () {
     RNCSitumPlugin.invalidateCache();
+  },
+
+  sdkVersions: function (callback: Function) {
+    var versions = {
+      react_native: packageJson.version,
+    };
+
+    if (Platform.OS === 'ios') {
+      versions.ios = packageJson.sdkVersions.ios;
+    } else {
+      versions.android = packageJson.sdkVersions.android;
+    }
+
+    callback(versions);
   },
 };
 
