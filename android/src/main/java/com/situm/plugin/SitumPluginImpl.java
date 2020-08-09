@@ -216,6 +216,15 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
+    public void getDeviceId(Callback callback) {
+        WritableMap response = Arguments.createMap();
+        response.putDouble("device_id", SitumSdk.getDeviceID());
+
+        callback.invoke(response);
+    }
+    
+    @Override
+    @ReactMethod
     public void requestAuthorization() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             final PermissionsModule perms = getReactApplicationContext().getNativeModule(PermissionsModule.class);
