@@ -68,4 +68,6 @@ public interface SitumPlugin {
 
     void requestAuthorization();
 
+    void getDeviceId(Callback callback);
+
 }

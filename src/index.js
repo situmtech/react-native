@@ -383,6 +383,10 @@ const SitumPlugin = {
 
     callback(versions);
   },
+
+  getDeviceId: function (callback: Function) {
+    RNCSitumPlugin.getDeviceId(callback);
+  },
 };
 
 module.exports = SitumPlugin;
