@@ -190,7 +190,7 @@ class SitumMapper {
     public static final String BURST_INTERVAL = "burstInterval";
     public static final String AVERAGE_SNR_THRESHOLD = "averageSnrThreshold";
     public static final String OUTDOOR_BUILDING_DETECTOR_BLE = "BLE";
-    public static final String OUTDOOR_BUILDING_DETECTOR_GPS_PROXIMITY = "GPS_PROXIMITY";
+    public static final String OUTDOOR_BUILDING_DETECTOR_GPS_PROXIMITY = "GPS";
     public static final String OUTDOOR_BUILDING_DETECTOR_WIFI = "WIFI";
     public static final String OUTDOOR_BUILDING_DETECTOR_WIFI_AND_BLE = "WIFI_AND_BLE";
 
