@@ -218,7 +218,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @ReactMethod
     public void getDeviceId(Callback callback) {
         WritableMap response = Arguments.createMap();
-        response.putDouble("device_id", SitumSdk.getDeviceID());
+        response.putDouble("deviceId", SitumSdk.getDeviceID());
 
         callback.invoke(response);
     }
