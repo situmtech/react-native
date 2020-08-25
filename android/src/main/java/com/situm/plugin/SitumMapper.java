@@ -184,10 +184,16 @@ class SitumMapper {
     public static final String AUTO_ENABLE_BLE = "autoEnableBleDuringPositioning";
 
     public static final String OUTDOOR_LOCATION_OPTIONS = "outdoorLocationOptions";
+    public static final String OUTDOOR_BUILDING_DETECTOR = "buildingDetector";
     public static final String CONTINUOUS_MODE = "continuousMode";
     public static final String USER_DEFINED_THRESHOLD = "userDefinedThreshold";
     public static final String BURST_INTERVAL = "burstInterval";
     public static final String AVERAGE_SNR_THRESHOLD = "averageSnrThreshold";
+    public static final String OUTDOOR_BUILDING_DETECTOR_BLE = "BLE";
+    public static final String OUTDOOR_BUILDING_DETECTOR_GPS_PROXIMITY = "GPS";
+    public static final String OUTDOOR_BUILDING_DETECTOR_WIFI = "WIFI";
+    public static final String OUTDOOR_BUILDING_DETECTOR_WIFI_AND_BLE = "WIFI_AND_BLE";
+
 
     public static final String BEACON_FILTERS = "beaconFilters";
     public static final String UUID = "uuid";
@@ -632,7 +638,7 @@ class SitumMapper {
             Coordinate coordinate = coordinateConverter.toCoordinate(cartesianCoordinate);
             JSONObject joCoordinate = coordinateToJsonObject(coordinate);
             jo.put(COORDINATE, joCoordinate);
-        }else if(!jo.has(CARTESIAN_COORDINATE))  {
+        } else if (!jo.has(CARTESIAN_COORDINATE)) {
             JSONObject joCoordinate = jo.getJSONObject(COORDINATE);
             Coordinate coordinate = coordinateJsonObjectToCoordinate((joCoordinate));
             CartesianCoordinate cartesianCoordinate = coordinateConverter.toCartesianCoordinate(coordinate);
@@ -640,8 +646,8 @@ class SitumMapper {
             jo.put(CARTESIAN_COORDINATE, joCartesianCoordinate);
         }
         return new Point(jo.getString(BUILDING_IDENTIFIER), jo.getString(FLOOR_IDENTIFIER),
-                 coordinateJsonObjectToCoordinate(jo.getJSONObject(COORDINATE)),
-                 cartesianCoordinateJsonObjectToCartesianCoordinate(jo.getJSONObject(CARTESIAN_COORDINATE)));
+                coordinateJsonObjectToCoordinate(jo.getJSONObject(COORDINATE)),
+                cartesianCoordinateJsonObjectToCartesianCoordinate(jo.getJSONObject(CARTESIAN_COORDINATE)));
     }
 
     // CartesianCoordinate
@@ -895,7 +901,7 @@ class SitumMapper {
         }
 
         if (args.length() > 1) {
-          locationRequestJSONObjectToLocationRequest(args.getJSONObject(1), locationBuilder);
+            locationRequestJSONObjectToLocationRequest(args.getJSONObject(1), locationBuilder);
         } else {
             locationBuilder.buildingIdentifier(sBuildingId);
         }
@@ -1069,12 +1075,27 @@ class SitumMapper {
             }
         }
 
-        if (outdoorLocationOptions.has(SitumMapper.AVERAGE_SNR_THRESHOLD)) ;
-        Float averageSnrThreshold = new Float(outdoorLocationOptions.getDouble(SitumMapper.AVERAGE_SNR_THRESHOLD));
-        if (averageSnrThreshold != null && averageSnrThreshold >= MIN_SNR && averageSnrThreshold <= MAX_SNR) {
-            optionsBuilder.averageSnrThreshold(averageSnrThreshold);
-            Log.i(TAG, "averageSnrThreshold: " + averageSnrThreshold);
+        if (outdoorLocationOptions.has(SitumMapper.AVERAGE_SNR_THRESHOLD)) {
+            Float averageSnrThreshold = new Float(outdoorLocationOptions.getDouble(SitumMapper.AVERAGE_SNR_THRESHOLD));
+
+            if (averageSnrThreshold != null && averageSnrThreshold >= MIN_SNR && averageSnrThreshold <= MAX_SNR) {
+                optionsBuilder.averageSnrThreshold(averageSnrThreshold);
+                Log.i(TAG, "averageSnrThreshold: " + averageSnrThreshold);
+            }
         }
+        if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_BUILDING_DETECTOR)) {
+            String buildingDetector = outdoorLocationOptions.getString(SitumMapper.OUTDOOR_BUILDING_DETECTOR);
+            if (buildingDetector.equalsIgnoreCase(SitumMapper.OUTDOOR_BUILDING_DETECTOR_BLE)) {
+                optionsBuilder.buildingDetector(OutdoorLocationOptions.BuildingDetector.BLE);
+            } else if (buildingDetector.equalsIgnoreCase(SitumMapper.OUTDOOR_BUILDING_DETECTOR_WIFI)) {
+                optionsBuilder.buildingDetector(OutdoorLocationOptions.BuildingDetector.WIFI);
+            } else if (buildingDetector.equalsIgnoreCase(SitumMapper.OUTDOOR_BUILDING_DETECTOR_WIFI_AND_BLE)) {
+                optionsBuilder.buildingDetector(OutdoorLocationOptions.BuildingDetector.WIFI_AND_BLE);
+            } else if (buildingDetector.equalsIgnoreCase(SitumMapper.OUTDOOR_BUILDING_DETECTOR_GPS_PROXIMITY)) {
+                optionsBuilder.buildingDetector(OutdoorLocationOptions.BuildingDetector.GPS_PROXIMITY);
+            }
+        }
+
         return optionsBuilder.build();
     }
 
