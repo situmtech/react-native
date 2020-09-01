@@ -267,7 +267,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         if ([options valueForKey: @"buildingDetector"]) {
             NSString *bDetector =  [options valueForKey: @"buildingDetector"];
 
-            if ([bDetector isEqualToString:@"kSITBLE"]) { // ble, gps, others?
+            if ([bDetector isEqualToString:@"BLE"] || [bDetector isEqualToString:@"WIFI"] || [bDetector isEqualToString:@"WIFI_AND_BLE"]) { // ble, gps, others?
                 outdoorLocationOptions.buildingDetector = kSITBLE;
             } else {
                 outdoorLocationOptions.buildingDetector = kSITGpsProximity;
