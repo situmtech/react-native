@@ -189,6 +189,7 @@ class SitumMapper {
     public static final String USER_DEFINED_THRESHOLD = "userDefinedThreshold";
     public static final String BURST_INTERVAL = "burstInterval";
     public static final String AVERAGE_SNR_THRESHOLD = "averageSnrThreshold";
+    public static final String ENABLE_OUTDOOR_POSITIONS = "enableOutdoorPositions";
     public static final String OUTDOOR_BUILDING_DETECTOR_BLE = "BLE";
     public static final String OUTDOOR_BUILDING_DETECTOR_GPS_PROXIMITY = "GPS";
     public static final String OUTDOOR_BUILDING_DETECTOR_WIFI = "WIFI";
@@ -1083,6 +1084,12 @@ class SitumMapper {
                 Log.i(TAG, "averageSnrThreshold: " + averageSnrThreshold);
             }
         }
+
+        if (outdoorLocationOptions.has(SitumMapper.ENABLE_OUTDOOR_POSITIONS)) {
+            optionsBuilder.enableOutdoorPositions(outdoorLocationOptions.getBoolean(ENABLE_OUTDOOR_POSITIONS));
+        }
+
+
         if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_BUILDING_DETECTOR)) {
             String buildingDetector = outdoorLocationOptions.getString(SitumMapper.OUTDOOR_BUILDING_DETECTOR);
             if (buildingDetector.equalsIgnoreCase(SitumMapper.OUTDOOR_BUILDING_DETECTOR_BLE)) {
