@@ -181,6 +181,7 @@ class SitumMapper {
     public static final String USE_DEAD_RECKONING = "useDeadReckoning";
     public static final String USE_GPS = "useGps";
     public static final String USE_BAROMETER = "useBarometer";
+    public static final String USE_BATTERY_SAVER = "useBatterySaver";
     public static final String AUTO_ENABLE_BLE = "autoEnableBleDuringPositioning";
 
     public static final String OUTDOOR_LOCATION_OPTIONS = "outdoorLocationOptions";
@@ -965,6 +966,12 @@ class SitumMapper {
             Boolean useBarometer = request.getBoolean(SitumMapper.USE_BAROMETER);
             locationBuilder.useBarometer(useBarometer);
             Log.i(TAG, "useBarometer: " + useBarometer);
+        }  
+        
+        if (request.has(SitumMapper.USE_BATTERY_SAVER)) {
+            Boolean useBatterySaver = request.getBoolean(SitumMapper.USE_BATTERY_SAVER);
+            locationBuilder.useBatterySaver(useBatterySaver);
+            Log.i(TAG, "useBatterySaver: " + useBatterySaver);
         }
 
         if (request.has(SitumMapper.AUTO_ENABLE_BLE)) {
@@ -1021,6 +1028,7 @@ class SitumMapper {
 
             locationBuilder.addBeaconFilters(filtersList);
         }
+
 
         if (request.has(SitumMapper.SMALLEST_DISPLACEMENT)) {
             Float smallestDisplacement = new Float(request.getDouble(SitumMapper.SMALLEST_DISPLACEMENT));
