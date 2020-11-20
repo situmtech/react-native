@@ -181,6 +181,7 @@ class SitumMapper {
     public static final String USE_DEAD_RECKONING = "useDeadReckoning";
     public static final String USE_GPS = "useGps";
     public static final String USE_BAROMETER = "useBarometer";
+    public static final String USE_BATTERY_SAVER = "useBatterySaver";
     public static final String AUTO_ENABLE_BLE = "autoEnableBleDuringPositioning";
 
     public static final String OUTDOOR_LOCATION_OPTIONS = "outdoorLocationOptions";
@@ -189,6 +190,7 @@ class SitumMapper {
     public static final String USER_DEFINED_THRESHOLD = "userDefinedThreshold";
     public static final String BURST_INTERVAL = "burstInterval";
     public static final String AVERAGE_SNR_THRESHOLD = "averageSnrThreshold";
+    public static final String ENABLE_OUTDOOR_POSITIONS = "enableOutdoorPositions";
     public static final String OUTDOOR_BUILDING_DETECTOR_BLE = "BLE";
     public static final String OUTDOOR_BUILDING_DETECTOR_GPS_PROXIMITY = "GPS";
     public static final String OUTDOOR_BUILDING_DETECTOR_WIFI = "WIFI";
@@ -964,6 +966,12 @@ class SitumMapper {
             Boolean useBarometer = request.getBoolean(SitumMapper.USE_BAROMETER);
             locationBuilder.useBarometer(useBarometer);
             Log.i(TAG, "useBarometer: " + useBarometer);
+        }  
+        
+        if (request.has(SitumMapper.USE_BATTERY_SAVER)) {
+            Boolean useBatterySaver = request.getBoolean(SitumMapper.USE_BATTERY_SAVER);
+            locationBuilder.useBatterySaver(useBatterySaver);
+            Log.i(TAG, "useBatterySaver: " + useBatterySaver);
         }
 
         if (request.has(SitumMapper.AUTO_ENABLE_BLE)) {
@@ -1020,6 +1028,7 @@ class SitumMapper {
 
             locationBuilder.addBeaconFilters(filtersList);
         }
+
 
         if (request.has(SitumMapper.SMALLEST_DISPLACEMENT)) {
             Float smallestDisplacement = new Float(request.getDouble(SitumMapper.SMALLEST_DISPLACEMENT));
@@ -1083,6 +1092,12 @@ class SitumMapper {
                 Log.i(TAG, "averageSnrThreshold: " + averageSnrThreshold);
             }
         }
+
+        if (outdoorLocationOptions.has(SitumMapper.ENABLE_OUTDOOR_POSITIONS)) {
+            optionsBuilder.enableOutdoorPositions(outdoorLocationOptions.getBoolean(ENABLE_OUTDOOR_POSITIONS));
+        }
+
+
         if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_BUILDING_DETECTOR)) {
             String buildingDetector = outdoorLocationOptions.getString(SitumMapper.OUTDOOR_BUILDING_DETECTOR);
             if (buildingDetector.equalsIgnoreCase(SitumMapper.OUTDOOR_BUILDING_DETECTOR_BLE)) {
