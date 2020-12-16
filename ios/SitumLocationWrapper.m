@@ -277,6 +277,10 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         if ([options valueForKey: @"minimumOutdoorLocationAccuracy"]) {
             outdoorLocationOptions.minimumOutdoorLocationAccuracy = [[options valueForKey: @"minimumOutdoorLocationAccuracy"] intValue];
         }
+
+        if ([options valueForKey: @"enableOutdoorPositions"]) {
+            outdoorLocationOptions.enableOutdoorPositions = [[options valueForKey: @"enableOutdoorPositions"] boolValue];
+        }
         
         locationRequest.outdoorLocationOptions = outdoorLocationOptions;           
     }
