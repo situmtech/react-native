@@ -195,6 +195,8 @@ class SitumMapper {
     public static final String OUTDOOR_BUILDING_DETECTOR_GPS_PROXIMITY = "GPS";
     public static final String OUTDOOR_BUILDING_DETECTOR_WIFI = "WIFI";
     public static final String OUTDOOR_BUILDING_DETECTOR_WIFI_AND_BLE = "WIFI_AND_BLE";
+    public static final String OUTDOOR_UPDATE_INTERVAL = "updateInterval";
+    public static final String OUTDOOR_COMPUTE_INTERVAL = "computeInterval";
 
 
     public static final String BEACON_FILTERS = "beaconFilters";
@@ -1081,6 +1083,22 @@ class SitumMapper {
             if (burstInterval != null && burstInterval >= 1) {
                 optionsBuilder.burstInterval(burstInterval);
                 Log.i(TAG, "burstInterval: " + burstInterval);
+            }
+        }
+
+        if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_UPDATE_INTERVAL)) {
+            Integer updateInterval = outdoorLocationOptions.getInt(SitumMapper.OUTDOOR_UPDATE_INTERVAL);
+            if (updateInterval != null && updateInterval >= 1) {
+                optionsBuilder.updateInterval(updateInterval);
+                Log.i(TAG, "updateInterval: " + updateInterval);
+            }
+        }
+
+        if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_COMPUTE_INTERVAL)) {
+            Integer computeInterval = outdoorLocationOptions.getInt(SitumMapper.OUTDOOR_COMPUTE_INTERVAL);
+            if (computeInterval != null && computeInterval >= 1) {
+                optionsBuilder.computeInterval(computeInterval);
+                Log.i(TAG, "computeInterval: " + computeInterval);
             }
         }
 
