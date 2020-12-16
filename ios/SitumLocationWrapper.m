@@ -282,6 +282,28 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
             outdoorLocationOptions.enableOutdoorPositions = [[options valueForKey: @"enableOutdoorPositions"] boolValue];
         }
         
+        if ([options valueForKey: @"updateInterval"]) {
+            outdoorLocationOptions.updateInterval = [[options valueForKey: @"updateInterval"] intValue];
+        }
+        
+        if ([options valueForKey: @"computeInterval"]) {
+            outdoorLocationOptions.updateInterval = [[options valueForKey: @"computeInterval"] intValue];
+        }
+        
+        if ([options valueForKey: @"backgroundAccuracy"]) {
+            NSString *accuracy =  [options valueForKey: @"backgroundAccuracy"];
+
+            if ([accuracy isEqualToString:@"MAXIMUM"]) {
+                outdoorLocationOptions.backgroundAccuracy = kSITBackgroundAccuracyNavigation;
+            } else if ([accuracy isEqualToString:@"HIGH"]) {
+                outdoorLocationOptions.backgroundAccuracy = kSITBackgroundAccuracyHigh;
+            }else if ([accuracy isEqualToString:@"MEDIUM"]) {
+                outdoorLocationOptions.backgroundAccuracy = kSITBackgroundAccuracyMedium;
+            }else if ([accuracy isEqualToString:@"LOW"]) {
+                outdoorLocationOptions.backgroundAccuracy = kSITBackgroundAccuracyLow;
+            }
+        }
+        
         locationRequest.outdoorLocationOptions = outdoorLocationOptions;           
     }
     
