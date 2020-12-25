@@ -287,7 +287,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         }
         
         if ([options valueForKey: @"computeInterval"]) {
-            outdoorLocationOptions.updateInterval = [[options valueForKey: @"computeInterval"] intValue];
+            outdoorLocationOptions.computeInterval = [[options valueForKey: @"computeInterval"] intValue];
         }
         
         if ([options valueForKey: @"backgroundAccuracy"]) {
