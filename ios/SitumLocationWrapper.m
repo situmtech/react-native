@@ -293,7 +293,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         if ([options valueForKey: @"backgroundAccuracy"]) {
             NSString *accuracy =  [options valueForKey: @"backgroundAccuracy"];
 
-            if ([accuracy isEqualToString:@"MAXIMUM"]) {
+            if ([accuracy isEqualToString:@"NAVIGATION"]) {
                 outdoorLocationOptions.backgroundAccuracy = kSITBackgroundAccuracyNavigation;
             } else if ([accuracy isEqualToString:@"HIGH"]) {
                 outdoorLocationOptions.backgroundAccuracy = kSITBackgroundAccuracyHigh;
