@@ -328,8 +328,20 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         [locationRequest setUseBarometer:[dict valueForKey:@"useBarometer"]];
     }
     
-    if ([dict valueForKey:@"realtimeUpdateInterval"]) {
-        [locationRequest setRealtimeUpdateInterval:[[dict valueForKey:@"realtimeUpdateInterval"] intValue]];
+     if ([dict valueForKey:@"realtimeUpdateInterval"]) {
+        NSString *updateInterval =  [dict valueForKey: @"realtimeUpdateInterval"];
+        
+        if ([updateInterval isEqualToString:@"REALTIME"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalRealtime];
+        } else if ([updateInterval isEqualToString:@"FAST"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalFast];
+        }else if ([updateInterval isEqualToString:@"NORMAL"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalNormal];
+        }else if ([updateInterval isEqualToString:@"SLOW"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalSlow];
+        }else if ([updateInterval isEqualToString:@"BATTERY_SAVER"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalBatterySaver];
+        }
     }
     return locationRequest;
 }
