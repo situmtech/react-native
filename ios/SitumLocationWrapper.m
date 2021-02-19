@@ -324,7 +324,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         [locationRequest setSmallestDisplacement:[[dict valueForKey:@"smallestDisplacement"] floatValue]];
     }
     
-    if([dict valueForKey:@"realtimeUpdateInterval"]) {
+    if([dict valueForKey:@"useBarometer"]) {
         [locationRequest setUseBarometer:[dict valueForKey:@"useBarometer"]];
     }
     
