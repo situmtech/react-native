@@ -289,6 +289,14 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         if ([options valueForKey: @"computeInterval"]) {
             outdoorLocationOptions.computeInterval = [[options valueForKey: @"computeInterval"] intValue];
         }
+
+        if ([options valueForKey: @"useGeofencesinBuildingSelector"]) {
+            outdoorLocationOptions.useGeofencesInBuildingSelector = [[options valueForKey: @"useGeofencesinBuildingSelector"] boolValue];
+        }
+        
+        if ([options valueForKey: @"enableOutdoorPositions"]) {
+            outdoorLocationOptions.enableOutdoorPositions = [[options valueForKey: @"enableOutdoorPositions"] boolValue];
+        }
         
         if ([options valueForKey: @"backgroundAccuracy"]) {
             NSString *accuracy =  [options valueForKey: @"backgroundAccuracy"];
