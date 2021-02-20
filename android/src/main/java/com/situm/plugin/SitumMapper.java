@@ -197,6 +197,7 @@ class SitumMapper {
     public static final String OUTDOOR_BUILDING_DETECTOR_WIFI_AND_BLE = "WIFI_AND_BLE";
     public static final String OUTDOOR_UPDATE_INTERVAL = "updateInterval";
     public static final String OUTDOOR_COMPUTE_INTERVAL = "computeInterval";
+    public static final String OUTDOOR_COMPUTE_USE_GEOFENCES_IN_BUILDING_SELECTOR = "useGeofencesinBuildingSelector";
 
 
     public static final String BEACON_FILTERS = "beaconFilters";
@@ -1113,6 +1114,10 @@ class SitumMapper {
 
         if (outdoorLocationOptions.has(SitumMapper.ENABLE_OUTDOOR_POSITIONS)) {
             optionsBuilder.enableOutdoorPositions(outdoorLocationOptions.getBoolean(ENABLE_OUTDOOR_POSITIONS));
+        }
+
+        if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_COMPUTE_USE_GEOFENCES_IN_BUILDING_SELECTOR)) {
+            optionsBuilder.useGeofencesInBuildingSelector(outdoorLocationOptions.getBoolean(OUTDOOR_COMPUTE_USE_GEOFENCES_IN_BUILDING_SELECTOR));
         }
 
 
