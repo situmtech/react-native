@@ -198,6 +198,9 @@ class SitumMapper {
     public static final String OUTDOOR_UPDATE_INTERVAL = "updateInterval";
     public static final String OUTDOOR_COMPUTE_INTERVAL = "computeInterval";
     public static final String OUTDOOR_COMPUTE_USE_GEOFENCES_IN_BUILDING_SELECTOR = "useGeofencesinBuildingSelector";
+    public static final String OUTDOOR_MINIMUM_OUTDOOR_LOCATION_ACCURACY = "minimumOutdoorLocationAccuracy";
+    public static final String OUTDOOR_SCAN_BASE_DETECTOR_ALWAYS_ON = "scansBasedDetectorAlwaysOn";
+    public static final String OUTDOOR_ENABLE_OPEN_SKY_DETECTOR = "enableOpenSkyDetector";
 
 
     public static final String BEACON_FILTERS = "beaconFilters";
@@ -1120,6 +1123,17 @@ class SitumMapper {
             optionsBuilder.useGeofencesInBuildingSelector(outdoorLocationOptions.getBoolean(OUTDOOR_COMPUTE_USE_GEOFENCES_IN_BUILDING_SELECTOR));
         }
 
+        if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_MINIMUM_OUTDOOR_LOCATION_ACCURACY)) {
+            optionsBuilder.minimumOutdoorLocationAccuracy(outdoorLocationOptions.getInt(OUTDOOR_MINIMUM_OUTDOOR_LOCATION_ACCURACY));
+        }
+
+        if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_SCAN_BASE_DETECTOR_ALWAYS_ON)) {
+            optionsBuilder.scansBasedDetectorAlwaysOn(outdoorLocationOptions.getBoolean(OUTDOOR_SCAN_BASE_DETECTOR_ALWAYS_ON));
+        }
+
+        if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_ENABLE_OPEN_SKY_DETECTOR)) {
+            optionsBuilder.enableOpenSkyDetector(outdoorLocationOptions.getBoolean(OUTDOOR_ENABLE_OPEN_SKY_DETECTOR));
+        }
 
         if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_BUILDING_DETECTOR)) {
             String buildingDetector = outdoorLocationOptions.getString(SitumMapper.OUTDOOR_BUILDING_DETECTOR);
