@@ -341,6 +341,8 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
             [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalSlow];
         }else if ([updateInterval isEqualToString:@"BATTERY_SAVER"]) {
             [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalBatterySaver];
+        }else if ([updateInterval isEqualToString:@"NEVER"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateNever];
         }
     }
     return locationRequest;
