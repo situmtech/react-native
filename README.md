@@ -127,6 +127,8 @@ allprojects {
 ### iOS
 You'll need to add depedency in `PodFile`
 
+If your React Native version >= 0.63.0 podspec will be detected automatically.
+
 ```js
   target 'YourApp' do
 
