@@ -1,6 +1,6 @@
 {
   "name": "react-native-situm-plugin",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "private": false,
   "react-native": "src/index.js",
   "main": "/src/index.js",
