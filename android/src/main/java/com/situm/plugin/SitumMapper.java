@@ -182,6 +182,8 @@ class SitumMapper {
     public static final String USE_GPS = "useGps";
     public static final String USE_BAROMETER = "useBarometer";
     public static final String USE_BATTERY_SAVER = "useBatterySaver";
+    public static final String USE_LOCATION_CACHE = "useLocationsCache";
+    public static final String IGNORE_WIFI_THROTTLING = "ignoreWifiThrottling";
     public static final String AUTO_ENABLE_BLE = "autoEnableBleDuringPositioning";
 
     public static final String OUTDOOR_LOCATION_OPTIONS = "outdoorLocationOptions";
@@ -974,6 +976,18 @@ class SitumMapper {
             Boolean useBatterySaver = request.getBoolean(SitumMapper.USE_BATTERY_SAVER);
             locationBuilder.useBatterySaver(useBatterySaver);
             Log.i(TAG, "useBatterySaver: " + useBatterySaver);
+        }
+
+       if (request.has(SitumMapper.USE_LOCATION_CACHE)) {
+            Boolean useLocationCache = request.getBoolean(SitumMapper.USE_LOCATION_CACHE);
+            locationBuilder.useLocationCache(useLocationCache);
+            Log.i(TAG, "useLocationCache: " + useLocationCache);
+        }
+
+       if (request.has(SitumMapper.IGNORE_WIFI_THROTTLING)) {
+            Boolean ignoreWifiThrottling = request.getBoolean(SitumMapper.IGNORE_WIFI_THROTTLING);
+            locationBuilder.ignoreWifiThrottling(ignoreWifiThrottling);
+            Log.i(TAG, "ignoreWifiThrottling: " + ignoreWifiThrottling);
         }
 
         if (request.has(SitumMapper.AUTO_ENABLE_BLE)) {
