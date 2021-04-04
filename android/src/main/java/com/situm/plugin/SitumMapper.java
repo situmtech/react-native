@@ -1068,6 +1068,8 @@ class SitumMapper {
                     locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.SLOW);
                 } else if (realtimeUpdateInterval.equals(LocationRequest.RealtimeUpdateInterval.BATTERY_SAVER.name())) {
                     locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.BATTERY_SAVER);
+                }else if (realtimeUpdateInterval.equals(LocationRequest.RealtimeUpdateInterval.NEVER.name())) {
+                    locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.NEVER);
                 }
                 Log.i(TAG, "realtimeUpdateInterval: " + realtimeUpdateInterval);
             }
