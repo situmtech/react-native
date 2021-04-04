@@ -331,6 +331,10 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     if ([dict valueForKey:@"realtimeUpdateInterval"]) {
         [locationRequest setRealtimeUpdateInterval:[[dict valueForKey:@"realtimeUpdateInterval"] intValue]];
     }
+    
+    if ([dict valueForKey:@"useLocationsCache"]) {
+        [locationRequest useLocationsCache:[[dict valueForKey:@"useLocationsCache"] boolValue]];
+    }
     return locationRequest;
 }
 
