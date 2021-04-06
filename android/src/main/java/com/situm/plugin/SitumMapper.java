@@ -979,9 +979,9 @@ class SitumMapper {
         }
 
        if (request.has(SitumMapper.USE_LOCATION_CACHE)) {
-            Boolean useLocationCache = request.getBoolean(SitumMapper.USE_LOCATION_CACHE);
-            locationBuilder.useLocationCache(useLocationCache);
-            Log.i(TAG, "useLocationCache: " + useLocationCache);
+            Boolean useLocationsCache = request.getBoolean(SitumMapper.USE_LOCATION_CACHE);
+            locationBuilder.useLocationsCache(useLocationsCache);
+            Log.i(TAG, "useLocationCache: " + useLocationsCache);
         }
 
        if (request.has(SitumMapper.IGNORE_WIFI_THROTTLING)) {

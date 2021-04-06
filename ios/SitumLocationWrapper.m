@@ -347,7 +347,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     }
     
     if ([dict valueForKey:@"useLocationsCache"]) {
-        [locationRequest useLocationsCache:[[dict valueForKey:@"useLocationsCache"] boolValue]];
+        locationRequest.useLocationsCache = [[dict valueForKey:@"useLocationsCache"] boolValue];
     }
     return locationRequest;
 }
