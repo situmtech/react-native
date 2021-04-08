@@ -182,6 +182,8 @@ class SitumMapper {
     public static final String USE_GPS = "useGps";
     public static final String USE_BAROMETER = "useBarometer";
     public static final String USE_BATTERY_SAVER = "useBatterySaver";
+    public static final String USE_LOCATION_CACHE = "useLocationsCache";
+    public static final String IGNORE_WIFI_THROTTLING = "ignoreWifiThrottling";
     public static final String AUTO_ENABLE_BLE = "autoEnableBleDuringPositioning";
 
     public static final String OUTDOOR_LOCATION_OPTIONS = "outdoorLocationOptions";
@@ -980,6 +982,18 @@ class SitumMapper {
             Log.i(TAG, "useBatterySaver: " + useBatterySaver);
         }
 
+       if (request.has(SitumMapper.USE_LOCATION_CACHE)) {
+            Boolean useLocationsCache = request.getBoolean(SitumMapper.USE_LOCATION_CACHE);
+            locationBuilder.useLocationsCache(useLocationsCache);
+            Log.i(TAG, "useLocationCache: " + useLocationsCache);
+        }
+
+       if (request.has(SitumMapper.IGNORE_WIFI_THROTTLING)) {
+            Boolean ignoreWifiThrottling = request.getBoolean(SitumMapper.IGNORE_WIFI_THROTTLING);
+            locationBuilder.ignoreWifiThrottling(ignoreWifiThrottling);
+            Log.i(TAG, "ignoreWifiThrottling: " + ignoreWifiThrottling);
+        }
+
         if (request.has(SitumMapper.AUTO_ENABLE_BLE)) {
             Boolean autoEnableBleDuringPositioning = request.getBoolean(SitumMapper.AUTO_ENABLE_BLE);
             locationBuilder.autoEnableBleDuringPositioning(autoEnableBleDuringPositioning);
@@ -1058,6 +1072,8 @@ class SitumMapper {
                     locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.SLOW);
                 } else if (realtimeUpdateInterval.equals(LocationRequest.RealtimeUpdateInterval.BATTERY_SAVER.name())) {
                     locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.BATTERY_SAVER);
+                }else if (realtimeUpdateInterval.equals(LocationRequest.RealtimeUpdateInterval.NEVER.name())) {
+                    locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.NEVER);
                 }
                 Log.i(TAG, "realtimeUpdateInterval: " + realtimeUpdateInterval);
             }
