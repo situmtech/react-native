@@ -301,7 +301,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         if ([options valueForKey: @"backgroundAccuracy"]) {
             NSString *accuracy =  [options valueForKey: @"backgroundAccuracy"];
 
-            if ([accuracy isEqualToString:@"MAXIMUM"]) {
+            if ([accuracy isEqualToString:@"NAVIGATION"]) {
                 outdoorLocationOptions.backgroundAccuracy = kSITBackgroundAccuracyNavigation;
             } else if ([accuracy isEqualToString:@"HIGH"]) {
                 outdoorLocationOptions.backgroundAccuracy = kSITBackgroundAccuracyHigh;
@@ -332,12 +332,30 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         [locationRequest setSmallestDisplacement:[[dict valueForKey:@"smallestDisplacement"] floatValue]];
     }
     
-    if([dict valueForKey:@"realtimeUpdateInterval"]) {
+    if([dict valueForKey:@"useBarometer"]) {
         [locationRequest setUseBarometer:[dict valueForKey:@"useBarometer"]];
     }
     
-    if ([dict valueForKey:@"realtimeUpdateInterval"]) {
-        [locationRequest setRealtimeUpdateInterval:[[dict valueForKey:@"realtimeUpdateInterval"] intValue]];
+     if ([dict valueForKey:@"realtimeUpdateInterval"]) {
+        NSString *updateInterval =  [dict valueForKey: @"realtimeUpdateInterval"];
+        
+        if ([updateInterval isEqualToString:@"REALTIME"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalRealtime];
+        } else if ([updateInterval isEqualToString:@"FAST"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalFast];
+        }else if ([updateInterval isEqualToString:@"NORMAL"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalNormal];
+        }else if ([updateInterval isEqualToString:@"SLOW"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalSlow];
+        }else if ([updateInterval isEqualToString:@"BATTERY_SAVER"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateIntervalBatterySaver];
+        }else if ([updateInterval isEqualToString:@"NEVER"]) {
+            [locationRequest setRealtimeUpdateInterval:kSITUpdateNever];
+        }
+    }
+    
+    if ([dict valueForKey:@"useLocationsCache"]) {
+        locationRequest.useLocationsCache = [[dict valueForKey:@"useLocationsCache"] boolValue];
     }
     return locationRequest;
 }
