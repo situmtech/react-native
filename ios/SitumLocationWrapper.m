@@ -296,6 +296,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         
         if ([options valueForKey: @"enableOutdoorPositions"]) {
             outdoorLocationOptions.enableOutdoorPositions = [[options objectForKey: @"enableOutdoorPositions"] boolValue];
+
         }
         
         if ([options valueForKey: @"backgroundAccuracy"]) {
