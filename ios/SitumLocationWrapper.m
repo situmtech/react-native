@@ -316,9 +316,8 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         locationRequest.outdoorLocationOptions = outdoorLocationOptions;           
     }
     
-    if ([dict valueForKey:@"useDeadReckoning"]) {
+    if ([dict objectForKey:@"useDeadReckoning"] boolValue) {
         [locationRequest setUseDeadReckoning:[dict valueForKey:@"useDeadReckoning"]];
-        
     }
     
     if([dict valueForKey:@"useGps"]) {
