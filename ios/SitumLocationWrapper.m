@@ -255,7 +255,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     SITLocationRequest *locationRequest = [[SITLocationRequest alloc] initWithBuildingId:buildingId];
    
     if ([dict valueForKey:@"useGlobalLocation"]) {
-        [locationRequest setUseGlobalLocation:[dict valueForKey:@"useGlobalLocation"]];
+        [locationRequest setUseGlobalLocation:[[dict objectForKey:@"useGlobalLocation"] boolValue]];
     }
 
     // TODO: Make parser from external to internal options
@@ -289,6 +289,15 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         if ([options valueForKey: @"computeInterval"]) {
             outdoorLocationOptions.computeInterval = [[options valueForKey: @"computeInterval"] intValue];
         }
+
+        if ([options valueForKey: @"useGeofencesinBuildingSelector"]) {
+            outdoorLocationOptions.useGeofencesInBuildingSelector = [[options objectForKey: @"useGeofencesinBuildingSelector"] boolValue];
+        }
+        
+        if ([options valueForKey: @"enableOutdoorPositions"]) {
+            outdoorLocationOptions.enableOutdoorPositions = [[options objectForKey: @"enableOutdoorPositions"] boolValue];
+
+        }
         
         if ([options valueForKey: @"backgroundAccuracy"]) {
             NSString *accuracy =  [options valueForKey: @"backgroundAccuracy"];
@@ -313,7 +322,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     }
     
     if([dict valueForKey:@"useGps"]) {
-        [locationRequest setUseGps:[dict valueForKey:@"useGps"]];
+        [locationRequest setUseGps:[[dict objectForKey:@"useGps"] boolValue]];
     }
     
     if([dict valueForKey:@"interval"]) {
@@ -325,7 +334,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     }
     
     if([dict valueForKey:@"useBarometer"]) {
-        [locationRequest setUseBarometer:[dict valueForKey:@"useBarometer"]];
+        [locationRequest setUseBarometer:[[dict objectForKey:@"useBarometer"] boolValue]];
     }
     
      if ([dict valueForKey:@"realtimeUpdateInterval"]) {
@@ -344,6 +353,10 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
         }else if ([updateInterval isEqualToString:@"NEVER"]) {
             [locationRequest setRealtimeUpdateInterval:kSITUpdateNever];
         }
+    }
+    
+    if ([dict valueForKey:@"useLocationsCache"]) {
+        locationRequest.useLocationsCache = [[dict objectForKey:@"useLocationsCache"] boolValue];
     }
     return locationRequest;
 }
