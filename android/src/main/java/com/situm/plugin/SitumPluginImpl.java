@@ -57,6 +57,8 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void setApiKey(String email, String apiKey, Callback callback) {
+        if(email.isEmpty() || apiKey.isEmpty()) return;
+        
         boolean isSuccess = SitumSdk.configuration().setApiKey(email, apiKey);
 
         WritableMap response = Arguments.createMap();
@@ -68,6 +70,8 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void setUserPass(String email, String password, Callback callback) {
+        if(email.isEmpty() || password.isEmpty()) return;
+        
         boolean isSuccess = SitumSdk.configuration().setUserPass(email, password);
 
         WritableMap response = Arguments.createMap();
