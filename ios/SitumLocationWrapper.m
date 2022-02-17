@@ -246,6 +246,11 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 }
 
 - (SITLocationRequest *) dictToLocationRequest: (NSDictionary *) dict {
+    if (dict.allKeys.count == 0) { // Empty
+        NSLog(@"using remote configuration");
+        return nil; // Remote Config
+    }
+    
     NSString *buildingId;
 
     if ([dict valueForKey:@"buildingIdentifier"]) {
