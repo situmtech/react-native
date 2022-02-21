@@ -93,7 +93,7 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 RCT_EXPORT_METHOD(initSitumSDK)
 {
     // only specific to Android at the moment
-    [SITServices setUseRemoteConfig:YES;
+    [SITServices setUseRemoteConfig:YES];
 }
 
 RCT_EXPORT_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig) {
