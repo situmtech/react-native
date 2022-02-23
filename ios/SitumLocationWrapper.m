@@ -622,6 +622,14 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     [jo setObject:[NSNumber numberWithBool:category.isPublic] forKey:@"public"];
     [jo setObject:[NSString stringWithFormat:@"%@", category.code] forKey:@"poiCategoryCode"];
     [jo setObject:[NSString stringWithFormat:@"%@", [category.name value]] forKey:@"poiCategoryName"];
+
+    NSMutableDictionary *nameJO = [[NSMutableDictionary alloc]init];
+
+    [nameJO setObject:[category.name valueForLocale:[NSLocale localeWithLocaleIdentifier:@"en"]] forKey:@"en"];
+    [nameJO setObject:[category.name valueForLocale:[NSLocale localeWithLocaleIdentifier:@"es"]] forKey:@"es"];
+
+    [jo setObject: nameJO forKey: @"name"];
+
     [jo setObject:category.iconURL.direction forKey:@"icon_deselected"];
     [jo setObject:category.selectedIconURL.direction forKey:@"icon_selected"];
     return jo.copy;
