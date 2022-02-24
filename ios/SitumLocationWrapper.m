@@ -623,6 +623,8 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     [jo setObject:[NSString stringWithFormat:@"%@", category.code] forKey:@"poiCategoryCode"];
     [jo setObject:[NSString stringWithFormat:@"%@", [category.name value]] forKey:@"poiCategoryName"];
 
+    // TODO 2022-02-23: Make this moore programming friendly (make a loop through languages or something)
+
     NSMutableDictionary *nameJO = [[NSMutableDictionary alloc]init];
 
     [nameJO setObject:[category.name valueForLocale:[NSLocale localeWithLocaleIdentifier:@"en"]] forKey:@"en"];
