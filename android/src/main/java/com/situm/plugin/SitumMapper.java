@@ -170,7 +170,7 @@ class SitumMapper {
     public static final String TOP_RIGHT = "topRight";
     public static final String BOTTOM_RIGHT = "bottomRight";
     public static final String POI_CATEGORY_ICON_SELECTED = "icon_selected";
-    public static final String POI_CATEGORY_NAME = "name";
+    public static final String POI_CATEGORY_iNAME = "name";
     
     public static final String POI_CATEGORY_ICON_UNSELECTED = "icon_unselected";
 
@@ -525,9 +525,7 @@ class SitumMapper {
             nameJO.put("es", poiCategory.getNameAsI18n().get("es"));
         }
 
-        jo.put(POI_CATEGORY_NAME, nameJO);
-
-
+        jo.put(POI_CATEGORY_iNAME, nameJO);
 
         jo.put(POI_CATEGORY_ICON_SELECTED, poiCategory.getSelectedIconUrl().getValue());
         jo.put(POI_CATEGORY_ICON_UNSELECTED, poiCategory.getUnselectedIconUrl().getValue());
