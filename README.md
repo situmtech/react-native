@@ -9,6 +9,7 @@
 
   * [Description](#description)
   * [Setup your account](#setup-your-account)
+  * [Submitting Contributions](#submitting-contributions)
   * [Installing pre-requisites](#installing-pre-requisites)
   * [Using the Plugin](#using-the-plugin)
     + [Accessing plugin object](#accessing-plugin-object)
@@ -56,6 +57,13 @@ Situm React Native Plugin is a set of utilities that allow any developer to buil
 * Compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
 
 * Trigger notifications when the user enters a certain area.
+
+---
+
+## Submitting Contributions
+
+You will need to sign a Contributor License Agreement (CLA) before making a submission. 
+[Learn more here.](https://situm.com/contributions/)
 
 ---
 
