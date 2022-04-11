@@ -31,4 +31,6 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 
+android/.settings/
+
       
