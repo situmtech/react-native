@@ -1,6 +1,6 @@
 {
   "name": "react-native-situm-plugin",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "private": false,
   "react-native": "src/index.js",
   "main": "/src/index.js",
@@ -40,7 +40,7 @@
     "validate:eslint": "eslint 'src/**/*.js'"
   },
   "sdkVersions": {
-    "android": "2.67.1@aar",
-    "ios": "2.50.4"
+    "android": "2.73.0@aar",
+    "ios": "2.52.1"
   }
 }
