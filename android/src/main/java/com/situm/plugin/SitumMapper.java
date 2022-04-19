@@ -170,6 +170,8 @@ class SitumMapper {
     public static final String TOP_RIGHT = "topRight";
     public static final String BOTTOM_RIGHT = "bottomRight";
     public static final String POI_CATEGORY_ICON_SELECTED = "icon_selected";
+    public static final String POI_CATEGORY_iNAME = "name";
+    
     public static final String POI_CATEGORY_ICON_UNSELECTED = "icon_unselected";
 
     public static final String INTERVAL = "interval";
@@ -512,6 +514,19 @@ class SitumMapper {
         JSONObject jo = new JSONObject();
         jo.put(POI_CATEGORY_CODE, poiCategory.getCode());
         jo.put(POI_CATEGORY_NAME, poiCategory.getName());
+        
+        JSONObject nameJO = new JSONObject();
+        // TODO 2022-02-23: make this programming friendly (loop through array or extract from inner values)
+        if (poiCategory.getNameAsI18n().has("en")) {
+            nameJO.put("en", poiCategory.getNameAsI18n().get("en"));
+        }
+
+        if (poiCategory.getNameAsI18n().has("es")) {
+            nameJO.put("es", poiCategory.getNameAsI18n().get("es"));
+        }
+
+        jo.put(POI_CATEGORY_iNAME, nameJO);
+
         jo.put(POI_CATEGORY_ICON_SELECTED, poiCategory.getSelectedIconUrl().getValue());
         jo.put(POI_CATEGORY_ICON_UNSELECTED, poiCategory.getUnselectedIconUrl().getValue());
         jo.put(IS_PUBLIC, poiCategory.isPublic());
@@ -1086,24 +1101,10 @@ class SitumMapper {
     static OutdoorLocationOptions buildOutdoorLocationOptions(JSONObject outdoorLocationOptions) throws JSONException {
         OutdoorLocationOptions.Builder optionsBuilder = new OutdoorLocationOptions.Builder();
 
-        if (outdoorLocationOptions.has(SitumMapper.CONTINUOUS_MODE)) {
-            Boolean continuousMode = outdoorLocationOptions.getBoolean(SitumMapper.CONTINUOUS_MODE);
-            optionsBuilder.continuousMode(continuousMode);
-            Log.i(TAG, "continuousMode: " + continuousMode);
-        }
-
         if (outdoorLocationOptions.has(SitumMapper.USER_DEFINED_THRESHOLD)) {
             Boolean userDefinedThreshold = outdoorLocationOptions.getBoolean(SitumMapper.USER_DEFINED_THRESHOLD);
             optionsBuilder.userDefinedThreshold(userDefinedThreshold);
             Log.i(TAG, "userDefinedThreshold: " + userDefinedThreshold);
-        }
-
-        if (outdoorLocationOptions.has(SitumMapper.BURST_INTERVAL)) {
-            Integer burstInterval = outdoorLocationOptions.getInt(SitumMapper.BURST_INTERVAL);
-            if (burstInterval != null && burstInterval >= 1) {
-                optionsBuilder.burstInterval(burstInterval);
-                Log.i(TAG, "burstInterval: " + burstInterval);
-            }
         }
 
         if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_UPDATE_INTERVAL)) {

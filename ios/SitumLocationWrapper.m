@@ -246,6 +246,11 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
 }
 
 - (SITLocationRequest *) dictToLocationRequest: (NSDictionary *) dict {
+    if (dict.allKeys.count == 0) { // Empty
+        NSLog(@"using remote configuration");
+        return nil; // Remote Config
+    }
+    
     NSString *buildingId;
 
     if ([dict valueForKey:@"buildingIdentifier"]) {
@@ -617,6 +622,16 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     [jo setObject:[NSNumber numberWithBool:category.isPublic] forKey:@"public"];
     [jo setObject:[NSString stringWithFormat:@"%@", category.code] forKey:@"poiCategoryCode"];
     [jo setObject:[NSString stringWithFormat:@"%@", [category.name value]] forKey:@"poiCategoryName"];
+
+    // TODO 2022-02-23: Make this moore programming friendly (make a loop through languages or something)
+
+    NSMutableDictionary *nameJO = [[NSMutableDictionary alloc]init];
+
+    [nameJO setObject:[category.name valueForLocale:[NSLocale localeWithLocaleIdentifier:@"en"]] forKey:@"en"];
+    [nameJO setObject:[category.name valueForLocale:[NSLocale localeWithLocaleIdentifier:@"es"]] forKey:@"es"];
+
+    [jo setObject: nameJO forKey: @"name"];
+
     [jo setObject:category.iconURL.direction forKey:@"icon_deselected"];
     [jo setObject:category.selectedIconURL.direction forKey:@"icon_selected"];
     return jo.copy;

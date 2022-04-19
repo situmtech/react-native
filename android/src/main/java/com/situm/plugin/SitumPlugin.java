@@ -18,6 +18,8 @@ public interface SitumPlugin {
 
     void initSitumSDK();
 
+    void setUseRemoteConfig(String useRemoteConfig, Callback callback);
+
     void setApiKey(String email, String apiKey, Callback callback);
 
     void setUserPass(String email, String password, Callback callback);
