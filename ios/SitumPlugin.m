@@ -93,11 +93,14 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 RCT_EXPORT_METHOD(initSitumSDK)
 {
     // only specific to Android at the moment
-    [SITServices setUseRemoteConfig:YES];
 }
 
-RCT_EXPORT_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig) {
+RCT_EXPORT_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig withCallback:(RCTResponseSenderBlock)callback) {
     [SITServices setUseRemoteConfig:([useRemoteConfig isEqualToString:@"true"] ? YES: NO)];
+    if (callback) {
+        NSDictionary *response = @{@"success": @"true"};
+        callback(@[response]);
+    }
 }
 
 RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCallback:(RCTResponseSenderBlock)callback)

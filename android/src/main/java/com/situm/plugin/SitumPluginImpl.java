@@ -52,7 +52,6 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @ReactMethod
     public void initSitumSDK() {
         SitumSdk.init(reactContext);
-        SitumSdk.configuration().setUseRemoteConfig(true); // By default remote configuration is ready to use
     }
 
     @Override
@@ -70,8 +69,14 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
-    public void setUseRemoteConfig(String useRemoteConfig) {
+    public void setUseRemoteConfig(String useRemoteConfig, Callback callback) {
         SitumSdk.configuration().setUseRemoteConfig(useRemoteConfig.equalsIgnoreCase("true") ? true : false);
+        if (callback != null) {
+            WritableMap response = Arguments.createMap();
+            response.putBoolean("success", true);
+    
+            callback.invoke(response);
+        }
     }
 
     @Override
