@@ -69,6 +69,18 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
+    public void setUseRemoteConfig(String useRemoteConfig, Callback callback) {
+        SitumSdk.configuration().setUseRemoteConfig(useRemoteConfig.equalsIgnoreCase("true") ? true : false);
+        if (callback != null) {
+            WritableMap response = Arguments.createMap();
+            response.putBoolean("success", true);
+    
+            callback.invoke(response);
+        }
+    }
+
+    @Override
+    @ReactMethod
     public void setUserPass(String email, String password, Callback callback) {
         if(email.isEmpty() || password.isEmpty()) return;
         

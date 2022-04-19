@@ -21,6 +21,10 @@ const SitumPlugin = {
     RNCSitumPlugin.setUserPass(email, password, success);
   },
 
+  setUseRemoteConfig(useRemoteConfig: string, success?: Function) {
+    RNCSitumPlugin.setUseRemoteConfig(useRemoteConfig, success);
+  },
+
   setCacheMaxAge: function (cacheAge: number, success?: Function) {
     RNCSitumPlugin.setCacheMaxAge(cacheAge, success);
   },
