@@ -400,7 +400,7 @@ const SitumPlugin = {
 
   onExitGeofences: function (callback: Function) {
     console.log("### INDEX set EXIT Callback!");
-    RNCSitumPlugin.onEnterGeofences();
+    RNCSitumPlugin.onExitGeofences();
     SitumPluginEventEmitter.addListener('onExitGeofences', callback);
   },
 };
