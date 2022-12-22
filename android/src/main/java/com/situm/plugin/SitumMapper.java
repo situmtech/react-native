@@ -51,6 +51,7 @@ import es.situm.sdk.model.location.Location;
 import es.situm.sdk.model.location.Location.Quality;
 import es.situm.sdk.model.navigation.NavigationProgress;
 import es.situm.sdk.model.realtime.RealTimeData;
+import es.situm.sdk.model.MapperInterface;
 import es.situm.sdk.realtime.RealTimeRequest;
 import es.situm.sdk.v1.Point2f;
 import es.situm.sdk.v1.SitumConversionArea;
@@ -1197,5 +1198,13 @@ class SitumMapper {
             }
         }
         return new DirectionsRequest.Builder().from(from, Angle.fromDegrees(startingAngle)).to(to).accessibilityMode(accessibilityMode).minimizeFloorChanges(minimizeFloorChanges).build();
+    }
+
+    static List<Map<String, Object>> mapList(List<? extends MapperInterface> modelObjects) {
+        List<Map<String, Object>> mappedList = new ArrayList<>();
+        for (MapperInterface modelObject: modelObjects) {
+            mappedList.add(modelObject.toMap());
+        }
+        return mappedList;
     }
 }
