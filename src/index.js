@@ -393,14 +393,14 @@ const SitumPlugin = {
   },
 
   onEnterGeofences: function (callback: Function) {
-    console.log("### INDEX set ENTER Callback!");
     RNCSitumPlugin.onEnterGeofences();
+    SitumPluginEventEmitter.removeAllListeners('onEnterGeofences');
     SitumPluginEventEmitter.addListener('onEnterGeofences', callback);
   },
 
   onExitGeofences: function (callback: Function) {
-    console.log("### INDEX set EXIT Callback!");
     RNCSitumPlugin.onExitGeofences();
+    SitumPluginEventEmitter.removeAllListeners('onExitGeofences');
     SitumPluginEventEmitter.addListener('onExitGeofences', callback);
   },
 };

@@ -928,17 +928,14 @@ public class PluginHelper {
     }
 
     private void createAndSetGeofenceListener(DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
-        Log.d("Situm>", "### ! createAndSetGeofenceListener() called.");
         GeofenceListener geofenceListener = new GeofenceListener() {
             public void onEnteredGeofences(List<Geofence> enteredGeofences) {
-                Log.d("Situm>", "#################### onEnteredGeofences called.");
-                if (emitEnterGeofences){
+                if (emitEnterGeofences) {
                     emitGeofences(EVENT_ENTER_GEOFENCES, enteredGeofences);
                 }
             }
 
             public void onExitedGeofences(List<Geofence> exitedGeofences) {
-                Log.d("Situm>", "#################### onExitedGeofences called.");
                 if (emitExitGeofences) {
                     emitGeofences(EVENT_EXIT_GEOFENCES, exitedGeofences);
                 }
@@ -946,10 +943,8 @@ public class PluginHelper {
 
             private void emitGeofences(String event, List<Geofence> geofences) {
                 eventEmitter.emit(event, SitumMapper.mapList(geofences));
-                Log.d("Situm>", "#################### emit called!!!");
             }
         };
         SitumSdk.locationManager().setGeofenceListener(geofenceListener);
-        Log.d("Situm>", "### ! createAndSetGeofenceListener() reached the end.");
     }
 }

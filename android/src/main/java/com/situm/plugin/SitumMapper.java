@@ -1200,11 +1200,81 @@ class SitumMapper {
         return new DirectionsRequest.Builder().from(from, Angle.fromDegrees(startingAngle)).to(to).accessibilityMode(accessibilityMode).minimizeFloorChanges(minimizeFloorChanges).build();
     }
 
-    static List<Map<String, Object>> mapList(List<? extends MapperInterface> modelObjects) {
-        List<Map<String, Object>> mappedList = new ArrayList<>();
-        for (MapperInterface modelObject: modelObjects) {
-            mappedList.add(modelObject.toMap());
+    static ReadableArray mapList(List<? extends MapperInterface> modelObjects) {
+        WritableArray mappedList = new WritableNativeArray();
+        for (MapperInterface modelObject : modelObjects) {
+            ReadableMap modelMap = convertMapToReadableMap(modelObject.toMap());
+            mappedList.pushMap(modelMap);
         }
         return mappedList;
+    }
+
+    public static ReadableMap convertMapToReadableMap(Map<String, Object> map) {
+        WritableMap response = new WritableNativeMap();
+        // Use a local stack to keep nested objects (avoids recursion).
+        // First item in the stack: the given object.
+        Stack<Map<String, Object>> sourcesStack = new Stack();
+        Stack<WritableMap> responseStack = new Stack<>();
+        sourcesStack.push(map);
+        responseStack.push(response);
+
+        while (!sourcesStack.isEmpty()) {
+            Map<String, Object> currentSource = sourcesStack.pop();
+            WritableMap currentTarget = responseStack.pop();
+            for (Map.Entry<String, Object> entry : currentSource.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof String) {
+                    currentTarget.putString(key, (String) value);
+                } else if (value instanceof Integer) {
+                    currentTarget.putInt(key, (Integer) value);
+                } else if (value instanceof Double) {
+                    currentTarget.putDouble(key, (Double) value);
+                } else if (value instanceof Boolean) {
+                    currentTarget.putBoolean(key, (Boolean) value);
+                } else if (value instanceof List) {
+                    // Warning: #convertMapToReadableMap maybe called here:
+                    currentTarget.putArray(key, convertListToReadableArray((List<Object>) value));
+                } else if (value instanceof Map) {
+                    sourcesStack.push((Map) value);
+                    WritableMap nextMap = new WritableNativeMap();
+                    responseStack.push(nextMap);
+                    currentTarget.putMap(key, nextMap);
+                }
+            }
+        }
+        return response;
+    }
+
+    public static ReadableArray convertListToReadableArray(List<Object> list) {
+        WritableArray response = new WritableNativeArray();
+        Stack<List<Object>> sourcesStack = new Stack();
+        Stack<WritableArray> responseStack = new Stack<>();
+        sourcesStack.push(list);
+        responseStack.push(response);
+
+        while (!sourcesStack.isEmpty()) {
+            List<Object> currentSource = sourcesStack.pop();
+            WritableArray currentTarget = responseStack.pop();
+            for (Object value : currentSource) {
+                if (value instanceof String) {
+                    currentTarget.pushString((String) value);
+                } else if (value instanceof Integer) {
+                    currentTarget.pushInt((Integer) value);
+                } else if (value instanceof Double) {
+                    currentTarget.pushDouble((Double) value);
+                } else if (value instanceof Boolean) {
+                    currentTarget.pushBoolean((Boolean) value);
+                } else if (value instanceof Map) {
+                    currentTarget.pushMap(convertMapToReadableMap((Map) value));
+                } else if (value instanceof List) {
+                    sourcesStack.push((List) value);
+                    WritableArray nextList = new WritableNativeArray();
+                    responseStack.push(nextList);
+                    currentTarget.pushArray(nextList);
+                }
+            }
+        }
+        return response;
     }
 }
