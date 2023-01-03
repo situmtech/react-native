@@ -394,6 +394,7 @@ const SitumPlugin = {
 
   onEnterGeofences: function (callback: Function) {
     RNCSitumPlugin.onEnterGeofences();
+    // Adopts SDK behavior (setter):
     SitumPluginEventEmitter.removeAllListeners('onEnterGeofences');
     SitumPluginEventEmitter.addListener('onEnterGeofences', callback);
   },
