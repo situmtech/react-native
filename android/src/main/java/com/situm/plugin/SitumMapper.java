@@ -5,6 +5,15 @@ import android.graphics.Bitmap;
 import android.util.Base64;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,14 +29,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Stack;
 
-import androidx.annotation.Nullable;
 import es.situm.sdk.directions.DirectionsRequest;
 import es.situm.sdk.location.LocationRequest;
 import es.situm.sdk.location.LocationStatus;
 import es.situm.sdk.location.OutdoorLocationOptions;
 import es.situm.sdk.location.util.CoordinateConverter;
 import es.situm.sdk.model.I18nString;
+import es.situm.sdk.model.MapperInterface;
 import es.situm.sdk.model.URL;
 import es.situm.sdk.model.cartography.Building;
 import es.situm.sdk.model.cartography.BuildingInfo;
@@ -51,7 +61,6 @@ import es.situm.sdk.model.location.Location;
 import es.situm.sdk.model.location.Location.Quality;
 import es.situm.sdk.model.navigation.NavigationProgress;
 import es.situm.sdk.model.realtime.RealTimeData;
-import es.situm.sdk.model.MapperInterface;
 import es.situm.sdk.realtime.RealTimeRequest;
 import es.situm.sdk.v1.Point2f;
 import es.situm.sdk.v1.SitumConversionArea;
@@ -172,7 +181,7 @@ class SitumMapper {
     public static final String BOTTOM_RIGHT = "bottomRight";
     public static final String POI_CATEGORY_ICON_SELECTED = "icon_selected";
     public static final String POI_CATEGORY_iNAME = "name";
-    
+
     public static final String POI_CATEGORY_ICON_UNSELECTED = "icon_unselected";
 
     public static final String INTERVAL = "interval";
@@ -515,7 +524,7 @@ class SitumMapper {
         JSONObject jo = new JSONObject();
         jo.put(POI_CATEGORY_CODE, poiCategory.getCode());
         jo.put(POI_CATEGORY_NAME, poiCategory.getName());
-        
+
         JSONObject nameJO = new JSONObject();
         // TODO 2022-02-23: make this programming friendly (loop through array or extract from inner values)
         if (poiCategory.getNameAsI18n().has("en")) {
@@ -990,21 +999,21 @@ class SitumMapper {
             Boolean useBarometer = request.getBoolean(SitumMapper.USE_BAROMETER);
             locationBuilder.useBarometer(useBarometer);
             Log.i(TAG, "useBarometer: " + useBarometer);
-        }  
-        
+        }
+
         if (request.has(SitumMapper.USE_BATTERY_SAVER)) {
             Boolean useBatterySaver = request.getBoolean(SitumMapper.USE_BATTERY_SAVER);
             locationBuilder.useBatterySaver(useBatterySaver);
             Log.i(TAG, "useBatterySaver: " + useBatterySaver);
         }
 
-       if (request.has(SitumMapper.USE_LOCATION_CACHE)) {
+        if (request.has(SitumMapper.USE_LOCATION_CACHE)) {
             Boolean useLocationsCache = request.getBoolean(SitumMapper.USE_LOCATION_CACHE);
             locationBuilder.useLocationsCache(useLocationsCache);
             Log.i(TAG, "useLocationCache: " + useLocationsCache);
         }
 
-       if (request.has(SitumMapper.IGNORE_WIFI_THROTTLING)) {
+        if (request.has(SitumMapper.IGNORE_WIFI_THROTTLING)) {
             Boolean ignoreWifiThrottling = request.getBoolean(SitumMapper.IGNORE_WIFI_THROTTLING);
             locationBuilder.ignoreWifiThrottling(ignoreWifiThrottling);
             Log.i(TAG, "ignoreWifiThrottling: " + ignoreWifiThrottling);
@@ -1088,7 +1097,7 @@ class SitumMapper {
                     locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.SLOW);
                 } else if (realtimeUpdateInterval.equals(LocationRequest.RealtimeUpdateInterval.BATTERY_SAVER.name())) {
                     locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.BATTERY_SAVER);
-                }else if (realtimeUpdateInterval.equals(LocationRequest.RealtimeUpdateInterval.NEVER.name())) {
+                } else if (realtimeUpdateInterval.equals(LocationRequest.RealtimeUpdateInterval.NEVER.name())) {
                     locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.NEVER);
                 }
                 Log.i(TAG, "realtimeUpdateInterval: " + realtimeUpdateInterval);
