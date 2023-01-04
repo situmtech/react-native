@@ -568,6 +568,9 @@ SitumPlugin.getDeviceId(response=>{
 
 #### - onEnterGeofences
 
+> **Warning**
+> This method is available only in Android by now.
+
 Get notified about entering geofences. Take into account:
 
 - This method must be called **before** the positioning is started.
@@ -582,6 +585,9 @@ SitumPlugin.onEnterGeofences((geofences) => {
 ```
 
 #### - onExitGeofences
+
+> **Warning**
+> This method is available only in Android by now.
 
 Get notified about exiting geofences. Take into account the considerations described at [onEnterGeofences](#--onEnterGeofences).
 
