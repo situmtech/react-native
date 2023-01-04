@@ -391,6 +391,19 @@ const SitumPlugin = {
   getDeviceId: function (callback: Function) {
     RNCSitumPlugin.getDeviceId(callback);
   },
+
+  onEnterGeofences: function (callback: Function) {
+    RNCSitumPlugin.onEnterGeofences();
+    // Adopts SDK behavior (setter):
+    SitumPluginEventEmitter.removeAllListeners('onEnterGeofences');
+    SitumPluginEventEmitter.addListener('onEnterGeofences', callback);
+  },
+
+  onExitGeofences: function (callback: Function) {
+    RNCSitumPlugin.onExitGeofences();
+    SitumPluginEventEmitter.removeAllListeners('onExitGeofences');
+    SitumPluginEventEmitter.addListener('onExitGeofences', callback);
+  },
 };
 
 module.exports = SitumPlugin;

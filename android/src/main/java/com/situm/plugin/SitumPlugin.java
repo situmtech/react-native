@@ -15,6 +15,8 @@ public interface SitumPlugin {
     String EVENT_REALTIME_ERROR = "realtimeError";
     String EVENT_REALTIME_UPDATE = "realtimeUpdated";
 
+    String EVENT_ENTER_GEOFENCES = "onEnterGeofences";
+    String EVENT_EXIT_GEOFENCES = "onExitGeofences";
 
     void initSitumSDK();
 
@@ -72,4 +74,7 @@ public interface SitumPlugin {
 
     void getDeviceId(Callback callback);
 
+    void onEnterGeofences();
+
+    void onExitGeofences();
 }
