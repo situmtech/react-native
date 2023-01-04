@@ -5,6 +5,15 @@ import android.graphics.Bitmap;
 import android.util.Base64;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,14 +29,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Stack;
 
-import androidx.annotation.Nullable;
 import es.situm.sdk.directions.DirectionsRequest;
 import es.situm.sdk.location.LocationRequest;
 import es.situm.sdk.location.LocationStatus;
 import es.situm.sdk.location.OutdoorLocationOptions;
 import es.situm.sdk.location.util.CoordinateConverter;
 import es.situm.sdk.model.I18nString;
+import es.situm.sdk.model.MapperInterface;
 import es.situm.sdk.model.URL;
 import es.situm.sdk.model.cartography.Building;
 import es.situm.sdk.model.cartography.BuildingInfo;
@@ -171,7 +181,7 @@ class SitumMapper {
     public static final String BOTTOM_RIGHT = "bottomRight";
     public static final String POI_CATEGORY_ICON_SELECTED = "icon_selected";
     public static final String POI_CATEGORY_iNAME = "name";
-    
+
     public static final String POI_CATEGORY_ICON_UNSELECTED = "icon_unselected";
 
     public static final String INTERVAL = "interval";
@@ -514,7 +524,7 @@ class SitumMapper {
         JSONObject jo = new JSONObject();
         jo.put(POI_CATEGORY_CODE, poiCategory.getCode());
         jo.put(POI_CATEGORY_NAME, poiCategory.getName());
-        
+
         JSONObject nameJO = new JSONObject();
         // TODO 2022-02-23: make this programming friendly (loop through array or extract from inner values)
         if (poiCategory.getNameAsI18n().has("en")) {
@@ -989,21 +999,21 @@ class SitumMapper {
             Boolean useBarometer = request.getBoolean(SitumMapper.USE_BAROMETER);
             locationBuilder.useBarometer(useBarometer);
             Log.i(TAG, "useBarometer: " + useBarometer);
-        }  
-        
+        }
+
         if (request.has(SitumMapper.USE_BATTERY_SAVER)) {
             Boolean useBatterySaver = request.getBoolean(SitumMapper.USE_BATTERY_SAVER);
             locationBuilder.useBatterySaver(useBatterySaver);
             Log.i(TAG, "useBatterySaver: " + useBatterySaver);
         }
 
-       if (request.has(SitumMapper.USE_LOCATION_CACHE)) {
+        if (request.has(SitumMapper.USE_LOCATION_CACHE)) {
             Boolean useLocationsCache = request.getBoolean(SitumMapper.USE_LOCATION_CACHE);
             locationBuilder.useLocationsCache(useLocationsCache);
             Log.i(TAG, "useLocationCache: " + useLocationsCache);
         }
 
-       if (request.has(SitumMapper.IGNORE_WIFI_THROTTLING)) {
+        if (request.has(SitumMapper.IGNORE_WIFI_THROTTLING)) {
             Boolean ignoreWifiThrottling = request.getBoolean(SitumMapper.IGNORE_WIFI_THROTTLING);
             locationBuilder.ignoreWifiThrottling(ignoreWifiThrottling);
             Log.i(TAG, "ignoreWifiThrottling: " + ignoreWifiThrottling);
@@ -1087,7 +1097,7 @@ class SitumMapper {
                     locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.SLOW);
                 } else if (realtimeUpdateInterval.equals(LocationRequest.RealtimeUpdateInterval.BATTERY_SAVER.name())) {
                     locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.BATTERY_SAVER);
-                }else if (realtimeUpdateInterval.equals(LocationRequest.RealtimeUpdateInterval.NEVER.name())) {
+                } else if (realtimeUpdateInterval.equals(LocationRequest.RealtimeUpdateInterval.NEVER.name())) {
                     locationBuilder.realtimeUpdateInterval(LocationRequest.RealtimeUpdateInterval.NEVER);
                 }
                 Log.i(TAG, "realtimeUpdateInterval: " + realtimeUpdateInterval);
@@ -1197,5 +1207,83 @@ class SitumMapper {
             }
         }
         return new DirectionsRequest.Builder().from(from, Angle.fromDegrees(startingAngle)).to(to).accessibilityMode(accessibilityMode).minimizeFloorChanges(minimizeFloorChanges).build();
+    }
+
+    static ReadableArray mapList(List<? extends MapperInterface> modelObjects) {
+        WritableArray mappedList = new WritableNativeArray();
+        for (MapperInterface modelObject : modelObjects) {
+            ReadableMap modelMap = convertMapToReadableMap(modelObject.toMap());
+            mappedList.pushMap(modelMap);
+        }
+        return mappedList;
+    }
+
+    public static ReadableMap convertMapToReadableMap(Map<String, Object> map) {
+        WritableMap response = new WritableNativeMap();
+        // Use a local stack to keep nested objects (avoids recursion).
+        // First item in the stack: the given object.
+        Stack<Map<String, Object>> sourcesStack = new Stack();
+        Stack<WritableMap> responseStack = new Stack<>();
+        sourcesStack.push(map);
+        responseStack.push(response);
+
+        while (!sourcesStack.isEmpty()) {
+            Map<String, Object> currentSource = sourcesStack.pop();
+            WritableMap currentTarget = responseStack.pop();
+            for (Map.Entry<String, Object> entry : currentSource.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof String) {
+                    currentTarget.putString(key, (String) value);
+                } else if (value instanceof Integer) {
+                    currentTarget.putInt(key, (Integer) value);
+                } else if (value instanceof Double) {
+                    currentTarget.putDouble(key, (Double) value);
+                } else if (value instanceof Boolean) {
+                    currentTarget.putBoolean(key, (Boolean) value);
+                } else if (value instanceof List) {
+                    // Warning: #convertMapToReadableMap maybe called here:
+                    currentTarget.putArray(key, convertListToReadableArray((List<Object>) value));
+                } else if (value instanceof Map) {
+                    sourcesStack.push((Map) value);
+                    WritableMap nextMap = new WritableNativeMap();
+                    responseStack.push(nextMap);
+                    currentTarget.putMap(key, nextMap);
+                }
+            }
+        }
+        return response;
+    }
+
+    public static ReadableArray convertListToReadableArray(List<Object> list) {
+        WritableArray response = new WritableNativeArray();
+        Stack<List<Object>> sourcesStack = new Stack();
+        Stack<WritableArray> responseStack = new Stack<>();
+        sourcesStack.push(list);
+        responseStack.push(response);
+
+        while (!sourcesStack.isEmpty()) {
+            List<Object> currentSource = sourcesStack.pop();
+            WritableArray currentTarget = responseStack.pop();
+            for (Object value : currentSource) {
+                if (value instanceof String) {
+                    currentTarget.pushString((String) value);
+                } else if (value instanceof Integer) {
+                    currentTarget.pushInt((Integer) value);
+                } else if (value instanceof Double) {
+                    currentTarget.pushDouble((Double) value);
+                } else if (value instanceof Boolean) {
+                    currentTarget.pushBoolean((Boolean) value);
+                } else if (value instanceof Map) {
+                    currentTarget.pushMap(convertMapToReadableMap((Map) value));
+                } else if (value instanceof List) {
+                    sourcesStack.push((List) value);
+                    WritableArray nextList = new WritableNativeArray();
+                    responseStack.push(nextList);
+                    currentTarget.pushArray(nextList);
+                }
+            }
+        }
+        return response;
     }
 }

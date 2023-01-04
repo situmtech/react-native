@@ -55,6 +55,7 @@ import es.situm.sdk.realtime.RealTimeManager;
 import es.situm.sdk.realtime.RealTimeRequest;
 import es.situm.sdk.utils.Handler;
 import es.situm.sdk.v1.SitumEvent;
+import es.situm.sdk.location.GeofenceListener;
 
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_CHANGED;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_ERROR;
@@ -63,6 +64,8 @@ import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_ERROR;
 import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_UPDATE;
 import static com.situm.plugin.SitumPlugin.EVENT_REALTIME_ERROR;
 import static com.situm.plugin.SitumPlugin.EVENT_REALTIME_UPDATE;
+import static com.situm.plugin.SitumPlugin.EVENT_ENTER_GEOFENCES;
+import static com.situm.plugin.SitumPlugin.EVENT_EXIT_GEOFENCES;
 import static com.situm.plugin.utils.ReactNativeJson.convertJsonToArray;
 import static com.situm.plugin.utils.ReactNativeJson.convertJsonToMap;
 import static com.situm.plugin.utils.ReactNativeJson.convertMapToJson;
@@ -77,6 +80,9 @@ public class PluginHelper {
     private LocationRequest locationRequest;
     private NavigationListener navigationListener;
     private NavigationRequest navigationRequest;
+
+    private boolean emitEnterGeofences = false;
+    private boolean emitExitGeofences = false;
 
     private volatile CommunicationManager cmInstance;
 
@@ -911,4 +917,34 @@ public class PluginHelper {
         }
     }
 
+    public void onEnterGeofences(DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
+        emitEnterGeofences = true;
+        createAndSetGeofenceListener(eventEmitter);
+    }
+
+    public void onExitGeofences(DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
+        emitExitGeofences = true;
+        createAndSetGeofenceListener(eventEmitter);
+    }
+
+    private void createAndSetGeofenceListener(DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
+        GeofenceListener geofenceListener = new GeofenceListener() {
+            public void onEnteredGeofences(List<Geofence> enteredGeofences) {
+                if (emitEnterGeofences) {
+                    emitGeofences(EVENT_ENTER_GEOFENCES, enteredGeofences);
+                }
+            }
+
+            public void onExitedGeofences(List<Geofence> exitedGeofences) {
+                if (emitExitGeofences) {
+                    emitGeofences(EVENT_EXIT_GEOFENCES, exitedGeofences);
+                }
+            }
+
+            private void emitGeofences(String event, List<Geofence> geofences) {
+                eventEmitter.emit(event, SitumMapper.mapList(geofences));
+            }
+        };
+        SitumSdk.locationManager().setGeofenceListener(geofenceListener);
+    }
 }
