@@ -84,7 +84,7 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"locationChanged", @"statusChanged", @"locationError", @"navigationUpdated", @"navigationError", @"realtimeUpdated", @"realtimeError"];
+    return @[@"locationChanged", @"statusChanged", @"locationError", @"navigationUpdated", @"navigationError", @"realtimeUpdated", @"realtimeError", @"onEnterGeofences", @"onExitGeofences"];
 }
 
 @synthesize computedRoute = _computedRoute;
@@ -724,6 +724,13 @@ RCT_EXPORT_METHOD(getDeviceId:(RCTResponseSenderBlock)callbackBlock)
     callbackBlock(@[@{@"deviceId": SITServices.deviceID}]);
 }
 
+RCT_EXPORT_METHOD(onEnterGeofences){
+    // TODO
+}
+
+RCT_EXPORT_METHOD(onExitGeofences){
+    // TODO
+}
 
 // SITRealtimeDelegate methods
 - (void)realTimeManager:(id <SITRealTimeInterface> _Nonnull)realTimeManager
