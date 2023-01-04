@@ -24,7 +24,7 @@
       - [fetchFloorsFromBuilding](#--fetchfloorsfrombuilding)
       - [fetchIndoorPOIsFromBuilding](#--fetchindoorpoisfrombuilding)
       - [fetchOutdoorPOIsFromBuilding](#--fetchoutdoorpoisfrombuilding)
-      - [fetchEventsFromBuilding](# --fetcheventsfrombuilding)
+      - [fetchEventsFromBuilding](#--fetcheventsfrombuilding)
       - [fetchPoiCategories](#--fetchpoicategories)
       - [fetchMapFromFloor](#--fetchmapfromfloor)
       - [fetchPoiCategoryIconNormal](#--fetchpoicategoryiconnormal)
