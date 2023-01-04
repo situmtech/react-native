@@ -40,6 +40,8 @@
       - [requestAuthorization](#--requestAuthorization)
       - [sdkVersions](#--sdkVersions)
       - [getDeviceId](#--getDeviceId)
+      - [onEnterGeofences](#--onEnterGeofences)
+      - [onExitGeofences](#--onExitGeofences)
   * [License](#license)
   * [More information](#more-information)
   * [Support information](#support-information)
@@ -571,6 +573,31 @@ SitumPlugin.getDeviceId(response=>{
   // e.g. {deviceId: 12345678}
 });
 ```
+
+#### - onEnterGeofences
+
+> **Warning**
+> This method is available only in Android by now.
+
+Get notified about entering geofences. Take into account:
+
+- This method must be called **before** the positioning is started.
+- Positioning geofences (with `trainer_metadata` custom field) won't be notified.
+- This callback only work with indoor locations. Any outdoor location will produce a call to [onExitedGeofences](#--onExitedGeofences) with the last positioned geofences as argument.
+
+```js
+SitumPlugin.onEnterGeofences((geofences) => {
+
+  // e.g. [{"polygonPoints": [], "customFields": {}, "updatedAt": "Thu Jan 01 01:00:00 +0100 1970", "buildingIdentifier": "1234", "floorIdentifier": "123456", "code": "", "createdAt": "Thu Jan 01 01:00:00 +0100 1970", "infoHtml": "", "name": "My Geofence", "identifier": "12345678-aaaa-bbbb-cccc-12345678abcd"}]
+});
+```
+
+#### - onExitGeofences
+
+> **Warning**
+> This method is available only in Android by now.
+
+Get notified about exiting geofences. Take into account the considerations described at [onEnterGeofences](#--onEnterGeofences).
 
 
 ## License
