@@ -245,7 +245,9 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             final PermissionsModule perms = getReactApplicationContext().getNativeModule(PermissionsModule.class);
 
-            final Callback onPermissionGranted = new Callback() {
+            // Location permission
+            
+            final Callback onLocationPermissionGranted = new Callback() {
                 @Override
                 public void invoke(Object... args) {
                     String result = (String) args[0];
@@ -255,14 +257,14 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
                 }
             };
 
-            final Callback onPermissionDenied = new Callback() {
+            final Callback onLocationPermissionDenied = new Callback() {
                 @Override
                 public void invoke(Object... args) {
                     Log.e(TAG, "Failed to request location permission.");
                 }
             };
 
-            Callback onPermissionCheckFailed = new Callback() {
+            Callback onLocationPermissionCheckFailed = new Callback() {
                 @Override
                 public void invoke(Object... args) {
 
@@ -270,18 +272,61 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
                 }
             };
 
-            Callback onPermissionChecked = new Callback() {
+            Callback onLocationPermissionChecked = new Callback() {
                 @Override
                 public void invoke(Object... args) {
                     boolean hasPermission = (boolean) args[0];
 
                     if (!hasPermission) {
-                        perms.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, new PromiseImpl(onPermissionGranted, onPermissionDenied));
+                        perms.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, new PromiseImpl(onLocationPermissionGranted, onLocationPermissionDenied));
                     }
                 }
             };
 
-            perms.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, new PromiseImpl(onPermissionChecked, onPermissionCheckFailed));
+            perms.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, new PromiseImpl(onLocationPermissionChecked, onLocationPermissionCheckFailed));
+
+            // Bluetooth permissions
+
+            final Callback onBluetoothPermissionsGranted = new Callback() {
+                @Override
+                public void invoke(Object... args) {
+                    String result = (String) args[0];
+                    if (!result.equals("granted")) {
+                        Log.e(TAG, "Nearby devices permission was not granted.");
+                    }
+                }
+            };
+
+            final Callback onBluetoothPermissionDenied = new Callback() {
+                @Override
+                public void invoke(Object... args) {
+                    Log.e(TAG, "Failed to request nearby devices permission.");
+                }
+            };
+
+            Callback onBluetoothPermissionCheckFailed = new Callback() {
+                @Override
+                public void invoke(Object... args) {
+
+                    Log.e(TAG, "Failed to check nearby devices permission.");
+                }
+            };
+
+            Callback onBluetoothPermissionChecked = new Callback() {
+                @Override
+                public void invoke(Object... args) {
+                    boolean hasPermission = (boolean) args[0];
+
+                    if (!hasPermission) {
+                        perms.requestPermission(Manifest.permission.BLUETOOTH_SCAN, new PromiseImpl(onBluetoothPermissionsGranted, onBluetoothPermissionDenied));
+                        perms.requestPermission(Manifest.permission.BLUETOOTH_CONNECT, new PromiseImpl(onBluetoothPermissionsGranted, onBluetoothPermissionDenied));
+                    }
+                }
+            };
+
+            perms.checkPermission(Manifest.permission.BLUETOOTH_SCAN, new PromiseImpl(onBluetoothPermissionChecked, onBluetoothPermissionCheckFailed));
+            perms.checkPermission(Manifest.permission.BLUETOOTH_CONNECT, new PromiseImpl(onBluetoothPermissionChecked, onBluetoothPermissionCheckFailed));
+            
         }
     }
 
