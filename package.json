@@ -4,6 +4,7 @@
   "private": false,
   "react-native": "src/index.js",
   "main": "/src/index.js",
+  "types": "/typings/index.d.ts",
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
@@ -40,7 +41,7 @@
     "validate:eslint": "eslint 'src/**/*.js'"
   },
   "sdkVersions": {
-    "android": "2.83.4@aar",
+    "android": "2.83.5@aar",
     "ios": "2.52.1"
   }
 }
