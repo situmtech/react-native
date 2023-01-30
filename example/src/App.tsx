@@ -13,6 +13,7 @@ import {ShowBuildingOnMap} from './examples/ShowBuildingOnMap';
 import {DrawRouteBetweenPOIs} from './examples/DrawRouteBetweenPOIs';
 import {RemoteConfig} from './examples/RemoteConfig';
 import {GetPoisIcons} from './examples/GetPoisIcons';
+import {SetCacheMaxAge} from './examples/SetCacheMaxAge';
 
 function initSitumSdk() {
   SitumPlugin.initSitumSDK();
@@ -62,6 +63,10 @@ const HomeScreen = ({navigation}) => {
             title: 'Draw pois with custom icons',
             key: 'GetPoisIcons',
           },
+          {
+            title: 'Set cache max age and invalidate it',
+            key: 'SetCacheMaxAge',
+          },
         ]}
         renderItem={({item, index, separators}) => (
           <TouchableHighlight key={item.key}>
@@ -100,6 +105,7 @@ function App() {
         />
         <Stack.Screen name="RemoteConfig" component={RemoteConfig} />
         <Stack.Screen name="GetPoisIcons" component={GetPoisIcons} />
+        <Stack.Screen name="SetCacheMaxAge" component={SetCacheMaxAge} />
       </Stack.Navigator>
     </NavigationContainer>
   );
