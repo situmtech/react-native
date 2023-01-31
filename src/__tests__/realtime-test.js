@@ -1,50 +1,49 @@
-/* eslint-disable no-undef */
+import { NativeModules } from "react-native";
 
-import {NativeModules} from 'react-native';
-import SitumPlugin from '..';
+import SitumPlugin from "..";
 
-describe('Test Realtime update functions', () => {
+describe("Test Realtime update functions", () => {
   afterEach(() => {
     SitumPlugin.removeRealTimeUpdates();
   });
-  it('should add update and error listener to the request realtiime upudatees', () => {
+  it("should add update and error listener to the request realtiime upudatees", () => {
     SitumPlugin.requestRealTimeUpdates(
       () => {},
-      () => {},
+      () => {}
     );
 
     expect(NativeModules.RNCSitumPlugin.addListener.mock.calls[0][0]).toBe(
-      'realtimeUpdated',
+      "realtimeUpdated"
     );
     expect(NativeModules.RNCSitumPlugin.addListener.mock.calls[1][0]).toBe(
-      'realtimeError',
+      "realtimeError"
     );
   });
 
-  it('should pass options to request realtime updates', () => {
+  it("should pass options to request realtime updates", () => {
     const options = expect.any(Object);
     SitumPlugin.requestRealTimeUpdates(
       () => {},
       () => {},
-      options,
+      options
     );
 
     expect(NativeModules.RNCSitumPlugin.addListener.mock.calls[0][0]).toBe(
-      'realtimeUpdated',
+      "realtimeUpdated"
     );
     expect(NativeModules.RNCSitumPlugin.addListener.mock.calls[1][0]).toBe(
-      'realtimeError',
+      "realtimeError"
     );
     expect(
-      NativeModules.RNCSitumPlugin.requestRealTimeUpdates.mock.calls[0][0],
+      NativeModules.RNCSitumPlugin.requestRealTimeUpdates.mock.calls[0][0]
     ).toBe(options);
   });
 
-  it('should call remove all realtime update request', () => {
+  it("should call remove all realtime update request", () => {
     SitumPlugin.removeRealTimeUpdates();
 
     expect(
-      NativeModules.RNCSitumPlugin.removeRealTimeUpdates.mock.calls.length,
+      NativeModules.RNCSitumPlugin.removeRealTimeUpdates.mock.calls.length
     ).toBe(1);
   });
 });

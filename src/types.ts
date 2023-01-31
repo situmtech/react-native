@@ -16,7 +16,6 @@
  * @property {string} userIdentifier - Unique identifier of the owner user of the building
  * @property {object} customFields - Map of custom fields, indexed by their name.
  */
-
 export type Building = {
   buildingIdentifier: string;
   name: string;
@@ -42,7 +41,6 @@ export type Building = {
  * @property {Coordinate} southEast - The coordinate of the south-east corner of the bound.
  * @property {Coordinate} southWest - The coordinate of the south-east corner of the bound.
  */
-
 export type Bounds = {
   northEast: Coordinate;
   northWest: Coordinate;
@@ -57,7 +55,6 @@ export type Bounds = {
  * @property {number} width - Width of rectangle in meters
  * @property {number} height - Height of rectangle in meters.
  */
-
 export type Dimensions = {
   width: number;
   height: number;
@@ -71,7 +68,6 @@ export type Dimensions = {
  * @property {number} latitude - Latitude in degrees
  * @property {number} longitude - Longitude in degrees
  */
-
 export type Coordinate = {
   latitude: number;
   longitude: number;
@@ -85,7 +81,6 @@ export type Coordinate = {
  * @property {number} x - Value of coordinate at x-axis
  * @property {number} y - Value of coordinate at y-axis
  */
-
 export type CartesianCoordinate = {
   x: number;
   y: number;
@@ -104,7 +99,6 @@ export type CartesianCoordinate = {
  * @property {number} scale - The scale of the floor image, in px/meters
  * @property {string} floorIdentifier - The unique identifier of the resource
  */
-
 export type Floor = {
   altitude: number;
   buildingIdentifier: string;
@@ -133,7 +127,6 @@ export type Floor = {
  * @property {string} infoHtml - Additional information about POI, in HTML
  * @property {object} customFields - Map of custom fields, indexed by their name.
  */
-
 export type Poi = {
   identifier: string;
   buildingIdentifier: string;
@@ -150,10 +143,9 @@ export type Poi = {
 };
 
 /**
- * @name
- * Geofence
- * @description
- * Point of Interest, associated to a building, regardless of whether it's place inside or outside the building.
+ * @name Geofence
+ * @description Point of Interest, associated to a building, regardless of whether it's place inside or outside the building.
+ *
  * @property {string} identifier - The unique identifier of the resource
  * @property {string} buildingIdentifier - Identifier of building to which the POI belongs.
  * @property {string} floorIdentifier - If this POI is outside the building (isOutdoor == true), this field has no meaning.
@@ -162,7 +154,6 @@ export type Poi = {
  * @property {Point[]} polygonPoints - List of points of that define the area of the geofence
  * @property {object} customFields - Map of custom fields, indexed by their name.
  */
-
 export type Geofence = {
   identifier: string;
   buildingIdentifier: string;
@@ -173,17 +164,15 @@ export type Geofence = {
 };
 
 /**
- * @name
- * PoiCategory
- * @description
- * Category of Point of Interest.
+ * @name PoiCategory
+ * @description Category of Point of Interest.
+ *
  * @property {string} poiCategoryCode - Unique code of the category
  * @property {string} poiCategoryName - The category name appropriate for display to the user
  * @property {string} icon_selected - The selected icon url
  * @property {string} icon_unselected - The unselected icon url
  * @property {boolean} public - Whether the category is public or not
  */
-
 export type PoiCategory = {
   poiCategoryCode: string;
   poiCategoryName: string;
@@ -193,10 +182,9 @@ export type PoiCategory = {
 };
 
 /**
- * @name
- * Point
- * @description
- * Associate geographical coordinate (Location) with Building and Floor (Cartography) and cartesian coordinate relative to that building.
+ * @name Point
+ * @description Associate geographical coordinate (Location) with Building and Floor (Cartography) and cartesian coordinate relative to that building.
+ *
  * @property {string} buildingIdentifier - Unique identifier for the building to which this point belongs
  * @property {CartesianCoordinate} cartesianCoordinate - Cartesian coordinate (in meters) relative to the Bounds of building's base.
  * @property {Coordinate} coordinate - Geographic coordinate (latitude, longitude) of the point, regardless of whether it's placed inside or outside the building.
@@ -204,7 +192,6 @@ export type PoiCategory = {
  * @property {boolean} isIndoor - If the POI is inside the building.
  * @property {boolean} idOutdoor - If the POI is outside the building.
  */
-
 export type Point = {
   buildingIdentifier: string;
   cartesianCoordinate: CartesianCoordinate;
@@ -215,10 +202,9 @@ export type Point = {
 };
 
 /**
- * @name
- * Route
- * @description
- * Route between two points.
+ * @name Route
+ * @description Route between two points.
+ *
  * @property {RouteStep[]} edges - Ordered list of steps to go to the goal point
  * @property {RouteStep} firstStep - First step
  * @property {Point} from - Point where the route starts.
@@ -230,7 +216,6 @@ export type Point = {
  * @property {RouteStep[]} steps - Ordered list of steps to go to the goal point
  * @property {RouteSegment[]} segments - List of segments formed by consecutive points and a floor identifier
  */
-
 export type Route = {
   edges: RouteStep[];
   firstStep: RouteStep;
@@ -245,10 +230,8 @@ export type Route = {
 };
 
 /**
- * @name
- * RouteStep
- * @description
- * A fragment of a route, described by the initial point from and the last point to of the fragment, and some information about the step within the route.
+ * @name RouteStep
+ * @description A fragment of a route, described by the initial point from and the last point to of the fragment, and some information about the step within the route.
  * @property {number} distance - Distance between from and to in meters.
  * @property {number} distanceToGoal - Distance in meters between the start point of this step (from) and the last point in the route ('to' of the last step).
  * @property {Point} from - Start point of this step.
@@ -257,7 +240,6 @@ export type Route = {
  * @property {boolean} isFirst - Returns true if this is the first step in the route.
  * @property {boolean} isLast - Returns true if this is the last step in the route.
  */
-
 export type RouteStep = {
   distance: number;
   distanceToGoal: number;
@@ -269,24 +251,19 @@ export type RouteStep = {
 };
 
 /**
- * @name
- * RouteSegment
- * @description
- * A fragment of a route, described by a floor identifier and a list of consecutive points from the same floor
+ * @name RouteSegment
+ * @description A fragment of a route, described by a floor identifier and a list of consecutive points from the same floor
  * @property {string} floorIdentifier - Identifier of the floor containing the points in this segment
  * @property {Point[]} points - Consecutive points in the same floor forming a path
  */
-
 export type RouteSegment = {
   floorIdentifier: string;
   points: Point[];
 };
 
 /**
- * @name
- * Indication
- * @description
- * Represents the instruction that a user should follow when on a RouteStep to continue the route.
+ * @name Indication
+ * @description Represents the instruction that a user should follow when on a RouteStep to continue the route.
  * @property {number} distance - The distance between the origin and destination
  * @property {number} distanceToNextLevel - The number of levels between the origin and destination
  * @property {string} indicationType - The Indication.Action of the instruction as String
@@ -296,7 +273,6 @@ export type RouteSegment = {
  * @property {number} stepIdxOrigin - The index of the indication's step of origin
  * @property {boolean} neededLevelChange - If the user should change the level in order to arrive to destination
  */
-
 export type Indication = {
   distance: number;
   distanceToNextLevel: number;
@@ -309,11 +285,9 @@ export type Indication = {
 };
 
 /**
- * @name
- * NavigationProgress
- * @description
- * Provides information of the progress of a user while following a route.
- * @property {Point} closestPointInRoute - Closest point in the route from the user location provided . @deprecated Use closestLocationInRoute instead.
+ * @name NavigationProgress
+ * @description Provides information of the progress of a user while following a route.
+ * @property {Point} closestPointInRoute - Closest point in the route from the user location provided .
  * @property {Location} closestLocationInRoute - Closest location in the route from the user location provided .
  * @property {number} distanceToClosestPointInRoute - Distance between the real user location (provided to updateWithLocation(Location)) and the closest route location.
  * @property {Indication} currentIndication - The current indication.
@@ -327,8 +301,10 @@ export type Indication = {
  * @property {Point[]} points - List of ordered points of the remaining route
  * @property {RouteSegment[]} segments - List of segments formed by consecutive points and a floor identifier
  */
-
 export type NavigationProgress = {
+  /**
+   * @deprecated Use closestLocationInRoute instead.
+   */
   closestPointInRoute: Point;
   closestLocationInRoute: Location;
   distanceToClosestPointInRoute: number;
@@ -343,53 +319,61 @@ export type NavigationProgress = {
   points: Point[];
   segments: RouteSegment[];
 };
-
 /**
- * @name
- * SitumEvent
- * @description
- * An event: POI with radius, conversion area and asociated statistics. It is intended for usage in marketing apps.
+ * @name SitumEvent
+ * @description An event: POI with radius, conversion area and asociated statistics. It is intended for usage in marketing apps.
  * @property {number} buildingIdentifier - The identifier of the building this floor belongs to. Deprecated, use trigger.center.buildingIdentifier instead
  * @property {number} identifier - Unique identifier of the SitumEvent.
- * @property {number} floorIdentifier - The identifier of the floor this event is located at. @deprecated, use trigger.center.floorIdentifier instead
+ * @property {number} floorIdentifier - The identifier of the floor this event is located at.
  * @property {string} infoHtml - Information contained into the event, in HTML format.
- * @property {SitumConversionArea} conversionArea - Location where the event is located. @deprecated, use conversion instead
+ * @property {SitumConversionArea} conversionArea - Location where the event is located.
  * @property {Circle} conversion - Location where the event is located.
  * @property {Circle} trigger - Location where the event should be fired
  * @property {object} customFields - Key-value pairs that allow to extend and fully customize the information associated with the event.
- * @property {number} radius - Radius of the event associated area. @deprecated, use trigger.radius instead
+ * @property {number} radius - Radius of the event associated area.
  * @property {string} name - Name of the event
- * @property {number} x - Center of the event in the x-axis. @deprecated, use trigger.center.cartesianCoordinate.x instead
- * @property {number} y - Center of the event in the y-axis. @deprecated, use trigger.center.cartesianCoordinate.y instead
+ * @property {number} x - Center of the event in the x-axis.
+ * @property {number} y - Center of the event in the y-axis.
  */
-
 export type SitumEvent = {
   buildingIdentifier: number;
   identifier: number;
+  /**
+   * @deprecated, use trigger.center.floorIdentifier instead
+   */
   floorIdentifier: number;
   infoHtml: string;
+  /**
+   * @deprecated, use conversion instead
+   */
   conversionArea: SitumConversionArea;
   conversion: Circle;
   trigget: Circle;
   customFields: object;
+  /**
+   * @deprecated, use trigger.radius instead
+   */
   radius: number;
   name: string;
+  /**
+   * @deprecated, use trigger.center.cartesianCoordinate.x instead
+   */
   x: number;
+  /**
+   * @deprecated, use trigger.center.cartesianCoordinate.y instead
+   */
   y: number;
 };
 
 /**
- * @name
- * SitumConversionArea
- * @description
- * A rectangular area of a floor defining the conversion area of an event
+ * @name SitumConversionArea
+ * @description A rectangular area of a floor defining the conversion area of an event
  * @property {number} floorIdentifier - The identifier of the floor the SitumConversionArea is located at.
  * @property {object} topLeft - Top-left corner
  * @property {object} topRight - Top-right corner
  * @property {object} bottomLeft - Bottom-left corner
  * @property {object} bottomRight - Bottom-right corner
  */
-
 export type SitumConversionArea = {
   floorIdentifier: number;
   topLeft: object;
@@ -399,24 +383,21 @@ export type SitumConversionArea = {
 };
 
 /**
- * @name
- * Circle
- * @description
- * A circular area
+ * @name Circle
+ * @description A circular area
+ *
  * @property {Point} center - The center of the circle
  * @property {number} radius - The radius of the circle
  */
-
 export type Circle = {
   center: Point;
   radius: number;
 };
 
 /**
- * @name
- * LocationOptions
- * @description
- * A data object that contains parameters for the location service, LocationManager.
+ * @name LocationRequestOptions
+ * @description  A data object that contains parameters for the location service, LocationManager.
+ *
  * @property {number} buildingIdentifier - Identifier of the building on which the positioning will be started
  * @property {number} interval - Default interval (in milliseconds) to notify location updates
  * @property {string} indoorProvider - Default indoor provider. Possible values are INPHONE and SUPPORT
@@ -428,50 +409,47 @@ export type Circle = {
  * @property {boolean} useForegroundService - Defines whether or not to activate the {@link http://developers.situm.es/pages/android/using_situm_sdk_background.html foreground service}
  * @property {boolean} useDeadReckoning - Defines whether ot not to use dead reckoning to get fast position updates using only the inertial sensors, between the server position updates.
  * @property {OutdoorLocationOptions} outdoorLocationOptions - Outdoor location options. Only used in an indoor/outdoor request
- * @property {BeaconFilter[]} beaconFilters - Beacon filters to be handled during scan time, otherwise only Situm beacons will be scanned. Can be invoked multiple times to add as much beacon filters as you want @deprecated The SitumSDK now does it automatically
+ * @property {BeaconFilter[]} beaconFilters - Beacon filters to be handled during scan time, otherwise only Situm beacons will be scanned. Can be invoked multiple times to add as much beacon filters as you want.
  * @property {number} smallestDisplacement - Default smallest displacement to nofiy location updates
  * @property {string} realtimeUpdateInterval - Default interval to send locations to the Realtime. Possible values are REALTIME, FAST, NORMAL, SLOW and BATTERY_SAVER
  * @property {boolean} autoEnableBleDuringPositioning - Set if the BLE should be re-enabled during positioning if the ble is used. Android only
  */
-
-export type LocationOptions = {
-  buildingIdentifier: number;
-  interval: number;
-  indoorProvider: string;
-  useBle: boolean;
-  useWifi: boolean;
-  useGps: boolean;
-  useBarometer: boolean;
-  motionMode: string;
-  useForegroundService: boolean;
-  useDeadReckoning: boolean;
-  outdoorLocationOptions: OutdoorLocationOptions;
-  beaconFilters: BeaconFilter[];
-  smallestDisplacement: number;
-  realtimeUpdateInterval: string;
-  autoEnableBleDuringPositioning: boolean;
+export type LocationRequestOptions = {
+  buildingIdentifier?: number;
+  interval?: number;
+  indoorProvider?: string;
+  useBle?: boolean;
+  useWifi?: boolean;
+  useGps?: boolean;
+  useBarometer?: boolean;
+  motionMode?: string;
+  useForegroundService?: boolean;
+  useDeadReckoning?: boolean;
+  outdoorLocationOptions?: OutdoorLocationOptions;
+  /**
+   * @deprecated The SitumSDK now does it automatically
+   */
+  beaconFilters?: BeaconFilter[];
+  smallestDisplacement?: number;
+  realtimeUpdateInterval?: string;
+  autoEnableBleDuringPositioning?: boolean;
 };
 
 /**
- * @name
- * LocationRequest
- * @description
- * A data object that contains parameters for the location service, LocationManager.
+ * @name LocationRequest
+ * @description A data object that contains parameters for the location service, LocationManager.
  * @type {array}
  * @property {Building} building 0 - Building on which the positioning will be started
  * @property {LocationOptions} locationOptions 1 - Location options.
  */
-
 export type LocationRequest = {
   building: Building;
-  locationOptions: LocationOptions;
+  locationOptions: LocationRequestOptions;
 };
 
 /**
- * @name
- * NavigationRequest
- * @description
- * A data object that contains parameters for the navigation service, NavigationManager.
+ * @name NavigationRequest
+ * @description A data object that contains parameters for the navigation service, NavigationManager.
  * @property {number} distanceToChangeIndicationThreshold - Distance threshold from when the next indication is considered reached.
  * @property {number} distanceToFloorChangeThreshold - Distance threshold from when a floor change is considered reached.
  * @property {number} distanceToGoalThreshold - Distance threshold from when the goal is considered reached.
@@ -483,7 +461,6 @@ export type LocationRequest = {
  * @property {number} timeToFirstIndication - Time to wait until the first indication is returned.
  * @property {number} timeToIgnoreUnexpectedFloorChanges - Time (in millis) to ignore the locations received during navigation, when the next indication is a floor change, if the locations are in a wrong floor (not in origin or destination floors).
  */
-
 export type NavigationRequest = {
   distanceToIgnoreFirstIndication: number;
   ignoreLowQualityLocations: number;
@@ -498,16 +475,13 @@ export type NavigationRequest = {
 };
 
 /**
- * @name
- * DirectionsRequest
- * @description
- * A data object that contains the request for directions.
+ * @name DirectionsRequest
+ * @description A data object that contains the request for directions.
  * @property {Building} positioningBuilding
  * @property {Point|Location} from - Current user's position as the starting point of the route.
  * @property {Point|POI} to - Point to, where the route should end.
  * @property {DirectionsOptions} options - Options that can be added to the request.
  */
-
 export type DirectionsRequest = {
   positioningBuilding: Building;
   from: Point | Location;
@@ -516,36 +490,36 @@ export type DirectionsRequest = {
 };
 
 /**
- * @name
- * DirectionsOptions
- * @description
- * A data object that contains the directions options.
+ * @name DirectionsOptions
+ * @description A data object that contains the directions options.
  * @property {boolean} minimizeFloorChanges - Defines wheter or not the route should be calculated minimizing the floor changes even if the result is longer.
- * @property {boolean} accessibleRoute - Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false). @deprecated, use accessibilityMode
- * @property {boolean} accessible - Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false). @deprecated, use accessibilityMode
+ * @property {boolean} accessibleRoute - Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false).
+ * @property {boolean} accessible - Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false).
  * @property {string} accessibilityMode - Defines the accessibility mode of the route. Possible values are: CHOOSE_SHORTEST, ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES, ONLY_ACCESSIBLE
  * @property {number} startingAngle - Current user's orientation in degrees.
  */
-
 export type DirectionsOptions = {
   minimizeFloorChanges: boolean;
+  /**
+   * @deprecated, use accessibilityMode
+   */
   accessibleRoute: boolean;
+  /**
+   * @deprecated, use accessibilityMode
+   */
   accessible: boolean;
   assebilityMode: string;
   startingAngle: number;
 };
 
 /**
- * @name
- * OutdoorLocationOptions
- * @description
- * Outdoor location options are only used in indoor-outdoor mode (Only available for Android)
+ * @name OutdoorLocationOptions
+ * @description Outdoor location options are only used in indoor-outdoor mode (Only available for Android)
  * @property {boolean} continuousMode - Environment detection continuous mode (true) or burst mode (false).
  * @property {boolean} userDefinedThreshold
  * @property {number} burstInterval - Interval to scan for GPS and detect the environment (in seconds).
  * @property {number} averageSnrThreshold
  */
-
 export type OutdoorLocationOptions = {
   continuousMode: boolean;
   userDefinedThreshold: boolean;
@@ -554,162 +528,39 @@ export type OutdoorLocationOptions = {
 };
 
 /**
- * @name
- * BeaconFilter
- * @description
- * Represents a BLE filter. Now the only field is the BLE proximity UUID
+ * @name BeaconFilter
+ * @description Represents a BLE filter. Now the only field is the BLE proximity UUID
  * @property {string} uuid - Assigns the proximity UUID
  */
-
 export type BeaconFilter = {
   uuid: string;
 };
 
 /**
- * @name
- * RealTimeRequest
- * @description
- * A data object that contains the parameters to process realtime data of the users.
+ * @name RealTimeRequest
+ * @description A data object that contains the parameters to process realtime data of the users.
  * @property {Building} building object
  * @property {int} pollTime - Interval in milliseconds (minimum is 3000ms).
  */
-
 export type RealTimeRequest = {
   building: Building;
   pollTime: number;
 };
 
+export type Location = any;
 /**
- * @name
- * RealTimeData
- * @description
- * A data object that contains information of the location of users in realtime.
+ * @name RealTimeData
+ * @description A data object that contains information of the location of users in realtime.
  * @property {Array<Location>} locations object
  */
-
 export type RealTimeData = {
   locations: Location[];
 };
 
-export interface SitumPluginStatic {
-  initSitumSDK(): void;
-
-  setApiKey(
-    email: string,
-    apiKey: string,
-    callback?: (success: boolean) => void,
-  ): void;
-
-  setUserPass(
-    email: string,
-    password: string,
-    callback?: (success: boolean) => void,
-  ): void;
-
-  setCacheMaxAge(cacheAge: number, callback?: (success: boolean) => void): void;
-
-  fetchBuildings(
-    success: (buildings: Array<Building>) => void,
-    error?: (error: string) => void,
-  ): void;
-
-  fetchBuildingInfo(
-    building: Building,
-    success: (building: Building) => void,
-    error?: (error: string) => void,
-  ): void;
-
-  fetchFloorsFromBuilding(
-    building: Building,
-    success: (floors: Array<Floor>) => void,
-    error?: (error: string) => void,
-  ): void;
-
-  fetchMapFromFloor(floor: Floor, success: Function, error: Function): void;
-
-  fetchGeofencesFromBuilding(
-    building: Building,
-    success: (geofence: Array<Geofence>) => void,
-    error?: (error: string) => void,
-  ): void;
-
-  startPositioning(
-    location: (location: Location) => void,
-    status: Function,
-    error?: Function,
-    locationOptions: LocationOptions,
-  ): number;
-
-  stopPositioning(
-    subscriptionId: number,
-    success: Function,
-    error?: Function,
-  ): void;
-
-  requestDirections(
-    directionParams: Array<any>,
-    success: (route: Route) => void,
-    error?: Function,
-  ): void;
-
-  fetchPoiCategories(success: Function, error?: Function): void;
-
-  fetchPoiCategoryIconNormal(
-    category: PoiCategory,
-    success: Function,
-    error?: Function,
-  ): void;
-
-  fetchPoiCategoryIconSelected(
-    category: PoiCategory,
-    success: Function,
-    error?: Function,
-  ): void;
-
-  requestNavigationUpdates(
-    navigationUpdates: Function,
-    error?: Function,
-    options?: LocationOptions,
-  ): void;
-
-  updateNavigationWithLocation(
-    location,
-    success: Function,
-    error?: Function,
-  ): void;
-
-  removeNavigationUpdates(callback?: Function): void;
-
-  fetchIndoorPOIsFromBuilding(
-    building: Building,
-    success: Function,
-    error?: Function,
-  ): void;
-
-  fetchOutdoorPOIsFromBuilding(
-    building: Building,
-    success: Function,
-    error?: Function,
-  ): void;
-
-  fetchEventsFromBuilding(
-    building: Building,
-    success: Function,
-    error?: Function,
-  ): void;
-
-  requestRealTimeUpdates(
-    navigationUpdates: Function,
-    error?: Function,
-    request?: RealTimeRequest,
-  ): void;
-
-  removeRealTimeUpdates(callback?: Function): void;
-
-  checkIfPointInsideGeofence(request: any, callback?: Function): void;
-
-  invalidateCache(callback: Function): void;
-}
-
-declare let SitumPlugin: SitumPluginStatic;
-export default SitumPlugin;
+export type LocationStatus =
+  | "STARTING"
+  | "PREPARING_POSITIONING_MODEL"
+  | "START_DOWNLOADING_POSITIONING_MODEL"
+  | "PROCESSING_POSITIONING_MODEL"
+  | "STARTING_POSITIONING"
+  | "CALCULATING";
