@@ -7,14 +7,15 @@ import styles from './styles/styles';
 let subscriptionId = -1;
 
 export const RemoteConfig = () => {
-  const [response, setResponse] = useState<String>('ready to be used');
+  const [location, setLocation] = useState<String>('ready to be used');
   const [status, setStatus] = useState<String>('ready to be used');
+  const [error, setError] = useState<String>('ready to be used');
 
   //We will call this method from a <Button /> later
   const stopPositioning = async () => {
     console.log('Stopping positioning');
+    setLocation('Stopping positioning');
     SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
-    setResponse('Positioning was stopped');
     subscriptionId = -1;
   };
 
@@ -25,20 +26,24 @@ export const RemoteConfig = () => {
     }
 
     console.log('Starting positioning');
-    setResponse('Starting positioning');
+    setLocation('Starting positioning ...');
+    setStatus('');
+    setError('');
     //Start positioning
     subscriptionId = SitumPlugin.startPositioning(
       (location: any) => {
         console.log(JSON.stringify(location, null, 3));
-        setResponse(JSON.stringify(location, null, 3));
+        setLocation(JSON.stringify(location, null, 3));
       },
       (status: any) => {
+        //returns positioning status
         console.log(JSON.stringify(status));
         setStatus(JSON.stringify(status, null, 3));
       },
       (error: string) => {
+        // returns an error string
         console.log(JSON.stringify(error));
-        setStatus(error);
+        setError(error);
         stopPositioning();
       },
       null,
@@ -66,8 +71,9 @@ export const RemoteConfig = () => {
           title="STOP POSITIONING"
           color="#F71D07"
         />
+        <Text style={styles.text}>Error: {error}</Text>
         <Text style={styles.text}>Status: {status}</Text>
-        <Text style={styles.text}>Response: {response}</Text>
+        <Text style={styles.text}>Location: {location}</Text>
       </SafeAreaView>
     </ScrollView>
   );
