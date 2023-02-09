@@ -15,6 +15,11 @@ import styles from './styles/styles';
 let subscriptionId = -1;
 
 function PositioningScreen() {
+  useEffect(() => {
+    //Set remote config to false, so we actually use local request
+    SitumPlugin.setUseRemoteConfig('false', (res: any) => {});
+  }, []);
+
   const [location, setLocation] = useState<String>('');
 
   // Requests the permissions required by Situm (e.g. Location)
@@ -23,10 +28,15 @@ function PositioningScreen() {
   };
 
   const startPositioning = async () => {
+    if (subscriptionId != -1) {
+      console.log('Positioning already started');
+      return;
+    }
+
     console.log('Starting positioning');
 
     //Declare the locationOptions (empty = default parameters)
-    const locationOptions = {};
+    const locationOptions = {getDefaultLocationOptions};
     //Start positioning
     subscriptionId = SitumPlugin.startPositioning(
       (location: any) => {
@@ -51,6 +61,7 @@ function PositioningScreen() {
     console.log('Stopping positioning');
     SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
     setLocation('');
+    subscriptionId = -1;
   };
 
   return (
