@@ -20,7 +20,9 @@ function PositioningScreen() {
     SitumPlugin.setUseRemoteConfig('false', (res: any) => {});
   }, []);
 
-  const [location, setLocation] = useState<String>('');
+  const [location, setLocation] = useState<String>('ready to be used');
+  const [status, setStatus] = useState<String>('ready to be used');
+  const [error, setError] = useState<String>('ready to be used');
 
   // Requests the permissions required by Situm (e.g. Location)
   const requestLocationPermissions = async () => {
@@ -34,6 +36,9 @@ function PositioningScreen() {
     }
 
     console.log('Starting positioning');
+    setLocation('');
+    setStatus('');
+    setError('');
 
     //Declare the locationOptions (empty = default parameters)
     const locationOptions = {};
@@ -47,10 +52,12 @@ function PositioningScreen() {
       (status: any) => {
         //returns positioning status
         console.log(JSON.stringify(status));
+        setStatus(JSON.stringify(status, null, 3));
       },
       (error: any) => {
         // returns an error string
-        console.log(error);
+        console.log(JSON.stringify(error));
+        setError(error);
       },
       locationOptions,
     );
@@ -61,6 +68,8 @@ function PositioningScreen() {
     console.log('Stopping positioning');
     SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
     setLocation('');
+    setStatus('');
+    setError('');
     subscriptionId = -1;
   };
 
@@ -72,7 +81,9 @@ function PositioningScreen() {
       />
       <Button title="start" onPress={startPositioning} />
       <Button title="stop" onPress={stopPositioning} />
-      <Text style={styles.text}>{location}</Text>
+      <Text style={styles.text}>Error: {error}</Text>
+      <Text style={styles.text}>Status: {status}</Text>
+      <Text style={styles.text}>Location: {location}</Text>
     </ScrollView>
   );
 }
