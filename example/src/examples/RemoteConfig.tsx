@@ -10,21 +10,34 @@ export const RemoteConfig = () => {
   const [response, setResponse] = useState<String>('ready to be used');
   const [status, setStatus] = useState<String>('ready to be used');
 
-  const stopPositioning = () => {
-    SitumPlugin.stopPositioning(subscriptionId, (success: any) => {
-      setResponse(JSON.stringify(success, null, 3));
-    });
+  //We will call this method from a <Button /> later
+  const stopPositioning = async () => {
+    console.log('Stopping positioning');
+    SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
+    setResponse('Positioning was stopped');
+    subscriptionId = -1;
   };
+
   const startPositioning = () => {
-    //START POISTIONING
+    if (subscriptionId != -1) {
+      console.log('Positioning already started');
+      return;
+    }
+
+    console.log('Starting positioning');
+    setResponse('Starting positioning');
+    //Start positioning
     subscriptionId = SitumPlugin.startPositioning(
       (location: any) => {
+        console.log(JSON.stringify(location, null, 3));
         setResponse(JSON.stringify(location, null, 3));
       },
       (status: any) => {
+        console.log(JSON.stringify(status));
         setStatus(JSON.stringify(status, null, 3));
       },
       (error: string) => {
+        console.log(JSON.stringify(error));
         setStatus(error);
         stopPositioning();
       },
@@ -38,16 +51,6 @@ export const RemoteConfig = () => {
       //STOP POISTIONING ON CLOSE COMPONENT
       stopPositioning();
     };
-  }, []);
-
-  useEffect(() => {
-    //REMOTE CONFIG
-    SitumPlugin.setUseRemoteConfig('true', (res: any) => {
-      console.log(
-        'success while configuring remote configuration' +
-          JSON.stringify(res, null, 3),
-      );
-    });
   }, []);
 
   return (
