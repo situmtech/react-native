@@ -40,7 +40,7 @@
     "validate:eslint": "eslint 'src/**/*.js'"
   },
   "sdkVersions": {
-    "android": "2.83.8@aar",
+    "android": "2.83.9@aar",
     "ios": "2.55.1"
   }
 }
