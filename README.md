@@ -153,6 +153,9 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
 
 ## Using the Plugin
 
+### Getting Started
+Before start using our plugin in your own project, you can try out our [Getting Started](./example/README.md) sample app in your device.
+
 ### Accessing plugin object
 
 In order to use the plugin in a React Native component all you need is the following:
@@ -546,7 +549,7 @@ SitumPlugin.checkIfPointInsideGeofence(
 
 #### - requestAuthorization
 
-Request location permissions on Android & iOS
+Request location permissions on Android & iOS.
 
 ```js
 SitumPlugin.requestAuthorization()
