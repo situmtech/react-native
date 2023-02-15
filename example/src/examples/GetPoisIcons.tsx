@@ -62,8 +62,7 @@ export const GetPoisIcons = () => {
             '-',
             currentFloor.identifier,
           );
-          //return poiAndIcon.poi.floorIdentifier === currentFloor.identifier;
-          return poiAndIcon;
+          return poiAndIcon.poi.floorIdentifier === currentFloor.identifier;
         })
         .map((poiAndIcon: any) => {
           return (
