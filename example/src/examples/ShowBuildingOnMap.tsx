@@ -33,8 +33,8 @@ export const ShowBuildingOnMap = () => {
         setMapRegion(map_region);
         if (data?.floors.length == 0) return;
         var selectedFloor = data.floors.filter(
-          f => f.level == SITUM_FLOOR_LEVEL,
-        )[0];
+          f => f.identifier == SITUM_FLOOR_LEVEL,
+        )[0];        
         setMapImage(selectedFloor.mapUrl);
       })
       .catch(err => console.log);
@@ -45,6 +45,8 @@ export const ShowBuildingOnMap = () => {
       <MapView
         style={{width: '100%', height: '100%'}}
         region={mapRegion}
+        showsIndoorLevelPicker={false}
+        showsIndoors={false}
         provider={PROVIDER_GOOGLE}>
         {mapImage && bounds && (
           <Overlay image={{uri: mapImage}} bounds={bounds} bearing={bearing} />

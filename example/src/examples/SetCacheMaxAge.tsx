@@ -6,7 +6,7 @@ import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
 import SitumPlugin from 'react-native-situm-plugin';
 import styles from './styles/styles';
 
-const NUMBER_OF_SECONDS = 10;
+const NUMBER_OF_SECONDS = 30*60;
 
 export const SetCacheMaxAge = () => {
   const [building, setBuilding] = useState<any>();
