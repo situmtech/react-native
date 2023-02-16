@@ -1,13 +1,12 @@
-/* eslint-disable no-undef */
+import { NativeModules } from "react-native";
 
-import {NativeModules} from 'react-native';
-import SitumPlugin from '..';
+import SitumPlugin from "..";
 
-describe('Test Setup SDK', () => {
-  it('should initialise native SitumSDK', () => {
+describe("Test Setup SDK", () => {
+  it("should initialise native SitumSDK", () => {
     SitumPlugin.initSitumSDK();
     expect(NativeModules.RNCSitumPlugin.initSitumSDK.mock.calls.length).toEqual(
-      1,
+      1
     );
   });
 
@@ -18,11 +17,11 @@ describe('Test Setup SDK', () => {
     SitumPlugin.setApiKey(email, apiKey);
     //first arugment of first call
     expect(
-      NativeModules.RNCSitumPlugin.setApiKey.mock.calls[0][0],
+      NativeModules.RNCSitumPlugin.setApiKey.mock.calls[0][0]
     ).toStrictEqual(expect.any(String));
     //second arugment of first call
     expect(
-      NativeModules.RNCSitumPlugin.setApiKey.mock.calls[0][1],
+      NativeModules.RNCSitumPlugin.setApiKey.mock.calls[0][1]
     ).toStrictEqual(expect.any(String));
   });
 
@@ -33,11 +32,11 @@ describe('Test Setup SDK', () => {
     SitumPlugin.setUserPass(email, pass);
     //first arugment of first call
     expect(
-      NativeModules.RNCSitumPlugin.setUserPass.mock.calls[0][0],
+      NativeModules.RNCSitumPlugin.setUserPass.mock.calls[0][0]
     ).toStrictEqual(expect.any(String));
     //second arugment of first call
     expect(
-      NativeModules.RNCSitumPlugin.setUserPass.mock.calls[0][1],
+      NativeModules.RNCSitumPlugin.setUserPass.mock.calls[0][1]
     ).toStrictEqual(expect.any(String));
   });
 
@@ -47,21 +46,21 @@ describe('Test Setup SDK', () => {
     SitumPlugin.setCacheMaxAge(maxCacheAge);
     //first arugment of first call
     expect(
-      NativeModules.RNCSitumPlugin.setCacheMaxAge.mock.calls[0][0],
+      NativeModules.RNCSitumPlugin.setCacheMaxAge.mock.calls[0][0]
     ).toStrictEqual(expect.any(Number));
   });
 
-  it('should request permissions/authorization for location requests', () => {
+  it("should request permissions/authorization for location requests", () => {
     SitumPlugin.requestAuthorization();
     expect(
-      NativeModules.RNCSitumPlugin.requestAuthorization.mock.calls.length,
+      NativeModules.RNCSitumPlugin.requestAuthorization.mock.calls.length
     ).toEqual(1);
   });
 
-  it('should call invalidate cache', () => {
+  it("should call invalidate cache", () => {
     SitumPlugin.invalidateCache();
     expect(
-      NativeModules.RNCSitumPlugin.invalidateCache.mock.calls.length,
+      NativeModules.RNCSitumPlugin.invalidateCache.mock.calls.length
     ).toEqual(1);
   });
 });
