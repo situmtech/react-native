@@ -2,7 +2,7 @@
 
 <div align="center" style="text-align:center">
 
-A sample React-Native application to start learning the power of [Situm's React Native SDK Plugin](../).
+A sample React-Native application to start learning the power of [Situm's React Native SDK Plugin](../README.md).
 
 </div>
 
