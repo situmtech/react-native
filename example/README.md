@@ -19,35 +19,7 @@ A sample React-Native application to start learning the power of [Situm](https:/
 ![](./docs/assets/map_preview.png)
 
 In this sample app we will guide you step by step to set up your first react-native application using Situm SDK.
-Before starting to write code, we recommend you to set up an account in our dashboard, retrieve your API KEY and configure your first building:
-
-#### Setup your account <a name="setupaccount"/>
-
-1. Go to the [sign in form](http://dashboard.situm.com/accounts/register) and enter your username
-   and password to sign in.
-2. Go to the [account section](https://dashboard.situm.com/accounts/profile) and on the bottom, click
-   on "generate one" to generate your API KEY.
-3. Go to the [buildings section](http://dashboard.situm.com/buildings) and create your first building.
-4. Download [Situm Mapping Tool](https://play.google.com/store/apps/details?id=es.situm.maps)
-   Android application. With this application you will be able to configure and test Situm's indoor
-   positioning system in your buildings.
-
-Perfect! Now you are ready to develop your first indoor positioning application.
-
-**NOTE**: More information on how to use the official React Native plugin and the set of APIs, the functions, parameters and results each function accepts and provides can be found in our [Cordova JSDoc](https://developers.situm.com/sdk_documentation/cordova/jsdoc/latest/situm) which shares interfaces.
-
-### Table of contents
-
-- [**What's in here**](#whatsinhere)
-- [**How to run the app**](#howtorun)
-  - [Step 1: Configure our SDK in your react-native project](#configureproject)
-  - [Step 2: Set your credentials](#config)
-  - [Step 3: Setup Google Maps](#mapsapikey)
-  - [Step 4: Run the app](#runapplication)
-- [**Code samples**](#code-samples)
-- [**Submitting contributions**](#contributions)
-- [**More information**](#more-info)
-- [**Support information**](#support)
+Before starting to write code, we recommend you to [set up an account in our dashboard](https://github.com/situmtech/situm-react-native-plugin/tree/master#setup-your-account).
 
 ### What's in here <a name="whatsinhere"/>
 
@@ -63,59 +35,7 @@ Among many other capabilities, apps developed with Situm SDK will be able to:
 
 ### How to run the app <a name="howtorun"/>
 
-1. [Step 1: Configure our SDK in your react-native project](#configureproject)
-2. [Step 2: Set your credentials](#config)
-3. [Step 3: Setup Google Maps](#mapsapikey)
-4. [Step 4: Run the app](#runapplication)
-
-### Step 1: Configure project and install dependencies <a name="configureproject"/>
-
-First of all, you must install all dependencies required to run the project. You can do that by executing any of the following commands.
-
-```shell
-yarn
-
-#OR
-
-npm install
-
-```
-
-After that, you must configure Situm SDK in your project. _This has been already done for you in the sample application, but nonetheless we will walk you through the process._
-
-- Add the SDK to your project directly using your favorite package manager.
-
-```shell
-yarn add react-native-situm-plugin
-
-#OR
-
-npm install --save react-native-situm-plugin
-```
-
-- You must initialize the SDK before using any of its features:
-
-```js
-import SitumPlugin from 'react-native-situm-plugin';
-
-SitumPlugin.initSitumSDK();
-```
-
-### Step 2: set your credentials <a name="config"/>
-
-In the code, you can set the situm's account user and API key with:
-
-```js
-SitumPlugin.setApiKey(SITUM_EMAIL, SITUM_API_KEY, response => {});
-```
-
-or you can set the user and password with:
-
-```js
-SitumPlugin.setUserPass(SITUM_EMAIL, SITUM_PASS, response => {});
-```
-
-**NOTE**: In case you don't have a situm account, follow the [Setup your account](#setupaccount) section to setup a new account and create a building.
+### Step 1: Set your credentials <a name="config"/>
 
 In this sample project you can do this by setting the properties on the [`src/situm.tsx`](./src/situm.tsx) file, like so:
 
@@ -128,7 +48,7 @@ export const SITUM_FLOOR_ID = 0; // Identifier of the floor
 
 **NOTE**: You should also fill the SITUM_BUILDING_ID and SITUM_FLOOR_ID variables so all the examples are able to work as expected.
 
-### Step 3: Setup Google Maps <a name="mapsapikey"/>
+### Step 2: Setup Google Maps <a name="mapsapikey"/>
 
 You may need to configure an API KEY in order to be able to use Google Maps on your app.
 
@@ -161,7 +81,7 @@ Key.
         android:value="HERE_GOES_GOOGLE_MAPS_API_KEY" />
 ```
 
-### Step 4: Run the app <a name="runapplication"></a>
+### Step 3: Run the app <a name="runapplication"></a>
 
 #### Android
 
@@ -173,7 +93,11 @@ Key.
 - **Run from command line:** `$ react-native run-ios`
 - **Run from XCode:** Go to `root/ios` folder and open `SitumRNGettingStarted.xcworkspace` or run command `xed ios` from root directory.
 
-### Code samples <a name="code-samples"/>
+### Documentation <a name="documentation"/>
+
+More information on how to use the official React Native plugin and the set of APIs, the functions, parameters and results each function accepts and provides can be found in our [Cordova JSDoc](https://developers.situm.com/sdk_documentation/cordova/jsdoc/latest/situm) which shares interfaces.
+
+In case you want to learn how to use our plugin, you may want to take a look at our code samples of the basics functionalities:
 
 1. [**Positioning**](https://github.com/situmtech/situm-react-native-plugin/blob/feature/update-SDK-2.83.7/example/src/examples/Positioning.tsx): Learn how to start positioning and get the user location by using our listener with the specified positioning configuration inside [`src/settings.tsx`](./src/settings.tsx) file.
 2. [**Positioning with Remote Configuration**](https://github.com/situmtech/situm-react-native-plugin/blob/feature/update-SDK-2.83.7/example/src/examples/RemoteConfig.tsx): Learn how to start positioning with the [remote configuration](https://situm.com/docs/sdk-remote-configuration/) defined in the settings section inside our [dashboard](https://dashboard.situm.com/settings). This way you can manage your positioning parameters with ease and avoid doing several code changes to test different configurations.
@@ -183,7 +107,7 @@ Key.
 6. [**Show a building's full info**](https://github.com/situmtech/situm-react-native-plugin/blob/feature/update-SDK-2.83.7/example/src/examples/BuildingFullInfo.tsx): Learn how to fetch all the information related to a building with just one call.
 7. [**Show the route between pois**](https://github.com/situmtech/situm-react-native-plugin/blob/feature/update-SDK-2.83.7/example/src/examples/RouteBetweenPOIs.tsx): Learn how to retrieve all the info of a route between 2 pois.
 8. [**Draw route between pois**](https://github.com/situmtech/situm-react-native-plugin/blob/feature/update-SDK-2.83.7/example/src/examples/DrawRouteBetweenPOIs.tsx): Learn how to draw a route between 2 pois above a floor plan.
-9. [**Draw POIs with custom icons**](https://github.com/situmtech/situm-react-native-plugin/blob/feature/update-SDK-2.83.7/example/src/examples/GetPoisIcons.tsx): Learn how to display POIs with custom icons. You may need to know first how to [<i>create a custom POI category with custom icons</i>](https://situm.com/docs/cartography-management/#poi-categories).
+9. [**Draw POIs with custom icons**](https://github.com/situmtech/situm-react-native-plugin/blob/feature/update-SDK-2.83.7/example/src/examples/GetPoisIcons.tsx): Learn how to display POIs with custom icons. You may need to know first how to [_create a custom POI category with custom icons_](https://situm.com/docs/cartography-management/#poi-categories).
 10. [**Set cache max age and invalidate it**](https://github.com/situmtech/situm-react-native-plugin/blob/feature/update-SDK-2.83.7/example/src/examples/SetCacheMaxAge.tsx): Learn how to set the maximum cache age and how to invalidate it.
 
 ## Submitting Contributions <a name="contributions"/>
