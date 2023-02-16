@@ -120,13 +120,13 @@ SitumPlugin.setUserPass(SITUM_EMAIL, SITUM_PASS, response => {});
 In this sample project you can do this by setting the properties on the [`src/situm.tsx`](./src/situm.tsx) file, like so:
 
 ```js
-export const SITUM_EMAIL = 'EMAIL_GOES_HERE';
-export const SITUM_API_KEY = 'SITUM_API_KEY_GOES_HERE';
-export const SITUM_BUILDING_ID = 'BUILDING_ID_GOES_HERE'; // Identifier of the building
-export const SITUM_FLOOR_LEVEL = 0; // Floor level (e.g. -1, 0, 1, 2, ...)
+export const SITUM_EMAIL = '';
+export const SITUM_API_KEY = '';
+export const SITUM_BUILDING_ID = ''; // Identifier of the building
+export const SITUM_FLOOR_ID = 0; // Identifier of the floor
 ```
 
-**NOTE**: You should also fill the SITUM_BUILDING_ID and SITUM_FLOOR_LEVEL variables so all the examples are able to work as expected.
+**NOTE**: You should also fill the SITUM_BUILDING_ID and SITUM_FLOOR_ID variables so all the examples are able to work as expected.
 
 ### Step 3: Setup Google Maps <a name="mapsapikey"/>
 
