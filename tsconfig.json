@@ -2,6 +2,10 @@
   "include": ["./src"],
   "compilerOptions": {
     "outDir": "dist",
+    "baseUrl": "./",
+    "paths": {
+      "react-native-situm-plugin": ["./src/index"]
+    },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
