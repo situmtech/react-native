@@ -2,7 +2,7 @@ import invariant from "invariant";
 import { NativeEventEmitter, NativeModules, Platform } from "react-native";
 
 import packageJson from "./../package.json";
-import {
+import type {
   Building,
   Floor,
   Geofence,

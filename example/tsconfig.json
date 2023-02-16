@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "jsx": "react"
+    "baseUrl": "./",
+    "paths": {
+      "react-native-situm-plugin": ["../src/index"]
+    }
   },
   "extends": "@tsconfig/react-native/tsconfig.json"
 }
