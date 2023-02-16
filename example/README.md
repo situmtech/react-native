@@ -1,10 +1,10 @@
-<p align="center"> <img width="233" src="https://situm.com/wp-content/themes/situm/img/logo-situm.svg" style="margin-bottom:1rem" /> <h1 align="center">Situm React Native Plugin sample app</h1> </p>
+<p align="center"> <img width="233" src="https://situm.com/wp-content/themes/situm/img/logo-situm.svg" style="margin-bottom:1rem" /> <h1 align="center">Situm React Native SDK sample app</h1> </p>
 
-<p align="center" style="text-align:center">
+<div align="center" style="text-align:center">
 
-A sample React-Native application to start learning the power of [Situm](https://situm.com/en/)'s SDK.
+A sample React-Native application to start learning the power of [Situm's React Native SDK Plugin](../).
 
-</p>
+</div>
 
 <div align="center" style="text-align:center">
 
@@ -12,16 +12,18 @@ A sample React-Native application to start learning the power of [Situm](https:/
 
 </div>
 
-# Getting Started
+## Getting Started
 
-![](./docs/assets/home_preview.png)
-![](./docs/assets/positioning_preview.png)
-![](./docs/assets/map_preview.png)
+<div align="center" style="display: flex;">
+    <img src="./docs/assets/home_preview.png" alt="home_preview">
+    <img src="./docs/assets/positioning_preview.png" alt="positioning_preview">
+    <img src="./docs/assets/positioning_preview.png" alt="map_preview">
+</div>
 
 In this sample app we will guide you step by step to set up your first react-native application using Situm SDK.
 Before starting to write code, we recommend you to [set up an account in our dashboard](https://github.com/situmtech/situm-react-native-plugin/tree/master#setup-your-account).
 
-### What's in here <a name="whatsinhere"/>
+## What's in here <a name="whatsinhere"/>
 
 Situm SDK is a set of utilities that allow any developer to build location based apps using Situm's indoor positioning system.
 Among many other capabilities, apps developed with Situm SDK will be able to:
@@ -33,7 +35,7 @@ Among many other capabilities, apps developed with Situm SDK will be able to:
 3. Compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of
    interest within the building).
 
-### How to run the app <a name="howtorun"/>
+## How to run the app <a name="howtorun"/>
 
 ### Step 1: Set your credentials <a name="config"/>
 
@@ -93,9 +95,11 @@ Key.
 - **Run from command line:** `$ react-native run-ios`
 - **Run from XCode:** Go to `root/ios` folder and open `SitumRNGettingStarted.xcworkspace` or run command `xed ios` from root directory.
 
-### Documentation <a name="documentation"/>
+## Documentation <a name="documentation"/>
 
 More information on how to use the official React Native plugin and the set of APIs, the functions, parameters and results each function accepts and provides can be found in our [Cordova JSDoc](https://developers.situm.com/sdk_documentation/cordova/jsdoc/latest/situm) which shares interfaces.
+
+### Examples
 
 In case you want to learn how to use our plugin, you may want to take a look at our code samples of the basics functionalities:
 
@@ -110,9 +114,21 @@ In case you want to learn how to use our plugin, you may want to take a look at 
 9. [**Draw POIs with custom icons**](https://github.com/situmtech/situm-react-native-plugin/blob/feature/update-SDK-2.83.7/example/src/examples/GetPoisIcons.tsx): Learn how to display POIs with custom icons. You may need to know first how to [_create a custom POI category with custom icons_](https://situm.com/docs/cartography-management/#poi-categories).
 10. [**Set cache max age and invalidate it**](https://github.com/situmtech/situm-react-native-plugin/blob/feature/update-SDK-2.83.7/example/src/examples/SetCacheMaxAge.tsx): Learn how to set the maximum cache age and how to invalidate it.
 
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning.
+
+Please refer to [CHANGELOG.md](../CHANGELOG.md) for a list of notables changes for each version of the library.
+
+You can also see the [tags on this repository](https://github.com/situmtech/situm-react-native-plugin/tags).
+
 ## Submitting Contributions <a name="contributions"/>
 
 You will need to sign a Contributor License Agreement (CLA) before making a submission. [Learn more here.](https://situm.com/contributions/)
+
+## License
+
+This project is licensed under the MIT - see the [LICENSE](../LICENSE) file for details.
 
 ## More information <a name="more-info"/>
 
