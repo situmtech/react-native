@@ -1,7 +1,7 @@
 <p align="center"> <img width="233" src="https://situm.com/wp-content/themes/situm/img/logo-situm.svg" style="margin-bottom:1rem" /> <h1 align="center">@situm/react-native-plugin</h1> </p>
 
 <p align="center" style="text-align:center">
-Set of utilities that allow any developer to build React Native location based apps using [Situm](https://www.situm.com/)'s indoor positioning system
+Set of utilities that allow any developer to build React Native location based apps using <a href="https://www.situm.com">Situm's</a> indoor positioning system
 .
 
 
@@ -30,7 +30,7 @@ The best way to get started is to navigate through the Situm React Native SDK's 
 
 - [A basic react-native app guide](https://situm.com/docs/a-basic-react-native-app/) will give you a good overview of the plugin.
 - [Methods](#methods) will help you use a particular class or method.
-- [Examples](./src/README.md) will demo some specific features.
+- [Examples](./example/README.md) will demo some specific features.
 - [Support](#support-information) might answer some of your questions.
 
 
