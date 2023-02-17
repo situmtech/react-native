@@ -63,7 +63,7 @@ export const SITUM_BUILDING_ID = ''; // Identifier of the building
 export const SITUM_FLOOR_ID = ''; // Identifier of the floor
 ```
 
-**NOTE**: You should also fill the SITUM_BUILDING_ID and SITUM_FLOOR_ID variables so all the examples are able to work as expected. In case you haven't created POIs or paths yet, learn [how to create these cartography elements](https://situm.com/docs/sdk-cartography/#sdk-a-basic-complete-cartography-example).
+**NOTE**: You should also fill the [SITUM_BUILDING_ID](https://situm.com/docs/sdk-cartography/#building-identifier) and [SITUM_FLOOR_ID](https://situm.com/docs/sdk-cartography/#floor-identifier) variables so all the examples are able to work as expected. In case you haven't created POIs or paths yet, learn [how to create these cartography elements](https://situm.com/docs/sdk-cartography/#sdk-a-basic-complete-cartography-example).
 
 ### Step 3: Setup Google Maps <a name="mapsapikey"/>
 
