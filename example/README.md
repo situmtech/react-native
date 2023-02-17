@@ -17,11 +17,8 @@ A sample React-Native application to start learning the power of [Situm's React 
 <div align="center" style="display: flex;">
     <img src="./docs/assets/home_preview.png" alt="home_preview">
     <img src="./docs/assets/positioning_preview.png" alt="positioning_preview">
-    <img src="./docs/assets/positioning_preview.png" alt="map_preview">
+    <img src="./docs/assets/map_preview.png" alt="map_preview">
 </div>
-
-In this sample app we will guide you step by step to set up your first react-native application using Situm SDK.
-Before starting to write code, we recommend you to [set up an account in our dashboard](https://github.com/situmtech/situm-react-native-plugin/tree/master#setup-your-account).
 
 ## What's in here <a name="whatsinhere"/>
 
@@ -37,20 +34,38 @@ Among many other capabilities, apps developed with Situm SDK will be able to:
 
 ## How to run the app <a name="howtorun"/>
 
-### Step 1: Set your credentials <a name="config"/>
+### Step 1: Install the dependencies <a name="dependencies"/>
 
-In this sample project you can do this by setting the properties on the [`src/situm.tsx`](./src/situm.tsx) file, like so:
+The first step is to download this repo:
+
+```bash
+git clone https://github.com/situmtech/situm-react-native-plugin.git
+```
+
+And then install this sample app dependecies as follows:
+
+```bash
+cd example/
+npm install
+#OR
+yarn
+```
+
+### Step 2: Set your credentials <a name="config"/>
+
+For this step you must create a situm account, so [setup your account](../README.md#setup-your-account) before continuing.
+After creating your situm account, you can set your credentials on the properties of [`src/situm.tsx`](./src/situm.tsx), like so:
 
 ```js
 export const SITUM_EMAIL = '';
 export const SITUM_API_KEY = '';
 export const SITUM_BUILDING_ID = ''; // Identifier of the building
-export const SITUM_FLOOR_ID = 0; // Identifier of the floor
+export const SITUM_FLOOR_ID = ''; // Identifier of the floor
 ```
 
-**NOTE**: You should also fill the SITUM_BUILDING_ID and SITUM_FLOOR_ID variables so all the examples are able to work as expected.
+**NOTE**: You should also fill the SITUM_BUILDING_ID and SITUM_FLOOR_ID variables so all the examples are able to work as expected. In case you haven't created POIs or paths yet, learn [how to create these cartography elements](https://situm.com/docs/sdk-cartography/#sdk-a-basic-complete-cartography-example).
 
-### Step 2: Setup Google Maps <a name="mapsapikey"/>
+### Step 3: Setup Google Maps <a name="mapsapikey"/>
 
 You may need to configure an API KEY in order to be able to use Google Maps on your app.
 
@@ -61,7 +76,7 @@ Key.
 
 - **iOS**
 
-  When you've successfully generated the key, go to `AppDelegate.m` file and initialize Google Maps as shown:
+  When you've successfully generated the key, go to [`ios/example/AppDelegate.mm`](ios/example/AppDelegate.mm) file and initialize Google Maps as shown:
 
 ```objc
 #import <GoogleMaps/GoogleMaps.h>
@@ -75,7 +90,7 @@ Key.
 
 - **Android**
 
-  Go to `AndroidManifest.xml` file and add Google Maps API key as a `meta-data` inside the `application` section.
+  Go to [`android/app/src/main/AndroidManifest.xml`](android/app/src/main/AndroidManifest.xml) file and add Google Maps API key as a `meta-data` inside the `application` section.
 
 ```xml
     <meta-data
@@ -83,7 +98,7 @@ Key.
         android:value="HERE_GOES_GOOGLE_MAPS_API_KEY" />
 ```
 
-### Step 3: Run the app <a name="runapplication"></a>
+### Step 4: Run the app <a name="runapplication"></a>
 
 #### Android
 
