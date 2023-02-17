@@ -20,9 +20,6 @@ A sample React-Native application to start learning the power of [Situm's React 
     <img src="./docs/assets/positioning_preview.png" alt="map_preview">
 </div>
 
-In this sample app we will guide you step by step to set up your first react-native application using Situm SDK.
-Before starting to write code, we recommend you to [set up an account in our dashboard](https://github.com/situmtech/situm-react-native-plugin/tree/master#setup-your-account).
-
 ## What's in here <a name="whatsinhere"/>
 
 Situm SDK is a set of utilities that allow any developer to build location based apps using Situm's indoor positioning system.
@@ -37,9 +34,26 @@ Among many other capabilities, apps developed with Situm SDK will be able to:
 
 ## How to run the app <a name="howtorun"/>
 
-### Step 1: Set your credentials <a name="config"/>
+### Step 1: Install the dependencies <a name="dependencies"/>
 
-In this sample project you can do this by setting the properties on the [`src/situm.tsx`](./src/situm.tsx) file, like so:
+The first step is to download this repo:
+
+```bash
+git clone https://github.com/situmtech/situm-react-native-plugin.git
+```
+
+And then install this sample app dependecies as follows:
+```bash
+cd example/
+npm install
+#OR
+yarn
+```
+
+### Step 2: Set your credentials <a name="config"/>
+
+For this step you must create a situm account, so [setup your account](../README.md#setup-your-account) before continuing.
+After creating your situm account, you can set your credentials on the properties of [`src/situm.tsx`](./src/situm.tsx), like so:
 
 ```js
 export const SITUM_EMAIL = '';
@@ -50,7 +64,7 @@ export const SITUM_FLOOR_ID = 0; // Identifier of the floor
 
 **NOTE**: You should also fill the SITUM_BUILDING_ID and SITUM_FLOOR_ID variables so all the examples are able to work as expected.
 
-### Step 2: Setup Google Maps <a name="mapsapikey"/>
+### Step 3: Setup Google Maps <a name="mapsapikey"/>
 
 You may need to configure an API KEY in order to be able to use Google Maps on your app.
 
@@ -83,7 +97,7 @@ Key.
         android:value="HERE_GOES_GOOGLE_MAPS_API_KEY" />
 ```
 
-### Step 3: Run the app <a name="runapplication"></a>
+### Step 4: Run the app <a name="runapplication"></a>
 
 #### Android
 
