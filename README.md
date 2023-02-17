@@ -26,6 +26,13 @@ Situm React Native Plugin is a set of utilities that allow any developer to buil
 
 * Trigger notifications when the user enters a certain area.
 
+The best way to get started is to navigate through the Situm React Native SDK's documentation site:
+
+- [A basic react-native app guide](https://situm.com/docs/a-basic-react-native-app/) will give you a good overview of the plugin.
+- [Methods](#methods) will help you use a particular class or method.
+- [Examples](./src/README.md) will demo some specific features.
+- [Support](#support-information) might answer some of your questions.
+
 
 ## Versioning
 
@@ -56,7 +63,6 @@ For any question or bug report, please send an email to [support@situm.es](mailt
   * [Setup your account](#setup-your-account)
   * [Installing pre-requisites](#installing-pre-requisites)
   * [Using the Plugin](#using-the-plugin)
-    + [Getting Started](#getting-started)
     + [Accessing plugin object](#accessing-plugin-object)
     + [Methods](#methods)
       - [initSitumSDK](#--initsitumsdk)
@@ -79,14 +85,14 @@ For any question or bug report, please send an email to [support@situm.es](mailt
       - [requestNavigationUpdates](#--requestnavigationupdates)
       - [updateNavigationWithLocation](#--updatenavigationwithlocation)
       - [removeNavigationUpdates](#--removenavigationupdates)
-      - [requestRealTimeUpdates](#--requestRealTimeUpdates)
-      - [removeRealTimeUpdates](#--removeRealTimeUpdates)
-      - [checkIfPointInsideGeofence](#--checkIfPointInsideGeofence)
-      - [requestAuthorization](#--requestAuthorization)
-      - [sdkVersions](#--sdkVersions)
-      - [getDeviceId](#--getDeviceId)
-      - [onEnterGeofences](#--onEnterGeofences)
-      - [onExitGeofences](#--onExitGeofences)
+      - [requestRealTimeUpdates](#--requestrealtimeupdates)
+      - [removeRealTimeUpdates](#--removerealtimeupdates)
+      - [checkIfPointInsideGeofence](#--checkifpointinsidegeofence)
+      - [requestAuthorization](#--requestauthorization)
+      - [sdkVersions](#--sdkversions)
+      - [getDeviceId](#--getdeviceid)
+      - [onEnterGeofences](#--onentergeofences)
+      - [onExitGeofences](#--onexitgeofences)
 
 
 ## Setup your account
@@ -170,9 +176,6 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
 ```
 
 ## Using the Plugin
-
-### Getting Started
-Before start using our plugin in your own project, you can try out our [Getting Started sample app](./example/README.md) in your device.
 
 ### Accessing plugin object
 
