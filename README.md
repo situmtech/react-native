@@ -97,7 +97,7 @@ For any question or bug report, please send an email to [support@situm.es](mailt
 
 ## Setup your account
 
-In this tutorial, we will guide you step by step to set up your first React Native application using Situm React Native Plugin. Before starting to write code, we recommend you to set up an account in our Dashboard (https://dashboard.situm.es), retrieve your API KEY and configure your first building.
+In this tutorial, we will guide you step by step to set up your first React Native application using Situm React Native Plugin. Before starting to write code, we recommend you to set up an account in our [Dashboard](https://dashboard.situm.es), retrieve your API KEY and configure your first building.
 
 1. Go to the [sign in form](http://dashboard.situm.es/accounts/register) and enter your username and password to sign in.
 
