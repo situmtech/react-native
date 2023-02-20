@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import MapView, {Overlay, PROVIDER_GOOGLE} from 'react-native-maps';
-import {SITUM_BUILDING_ID, SITUM_FLOOR_LEVEL} from '../situm';
+import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
 import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
 import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
 
@@ -33,7 +33,7 @@ export const ShowBuildingOnMap = () => {
         setMapRegion(map_region);
         if (data?.floors.length == 0) return;
         var selectedFloor = data.floors.filter(
-          f => f.level == SITUM_FLOOR_LEVEL,
+          f => f.identifier == SITUM_FLOOR_ID,
         )[0];
         setMapImage(selectedFloor.mapUrl);
       })
@@ -45,6 +45,8 @@ export const ShowBuildingOnMap = () => {
       <MapView
         style={{width: '100%', height: '100%'}}
         region={mapRegion}
+        showsIndoorLevelPicker={false}
+        showsIndoors={false}
         provider={PROVIDER_GOOGLE}>
         {mapImage && bounds && (
           <Overlay image={{uri: mapImage}} bounds={bounds} bearing={bearing} />

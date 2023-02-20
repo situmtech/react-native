@@ -4,7 +4,7 @@
  * <p>This source code is licensed under the MIT license found in the LICENSE file in the root
  * directory of this source tree.
  */
-package com.example;
+package com.example.reactnativesdkplugin;
 
 import android.content.Context;
 import com.facebook.flipper.android.AndroidFlipperClient;
@@ -25,8 +25,10 @@ import com.facebook.react.modules.network.NetworkingModule;
 import okhttp3.OkHttpClient;
 
 /**
- * Class responsible of loading Flipper inside your React Native application. This is the debug
- * flavor of it. Here you can add your own plugins and customize the Flipper setup.
+ * Class responsible of loading Flipper inside your React Native application.
+ * This is the debug
+ * flavor of it. Here you can add your own plugins and customize the Flipper
+ * setup.
  */
 public class ReactNativeFlipper {
   public static void initializeFlipper(Context context, ReactInstanceManager reactInstanceManager) {
