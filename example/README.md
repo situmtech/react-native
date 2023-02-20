@@ -17,7 +17,7 @@ A sample React-Native application to start learning the power of [Situm's React 
 <div align="center" style="display: flex;">
     <img src="./docs/assets/home_preview.png" alt="home_preview">
     <img src="./docs/assets/positioning_preview.png" alt="positioning_preview">
-    <img src="./docs/assets/positioning_preview.png" alt="map_preview">
+    <img src="./docs/assets/map_preview.png" alt="map_preview">
 </div>
 
 ## What's in here <a name="whatsinhere"/>
@@ -43,6 +43,7 @@ git clone https://github.com/situmtech/situm-react-native-plugin.git
 ```
 
 And then install this sample app dependecies as follows:
+
 ```bash
 cd example/
 npm install
@@ -59,10 +60,10 @@ After creating your situm account, you can set your credentials on the propertie
 export const SITUM_EMAIL = '';
 export const SITUM_API_KEY = '';
 export const SITUM_BUILDING_ID = ''; // Identifier of the building
-export const SITUM_FLOOR_ID = 0; // Identifier of the floor
+export const SITUM_FLOOR_ID = ''; // Identifier of the floor
 ```
 
-**NOTE**: You should also fill the SITUM_BUILDING_ID and SITUM_FLOOR_ID variables so all the examples are able to work as expected.
+**NOTE**: You should also fill the [SITUM_BUILDING_ID](https://situm.com/docs/sdk-cartography/#building-identifier) and [SITUM_FLOOR_ID](https://situm.com/docs/sdk-cartography/#floor-identifier) variables so all the examples are able to work as expected. In case you haven't created POIs or paths yet, learn [how to create these cartography elements](https://situm.com/docs/sdk-cartography/#sdk-a-basic-complete-cartography-example).
 
 ### Step 3: Setup Google Maps <a name="mapsapikey"/>
 
@@ -75,7 +76,7 @@ Key.
 
 - **iOS**
 
-  When you've successfully generated the key, go to `AppDelegate.m` file and initialize Google Maps as shown:
+  When you've successfully generated the key, go to [`ios/example/AppDelegate.mm`](ios/example/AppDelegate.mm) file and initialize Google Maps as shown:
 
 ```objc
 #import <GoogleMaps/GoogleMaps.h>
@@ -89,7 +90,7 @@ Key.
 
 - **Android**
 
-  Go to `AndroidManifest.xml` file and add Google Maps API key as a `meta-data` inside the `application` section.
+  Go to [`android/app/src/main/AndroidManifest.xml`](android/app/src/main/AndroidManifest.xml) file and add Google Maps API key as a `meta-data` inside the `application` section.
 
 ```xml
     <meta-data
