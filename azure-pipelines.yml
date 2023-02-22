@@ -20,6 +20,8 @@ variables:
 steps:
 - ${{ if contains(variables['Build.SourceBranch'], 'feature/') }}:
   - checkout: self
+    fetchDepth: 1
+    fetchTags: false
     displayName: Checkout self
 
   - bash: |
@@ -42,23 +44,28 @@ steps:
       git config --global user.email "sistemas@situm.es"
       git config --global user.name "Situm Devops"
 
+      echo -e "\n[+] Fetch branches \n"
       git fetch
+
+      echo -e "\n[+] Changing to $currentBranch"
       git checkout $currentBranch
+
+      echo -e "\n[+] Add,Commit and Push to $currentBranch"
       git commit -am "Setting the NPM version to ${{ parameters.RNVersion }}"
       git push --set-upstream origin $currentBranch  
       git push
 
     displayName: Initial Vars & Configs
 
-      #   - template: azure-templates/publish_release.yml@sys_kubernetes_templates
-      #     parameters:
-      #       bitbucket:
-      #         bitbucket_user: situmops
-      #       system: "N/A"
-      #       server: "github"
-      #       mergeBranches:
-      #         - "develop-SIS-614"
-      #     
+  - template: azure-templates/publish_release.yml@sys_kubernetes_templates
+    parameters:
+      bitbucket:
+        bitbucket_user: situmops
+      system: "N/A"
+      server: "github"
+      mergeBranches:
+        - "develop-SIS-614"
+     
 
  
 
