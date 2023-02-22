@@ -45,12 +45,21 @@ steps:
       git remote set-url origin https://situmops:$(github_token)@github.com/$(Build.Repository.Name).git
       cat .git/config
 
-      echo -e "\n[+] Setting NPM version to ${{ parameters.RNVersion }}"
-      npm version ${{ parameters.RNVersion }} --no-git-tag-version
+    displayName: Initial Vars & Configs
+
+  - bash: |
+
+      echo -e "\n[+] Setting NPM version to $(version)"
+      npm version $(version) --no-git-tag-version
+
+      echo -e "\n[+] Configure RELEASE.md changes"
+      sed -i -e '/guidelines/rCHANGELOG_UNRELEASED.md' CHANGELOG.md 
+      sed -i '/^#.*Unreleased/d' CHANGELOG.md
+      echo '# [Unreleased]' > CHANGELOG_UNRELEASED.md          
 
       echo -e "\n[+] Setting git to push NPM version\n"
       git config --global user.email "sistemas@situm.es"
-      git config --global user.name "Situm Devops"
+      git config --global user.name "Situmops"
 
       echo -e "\n[+] Fetch branches \n"
       git fetch
@@ -63,7 +72,6 @@ steps:
       git push --set-upstream origin $currentBranch  
       git push
 
-    displayName: Initial Vars & Configs
 
   - template: azure-templates/publish_release.yml@sys_kubernetes_templates
     parameters:
