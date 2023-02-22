@@ -3,17 +3,57 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- master
+trigger: none
+
+pr: none
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+parameters:
+  - name: RNVersion
+    type: string
+    displayName: React Native Plugin Version
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+variables:
+  - group: Passwords
+steps:
+- ${{ if contains(variables['Build.SourceBranch'], 'feature/') }}:
+  - checkout: self
+    fetchTags: false
+    displayName: Checkout self
+
+  - bash: |
+      echo "##vso[task.setvariable variable=version]$(echo ${{ parameters.RNVersion }})"
+      currentBranch=$(echo $(Build.SourceBranch | cut -d "/" -f 3,4))
+      echo -e "\n[+] Defined versions:"
+      echo -e "\t[+] NPM cli version: $(npm --version)" 
+      echo -e "\t[+] React Native Plugin version: ${{ parameters.RNVersion }}"
+      echo -e "\t [+] Current branch: $currentBranch"
+
+        
+      echo -e "\n[+] Setting git remote credentials\n"
+      git remote set-url origin https://situmops:$(github_token)@github.com/$(Build.Repository.Name).git
+      cat .git/config
+
+      echo -e "\n[+] Setting NPM version to ${{ parameters.RNVersion }}"
+      npm version ${{ parameters.RNVersion }} --no-git-tag-version
+
+      git add . 
+      git commit -m "Setting the NPM version to ${{ parameters.RNVersion }}"
+      git push origin $currentBranch 
+
+    displayName: Initial Vars & Configs
+
+      #   - template: azure-templates/publish_release.yml@sys_kubernetes_templates
+      #     parameters:
+      #       bitbucket:
+      #         bitbucket_user: situmops
+      #       system: "N/A"
+      #       server: "github"
+      #       mergeBranches:
+      #         - "develop-SIS-614"
+      #     
+
+ 
+
