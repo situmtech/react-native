@@ -44,6 +44,7 @@ steps:
 
       git add package.json 
       git commit -m "Setting the NPM version to ${{ parameters.RNVersion }}"
+      git status
       git push origin $currentBranch 
 
     displayName: Initial Vars & Configs
