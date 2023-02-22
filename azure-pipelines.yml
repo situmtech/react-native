@@ -71,6 +71,7 @@ steps:
       git commit -am "Setting the NPM version to ${{ parameters.RNVersion }}"
       git push --set-upstream origin $currentBranch  
       git push
+    displayName: Make changes
 
 
   - template: azure-templates/publish_release.yml@sys_kubernetes_templates
