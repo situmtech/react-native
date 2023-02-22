@@ -1,15 +1,59 @@
-# Situm React Native Plugin &middot; [![npm](https://img.shields.io/npm/dm/react-native-situm-plugin.svg)](https://www.npmjs.com/package/react-native-situm-plugin) [![npm](https://img.shields.io/npm/v/react-native-situm-plugin.svg)](https://www.npmjs.com/package/react-native-situm-plugin) [![npm](https://img.shields.io/github/license/situmtech/situm-react-native-plugin.svg)](https://opensource.org/licenses/MIT)
+<p align="center"> <img width="233" src="https://situm.com/wp-content/themes/situm/img/logo-situm.svg" style="margin-bottom:1rem" /> <h1 align="center">@situm/react-native-plugin</h1> </p>
+
+<p align="center" style="text-align:center">
+Set of utilities that allow any developer to build React Native location based apps using [Situm](https://www.situm.com/)'s indoor positioning system
+.
 
 
-[![](https://situm.es/assets/svg/logo-situm.svg)](https://www.situm.com)
+</p>
 
----
+<div align="center" style="text-align:center">
 
-## Table of contents
+[![npm](https://img.shields.io/npm/dm/react-native-situm-plugin.svg)](https://www.npmjs.com/package/react-native-situm-plugin) [![npm](https://img.shields.io/npm/v/react-native-situm-plugin.svg)](https://www.npmjs.com/package/react-native-situm-plugin) [![npm](https://img.shields.io/github/license/situmtech/situm-react-native-plugin.svg)](https://opensource.org/licenses/MIT)
 
-  * [Description](#description)
+</div>
+
+
+## Getting started
+
+Situm React Native Plugin is a set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system. Among many other capabilities, apps developed with Situm React Native Plugin will be able to:
+
+* Obtain information related to buildings where Situm's positioning system is already configured: floorplans, points of interest, geotriggered events, etc.
+
+* Retrieve the location of the smartphone inside these buildings (position, orientation, and floor where the smartphone is).
+
+* Compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
+
+* Trigger notifications when the user enters a certain area.
+
+
+## Versioning
+
+Please refer to [CHANGELOG.md](./CHANGELOG.md) for a list of notable changes for each version of the plugin.
+
+You can also see the [tags on this repository](https://github.com/situmtech/situm-react-native-plugin/tags).
+
+
+## Submitting contributions
+
+You will need to sign a Contributor License Agreement (CLA) before making a submission. [Learn more here](https://situm.com/contributions/).
+
+## License
+This project is licensed under the MIT - see the [LICENSE](./LICENSE) file for further details.
+
+
+## More information
+
+More info is available at our [Developers Page](https://situm.com/docs/01-introduction/).
+
+
+## Support information
+
+For any question or bug report, please send an email to [support@situm.es](mailto:support@situm.es)
+
+## Documentation
+
   * [Setup your account](#setup-your-account)
-  * [Submitting Contributions](#submitting-contributions)
   * [Installing pre-requisites](#installing-pre-requisites)
   * [Using the Plugin](#using-the-plugin)
     + [Getting Started](#getting-started)
@@ -43,32 +87,7 @@
       - [getDeviceId](#--getDeviceId)
       - [onEnterGeofences](#--onEnterGeofences)
       - [onExitGeofences](#--onExitGeofences)
-  * [License](#license)
-  * [More information](#more-information)
-  * [Support information](#support-information)
 
----
-
-## Description
-
-Situm React Native Plugin is a set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system. Among many other capabilities, apps developed with Situm React Native Plugin will be able to:
-
-* Obtain information related to buildings where Situm's positioning system is already configured: floorplans, points of interest, geotriggered events, etc.
-
-* Retrieve the location of the smartphone inside these buildings (position, orientation, and floor where the smartphone is).
-
-* Compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
-
-* Trigger notifications when the user enters a certain area.
-
----
-
-## Submitting Contributions
-
-You will need to sign a Contributor License Agreement (CLA) before making a submission. 
-[Learn more here.](https://situm.com/contributions/)
-
----
 
 ## Setup your account
 
@@ -83,8 +102,6 @@ In this tutorial, we will guide you step by step to set up your first React Nati
 4. Download Situm Mapping Tool in Play Store (Only Android devices) and calibrate your building. Check out our user guide for detailed information.
 
 5. You are ready for building your own React Native applications. Please check next steps about requirements
-
----
 
 ## Installing pre-requisites
 
@@ -111,7 +128,7 @@ Make sure to delete `node_modulles/` at `project/node_modules/react-native-situm
 Note: As of now the SDK is available only on Github. When updating the SDK, make sure to delete the existing one from `node_modules/react-native-situm-plugin`.
 
 
-### 2) Integrate plugin into project from npm  
+### 2) Integrate plugin into project from npm
 
 ```shell
 yarn add react-native-situm-plugin
@@ -164,10 +181,10 @@ In order to use the plugin in a React Native component all you need is the follo
 ```js
 import  SitumPlugin  from  "react-native-situm-plugin";
 
-   SitumPlugin.fetchFloorsFromBuilding(building,
-       (floors) => {...},
-       (error) => {...},
-   );
+SitumPlugin.fetchFloorsFromBuilding(building,
+    (floors) => {...},
+    (error) => {...},
+);
 ```
 
 ### Methods
@@ -221,11 +238,11 @@ const locationOptions = {
 
 const subscriptionId = SitumPlugin.startPositioning(
   (location) => {
-    //returns location object
+    // returns location object
     console.log(JSON.stringy(location))
   },
   (status) => {
-    //returns positioning status
+    // returns positioning status
     console.log(JSON.stringy(status))
   },
   (error: string) => {
@@ -494,7 +511,7 @@ const requestNavigationUpdates = () => {
 ```
 
 #### - updateNavigationWithLocation
-    
+
 Usually, position variable should be one of the locations provided by the system on the [startPositioning](#--startpositioning) function.
 
 ```js
@@ -511,7 +528,7 @@ SitumPlugin.removeNavigationUpdates();
 
 #### - requestRealTimeUpdates
 
-Emits the real time location of devices 
+Emits the real time location of devices
 
 ```js
 const requestRealtime = () => {
@@ -558,11 +575,10 @@ SitumPlugin.requestAuthorization()
 
 #### - sdkVersions
 
-Returns iOS, Android and react native SDK versions depending on the platform the app is running on. 
+Returns iOS, Android and react native SDK versions depending on the platform the app is running on.
 
 ```js
 SitumPlugin.sdkVersions(response=>{
-
   // e.g. {ios: "2.45.0", android: "1.60@aar", react_native:"0.0.3"}
 });
 ```
@@ -573,7 +589,6 @@ Returns user's device Id generated by SitumSDK
 
 ```js
 SitumPlugin.getDeviceId(response=>{
-
   // e.g. {deviceId: 12345678}
 });
 ```
@@ -603,14 +618,30 @@ SitumPlugin.onEnterGeofences((geofences) => {
 
 Get notified about exiting geofences. Take into account the considerations described at [onEnterGeofences](#--onEnterGeofences).
 
+## Development
 
-## License
+### Run the tests
 
-Situm-React-Native-Plugin is licensed under [MIT License](https://opensource.org/licenses/MIT)
+```
+yarn test
+```
 
-## More information
+### Build the library
 
-More info is available at our [Developers Page](http://developers.situm.com/pages/mobile/react-native/).
+```
+yarn run prepare
+```
 
-## Support information
-For any question or bug report, please send an email to [support@situm.com](mailto:support@situm.com)
+### Release version
+
+```
+yarn run prepare
+npm pack
+npm publish
+```
+
+or for beta channel
+
+```
+npm publish --tag beta
+```
