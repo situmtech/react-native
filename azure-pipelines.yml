@@ -43,9 +43,10 @@ steps:
       git config --global user.name "Situm Devops"
 
       git add . 
+      git status
       git commit -m "Setting the NPM version to ${{ parameters.RNVersion }}"
-      git fetch
-      git push origin $(Build.SourceBranch)
+      git status
+      git push origin $currentBranch 
 
     displayName: Initial Vars & Configs
 
