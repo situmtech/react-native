@@ -20,7 +20,6 @@ variables:
 steps:
 - ${{ if contains(variables['Build.SourceBranch'], 'feature/') }}:
   - checkout: self
-    fetchTags: false
     displayName: Checkout self
 
   - bash: |
