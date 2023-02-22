@@ -58,6 +58,8 @@ steps:
       sed -i '/^#.*Unreleased/d' CHANGELOG.md
       echo '# [Unreleased]' > CHANGELOG_UNRELEASED.md          
 
+      git commit -am "Configure RELEASE.md $(version)"
+
       echo -e "\n[+] Setting git to push NPM version\n"
       git config --global user.email "sistemas@situm.es"
       git config --global user.name "Situmops"
@@ -85,5 +87,14 @@ steps:
         - "develop-SIS-614"
      
 
+  - bash: |
+      echo -e "\n[+] Fetch all branches\n"
+      git fetch
+
+      echo -e "\n[+] Checkout and Pull to master branch\n"
+      git checkout develop-SIS-614
+      git pull origin develop-SIS-614
+
+    displayName: NPM publish
  
 
