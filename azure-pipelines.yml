@@ -17,6 +17,14 @@ parameters:
 
 variables:
   - group: Passwords
+
+resources:
+  repositories:
+  - repository: sys_kubernetes_templates
+    type: bitbucket
+    endpoint: Bitbucket - sistemas
+    name: situm/sys-kubernetes-templates.git
+
 steps:
 - ${{ if contains(variables['Build.SourceBranch'], 'feature/') }}:
   - checkout: self
