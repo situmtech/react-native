@@ -42,6 +42,7 @@ steps:
       git config --global user.email "sistemas@situm.es"
       git config --global user.name "Situm Devops"
 
+      git fetch
       git checkout $currentBranch
       git commit -am "Setting the NPM version to ${{ parameters.RNVersion }}"
       git push --set-upstream origin $currentBranch  
