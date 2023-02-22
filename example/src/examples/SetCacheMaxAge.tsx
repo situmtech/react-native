@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Button} from 'react-native';
-import MapView, {Overlay, PROVIDER_GOOGLE} from 'react-native-maps';
-import {SITUM_BUILDING_ID, SITUM_FLOOR_LEVEL} from '../situm';
+import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
 import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
 import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
 import SitumPlugin from 'react-native-situm-plugin';
 import styles from './styles/styles';
 
-const NUMBER_OF_SECONDS = 10;
+const NUMBER_OF_SECONDS = 30 * 60;
 
 export const SetCacheMaxAge = () => {
   const [building, setBuilding] = useState<any>();

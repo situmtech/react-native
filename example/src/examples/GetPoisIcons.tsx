@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {Image, View} from 'react-native';
 import MapView, {Marker, Overlay, PROVIDER_GOOGLE} from 'react-native-maps';
 import SitumPlugin from 'react-native-situm-plugin';
-import {SITUM_BUILDING_ID, SITUM_FLOOR_LEVEL} from '../situm';
+import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
 import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
 import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
 
@@ -62,8 +62,7 @@ export const GetPoisIcons = () => {
             '-',
             currentFloor.identifier,
           );
-          //return poiAndIcon.poi.floorIdentifier === currentFloor.identifier;
-          return poiAndIcon;
+          return poiAndIcon.poi.floorIdentifier === currentFloor.identifier;
         })
         .map((poiAndIcon: any) => {
           return (
@@ -106,7 +105,7 @@ export const GetPoisIcons = () => {
         setMapRegion(map_region);
         if (data?.floors.length == 0) return;
         var selectedFloor = data.floors.filter(
-          f => f.level == SITUM_FLOOR_LEVEL,
+          f => f.identifier == SITUM_FLOOR_ID,
         )[0];
         setCurrentFloor(selectedFloor);
         setMapImage(selectedFloor.mapUrl);

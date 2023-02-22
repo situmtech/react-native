@@ -24,6 +24,10 @@
     "ios",
     "cpp",
     "react-native-wayfinding.podspec",
+    "README.md",
+    "LICENSE",
+    "SECURITY-POLICY.md",
+    "security.txt",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
@@ -159,7 +163,7 @@
     ]
   },
   "sdkVersions": {
-    "android": "2.83.5@aar",
-    "ios": "2.52.1"
+    "android": "2.83.9@aar",
+    "ios": "2.57.0"
   }
 }
