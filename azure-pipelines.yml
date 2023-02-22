@@ -39,6 +39,10 @@ steps:
       echo -e "\n[+] Setting NPM version to ${{ parameters.RNVersion }}"
       npm version ${{ parameters.RNVersion }} --no-git-tag-version
 
+      echo -e "\n[+] Setting git to push NPM version\n"
+      git config --global user.email "sistemas@situm.es"
+      git config --global user.name "Situm Devops"
+
       git add . 
       git commit -m "Setting the NPM version to ${{ parameters.RNVersion }}"
       git push origin $currentBranch 
