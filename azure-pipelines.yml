@@ -45,7 +45,7 @@ steps:
       git add . 
       git commit -m "Setting the NPM version to ${{ parameters.RNVersion }}"
       git fetch
-      git push origin $currentBranch 
+      git push origin $(Build.SourceBranch)
 
     displayName: Initial Vars & Configs
 
