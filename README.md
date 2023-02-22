@@ -9,8 +9,10 @@
 
   * [Description](#description)
   * [Setup your account](#setup-your-account)
+  * [Submitting Contributions](#submitting-contributions)
   * [Installing pre-requisites](#installing-pre-requisites)
   * [Using the Plugin](#using-the-plugin)
+    + [Getting Started](#getting-started)
     + [Accessing plugin object](#accessing-plugin-object)
     + [Methods](#methods)
       - [initSitumSDK](#--initsitumsdk)
@@ -58,6 +60,13 @@ Situm React Native Plugin is a set of utilities that allow any developer to buil
 * Compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
 
 * Trigger notifications when the user enters a certain area.
+
+---
+
+## Submitting Contributions
+
+You will need to sign a Contributor License Agreement (CLA) before making a submission. 
+[Learn more here.](https://situm.com/contributions/)
 
 ---
 
@@ -144,6 +153,9 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
 ```
 
 ## Using the Plugin
+
+### Getting Started
+Before start using our plugin in your own project, you can try out our [Getting Started sample app](./example/README.md) in your device.
 
 ### Accessing plugin object
 
@@ -538,7 +550,7 @@ SitumPlugin.checkIfPointInsideGeofence(
 
 #### - requestAuthorization
 
-Request location permissions on Android & iOS
+Request location permissions on Android & iOS.
 
 ```js
 SitumPlugin.requestAuthorization()
