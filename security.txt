@@ -1,0 +1,4 @@
+Contact: mailto:support@situm.com
+Preferred-Languages: en, es
+Policy: https://github.com/situmtech/situm-react-native-plugin/blob/master/SECURITY-POLICY.md
+Hiring: https://situm.com/contact

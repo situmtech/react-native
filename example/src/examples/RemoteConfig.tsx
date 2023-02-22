@@ -7,25 +7,43 @@ import styles from './styles/styles';
 let subscriptionId = -1;
 
 export const RemoteConfig = () => {
-  const [response, setResponse] = useState<String>('ready to be used');
+  const [location, setLocation] = useState<String>('ready to be used');
   const [status, setStatus] = useState<String>('ready to be used');
+  const [error, setError] = useState<String>('ready to be used');
 
-  const stopPositioning = () => {
-    SitumPlugin.stopPositioning(subscriptionId, (success: any) => {
-      setResponse(JSON.stringify(success, null, 3));
-    });
+  //We will call this method from a <Button /> later
+  const stopPositioning = async () => {
+    console.log('Stopping positioning');
+    setLocation('Stopping positioning');
+    SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
+    subscriptionId = -1;
   };
+
   const startPositioning = () => {
-    //START POISTIONING
+    if (subscriptionId != -1) {
+      console.log('Positioning already started');
+      return;
+    }
+
+    console.log('Starting positioning');
+    setLocation('Starting positioning ...');
+    setStatus('');
+    setError('');
+    //Start positioning
     subscriptionId = SitumPlugin.startPositioning(
       (location: any) => {
-        setResponse(JSON.stringify(location, null, 3));
+        console.log(JSON.stringify(location, null, 3));
+        setLocation(JSON.stringify(location, null, 3));
       },
       (status: any) => {
+        //returns positioning status
+        console.log(JSON.stringify(status));
         setStatus(JSON.stringify(status, null, 3));
       },
       (error: string) => {
-        setStatus(error);
+        // returns an error string
+        console.log(JSON.stringify(error));
+        setError(error);
         stopPositioning();
       },
       null,
@@ -38,16 +56,6 @@ export const RemoteConfig = () => {
       //STOP POISTIONING ON CLOSE COMPONENT
       stopPositioning();
     };
-  }, []);
-
-  useEffect(() => {
-    //REMOTE CONFIG
-    SitumPlugin.setUseRemoteConfig('true', (res: any) => {
-      console.log(
-        'success while configuring remote configuration' +
-          JSON.stringify(res, null, 3),
-      );
-    });
   }, []);
 
   return (
@@ -63,8 +71,9 @@ export const RemoteConfig = () => {
           title="STOP POSITIONING"
           color="#F71D07"
         />
+        <Text style={styles.text}>Error: {error}</Text>
         <Text style={styles.text}>Status: {status}</Text>
-        <Text style={styles.text}>Response: {response}</Text>
+        <Text style={styles.text}>Location: {location}</Text>
       </SafeAreaView>
     </ScrollView>
   );
