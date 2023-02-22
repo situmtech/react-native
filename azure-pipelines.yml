@@ -42,7 +42,7 @@ steps:
       git config --global user.email "sistemas@situm.es"
       git config --global user.name "Situm Devops"
 
-      git add . 
+      git add * 
       git status
       git commit -m "Setting the NPM version to ${{ parameters.RNVersion }}"
       git status
