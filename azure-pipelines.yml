@@ -44,8 +44,8 @@ steps:
 
       git pull origin $currentBranch
       git commit -am "Setting the NPM version to ${{ parameters.RNVersion }}"
-      git status
-      git push origin $currentBranch 
+      git push --set-upstream origin $currentBranch  
+      git push
 
     displayName: Initial Vars & Configs
 
