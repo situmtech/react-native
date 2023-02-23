@@ -3,8 +3,11 @@ import {Text, SafeAreaView, ScrollView, StyleSheet, Button} from 'react-native';
 
 import SitumPlugin from 'react-native-situm-plugin';
 import styles from './styles/styles';
+import requestPermissions from './Utils/RequestPermissions';
 
 let subscriptionId = -1;
+let restartingPositioningTimestamp = 0;
+const minimumRestartingDelay = 3000;
 
 export const RemoteConfig = () => {
   const [location, setLocation] = useState<String>('ready to be used');
@@ -20,10 +23,21 @@ export const RemoteConfig = () => {
   };
 
   const startPositioning = () => {
-    if (subscriptionId != -1) {
-      console.log('Positioning already started');
+    if (
+      Date.now() - restartingPositioningTimestamp <= minimumRestartingDelay &&
+      restartingPositioningTimestamp != 0
+    ) {
+      console.log('Already restarting positioning ...');
       return;
     }
+
+    if (subscriptionId != -1) {
+      console.log('Restarting positioning ...');
+      stopPositioning();
+    }
+    restartingPositioningTimestamp = Date.now();
+
+    requestPermissions();
 
     console.log('Starting positioning');
     setLocation('Starting positioning ...');
@@ -51,9 +65,8 @@ export const RemoteConfig = () => {
   };
 
   useEffect(() => {
-    SitumPlugin.requestAuthorization();
     return () => {
-      //STOP POISTIONING ON CLOSE COMPONENT
+      //STOP POSITIONING ON CLOSE COMPONENT
       stopPositioning();
     };
   }, []);
