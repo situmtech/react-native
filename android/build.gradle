@@ -29,6 +29,9 @@ android {
 def getAndroidSDKVersion() {
 
     def inputFile = new File("$rootDir/../node_modules/react-native-situm-plugin/package.json")
+    if (!inputFile.exists()) {
+        inputFile = new File("$rootDir/../../package.json")
+    }
     def packageJson = new JsonSlurper().parseText(inputFile.text)
     return packageJson["sdkVersions"]["android"]
 }
