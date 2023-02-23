@@ -1,7 +1,13 @@
 # [Unreleased]
 
-#### Version 0.0.15 – February 16, 2023
+#### Version 0.0.x – February 23, 2023
 
-- Added a embedded sample app inside [`example/`](./example/README.md)
-- Updated Android SDK to [2.83.9](https://situm.com/docs/01-android-sdk-changelog/)
-- Updated iOS SDK to [2.57.0](https://situm.com/docs/ios-sdk-changelog/)
+##### Added
+
+- Added the necessary configuration to import locally the plugin, so now its posible to execute example/ app with npm
+- Added RequestPermissions.tsx as an example on how to request the required positioning permissions.
+
+##### Changed
+
+- "Start positioning" button now does restart positioning (with a delay 3 seconds to re-restart the positioning)
+- Exiting Positioning.tsx or RemoteConfig.tsx will stop the current positioning session.
