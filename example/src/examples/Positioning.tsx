@@ -11,13 +11,20 @@ import {
 import {getDefaultLocationOptions} from '../settings';
 import SitumPlugin from 'react-native-situm-plugin';
 import styles from './styles/styles';
+import requestPermissions from './Utils/RequestPermissions';
 
 let subscriptionId = -1;
+let restartingPositioningTimestamp = 0;
+const minimumRestartingDelay = 3000;
 
 function PositioningScreen() {
   useEffect(() => {
     //Set remote config to false, so we actually use local request
     SitumPlugin.setUseRemoteConfig('false', (res: any) => {});
+    return () => {
+      //STOP POSITIONING ON CLOSE COMPONENT
+      stopPositioning();
+    };
   }, []);
 
   const [location, setLocation] = useState<String>('ready to be used');
@@ -26,14 +33,25 @@ function PositioningScreen() {
 
   // Requests the permissions required by Situm (e.g. Location)
   const requestLocationPermissions = async () => {
-    SitumPlugin.requestAuthorization();
+    requestPermissions();
   };
 
   const startPositioning = async () => {
-    if (subscriptionId != -1) {
-      console.log('Positioning already started');
+    if (
+      Date.now() - restartingPositioningTimestamp <= minimumRestartingDelay &&
+      restartingPositioningTimestamp != 0
+    ) {
+      console.log('Already restarting positioning ...');
       return;
     }
+
+    if (subscriptionId != -1) {
+      console.log('Restarting positioning ...');
+      stopPositioning();
+    }
+    restartingPositioningTimestamp = Date.now();
+
+    requestPermissions();
 
     console.log('Starting positioning');
     setLocation('');
@@ -72,6 +90,7 @@ function PositioningScreen() {
     setStatus('');
     setError('');
     subscriptionId = -1;
+    restartingPositioningTimestamp = 0;
   };
 
   return (
