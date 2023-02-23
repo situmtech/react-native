@@ -42,7 +42,14 @@ The first step is to download this repo:
 git clone https://github.com/situmtech/situm-react-native-plugin.git
 ```
 
-And then install this sample app dependecies as follows:
+And then install the plugin dependencies alongside the example/ app dependecies as follows:
+
+```bash
+cd situm-react-native-plugin/
+npm install
+#OR
+yarn
+```
 
 **NOTE** Right now this only works with yarn. Npm won't work.
 
