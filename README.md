@@ -12,6 +12,7 @@
   * [Submitting Contributions](#submitting-contributions)
   * [Installing pre-requisites](#installing-pre-requisites)
   * [Using the Plugin](#using-the-plugin)
+    + [Getting Started](#getting-started)
     + [Accessing plugin object](#accessing-plugin-object)
     + [Methods](#methods)
       - [initSitumSDK](#--initsitumsdk)
@@ -153,6 +154,9 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
 
 ## Using the Plugin
 
+### Getting Started
+Before start using our plugin in your own project, you can try out our [Getting Started sample app](./example/README.md) in your device.
+
 ### Accessing plugin object
 
 In order to use the plugin in a React Native component all you need is the following:
@@ -193,11 +197,11 @@ Provides user's email and password.
 SitumPlugin.setUserPass("SITUM_EMAIL","SITUM_USER_PASSWORD")
 ```
 
-#### - setRemoteConfig
+#### - setUseRemoteConfig
 
 Set the remote configuration state which allows to use the configuration (location request) stored on the web to find the location of the user.
 ```js
-SitumPlugin.setRemoteConfig("true", (success: any) => {});
+SitumPlugin.setUseRemoteConfig("true", (success: any) => {});
 ```
 
 #### - setCacheMaxAge
@@ -546,7 +550,7 @@ SitumPlugin.checkIfPointInsideGeofence(
 
 #### - requestAuthorization
 
-Request location permissions on Android & iOS
+Request location permissions on Android & iOS.
 
 ```js
 SitumPlugin.requestAuthorization()
