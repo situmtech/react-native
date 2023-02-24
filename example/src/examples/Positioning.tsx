@@ -46,7 +46,7 @@ function PositioningScreen() {
     }
 
     if (subscriptionId != -1) {
-      console.log('Restarting positioning ...');
+      console.log('Restarting positioning');
       stopPositioning();
     }
     restartingPositioningTimestamp = Date.now();
