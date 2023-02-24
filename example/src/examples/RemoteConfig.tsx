@@ -17,9 +17,9 @@ export const RemoteConfig = () => {
   //We will call this method from a <Button /> later
   const stopPositioning = async () => {
     console.log('Stopping positioning');
-    setLocation('Stopping positioning');
     SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
     subscriptionId = -1;
+    restartingPositioningTimestamp = 0;
   };
 
   const startPositioning = () => {
@@ -32,7 +32,7 @@ export const RemoteConfig = () => {
     }
 
     if (subscriptionId != -1) {
-      console.log('Restarting positioning ...');
+      console.log('Restarting positioning');
       stopPositioning();
     }
     restartingPositioningTimestamp = Date.now();
@@ -40,7 +40,7 @@ export const RemoteConfig = () => {
     requestPermissions();
 
     console.log('Starting positioning');
-    setLocation('Starting positioning ...');
+    setLocation('');
     setStatus('');
     setError('');
     //Start positioning
