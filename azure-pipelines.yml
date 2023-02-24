@@ -77,24 +77,24 @@ steps:
       system: "N/A"
       server: "github"
       mergeBranches:
-        - "master"
-        - "develop"
+        - "master-SIS-614"
+        - "develop-SIS-614"
      
 
-  - bash: |
-      echo -e "\n[+] Fetch all branches\n"
-      git fetch
-
-      echo -e "\n[+] Checkout and Pull to master branch\n"
-      git checkout master
-      git pull origin master
-
-      echo -e "\n[+] Configure NPM login"
-      echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > ~/.npmrc
-
-      echo -e "\n[+] Publish NPM packages"
-      npm publish
-
-    displayName: NPM publish
- 
-
+          #  - bash: |
+          #      echo -e "\n[+] Fetch all branches\n"
+          #      git fetch
+          #
+          #      echo -e "\n[+] Checkout and Pull to master branch\n"
+          #      git checkout master
+          #      git pull origin master
+          #
+          #      echo -e "\n[+] Configure NPM login"
+          #      echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > ~/.npmrc
+          #
+          #      echo -e "\n[+] Publish NPM packages"
+          #      npm publish
+          #
+          #    displayName: NPM publish
+          # 
+          #
