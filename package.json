@@ -1,6 +1,6 @@
 {
   "name": "react-native-situm-plugin",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "private": false,
   "react-native": "src/index.js",
   "main": "/src/index.js",
@@ -11,7 +11,7 @@
     "android",
     "ios",
     "cpp",
-    "react-native-wayfinding.podspec",
+    "ReactNativeSitumPlugin.podspec",
     "README.md",
     "LICENSE",
     "SECURITY-POLICY.md",
