@@ -1,7 +1,5 @@
 # [Unreleased]
 
-#### Version 0.0.x – February 23, 2023
-
 ##### Added
 
 - Added the necessary configuration to import locally the plugin, so now its posible to execute example/ app with npm
