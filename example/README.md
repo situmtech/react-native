@@ -44,6 +44,8 @@ git clone https://github.com/situmtech/situm-react-native-plugin.git
 
 And then install this sample app dependecies as follows:
 
+**NOTE** Right now this only works with yarn. Npm won't work.
+
 ```bash
 cd example/
 npm install

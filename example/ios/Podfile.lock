@@ -102,7 +102,7 @@ PODS:
   - hermes-engine/Pre-built (0.71.1)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
-  - Protobuf (3.21.12)
+  - Protobuf (3.22.0)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -415,13 +415,13 @@ PODS:
     - React-jsi (= 0.71.1)
     - React-logger (= 0.71.1)
     - React-perflogger (= 0.71.1)
-  - ReactNativeSitumPlugin (0.0.14):
+  - ReactNativeSitumPlugin (0.0.15):
     - React
-    - SitumSDK (= 2.57.0)
+    - SitumSDK (= 2.57.1)
   - RNScreens (3.19.0):
     - React-Core
     - React-RCTImage
-  - SitumSDK (2.57.0):
+  - SitumSDK (2.57.1):
     - Protobuf (~> 3.7)
     - SSZipArchive (~> 2.4)
   - SocketRocket (0.6.0)
@@ -629,7 +629,7 @@ SPEC CHECKSUMS:
   hermes-engine: 922ccd744f50d9bfde09e9677bf0f3b562ea5fb9
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  Protobuf: 120350fc38646e2dedc26f49ecba778184ea1de2
+  Protobuf: 5e6cbc143d02fe08585d86b0098f8b755d2caaab
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: fd4d923b964658aa0c4091a32c8b2004c6d9e3a6
   RCTTypeSafety: c276d85975bde3d8448907235c70bf0da257adfd
@@ -660,9 +660,9 @@ SPEC CHECKSUMS:
   React-RCTVibration: 49d531ec8498e0afa2c9b22c2205784372e3d4f3
   React-runtimeexecutor: 311feb67600774723fe10eb8801d3138cae9ad67
   ReactCommon: 03be76588338a27a88d103b35c3c44a3fd43d136
-  ReactNativeSitumPlugin: f643e0ac568f8339d27c512fc25fe3c1c161744c
+  ReactNativeSitumPlugin: a76a0aa4d09c8e466c5ea7576cc029f4bf54d042
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
-  SitumSDK: e6ce19c4d8a45c14ec9ed919b19c8bd65d3c5c88
+  SitumSDK: 795742d8dfe05daf13f3895dfea2b97634f72da6
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   Yoga: 921eb014669cf9c718ada68b08d362517d564e0c
