@@ -197,11 +197,11 @@ Provides user's email and password.
 SitumPlugin.setUserPass("SITUM_EMAIL","SITUM_USER_PASSWORD")
 ```
 
-#### - setRemoteConfig
+#### - setUseRemoteConfig
 
 Set the remote configuration state which allows to use the configuration (location request) stored on the web to find the location of the user.
 ```js
-SitumPlugin.setRemoteConfig("true", (success: any) => {});
+SitumPlugin.setUseRemoteConfig("true", (success: any) => {});
 ```
 
 #### - setCacheMaxAge
