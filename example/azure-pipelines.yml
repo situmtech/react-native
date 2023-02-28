@@ -14,7 +14,7 @@ parameters:
       - "ubuntu-latest"
       - "macOS-11"
 
-resrouces:
+resources:
   repositories:
   - repository: sys_kubernetes_templates
     type: bitbucket
