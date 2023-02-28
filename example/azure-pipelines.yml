@@ -30,22 +30,27 @@ jobs:
       echo -e "\n[+] Install plugin dependencies\n"
       npm install
 
+      echo -e "\n[+] Install example dependencies\n"
+      cd example
+      npm install
+
     displayName: Install plugin dependencies
   
   - ${{ if contains(parameters.system, 'macOS') }}:
     - bash: |
-        echo -e "\n[+] Install iOS dependencies\n"
+        echo -e "\n[+] Install iOS example dependencies\n"
         cd example/ios
-        npm install 
         pod install
-      displayName: Install iOS dependencies
+      displayName: Install iOS example dependencies
   
   
   - ${{ if contains(parameters.system, 'ubuntu') }}:
     - bash: |
  
-        echo -e "\n[+] Install Android dependencies\n"
+        echo -e "\n[+] Build Android example \n"
         cd example/android
-        npm install
+
+        ./gradlew assembleDebug
+
         
-      displayName: Install Android dependencies
+      displayName: Build Android dependencies
