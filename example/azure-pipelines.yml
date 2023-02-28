@@ -3,17 +3,49 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- master
+trigger: none
+
+pr: none
+
+parameters:
+  - name: system
+    type: string
+    values:
+      - "ubuntu-latest"
+      - "macOS-11"
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: ${{ parameters.system }}
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- checkout: self
+  fetchDepth: 1
+  fetchTags: false
+  displayName: Clone repository
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- ${{ if contains(parameters.system, "macOS") }}:
+  - bash: |
+
+      echo -e "\n[+] Install plugin dependencies\n "
+      yarn install
+
+      echo -e "\n[+] Install iOS dependencies\n"
+      cd example/ios
+
+      pod install
+
+    displayName: Install iOS dependencies
+
+
+- ${{ if not contains(parameters.system, "macOS") }}:
+  - bash: |
+
+      echo -e "\n[+] Install plugin dependencies\n "
+      npm install
+
+      echo -e "\n[+] Install Android dependencies\n"
+      cd example/android
+      npm install
+      
+
+    displayName: Install Android dependencies
