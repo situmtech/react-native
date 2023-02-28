@@ -25,7 +25,7 @@ jobs:
     fetchTags: false
     displayName: Clone repository
   
-  - ${{ if contains(parameters.system, "macOS") }}:
+  - ${{ if contains(parameters.system, 'macOS') }}:
     - bash: |
   
         echo -e "\n[+] Install plugin dependencies\n "
@@ -39,7 +39,7 @@ jobs:
       displayName: Install iOS dependencies
   
   
-  - ${{ if contains(parameters.system, "ubuntu") }}:
+  - ${{ if contains(parameters.system, 'ubuntu') }}:
     - bash: |
   
         echo -e "\n[+] Install plugin dependencies\n "
