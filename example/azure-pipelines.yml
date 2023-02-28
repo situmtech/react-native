@@ -24,30 +24,28 @@ jobs:
     fetchDepth: 1
     fetchTags: false
     displayName: Clone repository
+
+  - bash: |
+
+      echo -e "\n[+] Install plugin dependencies\n"
+      npm install
+
+    displayName: Install plugin dependencies
   
   - ${{ if contains(parameters.system, 'macOS') }}:
     - bash: |
-  
-        echo -e "\n[+] Install plugin dependencies\n "
-        npm install
-  
         echo -e "\n[+] Install iOS dependencies\n"
         cd example/ios
-  
+        npm install 
         pod install
-  
       displayName: Install iOS dependencies
   
   
   - ${{ if contains(parameters.system, 'ubuntu') }}:
     - bash: |
-  
-        echo -e "\n[+] Install plugin dependencies\n "
-        npm install
-  
+ 
         echo -e "\n[+] Install Android dependencies\n"
         cd example/android
         npm install
         
-  
       displayName: Install Android dependencies
