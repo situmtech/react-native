@@ -42,6 +42,18 @@ jobs:
         cd example/ios
         pod install
       displayName: Install iOS example dependencies
+
+    - bash: |
+
+        cd example/ios/fastlane
+
+        echo -e "\n[+] Install fastlane \n"
+        gem install fastlane
+
+        echo -e "\n[+] Build example with fastlane \n"
+        fastlane ios beta
+
+      displayName: Build iOS example 
   
   
   - ${{ if contains(parameters.system, 'ubuntu') }}:
