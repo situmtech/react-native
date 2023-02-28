@@ -14,6 +14,12 @@ parameters:
       - "ubuntu-latest"
       - "macOS-11"
 
+resrouces:
+  repositories:
+  - repository: sys_kubernetes_templates
+    type: bitbucket
+    endpoint: Bitbucket - sistemas
+    name: situm/sys-kubernetes-templates.git
 
 jobs: 
 - job:
@@ -69,15 +75,30 @@ jobs:
   
   
   - ${{ if contains(parameters.system, 'ubuntu') }}:
+
+    - template: azure-templates/upload-sharepoint.yml@sys_kubernetes_templates
+      parameters:
+        prepare_ndk: false
+        sharepoint_folder: "/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
+  
     - bash: |
  
         echo -e "\n[+] Build Android example \n"
         cd example/android
 
         ./gradlew assembleDebug
-
-        cd app/build/outputs/apk/debug
-
-        ls -lahrt
         
       displayName: Build Android dependencies
+
+
+    - bash: |
+        folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
+        echo -e "\n[+] Create folder to APK"
+
+        o365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $(Build.BuildNumber)
+
+        echo -e "\n[+] Upload APK \n"
+        cd app/build/outputs/apk/debug
+        o365 spo file add -p app-debug.apk -u https://sistemassitum.sharepoint.com/sites/producteng -f $folder/$(Build.BuildNumber)
+
+      displayName: Upload APK
