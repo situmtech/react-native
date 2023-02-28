@@ -95,6 +95,10 @@ jobs:
 
         npm i -g @pnp/cli-microsoft365
 
+        echo -e "\n[+] Login in Sharepoint \n"
+        m365 login --authType password --userName $(sharepoint_user)  --password $(sharepoint_pass)
+
+        echo -e "\n[+] Create folder $folder/$(Build.BuildNumber)"
         m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $(Build.BuildNumber)
 
         echo -e "\n[+] Upload APK \n"
