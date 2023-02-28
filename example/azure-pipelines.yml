@@ -79,11 +79,6 @@ jobs:
   
   - ${{ if contains(parameters.system, 'ubuntu') }}:
 
-    - template: azure-templates/upload-sharepoint.yml@sys_kubernetes_templates
-      parameters:
-        prepare_ndk: false
-        sharepoint_folder: "/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
-  
     - bash: |
  
         echo -e "\n[+] Build Android example \n"
@@ -96,9 +91,11 @@ jobs:
 
     - bash: |
         folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
-        echo -e "\n[+] Create folder to APK"
+        echo -e "\n[+] Create folder to APK\n"
 
-        o365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $(Build.BuildNumber)
+        npm i -g @pnp/cli-microsoft365
+
+        m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $(Build.BuildNumber)
 
         echo -e "\n[+] Upload APK \n"
         cd app/build/outputs/apk/debug
