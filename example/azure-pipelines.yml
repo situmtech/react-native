@@ -68,6 +68,11 @@ jobs:
         cp $(api_key.secureFilePath) .
         export appleID=$(appleID) 
 
+        echo -e "\n[+] Install the latest WWDR certificate\n"
+
+        curl https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer -o AppleWWDRCAG3.cer
+        sudo security add-trusted-cert -d -r trustRoot -k /Users/runner/Library/Keychains/login.keychain-db AppleWWDRCAG3.cer
+
         echo -e "\n[+] Install fastlane \n"
         gem install fastlane
 
