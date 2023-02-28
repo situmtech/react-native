@@ -14,6 +14,9 @@ parameters:
       - "ubuntu-latest"
       - "macOS-11"
 
+variables:
+  - group: Passwords
+
 resources:
   repositories:
   - repository: sys_kubernetes_templates
