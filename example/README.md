@@ -64,6 +64,7 @@ yarn
   In case you are using iOS, the last step is to install de dependencies specified in [`example/ios/Podfile`](./ios/Podfile) with:
 
 ```bash
+cd ios/
 pod install
 ```
 
