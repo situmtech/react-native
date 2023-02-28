@@ -64,5 +64,8 @@ jobs:
 
         ./gradlew assembleDebug
 
+        cd app/build/outputs/apk/debug
+
+        ls -lahrt
         
       displayName: Build Android dependencies
