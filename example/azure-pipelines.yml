@@ -14,38 +14,40 @@ parameters:
       - "ubuntu-latest"
       - "macOS-11"
 
-pool:
-  vmImage: ${{ parameters.system }}
 
-steps:
-- checkout: self
-  fetchDepth: 1
-  fetchTags: false
-  displayName: Clone repository
-
-- ${{ if contains(parameters.system, "macOS") }}:
-  - bash: |
-
-      echo -e "\n[+] Install plugin dependencies\n "
-      yarn install
-
-      echo -e "\n[+] Install iOS dependencies\n"
-      cd example/ios
-
-      pod install
-
-    displayName: Install iOS dependencies
-
-
-- ${{ if contains(parameters.system, "ubuntu") }}:
-  - bash: |
-
-      echo -e "\n[+] Install plugin dependencies\n "
-      npm install
-
-      echo -e "\n[+] Install Android dependencies\n"
-      cd example/android
-      npm install
-      
-
-    displayName: Install Android dependencies
+jobs: 
+  job:
+    pool:
+      vmImage: ${{ parameters.system }}
+    steps:
+    - checkout: self
+      fetchDepth: 1
+      fetchTags: false
+      displayName: Clone repository
+    
+    - ${{ if contains(parameters.system, "macOS") }}:
+      - bash: |
+    
+          echo -e "\n[+] Install plugin dependencies\n "
+          yarn install
+    
+          echo -e "\n[+] Install iOS dependencies\n"
+          cd example/ios
+    
+          pod install
+    
+        displayName: Install iOS dependencies
+    
+    
+    - ${{ if contains(parameters.system, "ubuntu") }}:
+      - bash: |
+    
+          echo -e "\n[+] Install plugin dependencies\n "
+          npm install
+    
+          echo -e "\n[+] Install Android dependencies\n"
+          cd example/android
+          npm install
+          
+    
+        displayName: Install Android dependencies
