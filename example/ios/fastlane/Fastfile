@@ -50,6 +50,13 @@ platform :ios do
    # increment_build_number(
    #   build_number: new_build_number
    # )
+   #
+    get_certificates(
+      development: true,
+      username: ENV["appleID"],
+      api_key_path: "api_key.json"
+
+    )
 
     #=================================================
     # Build iOS SMT app
