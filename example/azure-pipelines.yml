@@ -37,7 +37,7 @@ steps:
     displayName: Install iOS dependencies
 
 
-- ${{ if not contains(parameters.system, "macOS") }}:
+- ${{ if contains(parameters.system, "ubuntu") }}:
   - bash: |
 
       echo -e "\n[+] Install plugin dependencies\n "
