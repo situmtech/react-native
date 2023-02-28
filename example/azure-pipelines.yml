@@ -103,7 +103,7 @@ jobs:
         m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $(Build.BuildNumber)
 
         echo -e "\n[+] Upload APK \n"
-        cd app/build/outputs/apk/debug
+        cd example/app/build/outputs/apk/debug
         o365 spo file add -p app-debug.apk -u https://sistemassitum.sharepoint.com/sites/producteng -f $folder/$(Build.BuildNumber)
 
       displayName: Upload APK
