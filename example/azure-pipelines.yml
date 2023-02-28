@@ -29,7 +29,7 @@ jobs:
     - bash: |
   
         echo -e "\n[+] Install plugin dependencies\n "
-        yarn install
+        npm install
   
         echo -e "\n[+] Install iOS dependencies\n"
         cd example/ios
