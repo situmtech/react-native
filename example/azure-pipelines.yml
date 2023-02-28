@@ -101,8 +101,9 @@ jobs:
         echo -e "\n[+] Create folder $folder/$(Build.BuildNumber)"
         m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $(Build.BuildNumber)
 
-        echo -e "\n[+] Upload APK \n"
+        echo -e "\n[+] Upload APK to $folder/$(Build.BuildNumber)\n"
         cd example/android/app/build/outputs/apk/debug
+        ls -lahrt
         m365 spo file add -p app-debug.apk -u https://sistemassitum.sharepoint.com/sites/producteng -f $folder/$(Build.BuildNumber)
 
       displayName: Upload APK
