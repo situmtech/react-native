@@ -16,7 +16,7 @@ parameters:
 
 
 jobs: 
-  job:
+- job:
     pool:
       vmImage: ${{ parameters.system }}
     steps:
