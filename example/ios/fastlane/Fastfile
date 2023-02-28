@@ -58,6 +58,12 @@ platform :ios do
 
     )
 
+    get_provisioning_profile(
+      username: ENV["appleID"],
+      api_key_path: "./fastlane/api_key.json"
+
+    )
+
     #=================================================
     # Build iOS SMT app
     # ================================================
