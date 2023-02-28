@@ -1,0 +1,72 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Build example"
+  lane :beta do
+    #sync_code_signing(type: "appstore")    # see code signing guide for more information
+    #=================================================
+    #Get Latest version and build number
+    #=================================================
+   # latest_testflight_build_number(
+   #   api_key_path:"./fastlane/api_key.json",
+   #   app_identifier:"es.situm.situmcalibrationtool",
+   # )
+
+    #=================================================
+    # Set Version number. 
+    # If user specify Stable Version in azure pipelines run set this as new version
+    # If user not set Stable Version in azure pipelines set the same version
+    #=================================================
+   # version_number = ENV["VERSION_NUMBER"]
+   # if version_number.nil?
+   #   version_number = lane_context[SharedValues::LATEST_TESTFLIGHT_VERSION]
+   #   new_build_number = lane_context[SharedValues::LATEST_TESTFLIGHT_BUILD_NUMBER] + 1
+   # else
+   #   new_build_number = "0"
+   # end
+
+    #====================================================
+    #Increment version number and build number
+    #
+    #====================================================
+   # increment_version_number(
+   #   version_number: version_number
+   #   )
+   # increment_build_number(
+   #   build_number: new_build_number
+   # )
+
+    #=================================================
+    # Build iOS SMT app
+    # ================================================
+    build_app(
+      workspace: "example.xcworkspace",
+      configuration: "Release",
+    )
+
+    #=================================================
+    # Upload to Testflight
+    # ================================================
+    #upload_to_testflight(
+    #  api_key_path:"./fastlane/api_key.json", 
+    #  skip_submission: true,
+    #  skip_waiting_for_build_processing: true,
+    #  changelog: ENV['WHATS_NEW']
+    #  )
+  end
+end
