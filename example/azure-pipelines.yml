@@ -17,6 +17,7 @@ parameters:
 
 jobs: 
 - job:
+  displayName: Build ${{ parameters.system }}
   pool:
     vmImage: ${{ parameters.system }}
   steps:
@@ -37,6 +38,12 @@ jobs:
     displayName: Install plugin dependencies
   
   - ${{ if contains(parameters.system, 'macOS') }}:
+
+    - task: DownloadSecureFile@1
+      name: api_key
+      inputs:
+        secureFile: api_key.json
+
     - bash: |
         echo -e "\n[+] Install iOS example dependencies\n"
         cd example/ios
@@ -46,6 +53,11 @@ jobs:
     - bash: |
 
         cd example/ios/fastlane
+
+        echo -e "\n[+] Setting Apple connection options"
+
+        cp $(api_key.secureFilePath) .
+        export appleID=$(appleID) 
 
         echo -e "\n[+] Install fastlane \n"
         gem install fastlane
