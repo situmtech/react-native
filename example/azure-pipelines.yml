@@ -104,12 +104,12 @@ jobs:
         provProfileSecureFile: PipelinesProfile.mobileprovision
         removeProfile: true
   
-    - bash: |
-        echo -e "\n[+] Install iOS example dependencies\n"
-        cd example/ios
-        pod install
-      displayName: Install iOS example dependencies
-
+          #    - bash: |
+          #        echo -e "\n[+] Install iOS example dependencies\n"
+          #        cd example/ios
+          #        pod install
+          #      displayName: Install iOS example dependencies
+          #
     - bash: |
 
         sudo xcode-select -switch /Applications/Xcode_13.2.1.app
