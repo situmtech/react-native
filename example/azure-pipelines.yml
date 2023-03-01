@@ -13,10 +13,12 @@ parameters:
     values:
       - "ubuntu-latest"        
       - "macOS-11"
-  - name: X-API-EMAIL
+  - name: XAPIEMAIL
     type: string
-  - name: X-API-KEY
+    displayName: X-API-EMAIL
+  - name: XAPIKEY
     type: string
+    displayName: X-API-KEY
   - name: BUILDINGID
     type: string
   - name: FLOORID
@@ -57,11 +59,9 @@ jobs:
   - bash: |
 
       echo -e "\n[+] Variables to set:"
-      echo -e "\t[+] X-API-EMAIL: ${{ parameters.X-API-EMAIL }}"
+      echo -e "\t[+] X-API-EMAIL: ${{ parameters.XAPIEMAIL }}"
       echo -e "\t[+] BUILDINGID: ${{ parameters.BUILDINGID }}"
       echo -e "\t[+] FLOORID: ${{ parameters.FLOORID }}"
-
-      
 
     displayName: Configure credentials
   
