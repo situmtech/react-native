@@ -132,6 +132,7 @@ jobs:
   - ${{ if contains(parameters.system, 'ubuntu') }}:
 
     - bash: |
+        whereis nvm 
         nvm use 16.19.1 
         echo -e "\n[+] Build Android example \n"
         
