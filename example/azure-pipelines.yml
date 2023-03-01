@@ -58,10 +58,22 @@ jobs:
 
   - bash: |
 
+      if [ "${{ parameters.system }}" == "*macOS*" ];then
+          echo -e "\n[+] Install gnu-sed\n"
+          brew install gnu-sed
+          export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+      fi
+
       echo -e "\n[+] Variables to set:"
       echo -e "\t[+] X-API-EMAIL: ${{ parameters.XAPIEMAIL }}"
       echo -e "\t[+] BUILDINGID: ${{ parameters.BUILDINGID }}"
       echo -e "\t[+] FLOORID: ${{ parameters.FLOORID }}"
+
+      echo "export const SITUM_EMAIL = '${{ parameters.XAPIEMAIL }}';" > example/src/situm.tsx
+      echo "export const SITUM_API_KEY = '${{ parameters.XAPIKEY }}';" >> example/src/situm.tsx
+      echo "export const SITUM_BUILDING_ID = '${{ parameters.BUILDINGID }}';" >> example/src/situm.tsx
+      echo "export const SITUM_FLOOR_ID = '${{ parameters.FLOORID }}';" >> example/src/situm.tsx
+      
 
     displayName: Configure credentials
   
@@ -103,7 +115,7 @@ jobs:
         echo -e "\n[+] Build Android example \n"
         cd example/android
 
-        ./gradlew assembleDebug
+        ./gradlew assembleRelease
         
       displayName: Build Android dependencies
 
