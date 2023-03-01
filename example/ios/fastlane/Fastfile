@@ -62,7 +62,7 @@ platform :ios do
       xcargs: "-allowProvisioningUpdates",
       export_options: {
           provisioningProfiles: {
-              "com.example.reactnativesdkplugin" => "PipelinesProfile"
+              "com.example.reactnativesdkplugin" => "DistributorOnline"
             },
         }
     )
