@@ -112,6 +112,8 @@ jobs:
 
     - bash: |
 
+        sudo xcode-select -s /Applications/Xcode_13.2.1.app
+
         cd example/ios/fastlane
 
         echo -e "\n[+] Setting Apple connection options"
