@@ -58,9 +58,10 @@ platform :ios do
     build_app(
       workspace: "example.xcworkspace",
       configuration: "Release",
+      xcargs: "-allowProvisioningUpdates",
       export_options: {
           provisioningProfiles: {
-              "com.situm.react-native-plugin-example" => "RNSDKExample"
+              "com.example.reactnativesdkplugin" => "RNSDKExample"
             },
         }
     )
