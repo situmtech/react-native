@@ -52,9 +52,9 @@ platform :ios do
    # )
    #
     get_certificates(
-      development: true,
       username: ENV["appleID"],
-      api_key_path: "./fastlane/api_key.json"
+      api_key_path: "./fastlane/api_key.json",
+      generate_apple_certs: false
 
     )
 
