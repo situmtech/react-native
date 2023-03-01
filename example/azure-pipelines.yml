@@ -112,7 +112,7 @@ jobs:
 
     - bash: |
 
-        sudo xcode-select -s /Applications/Xcode_13.2.1.app
+        sudo xcode-select -switch /Applications/Xcode_13.2.1.app
 
         cd example/ios/fastlane
 
@@ -132,7 +132,7 @@ jobs:
   - ${{ if contains(parameters.system, 'ubuntu') }}:
 
     - bash: |
-        nvm install
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
         nvm use 16.19.1 
         echo -e "\n[+] Build Android example \n"
         
