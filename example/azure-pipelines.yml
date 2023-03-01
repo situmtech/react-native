@@ -132,8 +132,7 @@ jobs:
   - ${{ if contains(parameters.system, 'ubuntu') }}:
 
     - bash: |
-        export NVM_DIR="$HOME/.nvm"
-        export PATH="$HOME/.nvm:$PATH"
+        locate nvm
         nvm use 16.19.1 
         echo -e "\n[+] Build Android example \n"
         
