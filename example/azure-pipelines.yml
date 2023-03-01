@@ -111,6 +111,7 @@ jobs:
           #      displayName: Install iOS example dependencies
           #
     - bash: |
+        cd ~/Library/MobileDevice/Provisioning\ Profiles && ls
 
         sudo xcode-select -switch /Applications/Xcode_13.2.1.app
 
