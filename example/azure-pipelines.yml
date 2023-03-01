@@ -90,7 +90,7 @@ jobs:
         
     - task: InstallAppleCertificate@2
       inputs:
-        certSecureFile: Distributor.p12
+        certSecureFile: distribution.p12
   
     - task: InstallAppleProvisioningProfile@1
       inputs:
@@ -101,7 +101,7 @@ jobs:
     - task: InstallAppleProvisioningProfile@1
       inputs:
         provisioningProfileLocation: 'secureFiles'
-        provProfileSecureFile: PipelinesProfile.mobileprovision
+        provProfileSecureFile: DistributorOnline.mobileprovision
         removeProfile: true
   
     - bash: |
