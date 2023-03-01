@@ -95,7 +95,7 @@ jobs:
     - task: InstallAppleProvisioningProfile@1
       inputs:
         provisioningProfileLocation: 'secureFiles'
-        provProfileSecureFile: 6eb21d22-4cb9-44aa-b81f-884023fb8d7f.mobileprovision
+        provProfileSecureFile: RNSDKExample.mobileprovision
         removeProfile: true
     
     - task: InstallAppleProvisioningProfile@1
