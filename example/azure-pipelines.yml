@@ -11,8 +11,16 @@ parameters:
   - name: system
     type: string
     values:
-      - "ubuntu-latest"
+      - "ubuntu-latest"        
       - "macOS-11"
+  - name: X-API-EMAIL
+    type: string
+  - name: X-API-KEY
+    type: string
+  - name: BUILDINGID
+    type: string
+  - name: FLOORID
+    type: string
 
 variables:
   - group: Passwords
@@ -45,6 +53,17 @@ jobs:
       npm install
 
     displayName: Install plugin dependencies
+
+  - bash: |
+
+      echo -e "\n[+] Variables to set:"
+      echo -e "\t[+] X-API-EMAIL: ${{ parameters.X-API-EMAIL }}"
+      echo -e "\t[+] BUILDINGID: ${{ parameters.BUILDINGID }}"
+      echo -e "\t[+] FLOORID: ${{ parameters.FLOORID }}"
+
+      
+
+    displayName: Configure credentials
   
   - ${{ if contains(parameters.system, 'macOS') }}:
 
