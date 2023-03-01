@@ -58,6 +58,7 @@ platform :ios do
     build_app(
       workspace: "example.xcworkspace",
       configuration: "Release",
+      scheme: "example",
       xcargs: "-allowProvisioningUpdates",
       export_options: {
           provisioningProfiles: {
