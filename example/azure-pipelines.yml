@@ -137,10 +137,12 @@ jobs:
 
     - bash: |
         echo -e "\n[+] Build Android example \n"
-        
-        npx react-native bundle --platform android --dev false --entry-file example/index.js --bundle-output example/android/app/src/main/assets/index.android.bundle --assets-dest example/android/app/src/main/res
 
-        cd example/android
+        cd example
+        
+        npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+
+        cd android
 
         ./gradlew assembleDebug
 
