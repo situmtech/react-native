@@ -73,10 +73,10 @@ jobs:
       echo "export const SITUM_API_KEY = '${{ parameters.XAPIKEY }}';" >> example/src/situm.tsx
       echo "export const SITUM_BUILDING_ID = '${{ parameters.BUILDINGID }}';" >> example/src/situm.tsx
       echo "export const SITUM_FLOOR_ID = '${{ parameters.FLOORID }}';" >> example/src/situm.tsx
-
-
-
       
+      sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/ios/example/AppDelegate.mm
+      sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/android/app/src/main/AndroidManifest.xml
+
 
     displayName: Configure credentials
   
@@ -87,11 +87,6 @@ jobs:
       inputs:
         secureFile: api_key.json
 
-    - task: DownloadSecureFile@1
-      name: developer_provision
-      inputs:
-        secureFile: RNSDKExample.mobileprovision
-
     - task: InstallAppleCertificate@2
       inputs:
         certSecureFile: AppleCert23.p12
@@ -100,13 +95,12 @@ jobs:
       inputs:
         certSecureFile: DistributorWildcard.p12
   
-          #    - task: InstallAppleProvisioningProfile@1
-          #      name: developer_provision
-          #      inputs:
-          #        provisioningProfileLocation: 'secureFiles'
-          #        provProfileSecureFile: RNSDKExample.mobileprovision
-          #        removeProfile: true
-          #    
+    - task: InstallAppleProvisioningProfile@1
+      inputs:
+        provisioningProfileLocation: 'secureFiles'
+        provProfileSecureFile: RNSDKExample.mobileprovision
+        removeProfile: true
+    
     - task: InstallAppleProvisioningProfile@1
       inputs:
         provisioningProfileLocation: 'secureFiles'
@@ -121,7 +115,6 @@ jobs:
 
     - bash: |
 
-        export DEVELOPER_PROVISION=$(developer_provision.secureFilePath)
         sudo xcode-select -switch /Applications/Xcode_14.2.app
 
         cd example/ios/fastlane
