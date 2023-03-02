@@ -63,7 +63,6 @@ platform :ios do
       workspace: "example.xcworkspace",
       configuration: "Release",
       scheme: "example",
-      xcargs: "-allowProvisioningUpdates",
       export_options: {
           provisioningProfiles: {
               "com.example.reactnativesdkplugin" => "DistributorOnline"
