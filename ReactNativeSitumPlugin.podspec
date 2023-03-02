@@ -6,8 +6,8 @@ Pod::Spec.new do |s|
   s.version       = package['version']
   s.summary       = "Situm react native plugin"
   s.homepage     = "https://github.com/author/situm-react-native-plugin.git"
-  s.license      = "TODO"
-  s.author       = { "Noman Rafique" => "nomrafique@gmail.com" }
+  s.license      = "../LICENSE"
+  s.author       = { "Situm Technologies S.L." => "situm@situm.com" }
   s.platform     = :ios, "8.0"
   s.source       = { :http => 'file:' + __dir__ + '/' } 
   s.source_files  = "ios/*.{h,m}"
