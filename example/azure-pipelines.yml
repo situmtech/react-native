@@ -88,9 +88,9 @@ jobs:
       inputs:
         certSecureFile: AppleCert23.p12
         
-          #    - task: InstallAppleCertificate@2
-          #      inputs:
-          #        certSecureFile: distribution.p12
+    - task: InstallAppleCertificate@2
+      inputs:
+        certSecureFile: DistributorWildcard.p12
   
     - task: InstallAppleProvisioningProfile@1
       inputs:
@@ -98,11 +98,11 @@ jobs:
         provProfileSecureFile: RNSDKExample.mobileprovision
         removeProfile: true
     
-          #    - task: InstallAppleProvisioningProfile@1
-          #      inputs:
-          #        provisioningProfileLocation: 'secureFiles'
-          #        provProfileSecureFile: DistributorOnline.mobileprovision
-          #        removeProfile: true
+    - task: InstallAppleProvisioningProfile@1
+      inputs:
+        provisioningProfileLocation: 'secureFiles'
+        provProfileSecureFile: DistributorOnline.mobileprovision
+        removeProfile: true
   
     - bash: |
         echo -e "\n[+] Install iOS example dependencies\n"
