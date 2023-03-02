@@ -51,6 +51,10 @@ platform :ios do
    #   build_number: new_build_number
    # )
    #
+    install_provisioning_profile(
+      path: ENV["DEVELOPER_PROVISION"]
+
+      )
 
     #=================================================
     # Build iOS SMT app
