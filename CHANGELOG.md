@@ -1,6 +1,8 @@
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+#### Version 0.0.17 - March,02 2023
+* Updated android SDK to 2.85.0
 
 #### Version 0.0.15 – February 23, 2023 
 
