@@ -12,7 +12,7 @@ parameters:
     type: string
     values:
       - "ubuntu-latest"        
-      - "macOS-11"
+      - "macOS-12"
   - name: XAPIEMAIL
     type: string
     displayName: X-API-EMAIL
@@ -93,6 +93,7 @@ jobs:
         certSecureFile: DistributorWildcard.p12
   
     - task: InstallAppleProvisioningProfile@1
+      name: developer_provision
       inputs:
         provisioningProfileLocation: 'secureFiles'
         provProfileSecureFile: RNSDKExample.mobileprovision
@@ -112,7 +113,7 @@ jobs:
 
     - bash: |
 
-        sudo xcode-select -switch /Applications/Xcode_13.2.1.app
+        sudo xcode-select -switch /Applications/Xcode_14.2.app
 
         cd example/ios/fastlane
 
