@@ -17,7 +17,7 @@
     "react-native-maps": "^1.4.0",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",
-    "react-native-situm-plugin": "file:.."
+    "react-native-situm-plugin": "file:../"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
