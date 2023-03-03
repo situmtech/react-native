@@ -49,8 +49,8 @@ jobs:
 
   - task: NodeTool@0
     inputs:
-      versionSource: 'fromFile' # 'spec' | 'fromFile'. Required. Source of version. Default: spec.
-      versionFilePath: '.node-version' # string. Optional. Use when versionSource = fromFile. Path to the .nvmrc file. 
+      versionSource: 'spec' # 'spec' | 'fromFile'. Required. Source of version. Default: spec.
+      versionSpec: '18.14.2'
 
   - bash: |
 
