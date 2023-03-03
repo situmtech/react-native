@@ -2,7 +2,7 @@ import * as React from 'react';
 import {View, FlatList, TouchableHighlight, Button} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import SitumPlugin from '../../react-native-situm-plugin';
+import SitumPlugin from 'react-native-situm-plugin';
 import {SITUM_EMAIL, SITUM_API_KEY} from './situm';
 import PositioningScreen from './examples/Positioning';
 import {BuildingsBasicInfo} from './examples/BuildingsBasicInfo';
