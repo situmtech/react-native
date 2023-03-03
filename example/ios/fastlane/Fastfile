@@ -60,7 +60,7 @@ platform :ios do
       configuration: "Release",
       scheme: "example",
       export_method: "app-store",
-      xcargs: "CODE_SIGN_STYLE=Manual",
+      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER=RNSDKExample",
       export_options: {
           provisioningProfiles: {
               "com.example.reactnativesdkplugin" => "DistributorOnline"
