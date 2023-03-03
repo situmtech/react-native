@@ -47,6 +47,11 @@ jobs:
     fetchTags: false
     displayName: Clone repository
 
+  - task: NodeTool@0
+    inputs:
+      versionSource: 'fromFile' # 'spec' | 'fromFile'. Required. Source of version. Default: spec.
+      versionFilePath: '.node-version' # string. Optional. Use when versionSource = fromFile. Path to the .nvmrc file. 
+
   - bash: |
 
       echo -e "\n[+] Installing NPM version $(npmVersion)\n"
