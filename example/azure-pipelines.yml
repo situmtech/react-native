@@ -26,6 +26,8 @@ parameters:
 
 variables:
   - group: Passwords
+  - name: npmVersion
+    value: "npvm@9.3.1"
 
 resources:
   repositories:
@@ -44,12 +46,6 @@ jobs:
     fetchDepth: 1
     fetchTags: false
     displayName: Clone repository
-
-      #  - task: NodeTool@0
-      #    inputs:
-      #      versionSource: 'spec'
-      #      versionSpec: '16.x' 
-      #
 
   - bash: |
 
@@ -144,6 +140,9 @@ jobs:
   - ${{ if contains(parameters.system, 'ubuntu') }}:
 
     - bash: |
+        echo -e "\n[+] Installing NPM version $(npmVersion)\n"
+        npm install -g $(npmVersion)
+
         echo -e "\n[+] Build Android example \n"
 
         cd example
