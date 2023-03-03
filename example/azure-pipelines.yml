@@ -12,7 +12,7 @@ parameters:
     type: string
     values:
       - "ubuntu-latest"        
-      - "macOS-11"
+      - "macOS-12"
   - name: XAPIEMAIL
     type: string
     displayName: X-API-EMAIL
