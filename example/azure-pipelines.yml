@@ -45,11 +45,11 @@ jobs:
     fetchTags: false
     displayName: Clone repository
 
-  - task: NodeTool@0
-    inputs:
-      versionSource: 'spec'
-      versionSpec: '16.x' 
-
+      #  - task: NodeTool@0
+      #    inputs:
+      #      versionSource: 'spec'
+      #      versionSpec: '16.x' 
+      #
 
   - bash: |
 
