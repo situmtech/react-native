@@ -27,7 +27,7 @@ parameters:
 variables:
   - group: Passwords
   - name: npmVersion
-    value: "npvm@9.3.1"
+    value: "npm@9.3.1"
 
 resources:
   repositories:
@@ -48,6 +48,10 @@ jobs:
     displayName: Clone repository
 
   - bash: |
+
+      echo -e "\n[+] Installing NPM version $(npmVersion)\n"
+      npm install -g $(npmVersion)
+
 
       echo -e "\n[+] Install plugin dependencies\n"
       npm install
@@ -140,9 +144,6 @@ jobs:
   - ${{ if contains(parameters.system, 'ubuntu') }}:
 
     - bash: |
-        echo -e "\n[+] Installing NPM version $(npmVersion)\n"
-        npm install -g $(npmVersion)
-
         echo -e "\n[+] Build Android example \n"
 
         cd example
