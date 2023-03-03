@@ -45,6 +45,12 @@ jobs:
     fetchTags: false
     displayName: Clone repository
 
+  - task: NodeTool@0
+    inputs:
+      versionSource: 'spec'
+      versionSpec: '16.x' 
+
+
   - bash: |
 
       echo -e "\n[+] Install plugin dependencies\n"
@@ -136,10 +142,6 @@ jobs:
   
   
   - ${{ if contains(parameters.system, 'ubuntu') }}:
-    - task: NodeTool@0
-      inputs:
-        versionSource: 'spec'
-        versionSpec: '16.x' 
 
     - bash: |
         echo -e "\n[+] Build Android example \n"
