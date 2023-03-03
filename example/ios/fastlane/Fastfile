@@ -60,6 +60,7 @@ platform :ios do
       configuration: "Release",
       scheme: "example",
       xcargs: "-allowProvisioningUpdates",
+      export_method: "app-store"
       export_options: {
           provisioningProfiles: {
               "com.example.reactnativesdkplugin" => "DistributorOnline"
