@@ -74,8 +74,8 @@ jobs:
       echo "export const SITUM_BUILDING_ID = '${{ parameters.BUILDINGID }}';" >> example/src/situm.tsx
       echo "export const SITUM_FLOOR_ID = '${{ parameters.FLOORID }}';" >> example/src/situm.tsx
       
-      sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/ios/example/AppDelegate.mm
-      sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/android/app/src/main/AndroidManifest.xml
+      #sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/ios/example/AppDelegate.mm
+      #sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/android/app/src/main/AndroidManifest.xml
 
       cat example/ios/example/AppDelegate.mm
       cat example/android/app/src/main/AndroidManifest.xml
