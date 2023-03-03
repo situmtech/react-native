@@ -36,7 +36,7 @@
     "babel-plugin-module-resolver": "^3.2.0",
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
-    "metro-react-native-babel-preset": "0.73.7",
+    "metro-react-native-babel-preset": "^0.56.0",
     "prettier": "^2.0.4",
     "react": "^16.11.0",
     "react-native": "0.62.1",
