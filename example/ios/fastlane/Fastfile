@@ -23,7 +23,7 @@ platform :ios do
     #=================================================
     latest_testflight_build_number(
       api_key_path:"./fastlane/api_key.json",
-      app_identifier:"es.situm.situmcalibrationtool",
+      app_identifier:"com.example.reactnativesdkplugin",
     )
 
     #====================================================
