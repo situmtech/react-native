@@ -28,6 +28,8 @@ variables:
   - group: Passwords
   - name: npmVersion
     value: "npm@9.3.1"
+  - name: xcodeVersion
+    value: "/Applications/Xcode_14.2.app"
 
 resources:
   repositories:
@@ -125,7 +127,7 @@ jobs:
 
     - bash: |
 
-        sudo xcode-select -switch /Applications/Xcode_14.2.app
+        sudo xcode-select -switch $(xcodeVersion)
 
         cd example/ios/fastlane
 
