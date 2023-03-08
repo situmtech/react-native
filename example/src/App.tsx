@@ -21,9 +21,9 @@ function initSitumSdk() {
     console.log(JSON.stringify(response));
     console.log('Authenticated Succesfully: ' + response.success);
   });
-  // SitumPlugin.setDashboardURL('https://des.situm.com', response => {
-  //   console.log('Set dashboard url to DES: ' + JSON.stringify(response));
-  // });
+  SitumPlugin.setDashboardURL('https://des.situm.com', response => {
+    console.log('Set dashboard url to DES: ' + JSON.stringify(response));
+  });
   SitumPlugin.setCacheMaxAge(1, response => {
     console.log('Cache Age: ' + response.success);
   });
