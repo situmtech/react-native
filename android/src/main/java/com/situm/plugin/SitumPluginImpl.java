@@ -94,6 +94,24 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
+    public void setDashboardURL(String url, Callback callback) {
+        boolean success = true;
+
+        if (url.isEmpty()) {
+            success = false;
+        } else {
+           SitumSdk.configuration().setDashboardURL(url); 
+        }
+
+        if (callback != null) {
+            WritableMap response = Arguments.createMap();
+            response.putBoolean("success", success);
+            callback.invoke(response);
+        }
+    }
+
+    @Override
+    @ReactMethod
     public void setCacheMaxAge(int cacheAge, Callback callback) {
         boolean isSuccess = SitumSdk.configuration().setCacheMaxAge(cacheAge, TimeUnit.SECONDS);
 
