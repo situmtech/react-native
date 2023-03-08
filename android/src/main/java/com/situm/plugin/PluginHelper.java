@@ -325,9 +325,9 @@ public class PluginHelper {
                         PluginHelper.this.computedLocation = location; // This is for testing purposes
                         Log.i(PluginHelper.TAG, "onLocationChanged() called with: location = [" + location + "]");
                         JSONObject jsonObject = SitumMapper.locationToJsonObject(location);
-                        
+
                         eventEmitter.emit(EVENT_LOCATION_CHANGED, convertJsonToMap(jsonObject));
-                        
+
                     } catch (JSONException e) {
                         eventEmitter.emit(EVENT_LOCATION_ERROR, e.getMessage());
                     }
