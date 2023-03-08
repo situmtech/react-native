@@ -131,13 +131,18 @@ RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass withCallba
 }
 
 RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url withCallback:(RCTResponseSenderBlock)callback) {
-    if (url == nil || !url) {
+    BOOL success = YES
+    
+    if (!url || !url.length) {
+        success = NO
         return;
     }
-
-    [SITServices setDashboardURL:url];
+    else{
+      [SITServices setDashboardURL:url];  
+    }
+    
     if (callback) {
-        NSDictionary *response = @{@"success": @"true"};
+        NSDictionary *response = @{@"success": success};
         callback(@[response]);
     }
     
