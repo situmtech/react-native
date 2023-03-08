@@ -131,21 +131,17 @@ RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass withCallba
 }
 
 RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url withCallback:(RCTResponseSenderBlock)callback) {
-    BOOL success = YES
+    BOOL success = NO
     
-    if (!url || !url.length) {
-        success = NO
-        return;
+    if (url || url.length) {
+        success = YES
+        [SITServices setDashboardURL:url];
+
+        if (callback) {
+            NSDictionary *response = @{@"success": success};
+            callback(@[response]);
+        }
     }
-    else{
-      [SITServices setDashboardURL:url];  
-    }
-    
-    if (callback) {
-        NSDictionary *response = @{@"success": success};
-        callback(@[response]);
-    }
-    
 }
 
 RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(RCTResponseSenderBlock)callback)
