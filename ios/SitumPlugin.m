@@ -136,11 +136,11 @@ RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url withCallback:(RCTResponseSende
     if (url || url.length) {
         success = YES
         [SITServices setDashboardURL:url];
+    }
 
-        if (callback) {
-            NSDictionary *response = @{@"success": success};
-            callback(@[response]);
-        }
+    if (callback) {
+        NSDictionary *response = @{@"success":success ? YES : NO};
+        callback(@[response]);
     }
 }
 
