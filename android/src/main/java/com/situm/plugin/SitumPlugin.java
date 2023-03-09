@@ -26,6 +26,8 @@ public interface SitumPlugin {
 
     void setUserPass(String email, String password, Callback callback);
 
+    void setDashboardURL(String url, Callback callback);
+
     void setCacheMaxAge(int cacheAge, Callback callback);
 
     void fetchBuildings(Callback success, Callback error);
