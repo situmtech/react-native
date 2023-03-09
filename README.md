@@ -18,7 +18,7 @@
       - [initSitumSDK](#--initsitumsdk)
       - [setApiKey](#--setapikey)
       - [setUserPass](#--setuserpass)
-      - [setUserPass](#--setdashboardurl)
+      - [setDashboardURL](#--setdashboardurl)
       - [setCacheMaxAge](#--setcachemaxage)
       - [startPositioning](#--startpositioning)
       - [stopPositioning](#--stoppositioning)
