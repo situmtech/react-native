@@ -201,6 +201,8 @@ SitumPlugin.setUserPass("SITUM_EMAIL","SITUM_USER_PASSWORD")
 #### - setDashboardURL
 
 Set the environment that will be used to retrieve the data of your account. Return true if `url` was set successfully, otherwise false. The default environment is "https://dashboard.situm.com".
+
+- **NOTE**: In case you are using `setUserPass()` method, you must set the environment with this method before authenticating.
 ```js
 SitumPlugin.setDashboardURL("https://dashboard.situm.com", (success: any) => {});
 ```
