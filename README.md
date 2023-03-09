@@ -185,7 +185,7 @@ SitumPlugin.initSitumSDK();
 
 #### - setApiKey
 
-Log in into your Situm Account. This key is generated in Situm Dashboard. Return true if apiKey was set successfully, otherwise false
+Log in into your Situm Account. This key is generated in Situm Dashboard. Return true if apiKey was set successfully, otherwise false.
 
 ```js
 SitumPlugin.setApiKey("SITUM_EMAIL","SITUM_API_KEY")
@@ -200,7 +200,7 @@ SitumPlugin.setUserPass("SITUM_EMAIL","SITUM_USER_PASSWORD")
 
 #### - setDashboardURL
 
-Set the enviroment that will be used to retrieve the data of your account. Return true if `url` was set successfully, otherwise false
+Set the environment that will be used to retrieve the data of your account. Return true if `url` was set successfully, otherwise false. The default environment is "https://dashboard.situm.com".
 ```js
 SitumPlugin.setDashboardURL("https://dashboard.situm.com", (success: any) => {});
 ```
