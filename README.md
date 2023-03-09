@@ -187,7 +187,7 @@ SitumPlugin.initSitumSDK();
 
 Set the environment that will be used to retrieve the data of your account. Return true if `url` was set successfully, otherwise false. The default environment is "https://dashboard.situm.com".
 
-- **NOTE**: You must set the environment with this method before authenticating.
+- **NOTE**: You must set the environment with this method before authenticating with `setUserPass()` or `setApiKey()`. In case you are authenticating with the `AndroidManifest.xml` fields, make sure the credentials specified there belong to the enviroment specified with this method.
 ```js
 SitumPlugin.setDashboardURL("https://dashboard.situm.com", (success: any) => {});
 ```
