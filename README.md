@@ -16,9 +16,9 @@
     + [Accessing plugin object](#accessing-plugin-object)
     + [Methods](#methods)
       - [initSitumSDK](#--initsitumsdk)
+      - [setDashboardURL](#--setdashboardurl)
       - [setApiKey](#--setapikey)
       - [setUserPass](#--setuserpass)
-      - [setDashboardURL](#--setdashboardurl)
       - [setCacheMaxAge](#--setcachemaxage)
       - [startPositioning](#--startpositioning)
       - [stopPositioning](#--stoppositioning)
@@ -183,6 +183,15 @@ Method that initialize the SDK. This method needs to be called once before using
 SitumPlugin.initSitumSDK();
 ```
 
+#### - setDashboardURL
+
+Set the environment that will be used to retrieve the data of your account. Return true if `url` was set successfully, otherwise false. The default environment is "https://dashboard.situm.com".
+
+- **NOTE**: You must set the environment with this method before authenticating.
+```js
+SitumPlugin.setDashboardURL("https://dashboard.situm.com", (success: any) => {});
+```
+
 #### - setApiKey
 
 Log in into your Situm Account. This key is generated in Situm Dashboard. Return true if apiKey was set successfully, otherwise false.
@@ -196,15 +205,6 @@ SitumPlugin.setApiKey("SITUM_EMAIL","SITUM_API_KEY")
 Provides user's email and password.
 ```js
 SitumPlugin.setUserPass("SITUM_EMAIL","SITUM_USER_PASSWORD")
-```
-
-#### - setDashboardURL
-
-Set the environment that will be used to retrieve the data of your account. Return true if `url` was set successfully, otherwise false. The default environment is "https://dashboard.situm.com".
-
-- **NOTE**: You must set the environment with this method before authenticating with `setUserPass()` or `setApiKey()`.
-```js
-SitumPlugin.setDashboardURL("https://dashboard.situm.com", (success: any) => {});
 ```
 
 #### - setUseRemoteConfig
