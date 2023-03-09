@@ -3,7 +3,7 @@ import {View, FlatList, TouchableHighlight, Button} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SitumPlugin from 'react-native-situm-plugin';
-import {SITUM_EMAIL, SITUM_API_KEY} from './situm';
+import {SITUM_EMAIL, SITUM_API_KEY, SITUM_DASHBOARD_URL} from './situm';
 import PositioningScreen from './examples/Positioning';
 import {BuildingsBasicInfo} from './examples/BuildingsBasicInfo';
 import {BuildingFullInfo} from './examples/BuildingFullInfo';
@@ -18,18 +18,24 @@ import {SetCacheMaxAge} from './examples/SetCacheMaxAge';
 function initSitumSdk() {
   SitumPlugin.initSitumSDK();
   SitumPlugin.setApiKey(SITUM_EMAIL, SITUM_API_KEY, response => {
-    console.log(JSON.stringify(response));
-    console.log('Authenticated Succesfully: ' + response.success);
+    console.log(`Authenticated Succesfully: ${response.success}`);
+  });
+  SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL, response => {
+    console.log(
+      `Set dashboard url to [${SITUM_DASHBOARD_URL}]: ${JSON.stringify(
+        response,
+      )}`,
+    );
   });
   SitumPlugin.setCacheMaxAge(1, response => {
-    console.log('Cache Age: ' + response.success);
+    console.log(`Cache Age: ${response.success}`);
   });
   SitumPlugin.sdkVersions(response => {
-    console.log('VERSIONS: ' + JSON.stringify(response));
+    console.log(`VERSIONS: ${JSON.stringify(response)}`);
   });
-  
-  SitumPlugin.setUseRemoteConfig("true", response => {
-    console.log("Remote config enabled: " + JSON.stringify(response));
+
+  SitumPlugin.setUseRemoteConfig('true', response => {
+    console.log(`Remote config enabled: ${JSON.stringify(response)}`);
   });
 }
 
