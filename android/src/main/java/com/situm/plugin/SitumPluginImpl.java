@@ -34,10 +34,11 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     }
 
     private static PluginHelper getPluginInstance() {
-        if (pluginInstance == null) { //Check for the first time
-            synchronized (PluginHelper.class) {   //Check for the second time.
-                //if there is no instance available... create new one
-                if (pluginInstance == null) pluginInstance = new PluginHelper();
+        if (pluginInstance == null) { // Check for the first time
+            synchronized (PluginHelper.class) { // Check for the second time.
+                // if there is no instance available... create new one
+                if (pluginInstance == null)
+                    pluginInstance = new PluginHelper();
             }
         }
         return pluginInstance;
@@ -57,8 +58,9 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void setApiKey(String email, String apiKey, Callback callback) {
-        if(email.isEmpty() || apiKey.isEmpty()) return;
-        
+        if (email.isEmpty() || apiKey.isEmpty())
+            return;
+
         boolean isSuccess = SitumSdk.configuration().setApiKey(email, apiKey);
 
         WritableMap response = Arguments.createMap();
@@ -74,7 +76,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         if (callback != null) {
             WritableMap response = Arguments.createMap();
             response.putBoolean("success", true);
-    
+
             callback.invoke(response);
         }
     }
@@ -82,14 +84,32 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void setUserPass(String email, String password, Callback callback) {
-        if(email.isEmpty() || password.isEmpty()) return;
-        
+        if (email.isEmpty() || password.isEmpty())
+            return;
+
         boolean isSuccess = SitumSdk.configuration().setUserPass(email, password);
 
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", isSuccess);
 
         callback.invoke(response);
+    }
+
+    @Override
+    @ReactMethod
+    public void setDashboardURL(String url, Callback callback) {
+        boolean success = false;
+
+        if (!url.isEmpty()) {
+            success = true;
+            SitumSdk.configuration().setDashboardURL(url);
+        }
+
+        if (callback != null) {
+            WritableMap response = Arguments.createMap();
+            response.putBoolean("success", success);
+            callback.invoke(response);
+        }
     }
 
     @Override
@@ -137,7 +157,8 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void startPositioning(ReadableMap map) {
-        getPluginInstance().startPositioning(map, getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
+        getPluginInstance().startPositioning(map,
+                getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
     }
 
     @Override
@@ -191,7 +212,9 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void requestNavigationUpdates(ReadableMap options) {
-        getPluginInstance().requestNavigationUpdates(options, getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class), getReactApplicationContext());
+        getPluginInstance().requestNavigationUpdates(options,
+                getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class),
+                getReactApplicationContext());
     }
 
     @Override
@@ -209,7 +232,8 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod
     public void requestRealTimeUpdates(ReadableMap map) {
-        getPluginInstance().requestRealTimeUpdates(map, getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
+        getPluginInstance().requestRealTimeUpdates(map,
+                getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
     }
 
     @Override
@@ -238,7 +262,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
         callback.invoke(response);
     }
-    
+
     @Override
     @ReactMethod
     public void requestAuthorization() {
@@ -276,12 +300,14 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
                     boolean hasPermission = (boolean) args[0];
 
                     if (!hasPermission) {
-                        perms.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, new PromiseImpl(onPermissionGranted, onPermissionDenied));
+                        perms.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION,
+                                new PromiseImpl(onPermissionGranted, onPermissionDenied));
                     }
                 }
             };
 
-            perms.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, new PromiseImpl(onPermissionChecked, onPermissionCheckFailed));
+            perms.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,
+                    new PromiseImpl(onPermissionChecked, onPermissionCheckFailed));
         }
     }
 
@@ -289,13 +315,13 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @ReactMethod
     public void onEnterGeofences() {
         getPluginInstance().onEnterGeofences(
-            getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
+                getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
     }
 
     @Override
     @ReactMethod
     public void onExitGeofences() {
         getPluginInstance().onExitGeofences(
-            getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
+                getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
     }
 }

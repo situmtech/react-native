@@ -130,6 +130,20 @@ RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass withCallba
         callback(@[response]);
 }
 
+RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url withCallback:(RCTResponseSenderBlock)callback) {
+    BOOL success = NO;
+    
+    if (url && url.length) {
+        success = YES;
+        [SITServices setDashboardURL:url];
+    }
+
+    if (callback) {
+        NSDictionary *response = @{@"success":success ? @"true" : @"false"};
+        callback(@[response]);
+    }
+}
+
 RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(RCTResponseSenderBlock)callback)
 {
     [[SITCommunicationManager sharedManager] setCacheMaxAge:[cacheMaxAge integerValue]];
