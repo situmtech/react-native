@@ -41,7 +41,8 @@ function PositioningScreen() {
     setError('');
 
     //Declare the locationOptions (empty = default parameters)
-    const locationOptions = {getDefaultLocationOptions};
+    const locationOptions = getDefaultLocationOptions();
+
     //Start positioning
     subscriptionId = SitumPlugin.startPositioning(
       (location: any) => {
