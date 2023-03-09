@@ -21,6 +21,10 @@ const SitumPlugin = {
     RNCSitumPlugin.setUserPass(email, password, success);
   },
 
+  setDashboardURL: function (url: string, success: Function) {
+    RNCSitumPlugin.setDashboardURL(url, success);
+  },
+
   setUseRemoteConfig(useRemoteConfig: string, success?: Function) {
     RNCSitumPlugin.setUseRemoteConfig(useRemoteConfig, success);
   },
