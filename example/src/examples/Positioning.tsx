@@ -20,7 +20,10 @@ const minimumRestartingDelay = 3000;
 function PositioningScreen() {
   useEffect(() => {
     //Set remote config to false, so we actually use local request
-    SitumPlugin.setUseRemoteConfig('false', (res: any) => {});
+    SitumPlugin.setUseRemoteConfig('false', response => {
+      console.log(`Remote config disabled: ${JSON.stringify(response)}`);
+    });
+
     return () => {
       //STOP POSITIONING ON CLOSE COMPONENT
       stopPositioning();
