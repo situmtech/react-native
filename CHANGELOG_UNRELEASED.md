@@ -2,8 +2,8 @@
 
 ##### Added
 
-- Added the necessary configuration to import locally the plugin, so now its posible to execute example/ app with npm
-- Added RequestPermissions.tsx as an example on how to request the required positioning permissions.
+- Added the necessary configuration to execute our getting started in example/ with `npm`. Now code changes in our plugin won't require to re-install dependencies every time.
+- Added RequestPermissions.tsx as an example on how to request the positioning permissions.
 
 ##### Changed
 
