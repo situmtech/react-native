@@ -65,6 +65,11 @@ export const RemoteConfig = () => {
   };
 
   useEffect(() => {
+    // Set useRemoteConfig to true in order to be able to
+    SitumPlugin.setUseRemoteConfig('true', response => {
+      console.log(`Remote config enabled: ${JSON.stringify(response)}`);
+    });
+    
     return () => {
       //STOP POSITIONING ON CLOSE COMPONENT
       stopPositioning();
