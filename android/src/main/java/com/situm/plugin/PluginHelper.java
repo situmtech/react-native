@@ -168,6 +168,41 @@ public class PluginHelper {
         }
     }
 
+        // building, floors, events, indoorPois, outdoorPois, ¿geofences? ¿Paths?
+        public void fetchTilesFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
+            try {
+                JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
+                Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
+    
+                getCommunicationManagerInstance().fetchTilesFromBuilding(building, new Handler<BuildingInfo>() {
+                    @Override
+                    public void onSuccess(BuildingInfo object) {
+                        try {
+                            Log.d(PluginHelper.TAG, "onSuccess: building info fetched successfully.");
+    
+    
+                            JSONObject jsonObject = SitumMapper.buildingInfoToJsonObject(object); // Include geofences to parse ? This needs to be on sdk
+    
+                            invokeCallback(success, ReactNativeJson.convertJsonToMap(jsonObject));
+                        } catch (JSONException e) {
+                            invokeCallback(error, e.getMessage());
+                        }
+                    }
+    
+                    @Override
+                    public void onFailure(Error e) {
+                        Log.e(PluginHelper.TAG, "onFailure:" + e);
+                        invokeCallback(error, e.getMessage());
+                    }
+                });
+    
+            } catch (Exception e) {
+                Log.e(TAG, "Unexpected error in building info response", e.getCause());
+                invokeCallback(error, e.getMessage());
+            }
+        }
+    
+
     // building, floors, events, indoorPois, outdoorPois, ¿geofences? ¿Paths?
     public void fetchBuildingInfo(ReadableMap buildingMap, Callback success, Callback error) {
         try {

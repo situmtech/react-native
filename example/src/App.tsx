@@ -14,6 +14,7 @@ import {DrawRouteBetweenPOIs} from './examples/DrawRouteBetweenPOIs';
 import {RemoteConfig} from './examples/RemoteConfig';
 import {GetPoisIcons} from './examples/GetPoisIcons';
 import {SetCacheMaxAge} from './examples/SetCacheMaxAge';
+import { TiledBuilding } from './examples/TiledBuilding';
 
 function initSitumSdk() {
   SitumPlugin.initSitumSDK();
@@ -77,6 +78,10 @@ const HomeScreen = ({navigation}) => {
             title: 'Set cache max age and invalidate it',
             key: 'SetCacheMaxAge',
           },
+          {
+            title: 'Show building with tiles',
+            key: 'TiledBuilding'
+          }
         ]}
         renderItem={({item, index, separators}) => (
           <TouchableHighlight key={item.key}>
@@ -116,6 +121,7 @@ function App() {
         <Stack.Screen name="RemoteConfig" component={RemoteConfig} />
         <Stack.Screen name="GetPoisIcons" component={GetPoisIcons} />
         <Stack.Screen name="SetCacheMaxAge" component={SetCacheMaxAge} />
+        <Stack.Screen name="TiledBuilding" component={TiledBuilding} />
       </Stack.Navigator>
     </NavigationContainer>
   );
