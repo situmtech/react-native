@@ -138,6 +138,12 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
+    public void fetchTilesFromBuilding(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().fetchTilesFromBuilding(map, success, error);
+    }
+
+    @Override
+    @ReactMethod
     public void fetchFloorsFromBuilding(ReadableMap map, Callback success, Callback error) {
         getPluginInstance().fetchFloorsFromBuilding(map, success, error);
     }
