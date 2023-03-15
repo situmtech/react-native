@@ -4,6 +4,7 @@
   "private": false,
   "react-native": "src/index.js",
   "main": "/src/index.js",
+  "source": "/src/index.js",
   "types": "/typings/index.d.ts",
   "files": [
     "src",
@@ -60,6 +61,6 @@
   },
   "sdkVersions": {
     "android": "2.85.0@aar",
-    "ios": "2.58.0"
+    "ios": "2.59.0"
   }
 }
