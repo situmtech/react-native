@@ -19,6 +19,7 @@
       - [setDashboardURL](#--setdashboardurl)
       - [setApiKey](#--setapikey)
       - [setUserPass](#--setuserpass)
+      - [setDashboardURL](#--setdashboardurl)
       - [setCacheMaxAge](#--setcachemaxage)
       - [startPositioning](#--startpositioning)
       - [stopPositioning](#--stoppositioning)
@@ -205,6 +206,13 @@ SitumPlugin.setApiKey("SITUM_EMAIL","SITUM_API_KEY")
 Provides user's email and password.
 ```js
 SitumPlugin.setUserPass("SITUM_EMAIL","SITUM_USER_PASSWORD")
+```
+
+#### - setDashboardURL
+
+Set the enviroment that will be used to retrieve the data of your account. Return true if `url` was set successfully, otherwise false
+```js
+SitumPlugin.setDashboardURL("https://dashboard.situm.com", (success: any) => {});
 ```
 
 #### - setUseRemoteConfig
