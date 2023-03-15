@@ -14,8 +14,6 @@ import styles from './styles/styles';
 import requestPermissions from './Utils/RequestPermissions';
 
 let subscriptionId = -1;
-let restartingPositioningTimestamp = 0;
-const minimumRestartingDelay = 3000;
 
 function PositioningScreen() {
   useEffect(() => {
@@ -40,19 +38,10 @@ function PositioningScreen() {
   };
 
   const startPositioning = async () => {
-    if (
-      Date.now() - restartingPositioningTimestamp <= minimumRestartingDelay &&
-      restartingPositioningTimestamp != 0
-    ) {
-      console.log('Already restarting positioning ...');
-      return;
-    }
-
     if (subscriptionId != -1) {
       console.log('Restarting positioning');
       stopPositioning();
     }
-    restartingPositioningTimestamp = Date.now();
 
     requestPermissions();
 
@@ -93,7 +82,6 @@ function PositioningScreen() {
     setStatus('');
     setError('');
     subscriptionId = -1;
-    restartingPositioningTimestamp = 0;
   };
 
   return (

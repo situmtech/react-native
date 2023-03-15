@@ -6,8 +6,6 @@ import styles from './styles/styles';
 import requestPermissions from './Utils/RequestPermissions';
 
 let subscriptionId = -1;
-let restartingPositioningTimestamp = 0;
-const minimumRestartingDelay = 3000;
 
 export const RemoteConfig = () => {
   const [location, setLocation] = useState<String>('ready to be used');
@@ -19,23 +17,13 @@ export const RemoteConfig = () => {
     console.log('Stopping positioning');
     SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
     subscriptionId = -1;
-    restartingPositioningTimestamp = 0;
   };
 
   const startPositioning = () => {
-    if (
-      Date.now() - restartingPositioningTimestamp <= minimumRestartingDelay &&
-      restartingPositioningTimestamp != 0
-    ) {
-      console.log('Already restarting positioning ...');
-      return;
-    }
-
     if (subscriptionId != -1) {
       console.log('Restarting positioning');
       stopPositioning();
     }
-    restartingPositioningTimestamp = Date.now();
 
     requestPermissions();
 
@@ -69,7 +57,7 @@ export const RemoteConfig = () => {
     SitumPlugin.setUseRemoteConfig('true', response => {
       console.log(`Remote config enabled: ${JSON.stringify(response)}`);
     });
-    
+
     return () => {
       //STOP POSITIONING ON CLOSE COMPONENT
       stopPositioning();
