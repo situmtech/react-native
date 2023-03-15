@@ -33,10 +33,6 @@ function initSitumSdk() {
   SitumPlugin.sdkVersions(response => {
     console.log(`VERSIONS: ${JSON.stringify(response)}`);
   });
-
-  SitumPlugin.setUseRemoteConfig('true', response => {
-    console.log(`Remote config enabled: ${JSON.stringify(response)}`);
-  });
 }
 
 const HomeScreen = ({navigation}) => {
