@@ -219,14 +219,8 @@ RCT_EXPORT_METHOD(fetchTilesFromBuilding:(NSDictionary *)buildingJO withSuccessC
     NSString *buildingId = [buildingJO valueForKey:@"identifier"];
     
     [[SITCommunicationManager sharedManager] fetchTilesForBuilding:buildingId success:^(NSDictionary * _Nullable mapping) {
-        if (IS_LOG_ENABLED) {
-            NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ Fetching tiles from building returned values", DEFAULT_SITUM_LOG, operation]);
-        }
 
-        // Parse and convert to json
-        // NSDictionary *buildingInfoJson = [SitumLocationWrapper.shared buildingInfoToJsonObject:mapping[@"results"]];
-
-        // Send result outsidecon e
+        // Send result outside
         if (IS_LOG_ENABLED) {
             NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ retrieved tiles from building: %@ with result: %@", DEFAULT_SITUM_LOG, operation, buildingJO, mapping]);
         }
