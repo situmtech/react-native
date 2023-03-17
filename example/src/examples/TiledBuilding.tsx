@@ -3,7 +3,7 @@ import { View, ActivityIndicator, Image, Dimensions } from "react-native";
 
 import SitumPlugin from "react-native-situm-plugin";
 import MapView, { PROVIDER_GOOGLE, Overlay, Marker , UrlTile, MapLocalTile} from "react-native-maps";
-import { SITUM_BUILDING_ID } from "../situm";
+import { SITUM_BUILDING_ID, SITUM_FLOOR_ID } from "../situm";
 
 
 
@@ -34,35 +34,6 @@ export const TiledBuilding = () => {
   const [hasStoredTiles, setHasStoredTiles] = useState<Boolean>(false); 
   const [offlineTilePath, setOfflineTilePath] = useState<String>();
   
-
-
-    /*
-  const getBuildings = () => {
-    SitumPlugin.fetchBuildings(
-        (buildings: any) => {
-          if (!buildings || buildings.length == 0)
-            setError(
-              'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
-            );
-          // console.log(JSON.stringify(buildings));
-          setBuildings(JSON.stringify(buildings, null, 2));
-
-          console.log ("looping through elements in array");
-          for (let b in buildings) {
-            console.log ("building bucle " + JSON.stringify(b));
-            if (b.identifier === buildingID) {
-                console.log("Established selected building");
-                setSelectedBuilding(b);                    
-            }
-          }
-        },
-        (error: any) => {
-          console.log(error);
-          setError(error);
-        },
-      );
-  }*/
-
   const getBuildingInfo = (building: any) => {
     
     SitumPlugin.fetchBuildings(
@@ -110,18 +81,11 @@ export const TiledBuilding = () => {
 
             }
 
-            /*
-            for (const [k, b] in Object.entries(buildings)) {
-                console.log("buildings are" + k + ": " + JSON.stringify(b));
-                ///console.log("downloaded building: " + JSON.stringify(b));
-                if (b.identifier === SITUM_BUILDING_ID) {
-                    
-                }
-            }*/
 
         },
         (error) => {
           // returns an error string
+          console.log("Error: " + error);
         },
       );
     
@@ -137,8 +101,6 @@ export const TiledBuilding = () => {
         (result: any) => {
           console.log("result is" + JSON.stringify(result));
 
-            // setHasStoredTiles(true);
-            // result is{"results":"/data/user/0/com.example.reactnativesdkplugin/files/tiles/12929"}
             setOfflineTilePath(result.results);
 
         },
@@ -147,17 +109,9 @@ export const TiledBuilding = () => {
         }
       );
   }
-
-  /*
-   const [mapRegion] = useState<any>({
-    latitude: building.center.latitude,
-    longitude: building.center.longitude,
-    latitudeDelta: 0.005,
-    longitudeDelta: 0.005,
-  });*/
  
   const initializeBuilding = () => {
-    setBuilding({"identifier" : "12929"});
+    setBuilding({"identifier" : SITUM_BUILDING_ID});
   }
   
   useEffect(() => {
@@ -169,11 +123,6 @@ export const TiledBuilding = () => {
     console.log("called getbuilding info");
     getBuildingInfo(building);
    }, building);
-
-   /*
-   useEffect(() => {
-    getBuildingInfo(selectedBuilding);
-   }, selectedBuilding);*/
   
   return (
     <View>
@@ -185,7 +134,7 @@ export const TiledBuilding = () => {
 
     {offlineTilePath !== "" ? (
         <MapLocalTile 
-        pathTemplate={offlineTilePath + '/40600/{z}/{x}/{y}.png'}
+        pathTemplate={offlineTilePath + '/' + SITUM_FLOOR_ID + '/{z}/{x}/{y}.png'}
         tileSize={256}
       ></MapLocalTile>)
       : (
