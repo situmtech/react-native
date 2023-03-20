@@ -174,14 +174,15 @@ public class PluginHelper {
                 JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
                 Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
     
-                getCommunicationManagerInstance().fetchTilesFromBuilding(building, new Handler<BuildingInfo>() {
+                getCommunicationManagerInstance().fetchTilesFromBuilding(building.getIdentifier(), new Handler<String>() {
                     @Override
-                    public void onSuccess(BuildingInfo object) {
+                    public void onSuccess(String url) {
                         try {
-                            Log.d(PluginHelper.TAG, "onSuccess: building info fetched successfully.");
+                            Log.d(PluginHelper.TAG, "onSuccess: fetch building tiles offline fetched successfully.");
     
     
-                            JSONObject jsonObject = SitumMapper.buildingInfoToJsonObject(object); // Include geofences to parse ? This needs to be on sdk
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("results", url);
     
                             invokeCallback(success, ReactNativeJson.convertJsonToMap(jsonObject));
                         } catch (JSONException e) {
