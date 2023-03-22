@@ -23,6 +23,13 @@ parameters:
     type: string
   - name: FLOORID
     type: string
+  - name: DASHBOARD_URL
+    type: string
+    values:
+      - "https://dashboard.situm.com"
+      - "https://pre.situm.com"
+      - "https://des.situm.com"
+    default: "https://dashboard.situm.com"
 
 variables:
   - group: Passwords
@@ -81,12 +88,14 @@ jobs:
       echo -e "\t[+] X-API-EMAIL: ${{ parameters.XAPIEMAIL }}"
       echo -e "\t[+] BUILDINGID: ${{ parameters.BUILDINGID }}"
       echo -e "\t[+] FLOORID: ${{ parameters.FLOORID }}"
+      echo -e "\t[+] DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}"
       echo -e "\t[+] Plugin Version used: $pluginVersion"
 
       echo "export const SITUM_EMAIL = '${{ parameters.XAPIEMAIL }}';" > example/src/situm.tsx
       echo "export const SITUM_API_KEY = '${{ parameters.XAPIKEY }}';" >> example/src/situm.tsx
       echo "export const SITUM_BUILDING_ID = '${{ parameters.BUILDINGID }}';" >> example/src/situm.tsx
       echo "export const SITUM_FLOOR_ID = '${{ parameters.FLOORID }}';" >> example/src/situm.tsx
+      echo "export const SITUM_DASHBOARD_URL = '${{ parameters.DASHBOARD_URL }}';" example/src/situm.tsx
       
       sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/ios/example/AppDelegate.mm
       sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/android/app/src/main/AndroidManifest.xml
