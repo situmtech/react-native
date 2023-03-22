@@ -26,10 +26,7 @@ parameters:
 
 variables:
   - group: Passwords
-  - name: npmVersion
-    value: "npm@9.3.1"
-  - name: xcodeVersion
-    value: "/Applications/Xcode_14.2.app"
+  - group: SoftwareVersions
 
 resources:
   repositories:
@@ -52,7 +49,7 @@ jobs:
   - task: NodeTool@0
     inputs:
       versionSource: 'spec' # 'spec' | 'fromFile'. Required. Source of version. Default: spec.
-      versionSpec: '18.14.2'
+      versionSpec: $(nodeVersion)
 
   - bash: |
 
@@ -164,18 +161,34 @@ jobs:
 
     - bash: |
         folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
-        echo -e "\n[+] Create folder to APK\n"
+        branchDir=$(echo $(Build.SourceBranch)| cut -d "/" -f 3,4 | sed 's/\//_/g')
+        branchFolder="$folder/$branchDir"
+        pluginVersion=$(grep version package.json | awk -F"\"" '{print $4}')
 
-        npm i -g @pnp/cli-microsoft365
+        echo -e "\n[+] Variables to Sharepoint Upload:"
+        echo -e "\t[+] Folder: $folder"
+        echo -e "\t[+] Branch Name: $branchDir"
+        echo -e "\t[+] Branch folder: $folder/$branchDir" 
+        echo -e "\t[+] Destination folder: $folder/$branchDir/$pluginVersion" 
+        echo -e "\t[+] Plugin Version: $pluginVersion"
+
+
+        echo -e "\n[+] Install $(office365Cli) cli\n"
+
+        npm i -g $(office365Cli)
 
         echo -e "\n[+] Login in Sharepoint \n"
         m365 login --authType password --userName $(sharepoint_user)  --password $(sharepoint_pass)
 
-        echo -e "\n[+] Create folder $folder/$(Build.BuildNumber)"
-        m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $(Build.BuildNumber)
+        echo -e "\n[+] Create Branch folder $folder/$branchDiri\n"
+        m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $branchDir
+
+        echo -e "\n[+] Create Destination folder $folder/$branchDir/$pluginVersion\n"
+        m365 spo folder add -p $folder/$branchDir -u https://sistemassitum.sharepoint.com/sites/producteng --name $pluginVersion
 
         echo -e "\n[+] Upload APK to $folder/$(Build.BuildNumber)\n"
         cd example/android/app/build/outputs/apk/debug
-        m365 spo file add -p app-debug.apk -u https://sistemassitum.sharepoint.com/sites/producteng -f $folder/$(Build.BuildNumber)
+        mv app-debug.apk app-$pluginVersion-debug.apk
+        m365 spo file add -p app-$pluginVersion-debug.apk -u https://sistemassitum.sharepoint.com/sites/producteng -f $folder/$branchDir/$pluginVersion
 
       displayName: Upload APK
