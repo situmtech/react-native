@@ -150,7 +150,7 @@ jobs:
         echo -e "\n[+] Install fastlane \n"
         gem install fastlane
 
-        export WHATS_NEW="Plugin version: $(pluginVersion), USER: ${{parameters.XAPIEMAIL}}, BUILDINGID: ${{ parameters.BUILDINGID }}"
+        export WHATS_NEW="Plugin version: $(pluginVersion), USER: ${{parameters.XAPIEMAIL}}, BUILDINGID: ${{ parameters.BUILDINGID }}, DASHBOARD_URL: ${{ parameters.DASHBOARD_URL}}"
         echo -e "\n[+] Setting variables to deploy:"
         echo -e "\t[+] Set WHATS_NEW: $WHATS_NEW"
 
@@ -181,14 +181,15 @@ jobs:
 
     - bash: |
         folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
-        branchDir=$(echo $(Build.SourceBranch)| cut -d "/" -f 3,4 | sed 's/\//_/g')
-        branchFolder="$folder/$branchDir"
+        branchName=$(echo $(Build.SourceBranch)| cut -d "/" -f 3,4 | sed 's/\//_/g')
+        branchFolder="$folder/$branchName"
+        destinationFolder="$branchFolder/$(pluginVersion)"
 
         echo -e "\n[+] Variables to Sharepoint Upload:"
         echo -e "\t[+] Folder: $folder"
-        echo -e "\t[+] Branch Name: $branchDir"
-        echo -e "\t[+] Branch folder: $folder/$branchDir" 
-        echo -e "\t[+] Destination folder: $folder/$branchDir/$(pluginVersion)" 
+        echo -e "\t[+] Branch Name: $branchName"
+        echo -e "\t[+] Branch folder: $branchFolder" 
+        echo -e "\t[+] Destination folder: $destinationFolder" 
         echo -e "\t[+] Plugin Version: $(pluginVersion)"
 
 
@@ -199,15 +200,15 @@ jobs:
         echo -e "\n[+] Login in Sharepoint \n"
         m365 login --authType password --userName $(sharepoint_user)  --password $(sharepoint_pass)
 
-        echo -e "\n[+] Create Branch folder $folder/$branchDiri\n"
-        m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $branchDir
+        echo -e "\n[+] Create Branch folder $branchFolder\n"
+        m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $branchFolder
 
-        echo -e "\n[+] Create Destination folder $folder/$branchDir/$(pluginVersion)\n"
-        m365 spo folder add -p $folder/$branchDir -u https://sistemassitum.sharepoint.com/sites/producteng --name $pluginVersion
+        echo -e "\n[+] Create Destination folder $destinationFolder\n"
+        m365 spo folder add -p $branchFolder -u https://sistemassitum.sharepoint.com/sites/producteng --name $(pluginVersion)
 
-        echo -e "\n[+] Upload APK to $folder/$branchDir/$(pluginVersion)\n"
+        echo -e "\n[+] Upload APK to $destinationFolder\n"
         cd example/android/app/build/outputs/apk/debug
         mv app-debug.apk app-$(pluginVersion)-debug.apk
-        m365 spo file add -p app-$(pluginVersion)-debug.apk -u https://sistemassitum.sharepoint.com/sites/producteng -f $folder/$branchDir/$(pluginVersion)
+        m365 spo file add -p app-$(pluginVersion)-debug.apk -u https://sistemassitum.sharepoint.com/sites/producteng -f $destinationFolder
 
       displayName: Upload APK
