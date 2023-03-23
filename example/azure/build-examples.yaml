@@ -5,6 +5,8 @@ parameters:
     type: string
   - name: XAPIEMAIL
     type: string
+  - name: BUILDINGID
+    type: string
 
 steps:
     - ${{ if contains(parameters.system, 'macOS') }}:
