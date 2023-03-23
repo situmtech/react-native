@@ -92,14 +92,14 @@ steps:
             folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
           fi
           branchName=$(echo $(Build.SourceBranch)| cut -d "/" -f 3,4 | sed 's/\//_/g')
-          branchFolder="$folder/$branchName"
-          destinationFolder="$branchFolder/$(pluginVersion)"
+          branchFolder="$branchName"
+          destinationFolder="$(pluginVersion)"
   
           echo -e "\n[+] Variables to Sharepoint Upload:"
           echo -e "\t[+] Folder: $folder"
           echo -e "\t[+] Branch Name: $branchName"
-          echo -e "\t[+] Branch folder: $branchFolder" 
-          echo -e "\t[+] Destination folder: $destinationFolder" 
+          echo -e "\t[+] Branch folder: $folder/$branchFolder" 
+          echo -e "\t[+] Destination folder: $folder/$branchFolder/$destinationFolder" 
           echo -e "\t[+] Plugin Version: $(pluginVersion)"
   
   
@@ -114,7 +114,7 @@ steps:
           m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $branchFolder
   
           echo -e "\n[+] Create Destination folder $destinationFolder\n"
-          m365 spo folder add -p $branchFolder -u https://sistemassitum.sharepoint.com/sites/producteng --name $(pluginVersion)
+          m365 spo folder add -p $folder/$branchFolder -u https://sistemassitum.sharepoint.com/sites/producteng --name $destinationFolder
   
           echo -e "\n[+] Upload APK to $destinationFolder\n"
           cd example/android/app/build/outputs/apk/debug
