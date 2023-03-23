@@ -14,6 +14,8 @@ parameters:
     values:
       - "ubuntu-latest"
       - "macOS-latest"
+    default:
+      - "macOS-latest"
   - name: XAPIEMAIL
     type: string
     displayName: X-API-EMAIL
