@@ -11,7 +11,7 @@ pr: none
 parameters:
   - name: systems
     type: string
-    default:
+    values:
       - "ubuntu-latest"
       - "macOS-latest"
   - name: XAPIEMAIL
