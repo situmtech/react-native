@@ -13,7 +13,7 @@ parameters:
     type: object
     default:
       - "ubuntu-latest"
-        "macOS-latest"
+      - "macOS-latest"
   - name: XAPIEMAIL
     type: string
     displayName: X-API-EMAIL
