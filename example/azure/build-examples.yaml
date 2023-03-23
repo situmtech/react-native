@@ -5,7 +5,7 @@ parameters:
     type: string
 
 steps:
-    - ${{ if contains(${{parameter.system}}, 'macOS') }}:
+    - ${{ if contains(parameters.system, 'macOS') }}:
       - task: DownloadSecureFile@1
         name: api_key
         inputs:
@@ -63,7 +63,7 @@ steps:
   
         displayName: Build iOS example 
 
-    - ${{ if contains(parameter.system, 'ubuntu') }}:
+    - ${{ if contains(parameters.system, 'ubuntu') }}:
   
       - bash: |
           echo -e "\n[+] Build Android example \n"
