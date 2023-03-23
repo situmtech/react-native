@@ -3,6 +3,8 @@ parameters:
     type: string
   - name: DASHBOARD_URL
     type: string
+  - name: XAPIEMAIL
+    type: string
 
 steps:
     - ${{ if contains(parameters.system, 'macOS') }}:
