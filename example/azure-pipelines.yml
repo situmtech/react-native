@@ -10,7 +10,7 @@ pr: none
 
 parameters:
   - name: systems
-    type: string
+    type: object
     values:
       - "ubuntu-latest"        
       - "macOS-latest"
