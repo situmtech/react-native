@@ -9,6 +9,11 @@ trigger:
 pr: none
 
 parameters:
+  - name: systems
+    type: object
+    default:
+      - "ubuntu-latest"
+      - "macOS-latest"
   - name: XAPIEMAIL
     type: string
     displayName: X-API-EMAIL
@@ -30,10 +35,6 @@ parameters:
 variables:
   - group: Passwords
   - group: SoftwareVersions
-  - name: systems
-    value:
-      - "ubuntu-latest"
-      - "macOS-latest"
 
 resources:
   repositories:
@@ -44,7 +45,7 @@ resources:
 
 jobs: 
 
-- ${{ each system in systems }}:
+- ${{ each system in parameters.systems }}:
   - job:
     displayName: Build ${{ system }}
     pool:
