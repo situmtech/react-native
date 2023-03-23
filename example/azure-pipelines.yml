@@ -113,6 +113,7 @@ jobs:
           BUILDINGID: ${{ parameters.BUILDINGID }}
           FLOORID: ${{ parameters.FLOORID }}
           DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}
+          system: ${{ system }}
   
     - ${{ if ne(variables['Build.Reason'],'manual') }}:
       - template: azure/build-examples.yaml
@@ -122,3 +123,4 @@ jobs:
           BUILDINGID: $(BUILDING_ID_EXAMPLES)
           FLOORID: $(FLOOR_ID_EXAMPLES)
           DASHBOARD_URL: "https://dashboard.situm.com"
+          system: ${{ system }}
