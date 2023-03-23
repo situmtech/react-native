@@ -12,7 +12,7 @@ parameters:
     type: string
     values:
       - "ubuntu-latest"        
-      - "macOS-12"
+      - "macOS-latest"
   - name: XAPIEMAIL
     type: string
     displayName: X-API-EMAIL
@@ -25,10 +25,6 @@ parameters:
     type: string
   - name: DASHBOARD_URL
     type: string
-    values:
-      - "https://dashboard.situm.com"
-      - "https://pre.situm.com"
-      - "https://des.situm.com"
     default: "https://dashboard.situm.com"
 
 variables:
@@ -102,114 +98,25 @@ jobs:
 
     displayName: Configure credentials
   
-  - ${{ if contains(parameters.system, 'macOS') }}:
+  - ${{ if eq(variables['Build.Reason'],'manual') }}:
+    - template: azure/build-examples.yaml
+      parameters:
+        XAPIKEY: ${{ parameters.XAPIKEY }}
+        XAPIEMAIL: ${{ parameters.XAPIEMAIL }}
+        BUILDINGID: ${{ parameters.BUILDINGID }}
+        FLOORID: ${{ parameters.FLOORID }}
+        DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}
+        systems:
+          - ${{ parameters.system }}
 
-    - task: DownloadSecureFile@1
-      name: api_key
-      inputs:
-        secureFile: api_key.json
-
-    - task: InstallAppleCertificate@2
-      inputs:
-        certSecureFile: AppleCert23.p12
-        
-    - task: InstallAppleCertificate@2
-      inputs:
-        certSecureFile: DistributorWildcard.p12
-  
-    - task: InstallAppleProvisioningProfile@1
-      inputs:
-        provisioningProfileLocation: 'secureFiles'
-        provProfileSecureFile: RNSDKExample.mobileprovision
-        removeProfile: true
-    
-    - task: InstallAppleProvisioningProfile@1
-      inputs:
-        provisioningProfileLocation: 'secureFiles'
-        provProfileSecureFile: DistributorOnline.mobileprovision
-        removeProfile: true
-  
-    - bash: |
-        echo -e "\n[+] Install iOS example dependencies\n"
-        cd example/ios
-        pod install
-      displayName: Install iOS example dependencies
-
-    - bash: |
-
-        echo -e "\n[+] Selecting the Xcode version $(xcodeVersion)\n"
-
-        sudo xcode-select -switch $(xcodeVersion)
-
-        cd example/ios/fastlane
-
-        echo -e "\n[+] Setting Apple connection options"
-
-        cp $(api_key.secureFilePath) .
-
-        echo -e "\n[+] Install fastlane \n"
-        gem install fastlane
-
-        dashboard=$(echo ${{ parameters.DASHBOARD_URL }} | awk -F"/" '{print $3}')  
-        export WHATS_NEW="Plugin version: $(pluginVersion), USER: ${{parameters.XAPIEMAIL}}, BUILDINGID: ${{ parameters.BUILDINGID }}, DASHBOARD_URL: $dashboard"
-        echo -e "\n[+] Setting variables to deploy:"
-        echo -e "\t[+] Set WHATS_NEW: $WHATS_NEW"
-
-
-        echo -e "\n[+] Build example with fastlane \n"
-        fastlane ios beta
-
-      displayName: Build iOS example 
-  
-  
-  - ${{ if contains(parameters.system, 'ubuntu') }}:
-
-    - bash: |
-        echo -e "\n[+] Build Android example \n"
-
-        cd example
-
-        mkdir -p android/app/src/main/assets 
-        
-        npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
-
-        cd android
-
-        ./gradlew assembleDebug
-        
-      displayName: Build Android dependencies
-
-
-    - bash: |
-        folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
-        branchName=$(echo $(Build.SourceBranch)| cut -d "/" -f 3,4 | sed 's/\//_/g')
-        branchFolder="$folder/$branchName"
-        destinationFolder="$branchFolder/$(pluginVersion)"
-
-        echo -e "\n[+] Variables to Sharepoint Upload:"
-        echo -e "\t[+] Folder: $folder"
-        echo -e "\t[+] Branch Name: $branchName"
-        echo -e "\t[+] Branch folder: $branchFolder" 
-        echo -e "\t[+] Destination folder: $destinationFolder" 
-        echo -e "\t[+] Plugin Version: $(pluginVersion)"
-
-
-        echo -e "\n[+] Install $(office365Cli) cli\n"
-
-        npm i -g $(office365Cli)
-
-        echo -e "\n[+] Login in Sharepoint \n"
-        m365 login --authType password --userName $(sharepoint_user)  --password $(sharepoint_pass)
-
-        echo -e "\n[+] Create Branch folder $branchFolder\n"
-        m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $branchFolder
-
-        echo -e "\n[+] Create Destination folder $destinationFolder\n"
-        m365 spo folder add -p $branchFolder -u https://sistemassitum.sharepoint.com/sites/producteng --name $(pluginVersion)
-
-        echo -e "\n[+] Upload APK to $destinationFolder\n"
-        cd example/android/app/build/outputs/apk/debug
-        mv app-debug.apk app-$(pluginVersion)-debug.apk
-        m365 spo file add -p app-$(pluginVersion)-debug.apk -u https://sistemassitum.sharepoint.com/sites/producteng -f $destinationFolder
-
-      displayName: Upload APK
+  - ${{ if ne(variables['Build.Reason'],'manual') }}:
+    - template: azure/build-examples.yaml
+      parameters:
+        XAPIKEY: $(XAPIKEY_EXAMPLES)
+        XAPIEMAIL: $(XAPIEMAIL_EXAMPLES)
+        BUILDINGID: $(BUILDING_ID_EXAMPLES)
+        FLOORID: $(FLOOR_ID_EXAMPLES)
+        DASHBOARD_URL: "https://dashboard.situm.com"
+        systems:
+          - "macOS-latest"
+          - "ubuntu-latest"
