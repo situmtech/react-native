@@ -1,6 +1,18 @@
 parameters:
   - name: system
     type: string
+  - name: XAPIEMAIL
+    type: string
+    displayName: X-API-EMAIL
+  - name: XAPIKEY
+    type: string
+    displayName: X-API-KEY
+  - name: BUILDINGID
+    type: string
+  - name: FLOORID
+    type: string
+  - name: DASHBOARD_URL
+    type: string
 
 steps:
     - ${{ if contains(parameter.system, 'macOS') }}:
