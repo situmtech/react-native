@@ -78,7 +78,7 @@ jobs:
   
     - bash: |
   
-        if [[ "${{ parameters.system }}" == *"macOS-"* ]];then
+        if [[ "${{ system }}" == *"macOS-"* ]];then
             echo -e "\n[+] Install gnu-sed\n"
             brew install gnu-sed
             export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
