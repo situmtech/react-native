@@ -78,6 +78,7 @@ jobs:
       parameters:
         DASHBOARD_URL: $(DASHBOARD_URL)
         system: $(ubuntuVersion)
+        BUILDINGID: $(BUILDINGID)
         XAPIEMAIL: $(XAPIEMAIL)
     
   #===============================================================
@@ -120,3 +121,4 @@ jobs:
         DASHBOARD_URL: $(DASHBOARD_URL)
         system: $(macOSVersion)
         XAPIEMAIL: $(XAPIEMAIL)
+        BUILDINGID: $(BUILDINGID)
