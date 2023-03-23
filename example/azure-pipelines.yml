@@ -9,7 +9,7 @@ trigger:
 pr: none
 
 parameters:
-  - name: system
+  - name: systems
     type: string
     values:
       - "ubuntu-latest"        
@@ -45,84 +45,81 @@ resources:
     name: situm/sys-kubernetes-templates.git
 
 jobs: 
-- job:
-  displayName: Build ${{ parameters.system }}
-  pool:
-    vmImage: ${{ parameters.system }}
-  steps:
-  - checkout: self
-    fetchDepth: 1
-    fetchTags: false
-    displayName: Clone repository
 
-  - task: NodeTool@0
-    inputs:
-      versionSource: 'spec' # 'spec' | 'fromFile'. Required. Source of version. Default: spec.
-      versionSpec: $(nodeVersion)
-
-  - bash: |
-
-      echo -e "\n[+] Installing NPM version $(npmVersion)\n"
-      npm install -g $(npmVersion)
-
-
-      echo -e "\n[+] Install plugin dependencies\n"
-      npm install
-
-      echo -e "\n[+] Install example dependencies\n"
-      cd example
-      npm install
-
-    displayName: Install plugin dependencies
-
-  - bash: |
-
-      if [[ "${{ parameters.system }}" == *"macOS-"* ]];then
-          echo -e "\n[+] Install gnu-sed\n"
-          brew install gnu-sed
-          export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-      fi
-
-      pluginVersion=$(grep version package.json | awk -F"\"" '{print $4}')
-      echo "##vso[task.setvariable variable=pluginVersion]$(echo $pluginVersion)"
-
-      echo -e "\n[+] Variables to set:"
-      echo -e "\t[+] X-API-EMAIL: ${{ parameters.XAPIEMAIL }}"
-      echo -e "\t[+] BUILDINGID: ${{ parameters.BUILDINGID }}"
-      echo -e "\t[+] FLOORID: ${{ parameters.FLOORID }}"
-      echo -e "\t[+] DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}"
-      echo -e "\t[+] Plugin Version used: $pluginVersion"
-
-      echo "export const SITUM_EMAIL = '${{ parameters.XAPIEMAIL }}';" > example/src/situm.tsx
-      echo "export const SITUM_API_KEY = '${{ parameters.XAPIKEY }}';" >> example/src/situm.tsx
-      echo "export const SITUM_BUILDING_ID = '${{ parameters.BUILDINGID }}';" >> example/src/situm.tsx
-      echo "export const SITUM_FLOOR_ID = '${{ parameters.FLOORID }}';" >> example/src/situm.tsx
-      echo "export const SITUM_DASHBOARD_URL = '${{ parameters.DASHBOARD_URL }}';"  >> example/src/situm.tsx
-      
-      sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/ios/example/AppDelegate.mm
-      sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/android/app/src/main/AndroidManifest.xml
-
-    displayName: Configure credentials
+- ${{ each system in parameters.systems }}:
+  - job:
+    displayName: Build ${{ system }}
+    pool:
+      vmImage: ${{ system }}
+    steps:
+    - checkout: self
+      fetchDepth: 1
+      fetchTags: false
+      displayName: Clone repository
   
-  - ${{ if eq(variables['Build.Reason'],'manual') }}:
-    - template: azure/build-examples.yaml
-      parameters:
-        XAPIKEY: ${{ parameters.XAPIKEY }}
-        XAPIEMAIL: ${{ parameters.XAPIEMAIL }}
-        BUILDINGID: ${{ parameters.BUILDINGID }}
-        FLOORID: ${{ parameters.FLOORID }}
-        DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}
-        systems:
-          - ${{ parameters.system }}
-
-  - ${{ if ne(variables['Build.Reason'],'manual') }}:
-    - template: azure/build-examples.yaml
-      parameters:
-        XAPIKEY: $(XAPIKEY_EXAMPLES)
-        XAPIEMAIL: $(XAPIEMAIL_EXAMPLES)
-        BUILDINGID: $(BUILDING_ID_EXAMPLES)
-        FLOORID: $(FLOOR_ID_EXAMPLES)
-        DASHBOARD_URL: "https://dashboard.situm.com"
-        systems:
-          - "macOS-latest"
-          - "ubuntu-latest"
+    - task: NodeTool@0
+      inputs:
+        versionSource: 'spec' # 'spec' | 'fromFile'. Required. Source of version. Default: spec.
+        versionSpec: $(nodeVersion)
+  
+    - bash: |
+  
+        echo -e "\n[+] Installing NPM version $(npmVersion)\n"
+        npm install -g $(npmVersion)
+  
+  
+        echo -e "\n[+] Install plugin dependencies\n"
+        npm install
+  
+        echo -e "\n[+] Install example dependencies\n"
+        cd example
+        npm install
+  
+      displayName: Install plugin dependencies
+  
+    - bash: |
+  
+        if [[ "${{ parameters.system }}" == *"macOS-"* ]];then
+            echo -e "\n[+] Install gnu-sed\n"
+            brew install gnu-sed
+            export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+        fi
+  
+        pluginVersion=$(grep version package.json | awk -F"\"" '{print $4}')
+        echo "##vso[task.setvariable variable=pluginVersion]$(echo $pluginVersion)"
+  
+        echo -e "\n[+] Variables to set:"
+        echo -e "\t[+] X-API-EMAIL: ${{ parameters.XAPIEMAIL }}"
+        echo -e "\t[+] BUILDINGID: ${{ parameters.BUILDINGID }}"
+        echo -e "\t[+] FLOORID: ${{ parameters.FLOORID }}"
+        echo -e "\t[+] DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}"
+        echo -e "\t[+] Plugin Version used: $pluginVersion"
+  
+        echo "export const SITUM_EMAIL = '${{ parameters.XAPIEMAIL }}';" > example/src/situm.tsx
+        echo "export const SITUM_API_KEY = '${{ parameters.XAPIKEY }}';" >> example/src/situm.tsx
+        echo "export const SITUM_BUILDING_ID = '${{ parameters.BUILDINGID }}';" >> example/src/situm.tsx
+        echo "export const SITUM_FLOOR_ID = '${{ parameters.FLOORID }}';" >> example/src/situm.tsx
+        echo "export const SITUM_DASHBOARD_URL = '${{ parameters.DASHBOARD_URL }}';"  >> example/src/situm.tsx
+        
+        sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/ios/example/AppDelegate.mm
+        sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/android/app/src/main/AndroidManifest.xml
+  
+      displayName: Configure credentials
+    
+    - ${{ if eq(variables['Build.Reason'],'manual') }}:
+      - template: azure/build-examples.yaml
+        parameters:
+          XAPIKEY: ${{ parameters.XAPIKEY }}
+          XAPIEMAIL: ${{ parameters.XAPIEMAIL }}
+          BUILDINGID: ${{ parameters.BUILDINGID }}
+          FLOORID: ${{ parameters.FLOORID }}
+          DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}
+  
+    - ${{ if ne(variables['Build.Reason'],'manual') }}:
+      - template: azure/build-examples.yaml
+        parameters:
+          XAPIKEY: $(XAPIKEY_EXAMPLES)
+          XAPIEMAIL: $(XAPIEMAIL_EXAMPLES)
+          BUILDINGID: $(BUILDING_ID_EXAMPLES)
+          FLOORID: $(FLOOR_ID_EXAMPLES)
+          DASHBOARD_URL: "https://dashboard.situm.com"

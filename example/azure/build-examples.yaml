@@ -12,12 +12,11 @@ parameters:
   - name: DASHBOARD_URL
     type: string
     default: "https://dashboard.situm.com"
-  - name: systems
-    type: object
+  - name: system
+    type: string
 
 steps:
-  - ${{ each system in parameters.systems }}:
-    - ${{ if contains(system, 'macOS') }}:
+    - ${{ if contains(parameter.system, 'macOS') }}:
       - task: DownloadSecureFile@1
         name: api_key
         inputs:
@@ -75,7 +74,7 @@ steps:
   
         displayName: Build iOS example 
 
-    - ${{ if contains(system, 'ubuntu') }}:
+    - ${{ if contains(parameter.system, 'ubuntu') }}:
   
       - bash: |
           echo -e "\n[+] Build Android example \n"
