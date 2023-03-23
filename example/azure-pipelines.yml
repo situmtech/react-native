@@ -60,8 +60,8 @@ jobs:
       - bash: |
            echo "##vso[task.setvariable variable=XAPIKEY]$(echo ${{parameters.XAPIKEY}})"
            echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
-           echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}}"
-           echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}}"
+           echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
+           echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}})"
            echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
         displayName: Configure Manual run Vars
 
