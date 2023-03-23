@@ -5,7 +5,7 @@ parameters:
     type: string
 
 steps:
-    - ${{ if contains(parameter.system, 'macOS') }}:
+    - ${{ if contains(${{parameter.system}}, 'macOS') }}:
       - task: DownloadSecureFile@1
         name: api_key
         inputs:
