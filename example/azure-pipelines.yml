@@ -108,8 +108,8 @@ jobs:
       - bash: |
            echo "##vso[task.setvariable variable=XAPIKEY]$(echo ${{parameters.XAPIKEY}})"
            echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
-           echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}}"
-           echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}}"
+           echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
+           echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}})"
            echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
 
            echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
