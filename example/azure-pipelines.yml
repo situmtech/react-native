@@ -10,7 +10,7 @@ pr: none
 
 parameters:
   - name: systems
-    type: object
+    type: string
     default:
       - "ubuntu-latest"
       - "macOS-latest"
