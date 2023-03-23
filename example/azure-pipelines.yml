@@ -17,13 +17,17 @@ parameters:
   - name: XAPIEMAIL
     type: string
     displayName: X-API-EMAIL
+    default: $(XAPIEMAIL_EXAMPLES)
   - name: XAPIKEY
     type: string
     displayName: X-API-KEY
+    default: $(XAPIKEY_EXAMPLES)
   - name: BUILDINGID
     type: string
+    default: $(BUILDING_ID_EXAMPLES)
   - name: FLOORID
     type: string
+    default: $(FLOOR_ID_EXAMPLES)
   - name: DASHBOARD_URL
     type: string
     default: "https://dashboard.situm.com"
