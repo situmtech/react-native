@@ -115,6 +115,11 @@ jobs:
            echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
         displayName: Configure Manual run Vars
 
+    - bash: |
+         echo -e "\n[+] Install gnu-sed\n"
+         brew install gnu-sed
+      displayName: Install gnu-sed
+
     - template: azure/common-steps.yaml
       parameters:
         XAPIKEY: $(XAPIKEY)
