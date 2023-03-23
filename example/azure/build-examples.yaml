@@ -26,7 +26,7 @@ steps:
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: RNSDKExample.mobileprovision
+          provProfileSecureFile: Situm_RN_SDK_Example.mobileprovision
           removeProfile: true
       
       - task: InstallAppleProvisioningProfile@1
@@ -86,7 +86,11 @@ steps:
   
   
       - bash: |
-          folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
+          if [[ "$(Build.Reason)" -eq "manual" ]];then
+            folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK/Manual"
+          else
+            folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
+          fi
           branchName=$(echo $(Build.SourceBranch)| cut -d "/" -f 3,4 | sed 's/\//_/g')
           branchFolder="$folder/$branchName"
           destinationFolder="$branchFolder/$(pluginVersion)"

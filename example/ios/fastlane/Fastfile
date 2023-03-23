@@ -49,7 +49,7 @@ platform :ios do
       configuration: "Release",
       scheme: "example",
       export_method: "app-store",
-      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER=RNSDKExample",
+      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER=Situm_RN_SDK_Example",
       export_options: {
           provisioningProfiles: {
               "com.situm.rnsdkexample" => "DistributorOnline"
@@ -64,7 +64,7 @@ platform :ios do
       api_key_path:"./fastlane/api_key.json", 
       skip_submission: true,
       skip_waiting_for_build_processing: true,
-      changelog: ENV['WHATS_NEW']
+      changelog: "ENV['WHATS_NEW']"
       )
   end
 end
