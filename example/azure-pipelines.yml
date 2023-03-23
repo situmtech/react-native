@@ -11,23 +11,23 @@ pr: none
 parameters:
   - name: systems
     type: object
-    values:
-      - "ubuntu-latest"        
-      - "macOS-latest"
+    default:
+      - "ubuntu-latest"
+        "macOS-latest"
   - name: XAPIEMAIL
     type: string
     displayName: X-API-EMAIL
-    default: $(XAPIEMAIL_EXAMPLES)
+    default: user@email.com
   - name: XAPIKEY
     type: string
     displayName: X-API-KEY
-    default: $(XAPIKEY_EXAMPLES)
+    default: user-api-key
   - name: BUILDINGID
     type: string
-    default: $(BUILDING_ID_EXAMPLES)
+    default: "1"
   - name: FLOORID
     type: string
-    default: $(FLOOR_ID_EXAMPLES)
+    default: "1"
   - name: DASHBOARD_URL
     type: string
     default: "https://dashboard.situm.com"
