@@ -1,3 +1,7 @@
+parameters:
+  - name: system
+    type: string
+
 steps:
     - ${{ if contains(parameter.system, 'macOS') }}:
       - task: DownloadSecureFile@1
