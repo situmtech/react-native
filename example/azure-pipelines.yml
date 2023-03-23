@@ -78,6 +78,7 @@ jobs:
       parameters:
         DASHBOARD_URL: $(DASHBOARD_URL)
         system: $(ubuntuVersion)
+        XAPIEMAIL: $(XAPIEMAIL)
     
   #===============================================================
   # Job for iOS app
@@ -118,3 +119,4 @@ jobs:
       parameters:
         DASHBOARD_URL: $(DASHBOARD_URL)
         system: $(macOSVersion)
+        XAPIEMAIL: $(XAPIEMAIL)
