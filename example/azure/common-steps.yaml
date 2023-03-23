@@ -1,3 +1,7 @@
+parameters:
+  - name: system
+    type: "string"
+
 steps:
  - checkout: self
    fetchDepth: 1
@@ -26,7 +30,7 @@ steps:
 
  - bash: |
 
-     if [[ "${{ system }}" == *"macOS-"* ]];then
+     if [[ "${{ parameters.system }}" == *"macOS-"* ]];then
          echo -e "\n[+] Install gnu-sed\n"
          brew install gnu-sed
          export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
@@ -61,7 +65,6 @@ steps:
        BUILDINGID: ${{ parameters.BUILDINGID }}
        FLOORID: ${{ parameters.FLOORID }}
        DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}
-       system: ${{ system }}
 
  - ${{ if ne(variables['Build.Reason'],'manual') }}:
    - template: azure/build-examples.yaml
@@ -71,4 +74,3 @@ steps:
        BUILDINGID: $(BUILDING_ID_EXAMPLES)
        FLOORID: $(FLOOR_ID_EXAMPLES)
        DASHBOARD_URL: "https://dashboard.situm.com"
-       system: ${{ system }}
