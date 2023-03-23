@@ -39,12 +39,7 @@ steps:
 
  - bash: |
 
-     if [[ "${{ parameters.system }}" == *"macOS-"* ]];then
-         echo -e "\n[+] Install gnu-sed\n"
-         brew install gnu-sed
-         export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-     fi
-
+     export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
      pluginVersion=$(grep version package.json | awk -F"\"" '{print $4}')
      echo "##vso[task.setvariable variable=pluginVersion]$(echo $pluginVersion)"
 
