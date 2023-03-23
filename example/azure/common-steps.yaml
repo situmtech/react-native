@@ -3,10 +3,8 @@ parameters:
     type: string
   - name: XAPIEMAIL
     type: string
-    displayName: X-API-EMAIL
   - name: XAPIKEY
     type: string
-    displayName: X-API-KEY
   - name: BUILDINGID
     type: string
   - name: FLOORID
