@@ -86,7 +86,7 @@ steps:
   
   
       - bash: |
-          if [[ "$(Build.Reason)" -eq "manual" ]];then
+          if [[ "$(Build.Reason)" == "manual" ]];then
             folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK/Manual"
           else
             folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
