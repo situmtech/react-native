@@ -86,7 +86,7 @@ steps:
   
   
       - bash: |
-          if [[ "$(Build.Reason)" == "manual" ]];then
+          if [[ "$(Build.Reason)" == "Manual" ]];then
             folder="$(RNSDKExample_folder)/Manual"
           else
             folder="$(RNSDKExample_folder)"
