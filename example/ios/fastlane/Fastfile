@@ -64,7 +64,7 @@ platform :ios do
       api_key_path:"./fastlane/api_key.json", 
       skip_submission: true,
       skip_waiting_for_build_processing: true,
-      changelog: "Test Changelog with static message" 
+      changelog: ENV['WHATS_NEW']
       )
   end
 end
