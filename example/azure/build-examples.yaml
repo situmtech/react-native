@@ -87,9 +87,9 @@ steps:
   
       - bash: |
           if [[ "$(Build.Reason)" == "manual" ]];then
-            folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK/Manual"
+            folder="$(RNSDKExample_folder)/Manual"
           else
-            folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
+            folder="$(RNSDKExample_folder)"
           fi
           branchName=$(echo $(Build.SourceBranch)| cut -d "/" -f 3,4 | sed 's/\//_/g')
           branchFolder="$branchName"
@@ -111,14 +111,14 @@ steps:
           m365 login --authType password --userName $(sharepoint_user)  --password $(sharepoint_pass)
   
           echo -e "\n[+] Create Branch folder $folder/$branchFolder\n"
-          m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $branchFolder
+          m365 spo folder add -p $folder -u $(SharepointUrl) --name $branchFolder
   
           echo -e "\n[+] Create Destination folder $folder/$branchFolder/$destinationFolder\n"
-          m365 spo folder add -p $folder/$branchFolder -u https://sistemassitum.sharepoint.com/sites/producteng --name $destinationFolder
+          m365 spo folder add -p $folder/$branchFolder -u $(SharepointUrl) --name $destinationFolder
   
           echo -e "\n[+] Upload APK to $folder/$branchFolder/$destinationFolder\n"
           cd example/android/app/build/outputs/apk/debug
           mv app-debug.apk app-$(pluginVersion)-debug.apk
-          m365 spo file add -p app-$(pluginVersion)-debug.apk -u https://sistemassitum.sharepoint.com/sites/producteng -f $folder/$branchFolder/$destinationFolder
+          m365 spo file add -p app-$(pluginVersion)-debug.apk -u $(SharepointUrl) -f $folder/$branchFolder/$destinationFolder
   
         displayName: Upload APK
