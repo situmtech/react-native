@@ -49,7 +49,7 @@ platform :ios do
       configuration: "Release",
       scheme: "example",
       export_method: "app-store",
-      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER=Situm\ RN\ SDK\ Example",
+      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER=\"Situm RN SDK Example\"",
       export_options: {
           provisioningProfiles: {
               "com.situm.rnsdkexample" => "DistributorOnline"
