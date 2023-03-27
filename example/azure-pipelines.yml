@@ -4,7 +4,7 @@
 # https://aka.ms/yaml
 
 trigger:
-  - master
+  - release/*
 
 pr: none
 
@@ -30,7 +30,6 @@ parameters:
 variables:
   - group: Passwords
   - group: SoftwareVersions
-  - group: SharepointPaths
 
 resources:
   repositories:
@@ -48,6 +47,27 @@ jobs:
     pool:
       vmImage: $(ubuntuVersion)
     steps:
+    - ${{ if ne(variables['Build.Reason'],'manual') }}:
+      - bash: |
+           echo "##vso[task.setvariable variable=XAPIKEY]$(echo $(XAPIKEY_EXAMPLES))"
+           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo $(XAPIEMAIL_EXAMPLES))"
+           echo "##vso[task.setvariable variable=BUILDINGID]$(echo $(BUILDING_ID_EXAMPLES))"
+           echo "##vso[task.setvariable variable=FLOORID]$(echo $(FLOOR_ID_EXAMPLES))"
+           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo 'https://dashboard.situm.com')"
+
+           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+        displayName: Configure Automatic run Vars
+
+    - ${{ if eq(variables['Build.Reason'],'manual') }}:
+      - bash: |
+           echo "##vso[task.setvariable variable=XAPIKEY]$(echo ${{parameters.XAPIKEY}})"
+           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
+           echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
+           echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}})"
+           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
+
+           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+        displayName: Configure Manual run Vars
 
     - template: azure/common-steps.yaml
       parameters:
@@ -73,6 +93,27 @@ jobs:
     pool:
       vmImage: $(macOSVersion)
     steps:
+    - ${{ if ne(variables['Build.Reason'],'manual') }}:
+      - bash: |
+           echo "##vso[task.setvariable variable=XAPIKEY]$(echo $(XAPIKEY_EXAMPLES))"
+           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo $(XAPIEMAIL_EXAMPLES))"
+           echo "##vso[task.setvariable variable=BUILDINGID]$(echo $(BUILDING_ID_EXAMPLES))"
+           echo "##vso[task.setvariable variable=FLOORID]$(echo $(FLOOR_ID_EXAMPLES))"
+           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo 'https://dashboard.situm.com')"
+
+           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+        displayName: Configure Automatic run Vars
+
+    - ${{ if eq(variables['Build.Reason'],'manual') }}:
+      - bash: |
+           echo "##vso[task.setvariable variable=XAPIKEY]$(echo ${{parameters.XAPIKEY}})"
+           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
+           echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
+           echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}})"
+           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
+
+           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+        displayName: Configure Manual run Vars
 
     - bash: |
          echo -e "\n[+] Install gnu-sed\n"
