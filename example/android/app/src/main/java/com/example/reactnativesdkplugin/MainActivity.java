@@ -1,4 +1,4 @@
-package com.example.reactnativesdkplugin;
+package com.situm.rnsdkexample;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

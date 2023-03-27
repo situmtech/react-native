@@ -23,7 +23,7 @@ platform :ios do
     #=================================================
     latest_testflight_build_number(
       api_key_path:"./fastlane/api_key.json",
-      app_identifier:"com.example.reactnativesdkplugin",
+      app_identifier:"com.situm.rnsdkexample",
     )
 
     #====================================================
@@ -49,10 +49,10 @@ platform :ios do
       configuration: "Release",
       scheme: "example",
       export_method: "app-store",
-      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER=RNSDKExample",
+      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER=\"Situm RN SDK Example\"",
       export_options: {
           provisioningProfiles: {
-              "com.example.reactnativesdkplugin" => "DistributorOnline"
+              "com.situm.rnsdkexample" => "DistributorOnline"
             },
         }
     )
@@ -64,6 +64,7 @@ platform :ios do
       api_key_path:"./fastlane/api_key.json", 
       skip_submission: true,
       skip_waiting_for_build_processing: true,
+      changelog: ENV['WHATS_NEW']
       )
   end
 end
