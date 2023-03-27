@@ -93,9 +93,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.example.reactnativesdkplugin"
+    namespace "com.situm.rnsdkexample"
     defaultConfig {
-        applicationId "com.example.reactnativesdkplugin"
+        applicationId "com.situm.rnsdkexample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
