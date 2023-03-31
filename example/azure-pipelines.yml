@@ -30,6 +30,7 @@ parameters:
 variables:
   - group: Passwords
   - group: SoftwareVersions
+  - group: SharepointPaths
 
 resources:
   repositories:
