@@ -10,6 +10,7 @@ export const RemoteConfig = () => {
   const [location, setLocation] = useState<String>('ready to be used');
   const [status, setStatus] = useState<String>('ready to be used');
   const [error, setError] = useState<String>('ready to be used');
+  const [geofences, setGeofences] = useState<String>('ready to be used');
 
   //We will call this method from a <Button /> later
   const stopPositioning = async () => {
@@ -17,6 +18,10 @@ export const RemoteConfig = () => {
     setLocation('Stopping positioning');
     SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
     subscriptionId = -1;
+
+    // Remove geofences if neccessary
+
+
   };
 
   const startPositioning = () => {
@@ -48,6 +53,20 @@ export const RemoteConfig = () => {
       },
       null,
     );
+
+    SitumPlugin.onEnterGeofences(
+      (geofences: any) => {
+        console.log("Detected Entered geofences: " + JSON.stringify(geofences));
+        setGeofences("Inside "+ JSON.stringify(geofences));
+      }
+    );
+
+    SitumPlugin.onExitGeofences(
+      (geofences: any) => {
+        console.log("Detected Exited geofences: " +  JSON.stringify(geofences));
+        setGeofences("Outside "+ JSON.stringify(geofences));
+      }
+    );
   };
 
   useEffect(() => {
@@ -74,6 +93,7 @@ export const RemoteConfig = () => {
         <Text style={styles.text}>Error: {error}</Text>
         <Text style={styles.text}>Status: {status}</Text>
         <Text style={styles.text}>Location: {location}</Text>
+        <Text style={styles.text}>Geofence actions: {geofences} </Text>
       </SafeAreaView>
     </ScrollView>
   );

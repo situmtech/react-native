@@ -219,8 +219,14 @@ RCT_EXPORT_METHOD(fetchTilesFromBuilding:(NSDictionary *)buildingJO withSuccessC
     NSString *buildingId = [buildingJO valueForKey:@"identifier"];
     
     [[SITCommunicationManager sharedManager] fetchTilesForBuilding:buildingId success:^(NSDictionary * _Nullable mapping) {
+        if (IS_LOG_ENABLED) {
+            NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ Fetching tiles from building returned values", DEFAULT_SITUM_LOG, operation]);
+        }
 
-        // Send result outside
+        // Parse and convert to json
+        // NSDictionary *buildingInfoJson = [SitumLocationWrapper.shared buildingInfoToJsonObject:mapping[@"results"]];
+
+        // Send result outsidecon e
         if (IS_LOG_ENABLED) {
             NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ retrieved tiles from building: %@ with result: %@", DEFAULT_SITUM_LOG, operation, buildingJO, mapping]);
         }
@@ -766,12 +772,18 @@ RCT_EXPORT_METHOD(getDeviceId:(RCTResponseSenderBlock)callbackBlock)
     callbackBlock(@[@{@"deviceId": SITServices.deviceID}]);
 }
 
-RCT_EXPORT_METHOD(onEnterGeofences){
+RCT_EXPORT_METHOD(onEnterGeofences) { // :(RCTResponseSenderBlock)callbackBlock)
     // TODO
+    [self attachGeofenceListener];
 }
 
-RCT_EXPORT_METHOD(onExitGeofences){
+RCT_EXPORT_METHOD(onExitGeofences ){ // :(RCTResponseSenderBlock)callbackBlock)
     // TODO
+    [self attachGeofenceListener];    
+}
+
+- (void)attachGeofenceListener {
+    SITLocationManager.sharedInstance.geofenceDelegate = self;    
 }
 
 // SITRealtimeDelegate methods
@@ -899,4 +911,16 @@ destinationReachedOnRoute:(SITRoute *)route {
 }
 
 
+- (void)didEnteredGeofences:(NSArray<SITGeofence *> *)geofences {    
+    NSArray *geofencesJO = [SitumLocationWrapper.shared geofencesToJsonArray:geofences];
+
+    [self sendEventWithName:@"onEnterGeofences" body:geofencesJO];
+}
+
+- (void)didExitedGeofences:(NSArray<SITGeofence *> *)geofences {
+
+    NSArray *geofencesJO = [SitumLocationWrapper.shared geofencesToJsonArray:geofences];
+
+    [self sendEventWithName:@"onExitGeofences" body:geofencesJO];
+}
 @end
