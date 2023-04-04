@@ -9,6 +9,10 @@ const modules = Object.keys({
   ...pak.peerDependencies,
 });
 
+// Unable to resolve module @babel/runtime/helpers/interopRequireDefault:
+// https://www.appsloveworld.com/react-native/100/29/react-native-monorepo-unable-to-resolve-module-babel-runtime-helpers-interopre
+const nodeModulesPaths = [path.resolve(path.join(__dirname, './node_modules'))];
+
 module.exports = {
   projectRoot: __dirname,
   watchFolders: [root],
@@ -21,6 +25,8 @@ module.exports = {
         m => new RegExp(`^${escape(path.join(root, 'node_modules', m))}\\/.*$`),
       ),
     ),
+
+    nodeModulesPaths: nodeModulesPaths,
 
     extraNodeModules: modules.reduce((acc, name) => {
       acc[name] = path.join(__dirname, 'node_modules', name);
