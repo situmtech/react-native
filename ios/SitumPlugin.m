@@ -327,17 +327,15 @@ RCT_EXPORT_METHOD(startPositioning:(NSDictionary *)request)
     SITLocationRequest *locationRequest = [SitumLocationWrapper.shared dictToLocationRequest:request];
 
     _positioningUpdates = YES;
+    [[SITLocationManager sharedInstance] addDelegate:self];
     [[SITLocationManager sharedInstance] requestLocationUpdates:locationRequest];
-    [[SITLocationManager sharedInstance] setDelegate:self];
-
-
 }
 
 RCT_EXPORT_METHOD(stopPositioning:(RCTResponseSenderBlock)callback)
 {
     _positioningUpdates = NO;
     [[SITLocationManager sharedInstance] removeUpdates];
-
+    [[SITLocationManager sharedInstance] removeDelegate:self];
 }
 
 RCT_EXPORT_METHOD(requestDirections: (NSArray *)requestArray withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
