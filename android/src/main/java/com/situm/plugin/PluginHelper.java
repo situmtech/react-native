@@ -351,7 +351,8 @@ public class PluginHelper {
                 }
             };
             try {
-                SitumSdk.locationManager().requestLocationUpdates(locationRequest, locationListener);
+                SitumSdk.locationManager().addLocationListener(locationListener);
+                SitumSdk.locationManager().requestLocationUpdates(locationRequest);
             } catch (Exception e) {
                 Log.e(PluginHelper.TAG, "onError() called with: error = [" + e + "]");
             }
@@ -362,29 +363,24 @@ public class PluginHelper {
     }
 
     public void stopPositioning(Callback callback) {
-
+        SitumSdk.locationManager().removeUpdates();
         if (locationListener != null) {
+            SitumSdk.locationManager().removeLocationListener(locationListener);
+            locationListener = null;
             try {
-                SitumSdk.locationManager().removeUpdates(locationListener);
-                locationListener = null;
-
                 WritableMap map = Arguments.createMap();
                 map.putBoolean("success", true);
                 map.putString("message", "Stopped Successfully");
                 invokeCallback(callback, map);
-
             } catch (Exception e) {
                 invokeCallback(callback, e.getMessage());
             }
         } else {
             Log.i(TAG, "stopPositioning: location listener is not started.");
-
             WritableMap map = Arguments.createMap();
             map.putBoolean("success", true);
             map.putString("message", "Already disabled");
-
             invokeCallback(callback, map);
-
         }
     }
 
