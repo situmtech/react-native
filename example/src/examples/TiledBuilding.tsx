@@ -22,22 +22,14 @@ const TILES_URL = "https://dashboard.situm.com/uploads/{building_id}/{floor_id}/
 
 
 export const TiledBuilding = () => {
-  const [building, setBuilding] = useState<any>();
-  const [buildings, setBuildings] = useState<any>();
-  const [selectedBuilding, setSelectedBuilding] = useState<any>();
-  const [mapRegion, setMapRegion] = useState<any>();
-
-  const [isLoading, setIsLoading] = useState<Boolean>(false);
-  const [error, setError] = useState<String>();
-  const [floor, setFloor] = useState<any>();
-
-  const [hasStoredTiles, setHasStoredTiles] = useState<Boolean>(false);
+  const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [offlineTilePath, setOfflineTilePath] = useState<String>();
+  const mapRef = React.createRef<MapView>();
 
-  const getBuildingInfo = (building: any) => {
+  const getBuildingInfo = () => {
 
     SitumPlugin.fetchBuildings(
-      (buildings) => {
+      (buildings: any) => {
         // returns list of buildings
         if (!buildings || buildings.length == 0)
           alert(
@@ -52,14 +44,7 @@ export const TiledBuilding = () => {
               (buildingInfo: any) => {
                 console.log('FetchBuildingInfo ' + JSON.stringify(buildingInfo));
 
-                if (buildingInfo.floors.length >= 1) {
-                  setFloor(buildingInfo.floors.find((fl: any) => fl.level === 0));
-                } else {
-                  console.error('No floors found!');
-                }
-
-
-                setMapRegion({
+                mapRef.current?.animateToRegion({
                   latitude: buildingInfo.building.center.latitude,
                   longitude: buildingInfo.building.center.longitude,
                   latitudeDelta: 0.005,
@@ -75,7 +60,7 @@ export const TiledBuilding = () => {
           }
         }
       },
-      (error) => {
+      (error: any) => {
         // returns an error string
         console.log("Error: " + error);
       },
@@ -88,6 +73,7 @@ export const TiledBuilding = () => {
         console.log("result is" + JSON.stringify(result));
 
         setOfflineTilePath(result.results);
+        setIsLoading(false);
 
       },
       (error: any) => {
@@ -96,43 +82,21 @@ export const TiledBuilding = () => {
     );
   }
 
-  const initializeBuilding = () => {
-    setBuilding({ "identifier": SITUM_BUILDING_ID });
-  }
-
   useEffect(() => {
-    console.log("called initialized");
-    initializeBuilding();
+    getBuildingInfo();
   }, []);
-
-  useEffect(() => {
-    console.log("called getbuilding info");
-    getBuildingInfo(building);
-  }, building);
 
   return (
     <View>
       <MapView
+        ref={mapRef}
         style={{ width: "100%", height: "100%" }}
-        initialRegion={mapRegion}
         maxZoomLevel={MAX_ZOOM_LEVEL}
-        
       >
-
-        {offlineTilePath !== "" ? (
-          <MapLocalTile
-            pathTemplate={offlineTilePath + '/' + SITUM_FLOOR_ID + '/{z}/{x}/{y}.png'}
-            tileSize={256}
-          ></MapLocalTile>)
-          : (
-            <UrlTile
-              key={"https://dashboard.situm.com/uploads/" + SITUM_BUILDING_ID + "/{floor_id}/{z}/{x}/{y}.png"}
-              urlTemplate={"https://dashboard.situm.com/uploads/" + SITUM_BUILDING_ID + "/{floor_id}/{z}/{x}/{y}.png"}
-              flipY={false}
-            />
-          )}
-
-
+      <MapLocalTile
+        pathTemplate={offlineTilePath + '/' + SITUM_FLOOR_ID + '/{z}/{x}/{y}.png'}
+        tileSize={256}
+        />
       </MapView>
 
       {isLoading && (
