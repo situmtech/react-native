@@ -10,16 +10,8 @@ import { SITUM_BUILDING_ID, SITUM_FLOOR_ID } from "../situm";
 
 //This example shows how to display a tiled floorplan hosted in Situm Platform.
 //Floorplans are not stored in tiles by default, but Situm Support Team can tile your floorplans & upload them to Situm Platform (ask us: support@situm.com)
-//Change TILES_URL to the URL provided by Situm Support.
-
 
 const MAX_ZOOM_LEVEL = 20
-
-
-// This URL will be provided by Situm Support. {building_id} and {floor_id} will be the ID of the building and that you want to display, respectivelly.
-// {z},{y}, {x} are the tile selection variables that will be auto-filled at runtime by react-native-maps
-const TILES_URL = "https://dashboard.situm.com/uploads/{building_id}/{floor_id}/{z}/{x}/{y}.png"
-
 
 export const TiledBuilding = () => {
   const [isLoading, setIsLoading] = useState<Boolean>(true);
