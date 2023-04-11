@@ -1,55 +1,55 @@
 {
   "images" : [
     {
-      "filename" : "imagotype-SITUM-white-1024-20@2x-1.png",
+      "filename" : "iPhone_Notifications_20_2x.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "imagotype-SITUM-white-1024-20@3x.png",
+      "filename" : "iPhone_Notifications_20_3x.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
-      "filename" : "imagotype-SITUM-white-1024-29@2x-1.png",
+      "filename" : "iPhone_Settings_29_2x.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "imagotype-SITUM-white-1024-29@3x.png",
+      "filename" : "iPhone_Settings_29_3x.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
-      "filename" : "imagotype-SITUM-white-1024-40@2x-1.png",
+      "filename" : "iPhone_Spotlight_40_2x.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "imagotype-SITUM-white-1024-40@3x.png",
+      "filename" : "iPhone_Spotlight_40_3x.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
-      "filename" : "imagotype-SITUM-white-1024-60@2x.png",
+      "filename" : "iPhone_App_60_2x.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
-      "filename" : "imagotype-SITUM-white-1024-60@3x.png",
+      "filename" : "iPhone_App_60_3x.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x60"
     },
     {
-      "filename" : "imagotype-SITUM-white-1024-1024.png",
+      "filename" : "App_store_1024_1x.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
