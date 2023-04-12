@@ -209,6 +209,34 @@ RCT_EXPORT_METHOD(fetchBuildings: (RCTResponseSenderBlock)successBlock errorCall
     }];
 }
 
+RCT_EXPORT_METHOD(fetchTilesFromBuilding:(NSDictionary *)buildingJO withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
+{
+    NSString *operation = @"Fetching tiles from building request";
+    if (IS_LOG_ENABLED) {
+        NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ with parameters: %@", DEFAULT_SITUM_LOG, operation, buildingJO]);
+    }
+
+    NSString *buildingId = [buildingJO valueForKey:@"identifier"];
+    
+    [[SITCommunicationManager sharedManager] fetchTilesForBuilding:buildingId success:^(NSDictionary * _Nullable mapping) {
+
+        // Send result outside
+        if (IS_LOG_ENABLED) {
+            NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ retrieved tiles from building: %@ with result: %@", DEFAULT_SITUM_LOG, operation, buildingJO, mapping]);
+        }
+
+        successBlock(@[mapping]);
+
+    } failure:^(NSError * _Nullable error) {
+        if (IS_LOG_ENABLED) {
+            NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ error : %@ retrieving building info on building: %@", DEFAULT_SITUM_LOG, operation, error, buildingId]);
+        }
+        if(errorBlock)
+            errorBlock(@[error.description]);
+    }];
+
+}
+
 RCT_EXPORT_METHOD(fetchBuildingInfo:(NSDictionary *)buildingJO withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
 
