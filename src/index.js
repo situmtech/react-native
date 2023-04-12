@@ -55,6 +55,18 @@ const SitumPlugin = {
     RNCSitumPlugin.fetchBuildingInfo(building, success, error || logError);
   },
 
+  fetchTilesFromBuilding: function (
+    building: Building,
+    success: Function,
+    error?: Function,
+  ) {
+    invariant(
+      typeof success === 'function',
+      'Must provide a valid success callback.',
+    );
+    RNCSitumPlugin.fetchTilesFromBuilding(building, success, error || logError);
+  },
+
   fetchFloorsFromBuilding: function (
     building: Building,
     success: Function,

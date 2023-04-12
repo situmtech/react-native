@@ -34,6 +34,8 @@ public interface SitumPlugin {
 
     void fetchBuildingInfo(ReadableMap map, Callback success, Callback error);
 
+    void fetchTilesFromBuilding(ReadableMap map, Callback success, Callback error);
+
     void fetchFloorsFromBuilding(ReadableMap map, Callback success, Callback error);
 
     void fetchMapFromFloor(ReadableMap map, Callback success, Callback error);
