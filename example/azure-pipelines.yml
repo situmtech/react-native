@@ -3,33 +3,34 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger: none
+trigger:
+  - master
 
 pr: none
 
 parameters:
-  - name: system
-    type: string
-    values:
-      - "ubuntu-latest"        
-      - "macOS-12"
   - name: XAPIEMAIL
     type: string
     displayName: X-API-EMAIL
+    default: user@email.com
   - name: XAPIKEY
     type: string
     displayName: X-API-KEY
+    default: user-api-key
   - name: BUILDINGID
     type: string
+    default: "1"
   - name: FLOORID
     type: string
+    default: "1"
+  - name: DASHBOARD_URL
+    type: string
+    default: "https://dashboard.situm.com"
 
 variables:
   - group: Passwords
-  - name: npmVersion
-    value: "npm@9.3.1"
-  - name: xcodeVersion
-    value: "/Applications/Xcode_14.2.app"
+  - group: SoftwareVersions
+  - group: SharepointPaths
 
 resources:
   repositories:
@@ -39,143 +40,99 @@ resources:
     name: situm/sys-kubernetes-templates.git
 
 jobs: 
-- job:
-  displayName: Build ${{ parameters.system }}
-  pool:
-    vmImage: ${{ parameters.system }}
-  steps:
-  - checkout: self
-    fetchDepth: 1
-    fetchTags: false
-    displayName: Clone repository
+  #===============================================================
+  # Job for Android app
+  #===============================================================
+  - job:
+    displayName: Build Android App
+    pool:
+      vmImage: $(ubuntuVersion)
+    steps:
+    - ${{ if ne(variables['Build.Reason'],'manual') }}:
+      - bash: |
+           echo "##vso[task.setvariable variable=XAPIKEY]$(echo $(XAPIKEY_EXAMPLES))"
+           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo $(XAPIEMAIL_EXAMPLES))"
+           echo "##vso[task.setvariable variable=BUILDINGID]$(echo $(BUILDING_ID_EXAMPLES))"
+           echo "##vso[task.setvariable variable=FLOORID]$(echo $(FLOOR_ID_EXAMPLES))"
+           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo 'https://dashboard.situm.com')"
 
-  - task: NodeTool@0
-    inputs:
-      versionSource: 'spec' # 'spec' | 'fromFile'. Required. Source of version. Default: spec.
-      versionSpec: '18.14.2'
+           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+        displayName: Configure Automatic run Vars
 
-  - bash: |
+    - ${{ if eq(variables['Build.Reason'],'manual') }}:
+      - bash: |
+           echo "##vso[task.setvariable variable=XAPIKEY]$(echo ${{parameters.XAPIKEY}})"
+           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
+           echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
+           echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}})"
+           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
 
-      echo -e "\n[+] Installing NPM version $(npmVersion)\n"
-      npm install -g $(npmVersion)
+           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+        displayName: Configure Manual run Vars
 
+    - template: azure/common-steps.yaml
+      parameters:
+        XAPIKEY: $(XAPIKEY)
+        XAPIEMAIL: $(XAPIEMAIL)
+        BUILDINGID: $(BUILDINGID)
+        FLOORID: $(FLOORID)
+        DASHBOARD_URL: $(DASHBOARD_URL)
+        system: $(ubuntuVersion)
 
-      echo -e "\n[+] Install plugin dependencies\n"
-      npm install
-
-      echo -e "\n[+] Install example dependencies\n"
-      cd example
-      npm install
-
-    displayName: Install plugin dependencies
-
-  - bash: |
-
-      if [[ "${{ parameters.system }}" == *"macOS-"* ]];then
-          echo -e "\n[+] Install gnu-sed\n"
-          brew install gnu-sed
-          export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-      fi
-
-      echo -e "\n[+] Variables to set:"
-      echo -e "\t[+] X-API-EMAIL: ${{ parameters.XAPIEMAIL }}"
-      echo -e "\t[+] BUILDINGID: ${{ parameters.BUILDINGID }}"
-      echo -e "\t[+] FLOORID: ${{ parameters.FLOORID }}"
-
-      echo "export const SITUM_EMAIL = '${{ parameters.XAPIEMAIL }}';" > example/src/situm.tsx
-      echo "export const SITUM_API_KEY = '${{ parameters.XAPIKEY }}';" >> example/src/situm.tsx
-      echo "export const SITUM_BUILDING_ID = '${{ parameters.BUILDINGID }}';" >> example/src/situm.tsx
-      echo "export const SITUM_FLOOR_ID = '${{ parameters.FLOORID }}';" >> example/src/situm.tsx
-      
-      sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/ios/example/AppDelegate.mm
-      sed -i "s/HERE_GOES_GOOGLE_MAPS_API_KEY/$(MAPS_APIKEY_EXAMPLE)/" example/android/app/src/main/AndroidManifest.xml
-
-    displayName: Configure credentials
-  
-  - ${{ if contains(parameters.system, 'macOS') }}:
-
-    - task: DownloadSecureFile@1
-      name: api_key
-      inputs:
-        secureFile: api_key.json
-
-    - task: InstallAppleCertificate@2
-      inputs:
-        certSecureFile: AppleCert23.p12
-        
-    - task: InstallAppleCertificate@2
-      inputs:
-        certSecureFile: DistributorWildcard.p12
-  
-    - task: InstallAppleProvisioningProfile@1
-      inputs:
-        provisioningProfileLocation: 'secureFiles'
-        provProfileSecureFile: RNSDKExample.mobileprovision
-        removeProfile: true
+    - template: azure/build-examples.yaml
+      parameters:
+        DASHBOARD_URL: $(DASHBOARD_URL)
+        system: $(ubuntuVersion)
+        BUILDINGID: $(BUILDINGID)
+        XAPIEMAIL: $(XAPIEMAIL)
     
-    - task: InstallAppleProvisioningProfile@1
-      inputs:
-        provisioningProfileLocation: 'secureFiles'
-        provProfileSecureFile: DistributorOnline.mobileprovision
-        removeProfile: true
-  
-    - bash: |
-        echo -e "\n[+] Install iOS example dependencies\n"
-        cd example/ios
-        pod install
-      displayName: Install iOS example dependencies
+  #===============================================================
+  # Job for iOS app
+  #===============================================================
+  - job:
+    displayName: Build iOS App
+    pool:
+      vmImage: $(macOSVersion)
+    steps:
+    - ${{ if ne(variables['Build.Reason'],'manual') }}:
+      - bash: |
+           echo "##vso[task.setvariable variable=XAPIKEY]$(echo $(XAPIKEY_EXAMPLES))"
+           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo $(XAPIEMAIL_EXAMPLES))"
+           echo "##vso[task.setvariable variable=BUILDINGID]$(echo $(BUILDING_ID_EXAMPLES))"
+           echo "##vso[task.setvariable variable=FLOORID]$(echo $(FLOOR_ID_EXAMPLES))"
+           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo 'https://dashboard.situm.com')"
+
+           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+        displayName: Configure Automatic run Vars
+
+    - ${{ if eq(variables['Build.Reason'],'manual') }}:
+      - bash: |
+           echo "##vso[task.setvariable variable=XAPIKEY]$(echo ${{parameters.XAPIKEY}})"
+           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
+           echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
+           echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}})"
+           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
+
+           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+        displayName: Configure Manual run Vars
 
     - bash: |
+         echo -e "\n[+] Install gnu-sed\n"
+         brew install gnu-sed
+      displayName: Install gnu-sed
 
-        sudo xcode-select -switch $(xcodeVersion)
+    - template: azure/common-steps.yaml
+      parameters:
+        XAPIKEY: $(XAPIKEY)
+        XAPIEMAIL: $(XAPIEMAIL)
+        BUILDINGID: $(BUILDINGID)
+        FLOORID: $(FLOORID)
+        DASHBOARD_URL: $(DASHBOARD_URL)
+        system: $(macOSVersion)
 
-        cd example/ios/fastlane
-
-        echo -e "\n[+] Setting Apple connection options"
-
-        cp $(api_key.secureFilePath) .
-
-        echo -e "\n[+] Install fastlane \n"
-        gem install fastlane
-
-        echo -e "\n[+] Build example with fastlane \n"
-        fastlane ios beta
-
-      displayName: Build iOS example 
-  
-  
-  - ${{ if contains(parameters.system, 'ubuntu') }}:
-
-    - bash: |
-        echo -e "\n[+] Build Android example \n"
-
-        cd example
-
-        mkdir -p android/app/src/main/assets 
-        
-        npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
-
-        cd android
-
-        ./gradlew assembleDebug
-        
-      displayName: Build Android dependencies
-
-
-    - bash: |
-        folder="/Documentos%20compartidos/Desarrollo/Apks/RNSDK"
-        echo -e "\n[+] Create folder to APK\n"
-
-        npm i -g @pnp/cli-microsoft365
-
-        echo -e "\n[+] Login in Sharepoint \n"
-        m365 login --authType password --userName $(sharepoint_user)  --password $(sharepoint_pass)
-
-        echo -e "\n[+] Create folder $folder/$(Build.BuildNumber)"
-        m365 spo folder add -p $folder -u https://sistemassitum.sharepoint.com/sites/producteng --name $(Build.BuildNumber)
-
-        echo -e "\n[+] Upload APK to $folder/$(Build.BuildNumber)\n"
-        cd example/android/app/build/outputs/apk/debug
-        m365 spo file add -p app-debug.apk -u https://sistemassitum.sharepoint.com/sites/producteng -f $folder/$(Build.BuildNumber)
-
-      displayName: Upload APK
+    - template: azure/build-examples.yaml
+      parameters:
+        DASHBOARD_URL: $(DASHBOARD_URL)
+        system: $(macOSVersion)
+        XAPIEMAIL: $(XAPIEMAIL)
+        BUILDINGID: $(BUILDINGID)
