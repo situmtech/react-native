@@ -168,6 +168,42 @@ public class PluginHelper {
         }
     }
 
+        // building, floors, events, indoorPois, outdoorPois, ¿geofences? ¿Paths?
+        public void fetchTilesFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
+            try {
+                JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
+                Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
+    
+                getCommunicationManagerInstance().fetchTilesFromBuilding(building.getIdentifier(), new Handler<String>() {
+                    @Override
+                    public void onSuccess(String url) {
+                        try {
+                            Log.d(PluginHelper.TAG, "onSuccess: fetch building tiles offline fetched successfully.");
+    
+    
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("results", url);
+    
+                            invokeCallback(success, ReactNativeJson.convertJsonToMap(jsonObject));
+                        } catch (JSONException e) {
+                            invokeCallback(error, e.getMessage());
+                        }
+                    }
+    
+                    @Override
+                    public void onFailure(Error e) {
+                        Log.e(PluginHelper.TAG, "onFailure:" + e);
+                        invokeCallback(error, e.getMessage());
+                    }
+                });
+    
+            } catch (Exception e) {
+                Log.e(TAG, "Unexpected error in building info response", e.getCause());
+                invokeCallback(error, e.getMessage());
+            }
+        }
+    
+
     // building, floors, events, indoorPois, outdoorPois, ¿geofences? ¿Paths?
     public void fetchBuildingInfo(ReadableMap buildingMap, Callback success, Callback error) {
         try {
