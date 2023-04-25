@@ -219,8 +219,6 @@ RCT_EXPORT_METHOD(fetchTilesFromBuilding:(NSDictionary *)buildingJO withSuccessC
     NSString *buildingId = [buildingJO valueForKey:@"identifier"];
     
     [[SITCommunicationManager sharedManager] fetchTilesForBuilding:buildingId success:^(NSDictionary * _Nullable mapping) {
-
-        // Send result outside
         if (IS_LOG_ENABLED) {
             NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ retrieved tiles from building: %@ with result: %@", DEFAULT_SITUM_LOG, operation, buildingJO, mapping]);
         }
@@ -766,12 +764,16 @@ RCT_EXPORT_METHOD(getDeviceId:(RCTResponseSenderBlock)callbackBlock)
     callbackBlock(@[@{@"deviceId": SITServices.deviceID}]);
 }
 
-RCT_EXPORT_METHOD(onEnterGeofences){
-    // TODO
+RCT_EXPORT_METHOD(onEnterGeofences) {
+    [self attachGeofenceListener];
 }
 
 RCT_EXPORT_METHOD(onExitGeofences){
-    // TODO
+    [self attachGeofenceListener];    
+}
+
+- (void)attachGeofenceListener {
+    SITLocationManager.sharedInstance.geofenceDelegate = self;    
 }
 
 // SITRealtimeDelegate methods
@@ -899,4 +901,16 @@ destinationReachedOnRoute:(SITRoute *)route {
 }
 
 
+- (void)didEnteredGeofences:(NSArray<SITGeofence *> *)geofences {    
+    NSArray *geofencesJO = [SitumLocationWrapper.shared geofencesToJsonArray:geofences];
+
+    [self sendEventWithName:@"onEnterGeofences" body:geofencesJO];
+}
+
+- (void)didExitedGeofences:(NSArray<SITGeofence *> *)geofences {
+
+    NSArray *geofencesJO = [SitumLocationWrapper.shared geofencesToJsonArray:geofences];
+
+    [self sendEventWithName:@"onExitGeofences" body:geofencesJO];
+}
 @end
