@@ -39,6 +39,7 @@
 - (NSDictionary *) poiToJsonObject:(SITPOI *) poi;
 
 // Geofence
+- (NSArray *)geofencesToJsonArray:(NSArray *)array;
 - (NSDictionary *) geofenceToJsonObject:(SITGeofence *)geofence;
 
 // Location

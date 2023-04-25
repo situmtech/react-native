@@ -2,7 +2,7 @@
 #import <React/RCTEventEmitter.h>
 #import <SitumSDK/SitumSDK.h>
 
-@interface SitumPlugin : RCTEventEmitter<SITDirectionsDelegate, SITLocationDelegate, SITNavigationDelegate, SITRealTimeDelegate> {
+@interface SitumPlugin : RCTEventEmitter<SITDirectionsDelegate, SITLocationDelegate, SITNavigationDelegate, SITRealTimeDelegate, SITGeofencesDelegate> {
     NSMutableDictionary *buildingsStored;
     NSMutableDictionary *floorStored;
     NSMutableDictionary *eventStored;
