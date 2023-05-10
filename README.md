@@ -237,7 +237,7 @@ const locationOptions = {
   buildingIdentifier: building.buildingIdentifier,
 };
 
-const subscriptionId = SitumPlugin.startPositioning(
+SitumPlugin.startPositioning(
   (location) => {
     //returns location object
     console.log(JSON.stringy(location))
@@ -256,9 +256,9 @@ const subscriptionId = SitumPlugin.startPositioning(
 
 #### - stopPositioning
 
-Stop the positioning system on current active listener. Make sure to pass `subscriptionId` received from start positioning updates for those particular listeners.
+Stop the positioning system on current active listener.
 ```js
-SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
+SitumPlugin.stopPositioning((success: any) => {});
 ```
 
 #### - fetchBuildings
