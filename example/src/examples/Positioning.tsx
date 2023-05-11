@@ -70,10 +70,10 @@ function PositioningScreen() {
   //We will call this method from a <Button /> later
   const stopPositioning = async () => {
     console.log('Stopping positioning');
-    SitumPlugin.stopPositioning((success: any) => {});
     setLocation('');
     setStatus('');
     setError('');
+    SitumPlugin.stopPositioning((success: any) => {});
   };
 
   return (
