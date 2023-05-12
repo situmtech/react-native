@@ -139,13 +139,10 @@ const SitumPlugin = {
     error?: Function,
     options?: LocationRequestOptions,
   ) {
-    // Update positioning subscriptions:
-    if (positioningSubscriptions.length > 0) {
-      positioningSubscriptions[0].remove(); //locationChange
-      positioningSubscriptions[1].remove(); //statusChange
-      const oldError = positioningSubscriptions[2];
-      oldError && oldError.remove(); //locationError if exists
-    }
+    // Remove old positioning subscriptions:
+    positioningSubscriptions.forEach(subscription => subscription?.remove());
+    positioningSubscriptions = [];
+
     positioningSubscriptions.push(
       SitumPluginEventEmitter.addListener('locationChanged', location),
       SitumPluginEventEmitter.addListener('statusChanged', status),
