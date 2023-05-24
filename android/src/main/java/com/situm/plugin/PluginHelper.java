@@ -430,7 +430,7 @@ public class PluginHelper {
                 jsonOptions = convertMapToJson(Objects.requireNonNull(requestArray.getMap(3)));
             }
 
-            DirectionsRequest directionRequest = SitumMapper.jsonObjectToDirectionsRequest(jsonBuilding, jsonFrom, jsonTo, null);
+            DirectionsRequest directionRequest = SitumMapper.jsonObjectToDirectionsRequest(jsonBuilding, jsonFrom, jsonTo, jsonOptions);
 
             SitumSdk.directionsManager().requestDirections(directionRequest, new Handler<Route>() {
                 @Override
