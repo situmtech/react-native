@@ -834,7 +834,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     
     NSDictionary* options = nil;
     if(json.count>3)
-        (NSDictionary*)[json objectAtIndex:3];
+        options = (NSDictionary*)[json objectAtIndex:3];
     
     NSDictionary* dimensionsJO = (NSDictionary*)[buildingJO objectForKey:@"dimensions"];
     NSDictionary* centerJo = (NSDictionary*)[buildingJO objectForKey:@"center"];
