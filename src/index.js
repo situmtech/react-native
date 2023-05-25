@@ -123,7 +123,7 @@ const SitumPlugin = {
     status: Function,
     error?: Function,
     options?: LocationRequestOptions,
-  ) {
+  ): void {
     this.requestAuthorization();
     return this.startPositioningUpdates(
       location,
@@ -138,10 +138,12 @@ const SitumPlugin = {
     status: Function,
     error?: Function,
     options?: LocationRequestOptions,
-  ): number {
-    RNCSitumPlugin.startPositioning(options || {});
-    const subscriptionId = positioningSubscriptions.length;
-    positioningSubscriptions.push([
+  ) {
+    // Remove old positioning subscriptions:
+    positioningSubscriptions.forEach(subscription => subscription?.remove());
+    positioningSubscriptions = [];
+
+    positioningSubscriptions.push(
       SitumPluginEventEmitter.addListener('locationChanged', location),
       SitumPluginEventEmitter.addListener('statusChanged', status),
       error
@@ -150,50 +152,13 @@ const SitumPlugin = {
             error || logError,
           )
         : null,
-    ]);
-
-    return subscriptionId;
+    );
+    // Call native:
+    RNCSitumPlugin.startPositioning(options || {});
   },
 
-  stopPositioning: function (subscriptionId: number, callback?: Function) {
-    const sub = positioningSubscriptions[subscriptionId];
-    if (!sub) {
-      // Silently exit when the watchID is invalid or already cleared
-      // This is consistent with timers
-      return;
-    }
-
-    sub[0].remove(); //locationChange
-    sub[1].remove(); //statusChange
-    const sub2 = sub[2];
-    sub2 && sub2.remove(); //locationError if exists
-
-    positioningSubscriptions[subscriptionId] = undefined;
-
-    let noSubscriptions = true;
-    for (let ii = 0; ii < positioningSubscriptions.length; ii++) {
-      if (positioningSubscriptions[ii]) {
-        noSubscriptions = false; // still valid subscriptions on other screens maybe
-      }
-    }
-    if (noSubscriptions) {
-      this.stopPositioningUpdates(callback);
-    }
-  },
-
-  stopPositioningUpdates: function (callback?: Function) {
+  stopPositioning: function (callback?: Function) {
     RNCSitumPlugin.stopPositioning(callback || logError);
-    for (let ii = 0; ii < positioningSubscriptions.length; ii++) {
-      const sub = positioningSubscriptions[ii];
-      if (sub) {
-        logError('Called stopPositioningUpdates with existing subscriptions.');
-        sub[0].remove();
-        // array element refinements not yet enabled in Flow
-        const sub1 = sub[1];
-        sub1 && sub1.remove();
-      }
-    }
-    positioningSubscriptions = [];
   },
 
   requestDirections: function (

@@ -5,8 +5,6 @@ import SitumPlugin from 'react-native-situm-plugin';
 import styles from './styles/styles';
 import requestPermissions from './Utils/RequestPermissions';
 
-let subscriptionId = -1;
-
 export const RemoteConfig = () => {
   const [location, setLocation] = useState<String>('ready to be used');
   const [status, setStatus] = useState<String>('ready to be used');
@@ -16,20 +14,10 @@ export const RemoteConfig = () => {
   //We will call this method from a <Button /> later
   const stopPositioning = async () => {
     console.log('Stopping positioning');
-    SitumPlugin.stopPositioning(subscriptionId, (success: any) => {});
-    subscriptionId = -1;
-
-    // Remove geofences if neccessary
-
-
+    SitumPlugin.stopPositioning((success: any) => {});
   };
 
   const startPositioning = () => {
-    if (subscriptionId != -1) {
-      console.log('Restarting positioning');
-      stopPositioning();
-    }
-
     requestPermissions();
 
     console.log('Starting positioning');
@@ -37,7 +25,7 @@ export const RemoteConfig = () => {
     setStatus('');
     setError('');
     //Start positioning
-    subscriptionId = SitumPlugin.startPositioning(
+    SitumPlugin.startPositioning(
       (location: any) => {
         console.log(JSON.stringify(location, null, 3));
         setLocation(JSON.stringify(location, null, 3));
