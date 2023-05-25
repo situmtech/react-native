@@ -637,11 +637,10 @@ export interface SitumPluginStatic {
     location: (location: Location) => void,
     status: Function,
     error?: Function,
-    locationOptions: LocationOptions,
-  ): number;
+    locationOptions: LocationRequestOptions,
+  ): void;
 
   stopPositioning(
-    subscriptionId: number,
     success: Function,
     error?: Function,
   ): void;
