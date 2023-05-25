@@ -862,19 +862,11 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     
     SITDirectionsRequest *directionsRequest = [[SITDirectionsRequest alloc] initWithOrigin: startPoint withDestination: endPoint];
     
-    // NSNumber *accessible;
-    // BOOL minimizeFloorChanges = false;
     NSString *accessibilityModeValue = nil;
     SITAccessibilityMode accessibilityMode = kSITChooseShortest;
     
     if(options) {
-        // accessible = (NSNumber*)[options valueForKey: @"accessible"];
-        // if (accessible == nil) {
-        //     accessible = (NSNumber*)[options valueForKey: @"accessibleRoute"];
-        // }
         accessibilityModeValue = options[@"accessibilityMode"];
-        // minimizeFloorChanges = [(NSNumber*)[options valueForKey: @"minimizeFloorChanges"] boolValue];
-        
         if (accessibilityModeValue != nil) {
             if ([accessibilityModeValue isEqualToString:@"ONLY_ACCESSIBLE"]) {
                 accessibilityMode = kSITOnlyAccessible;
@@ -883,10 +875,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
             }
             [directionsRequest setAccessibility:accessibilityMode];
         }
-        // else if (accessible != nil) {
-        //     [directionsRequest setAccessible: [accessible boolValue]];
-        // }
-        // [directionsRequest setMinimizeFloorChanges: minimizeFloorChanges];
+        // TODO: add support for the remaining direction options 
     }
     
     return directionsRequest;
