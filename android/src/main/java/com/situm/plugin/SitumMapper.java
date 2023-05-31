@@ -135,17 +135,7 @@ class SitumMapper {
     public static final String HEIGHT = "height";
     public static final String X = "x";
     public static final String Y = "y";
-    public static final String ID = "id";
-
-    public static final String EDGES = "edges";
-    public static final String FIRST_STEP = "firstStep";
-    public static final String LAST_STEP = "lastStep";
-    public static final String INDICATIONS = "indications";
-    public static final String NODES = "nodes";
     public static final String POINTS = "points";
-    public static final String FROM = "from";
-    public static final String TO = "TO";
-    public static final String STEPS = "steps";
     public static final String SEGMENTS = "segments";
 
     public static final String DISTANCE_TO_GOAL = "distanceToGoal";
@@ -156,8 +146,6 @@ class SitumMapper {
     public static final String INDICATION_TYPE = "indicationType";
     public static final String CURRENT_INDICATION = "currentIndication";
     public static final String NEXT_INDICATION = "nextIndication";
-    public static final String IS_FIRST = "isFirst";
-    public static final String IS_LAST = "isLast";
     public static final String CLOSEST_POINT_IN_ROUTE = "closestPointInRoute";
     public static final String STEP_IDX_DESTINATION = "stepIdxDestination";
     public static final String STEP_IDX_ORIGIN = "stepIdxOrigin";
@@ -200,9 +188,7 @@ class SitumMapper {
 
     public static final String OUTDOOR_LOCATION_OPTIONS = "outdoorLocationOptions";
     public static final String OUTDOOR_BUILDING_DETECTOR = "buildingDetector";
-    public static final String CONTINUOUS_MODE = "continuousMode";
     public static final String USER_DEFINED_THRESHOLD = "userDefinedThreshold";
-    public static final String BURST_INTERVAL = "burstInterval";
     public static final String AVERAGE_SNR_THRESHOLD = "averageSnrThreshold";
     public static final String ENABLE_OUTDOOR_POSITIONS = "enableOutdoorPositions";
     public static final String OUTDOOR_BUILDING_DETECTOR_BLE = "BLE";
@@ -224,8 +210,6 @@ class SitumMapper {
     public static final String REALTIME_UPDATE_INTERVAL = "realtimeUpdateInterval";
     public static final String ACCESSIBLE = "accessible";
     public static final String ACCESSIBLE_ROUTE = "accessibleRoute";
-    public static final String CACHE_AGE = "cacheAge";
-
     public static final String DISTANCE_TO_IGNORE_FIRST_INDICATION = "distanceToIgnoreFirstIndication";
     public static final String OUTSIDE_ROUTE_THRESHOLD = "outsideRouteThreshold";
     public static final String DISTANCE_TO_GOAL_THRESHOLD = "distanceToGoalThreshold";
@@ -734,69 +718,15 @@ class SitumMapper {
     // Route
 
     static JSONObject routeToJsonObject(Route route) throws JSONException {
-        return routeToJsonObject(route, null);
+        // TODO: remove intermediary JSONObjects.
+        return new JSONObject(route.toMap());
     }
-
-    static JSONObject routeToJsonObject(Route route, Context context) throws JSONException {
-        JSONObject jo = new JSONObject();
-        JSONArray edgesJsonArray = new JSONArray();
-        for (RouteStep routeStep : route.getEdges()) {
-            edgesJsonArray.put(routeStepToJsonObject(routeStep));
-        }
-        JSONArray stepsJsonArray = new JSONArray();
-        for (RouteStep routeStep : route.getSteps()) {
-            stepsJsonArray.put(routeStepToJsonObject(routeStep));
-        }
-        JSONArray indicationsJsonArray = new JSONArray();
-        for (Indication indication : route.getIndications()) {
-            indicationsJsonArray.put(indicationToJsonObject(indication, context));
-        }
-        JSONArray nodesJsonArray = new JSONArray();
-        for (Point point : route.getNodes()) {
-            nodesJsonArray.put(pointToJsonObject(point));
-        }
-        JSONArray pointsJsonArray = new JSONArray();
-        for (Point point : route.getPoints()) {
-            pointsJsonArray.put(pointToJsonObject(point));
-        }
-        JSONArray segmentsJsonArray = new JSONArray();
-        for (RouteSegment segment : route.getSegments()) {
-            segmentsJsonArray.put(routeSegmentToJsonObject(segment));
-        }
-
-        jo.put(EDGES, edgesJsonArray);
-        jo.put(FIRST_STEP, routeStepToJsonObject(route.getFirstStep()));
-        jo.put(FROM, pointToJsonObject(route.getFrom()));
-        jo.put(INDICATIONS, indicationsJsonArray);
-        jo.put(LAST_STEP, routeStepToJsonObject(route.getLastStep()));
-        jo.put(NODES, nodesJsonArray);
-        jo.put(POINTS, pointsJsonArray);
-        jo.put(SEGMENTS, segmentsJsonArray);
-        jo.put(INDICATIONS, indicationsJsonArray);
-        jo.put(TO, pointToJsonObject(route.getTo()));
-        jo.put(STEPS, stepsJsonArray);
-        return jo;
-    }
-
-    /*
-     * static Route jsonRouteToRoute(JSONObject jo) throws JSONException { // Create
-     * a static route
-     *
-     * }
-     */
 
     // RouteStep
 
     static JSONObject routeStepToJsonObject(RouteStep routeStep) throws JSONException {
-        JSONObject jo = new JSONObject();
-        jo.put(DISTANCE, routeStep.getDistance());
-        jo.put(DISTANCE_TO_GOAL, routeStep.getDistanceToGoal());
-        jo.put(FROM, pointToJsonObject(routeStep.getFrom()));
-        jo.put(ID, routeStep.getId());
-        jo.put(TO, pointToJsonObject(routeStep.getTo()));
-        jo.put(IS_FIRST, routeStep.isFirst());
-        jo.put(IS_LAST, routeStep.isLast());
-        return jo;
+        // TODO: remove intermediary JSONObjects.
+        return new JSONObject(routeStep.toMap());
     }
 
     /*
@@ -824,10 +754,6 @@ class SitumMapper {
 
     // Indication
 
-    static JSONObject indicationToJsonObject(Indication indication) throws JSONException {
-        return indicationToJsonObject(indication, null);
-    }
-
     static JSONObject indicationToJsonObject(Indication indication, Context context) throws JSONException {
         JSONObject jo = new JSONObject();
         jo.put(DISTANCE, indication.getDistance());
@@ -845,23 +771,7 @@ class SitumMapper {
         return jo;
     }
 
-    static Indication indicationJsonObjectToIndication(JSONObject jo) throws JSONException {
-        Indication indication = null;
-        indication = new Indication.Builder().setDistance(jo.getDouble(DISTANCE))
-                .setDistanceToNextLevel(jo.getInt(DISTANCE_TO_NEXT_LEVEL))
-                .setInstructionType(Indication.Action.valueOf(jo.getString(INDICATION_TYPE)))
-                .setOrientation(jo.getDouble(ORIENTATION))
-                .setOrientationType(Indication.Orientation.valueOf(jo.getString(ORIENTATION_TYPE)))
-                .setStepIdxDestination(jo.getInt(STEP_IDX_DESTINATION)).setStepIdxOrigin(jo.getInt(STEP_IDX_ORIGIN))
-                .setNextLevel(jo.getInt(NEXT_LEVEL)).build();
-        return indication;
-    }
-
     // NavigationProgress
-
-    static JSONObject navigationProgressToJsonObject(NavigationProgress navigationProgress) throws JSONException {
-        return navigationProgressToJsonObject(navigationProgress, null);
-    }
 
     static JSONObject navigationProgressToJsonObject(NavigationProgress navigationProgress, Context context)
             throws JSONException {

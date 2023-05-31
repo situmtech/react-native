@@ -61,7 +61,7 @@ const HomeScreen = ({navigation}) => {
             key: 'ShowBuildingOnMap',
           },
           {title: "Show a building's full info", key: 'InfoFromBuilding'},
-          {title: 'Show the route bewtween 2 POIs', key: 'RouteBetweenPOIs'},
+          {title: 'Show the route between 2 POIs', key: 'RouteBetweenPOIs'},
           {
             title: 'Draw route between POIs',
             key: 'DrawRouteBetweenPOIs',
