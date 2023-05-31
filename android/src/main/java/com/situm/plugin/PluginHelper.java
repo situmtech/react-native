@@ -431,7 +431,7 @@ public class PluginHelper {
                 public void onSuccess(Route route) {
                     try {
                         PluginHelper.this.computedRoute = route;
-                        JSONObject jsonRoute = SitumMapper.routeToJsonObject(route, context);
+                        JSONObject jsonRoute = SitumMapper.routeToJsonObject(route);
                         Log.i(TAG, "onSuccess: Route calculated successfully" + route);
                         invokeCallback(success, convertJsonToMap(jsonRoute));
                     } catch (JSONException e) {
