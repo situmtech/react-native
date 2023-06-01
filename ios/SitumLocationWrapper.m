@@ -867,7 +867,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     
     if(options) {
         accessibilityModeValue = options[@"accessibilityMode"];
-        if (accessibilityModeValue != nil) {
+        if (accessibilityModeValue != nil && ![accessibilityModeValue isEqual:[NSNull null]]) {
             if ([accessibilityModeValue isEqualToString:@"ONLY_ACCESSIBLE"]) {
                 accessibilityMode = kSITOnlyAccessible;
             } else if ([accessibilityModeValue isEqualToString:@"ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES"]) {
