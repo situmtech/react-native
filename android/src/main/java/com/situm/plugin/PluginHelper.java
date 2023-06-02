@@ -349,6 +349,10 @@ public class PluginHelper {
 
     public void startPositioning(final ReadableMap locationRequestMap, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
         try {
+            if (locationListener != null) {
+                SitumSdk.locationManager().removeLocationListener(locationListener);
+            }
+
             JSONObject jsonRequst = ReactNativeJson.convertMapToJson(locationRequestMap);
             LocationRequest.Builder locationBuilder = new LocationRequest.Builder();
             SitumMapper.locationRequestJSONObjectToLocationRequest(jsonRequst, locationBuilder);
@@ -399,24 +403,14 @@ public class PluginHelper {
     }
 
     public void stopPositioning(Callback callback) {
-        SitumSdk.locationManager().removeUpdates();
-        if (locationListener != null) {
-            SitumSdk.locationManager().removeLocationListener(locationListener);
-            locationListener = null;
-            try {
-                WritableMap map = Arguments.createMap();
-                map.putBoolean("success", true);
-                map.putString("message", "Stopped Successfully");
-                invokeCallback(callback, map);
-            } catch (Exception e) {
-                invokeCallback(callback, e.getMessage());
-            }
-        } else {
-            Log.i(TAG, "stopPositioning: location listener is not started.");
+        try {
+            SitumSdk.locationManager().removeUpdates();
             WritableMap map = Arguments.createMap();
             map.putBoolean("success", true);
-            map.putString("message", "Already disabled");
+            map.putString("message", "Stopped Successfully");
             invokeCallback(callback, map);
+        } catch (Exception e) {
+            invokeCallback(callback, e.getMessage());
         }
     }
 
@@ -437,7 +431,7 @@ public class PluginHelper {
                 public void onSuccess(Route route) {
                     try {
                         PluginHelper.this.computedRoute = route;
-                        JSONObject jsonRoute = SitumMapper.routeToJsonObject(route, context);
+                        JSONObject jsonRoute = SitumMapper.routeToJsonObject(route);
                         Log.i(TAG, "onSuccess: Route calculated successfully" + route);
                         invokeCallback(success, convertJsonToMap(jsonRoute));
                     } catch (JSONException e) {
