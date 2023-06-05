@@ -834,7 +834,7 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     
     NSDictionary* options = nil;
     if(json.count>3)
-        (NSDictionary*)[json objectAtIndex:3];
+        options = (NSDictionary*)[json objectAtIndex:3];
     
     NSDictionary* dimensionsJO = (NSDictionary*)[buildingJO objectForKey:@"dimensions"];
     NSDictionary* centerJo = (NSDictionary*)[buildingJO objectForKey:@"center"];
@@ -862,36 +862,22 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     
     SITDirectionsRequest *directionsRequest = [[SITDirectionsRequest alloc] initWithOrigin: startPoint withDestination: endPoint];
     
+    NSString *accessibilityModeValue = nil;
+    SITAccessibilityMode accessibilityMode = kSITChooseShortest;
     
-    //
-    //    NSNumber *accessible;
-    //    BOOL minimizeFloorChanges = false;
-    //    NSString *accessibilityModeValue = nil;
-    //    if(options) {
-    //        accessible = (NSNumber*)[options valueForKey: @"accessible"];
-    //        if (accessible == nil) {
-    //            accessible = (NSNumber*)[options valueForKey: @"accessibleRoute"];
-    //        }
-    //        accessibilityModeValue = options[@"accessibilityMode"];
-    //        minimizeFloorChanges = [(NSNumber*)[options valueForKey: @"minimizeFloorChanges"] boolValue];
-    //    }
-    //
-    //    if (accessibilityModeValue != nil) {
-    //        SITAccessibilityMode accessibilityMode;
-    //        if ([accessibilityModeValue isEqualToString:@"CHOOSE_SHORTEST"]) {
-    //            accessibilityMode = kSITChooseShortest;
-    //        } else if ([accessibilityModeValue isEqualToString:@"ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES"]) {
-    //            accessibilityMode = kSITOnlyNotAccessibleFloorChanges;
-    //        } else {
-    //            accessibilityMode = kSITOnlyAccessible;
-    //        }
-    //        [directionsRequest setAccessibility:accessibilityMode];
-    //    } else if (accessible != nil) {
-    //
-    //        [directionsRequest setAccessible: [accessible boolValue]];
-    //    }
-    //
-    //    [directionsRequest setMinimizeFloorChanges: minimizeFloorChanges];
+    if(options) {
+        accessibilityModeValue = options[@"accessibilityMode"];
+        if (accessibilityModeValue != nil && ![accessibilityModeValue isEqual:[NSNull null]]) {
+            if ([accessibilityModeValue isEqualToString:@"ONLY_ACCESSIBLE"]) {
+                accessibilityMode = kSITOnlyAccessible;
+            } else if ([accessibilityModeValue isEqualToString:@"ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES"]) {
+                accessibilityMode = kSITOnlyNotAccessibleFloorChanges;
+            }
+            [directionsRequest setAccessibility:accessibilityMode];
+        }
+        // TODO: add support for the remaining direction options 
+    }
+    
     return directionsRequest;
 }
 
