@@ -453,7 +453,7 @@ SitumPlugin.invalidateCache();
 
 #### - requestDirections
 
-Calculates a route between two points. Note that you can also specify the [accessibility mode](https://situm.com/docs/wayfinding/#route-typese). The values allowed for this parameter are: `'CHOOSE_SHORTEST', 'ONLY_ACCESSIBLE'` or `'ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES'`. 
+Calculates a route between two points. Note that you can also specify the [accessibility mode](https://situm.com/docs/wayfinding/#route-types). The values allowed for this parameter are: `'CHOOSE_SHORTEST', 'ONLY_ACCESSIBLE'` or `'ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES'`. 
 
 ```js
 
