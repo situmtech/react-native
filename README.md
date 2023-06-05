@@ -453,8 +453,15 @@ SitumPlugin.invalidateCache();
 
 #### - requestDirections
 
-Calculates a route between two points.
+Calculates a route between two points. Note that you can also specify the [accessibility mode](https://situm.com/docs/sdk-routes/#configuring-the-type-of-route). The values allowed for this parameter are: `'CHOOSE_SHORTEST', 'ONLY_ACCESSIBLE'` or `'ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES'`. 
+
 ```js
+
+// Set the accessibility mode used on route computation
+const directionOptions = {
+  accessibilityMode: 'CHOOSE_SHORTEST'
+};
+
 const points = [
   {
     floorIdentifier: floor.floorIdentifier,
@@ -469,7 +476,7 @@ const points = [
 ];
 
 SitumPlugin.requestDirections(
-  [building, ...points],
+  [building, ...points, {...directionOptions}],
   (route) => {
     // returns route object
     let latlngs = [];
