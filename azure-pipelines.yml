@@ -113,7 +113,7 @@ steps:
       echo -e "\n[+] Versions:"
       echo -e "\t[+] RN SDK: $(version)"
       echo -e "\t[+] ANDROID SDK: $androidsdk"
-      echo -e "\t[+] IOS SDK: $iosskd"
+      echo -e "\t[+] IOS SDK: $iossdk"
   
       versions="| *VERSIÓN* | *FECHA* | *ANDROID SDK* | *IOS SDK* |\n|$(version)|$(date +"%d/%m/%Y")|$androidsdk|$iossdk|"
   
