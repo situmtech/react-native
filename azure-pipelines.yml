@@ -125,7 +125,7 @@ steps:
     parameters:
       versions: $(versions)
       releaseTable: RN_SDK_TABLE
-      confluence_release_page: $(rnSDKReleasePage)
+      confluence_release_page: $(RN_SDK_TABLE)
       confluence_release_page_title: "SDK Automatic Release Table - React Native Plugin"
       bitbucket:
         bitbucket_user: $(bitbucket_user)
