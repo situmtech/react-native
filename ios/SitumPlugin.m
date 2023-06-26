@@ -171,10 +171,7 @@ RCT_EXPORT_METHOD(fetchBuildings: (RCTResponseSenderBlock)successBlock errorCall
         NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ ", DEFAULT_SITUM_LOG, operation]);
     }
 
-    // Forcing requests to go to the network instead of cache
-    NSDictionary *options = @{@"forceRequest":@YES,};
-
-    [[SITCommunicationManager sharedManager] fetchBuildingsWithOptions:options success:^(NSDictionary *mapping) {
+    [[SITCommunicationManager sharedManager] fetchBuildingsWithOptions:nil success:^(NSDictionary *mapping) {
         if (IS_LOG_ENABLED) {
             NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ Fetching buildings returned values", DEFAULT_SITUM_LOG, operation]);
         }
