@@ -1,33 +1,34 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Platform } from 'react-native';
-import WebView from 'react-native-webview';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import React, { useEffect, useRef, useState } from "react";
+import { Platform } from "react-native";
+import WebView from "react-native-webview";
 import {
   WebViewErrorEvent,
   WebViewMessageEvent,
-} from 'react-native-webview/lib/WebViewTypes';
+} from "react-native-webview/lib/WebViewTypes";
 
 //This icon should either be inside plugin or not be used rat all
-import useSitum from '../hooks';
+import useSitum from "../hooks";
 import {
   NavigationStatus,
   NavigationUpdateType,
   setWebViewRef,
-} from '../store';
+} from "../store";
+import { useDispatch } from "../store/utils";
 import {
   MapViewProps,
   OnNavigationResult,
   WayfindingResult,
-} from '../types/index.d';
-import Mapper from '../utils/mapper';
-import { useDispatch } from '../store/utils';
-import { sendMessageToViewer } from '../utils';
+} from "../types/index.d";
+import { sendMessageToViewer } from "../utils";
+import Mapper from "../utils/mapper";
 
-const SITUM_BASE_DOMAIN = 'https://map-viewer.situm.com';
+const SITUM_BASE_DOMAIN = "https://map-viewer.situm.com";
 
 // Define class that handles errors
 export enum ErrorName {
-  ERR_INTERNET_DISCONNECTED = 'ERR_INTERNET_DISCONNECTED',
-  ERR_INTERNAL_SERVER_ERROR = 'ERR_INTERNAL_SERVER_ERROR',
+  ERR_INTERNET_DISCONNECTED = "ERR_INTERNET_DISCONNECTED",
+  ERR_INTERNAL_SERVER_ERROR = "ERR_INTERNAL_SERVER_ERROR",
 }
 
 const NETWORK_ERROR_CODE = {
@@ -106,7 +107,7 @@ const MapView: React.FC<MapViewProps> = ({
       useRemoteConfig,
     })
       .then(() => {
-        console.info('SDK initialized successfully');
+        console.info("SDK initialized successfully");
       })
       .catch((e) => {
         console.error(`Error on SDK initialization: ${e}`);
@@ -125,10 +126,10 @@ const MapView: React.FC<MapViewProps> = ({
   useEffect(() => {
     if (error) {
       console.error(
-        'Error code:',
-        error.code ? error.code : ' no code provided'
+        "Error code:",
+        error.code ? error.code : " no code provided"
       );
-      console.error('Error detected:', error.message);
+      console.error("Error detected:", error.message);
     }
   }, [error]);
 
@@ -195,14 +196,14 @@ const MapView: React.FC<MapViewProps> = ({
   const handleRequestFromViewer = (event: WebViewMessageEvent) => {
     const eventParsed = JSON.parse(event.nativeEvent.data);
     switch (eventParsed.type) {
-      case 'app.map_is_ready':
+      case "app.map_is_ready":
         onMapReady({
-          status: 'SUCCESS',
-          message: 'Map is ready!',
+          status: "SUCCESS",
+          message: "Map is ready!",
         } as WayfindingResult);
         sendFollowUser();
         break;
-      case 'directions.requested':
+      case "directions.requested":
         calculateRoute({
           originId: JSON.parse(event.nativeEvent.data).payload.originIdentifier,
           destinationId: JSON.parse(event.nativeEvent.data).payload
@@ -211,7 +212,7 @@ const MapView: React.FC<MapViewProps> = ({
             .directionsOptions,
         });
         break;
-      case 'navigation.requested':
+      case "navigation.requested":
         startNavigation({
           originId: JSON.parse(event.nativeEvent.data).payload.originIdentifier,
           destinationId: JSON.parse(event.nativeEvent.data).payload
@@ -219,27 +220,27 @@ const MapView: React.FC<MapViewProps> = ({
           directionsOptions: JSON.parse(event.nativeEvent.data).payload
             .directionsOptions,
           callback: (status, navigation?) =>
-            status == 'success' && navigation
+            status == "success" && navigation
               ? onNavigationRequested({
                   navigation: Mapper.routeToResult(navigation),
                 } as OnNavigationResult)
-              : status == 'error' &&
+              : status == "error" &&
                 onNavigationError({} as OnNavigationResult),
         });
         break;
-      case 'navigation.stopped':
+      case "navigation.stopped":
         stopNavigation();
         break;
-      case 'cartography.poi_selected':
+      case "cartography.poi_selected":
         onPoiSelected(eventParsed?.payload);
         break;
-      case 'cartography.poi_deselected':
+      case "cartography.poi_deselected":
         onPoiDeselected(eventParsed?.payload);
         break;
-      case 'cartography.floor_changed':
+      case "cartography.floor_changed":
         onFloorChanged(eventParsed?.payload);
         break;
-      case 'cartography.building_selected':
+      case "cartography.building_selected":
         if (
           !eventParsed.payload.identifier ||
           (currentBuilding &&
@@ -263,12 +264,12 @@ const MapView: React.FC<MapViewProps> = ({
         uri: `${domain || SITUM_BASE_DOMAIN}/?email=${fullUser?.email}&apikey=${
           fullUser?.apiKey
         }&wl=true&global=true&mode=embed${
-          buildingId ? `&buildingid=${buildingId}` : ''
+          buildingId ? `&buildingid=${buildingId}` : ""
         }&show=rts`,
       }}
       style={{
-        minHeight: '100%',
-        minWidth: '100%',
+        minHeight: "100%",
+        minWidth: "100%",
       }}
       javaScriptEnabled={true}
       domStorageEnabled={true}

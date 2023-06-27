@@ -1,7 +1,7 @@
 //@ts-ignore
-import type { Building } from 'react-native-situm-plugin';
+import type { Building } from "react-native-situm-plugin";
 
-import { ErrorName } from '../components/MapView';
+import { ErrorName } from "../components/MapView";
 
 interface MapViewError {
   name: ErrorName;

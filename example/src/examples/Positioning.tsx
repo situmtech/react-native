@@ -1,13 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Button,
-  PermissionsAndroid,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Button, ScrollView, Text} from 'react-native';
 import {getDefaultLocationOptions} from '../settings';
 import SitumPlugin from 'react-native-situm-plugin';
 import styles from './styles/styles';

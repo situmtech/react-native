@@ -1,8 +1,34 @@
-import { RNCSitumPlugin, SitumPluginEventEmitter } from './nativeInterface';
-import invariant from 'invariant';
-import { logError } from './utils';
-import packageJson from '../../package.json';
-import { Platform } from 'react-native';
+/* eslint-disable @typescript-eslint/ban-types */
+import invariant from "invariant";
+import { NativeEventEmitter, NativeModules, Platform } from "react-native";
+import {
+  Building,
+  DirectionsOptions,
+  Floor,
+  LocationRequestOptions,
+} from "src/sdk/typings/index.js";
+
+import packageJson from "../../package.json";
+import { logError } from "./utils";
+
+const LINKING_ERROR =
+  `The package 'situm-react-native-plugin' doesn't seem to be linked. Make sure: \n\n` +
+  Platform.select({ ios: "- You have run 'pod install'\n", default: "" }) +
+  "- You rebuilt the app after installing the package\n" +
+  "- You are not using Expo managed workflow\n";
+
+const RNCSitumPlugin = NativeModules.RNCSitumPlugin
+  ? NativeModules.RNCSitumPlugin
+  : new Proxy(
+      {},
+      {
+        get() {
+          throw new Error(LINKING_ERROR);
+        },
+      }
+    );
+
+const SitumPluginEventEmitter = new NativeEventEmitter(RNCSitumPlugin);
 
 let positioningSubscriptions = [];
 let navigationSubscriptions = [];
@@ -35,8 +61,8 @@ const SitumPlugin = {
 
   fetchBuildings: function (success: Function, error?: Function) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.fetchBuildings(success, error || logError);
@@ -45,11 +71,11 @@ const SitumPlugin = {
   fetchBuildingInfo: function (
     building: Building,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.fetchBuildingInfo(building, success, error || logError);
@@ -58,11 +84,11 @@ const SitumPlugin = {
   fetchTilesFromBuilding: function (
     building: Building,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
     RNCSitumPlugin.fetchTilesFromBuilding(building, success, error || logError);
   },
@@ -70,28 +96,28 @@ const SitumPlugin = {
   fetchFloorsFromBuilding: function (
     building: Building,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.fetchFloorsFromBuilding(
       building,
       success,
-      error || logError,
+      error || logError
     );
   },
 
   fetchMapFromFloor: function (
     floor: Floor,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.fetchMapFromFloor(floor, success, error || logError);
@@ -100,17 +126,17 @@ const SitumPlugin = {
   fetchGeofencesFromBuilding: function (
     building: Building,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.fetchGeofencesFromBuilding(
       building,
       success,
-      error || logError,
+      error || logError
     );
   },
 
@@ -122,14 +148,14 @@ const SitumPlugin = {
     location: Function,
     status: Function,
     error?: Function,
-    options?: LocationRequestOptions,
+    options?: LocationRequestOptions
   ): void {
     this.requestAuthorization();
     return this.startPositioningUpdates(
       location,
       status,
       error || logError,
-      options || {},
+      options || {}
     );
   },
 
@@ -137,21 +163,21 @@ const SitumPlugin = {
     location: Function,
     status: Function,
     error?: Function,
-    options?: LocationRequestOptions,
+    options?: LocationRequestOptions
   ) {
     // Remove old positioning subscriptions:
-    positioningSubscriptions.forEach(subscription => subscription?.remove());
+    positioningSubscriptions.forEach((subscription) => subscription?.remove());
     positioningSubscriptions = [];
 
     positioningSubscriptions.push(
-      SitumPluginEventEmitter.addListener('locationChanged', location),
-      SitumPluginEventEmitter.addListener('statusChanged', status),
+      SitumPluginEventEmitter.addListener("locationChanged", location),
+      SitumPluginEventEmitter.addListener("statusChanged", status),
       error
         ? SitumPluginEventEmitter.addListener(
-          'locationError',
-          error || logError,
-        )
-        : null,
+            "locationError",
+            error || logError
+          )
+        : null
     );
     // Call native:
     RNCSitumPlugin.startPositioning(options || {});
@@ -162,26 +188,26 @@ const SitumPlugin = {
   },
 
   requestDirections: function (
-    directionParams: Array,
+    directionParams: DirectionsOptions,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.requestDirections(
       directionParams,
       success,
-      error || logError,
+      error || logError
     );
   },
 
   fetchPoiCategories: function (success: Function, error?: Function) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.fetchPoiCategories(success, error || logError);
@@ -190,73 +216,73 @@ const SitumPlugin = {
   fetchPoiCategoryIconNormal: function (
     category: any,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.fetchPoiCategoryIconNormal(
       category,
       success,
-      error || logError,
+      error || logError
     );
   },
 
   fetchPoiCategoryIconSelected: function (
     category: any,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.fetchPoiCategoryIconSelected(
       category,
       success,
-      error || logError,
+      error || logError
     );
   },
 
   requestNavigationUpdates: function (
     navigationUpdates: Function,
     error?: Function,
-    options?: LocationRequestOptions,
+    options?: LocationRequestOptions
   ) {
     RNCSitumPlugin.requestNavigationUpdates(options || {});
     navigationSubscriptions.push(
       SitumPluginEventEmitter.addListener(
-        'navigationUpdated',
-        navigationUpdates,
-      ),
+        "navigationUpdated",
+        navigationUpdates
+      )
     );
     navigationSubscriptions.push(
       error
         ? SitumPluginEventEmitter.addListener(
-          'navigationError',
-          error || logError,
-        )
-        : null,
+            "navigationError",
+            error || logError
+          )
+        : null
     );
   },
 
   updateNavigationWithLocation: function (
     location,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     if (navigationSubscriptions.length === 0) {
-      error('No active navigation!!');
+      error("No active navigation!!");
       return;
     }
 
     RNCSitumPlugin.updateNavigationWithLocation(
       location,
       success,
-      error || logError,
+      error || logError
     );
   },
 
@@ -272,80 +298,80 @@ const SitumPlugin = {
   fetchIndoorPOIsFromBuilding: function (
     building: any,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.fetchIndoorPOIsFromBuilding(
       building,
       success,
-      error || logError,
+      error || logError
     );
   },
 
   fetchOutdoorPOIsFromBuilding: function (
     building: any,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.fetchOutdoorPOIsFromBuilding(
       building,
       success,
-      error || logError,
+      error || logError
     );
   },
 
   fetchEventsFromBuilding: function (
     building: any,
     success: Function,
-    error?: Function,
+    error?: Function
   ) {
     invariant(
-      typeof success === 'function',
-      'Must provide a valid success callback.',
+      typeof success === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.fetchEventsFromBuilding(
       building,
       success,
-      error || logError,
+      error || logError
     );
   },
 
   requestRealTimeUpdates: function (
     navigationUpdates: Function,
     error?: Function,
-    options?: any,
+    options?: any
   ) {
     RNCSitumPlugin.requestRealTimeUpdates(options || {});
     realtimeSubscriptions.push([
-      SitumPluginEventEmitter.addListener('realtimeUpdated', navigationUpdates),
+      SitumPluginEventEmitter.addListener("realtimeUpdated", navigationUpdates),
       error
         ? SitumPluginEventEmitter.addListener(
-          'realtimeError',
-          error || logError,
-        )
+            "realtimeError",
+            error || logError
+          )
         : null,
     ]);
   },
 
-  removeRealTimeUpdates: function (callback?: Function) {
+  removeRealTimeUpdates: function (_callback?: Function) {
     realtimeSubscriptions = [];
     RNCSitumPlugin.removeRealTimeUpdates();
   },
 
   checkIfPointInsideGeofence: function (request: any, callback?: Function) {
     invariant(
-      typeof callback === 'function',
-      'Must provide a valid success callback.',
+      typeof callback === "function",
+      "Must provide a valid success callback."
     );
 
     RNCSitumPlugin.checkIfPointInsideGeofence(request, callback);
@@ -355,12 +381,18 @@ const SitumPlugin = {
     RNCSitumPlugin.invalidateCache();
   },
 
-  sdkVersions: function (callback: Function) {
-    var versions = {
+  sdkVersions: function (
+    callback: (event: {
+      ios?: string;
+      android?: string;
+      react_native: string;
+    }) => void
+  ): void {
+    const versions: { react_native: string; ios?: string; android?: string } = {
       react_native: packageJson.version,
     };
 
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
       versions.ios = packageJson.sdkVersions.ios;
     } else {
       versions.android = packageJson.sdkVersions.android;
@@ -376,15 +408,15 @@ const SitumPlugin = {
   onEnterGeofences: function (callback: Function) {
     RNCSitumPlugin.onEnterGeofences();
     // Adopts SDK behavior (setter):
-    SitumPluginEventEmitter.removeAllListeners('onEnterGeofences');
-    SitumPluginEventEmitter.addListener('onEnterGeofences', callback);
+    SitumPluginEventEmitter.removeAllListeners("onEnterGeofences");
+    SitumPluginEventEmitter.addListener("onEnterGeofences", callback);
   },
 
   onExitGeofences: function (callback: Function) {
     RNCSitumPlugin.onExitGeofences();
-    SitumPluginEventEmitter.removeAllListeners('onExitGeofences');
-    SitumPluginEventEmitter.addListener('onExitGeofences', callback);
+    SitumPluginEventEmitter.removeAllListeners("onExitGeofences");
+    SitumPluginEventEmitter.addListener("onExitGeofences", callback);
   },
 };
 
-module.exports = SitumPlugin;
+export default SitumPlugin;

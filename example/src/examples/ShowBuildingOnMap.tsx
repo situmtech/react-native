@@ -21,7 +21,9 @@ export const ShowBuildingOnMap = () => {
   }, []);
 
   useEffect(() => {
-    if (!building) return;
+    if (!building) {
+      return;
+    }
 
     fetchBuildingInfo(building)
       .then(data => {
@@ -31,7 +33,9 @@ export const ShowBuildingOnMap = () => {
         setBearing(bearing);
         setBounds(bounds);
         setMapRegion(map_region);
-        if (data?.floors.length == 0) return;
+        if (data?.floors.length == 0) {
+          return;
+        }
         var selectedFloor = data.floors.filter(
           f => f.identifier == SITUM_FLOOR_ID,
         )[0];

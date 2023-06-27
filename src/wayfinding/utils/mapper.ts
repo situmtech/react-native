@@ -1,17 +1,17 @@
-import { Destination, Navigation, Point } from '..';
+import { Destination, Navigation, Point } from "..";
 import {
   Directions,
   Location,
   NavigateToPoiType,
   SDKNavigation,
-} from '../store/index';
+} from "../store/index";
 
 const mapperWrapper = (type: string, payload: unknown) =>
   JSON.stringify({ type, payload });
 
 const Mapper = {
   location: (location: Location) =>
-    mapperWrapper('location.update', {
+    mapperWrapper("location.update", {
       ...(location.position && {
         latitude: location.position.coordinate.latitude,
         longitude: location.position.coordinate.longitude,
@@ -27,11 +27,11 @@ const Mapper = {
       }),
       status: location.status,
     }),
-  locationStatus: (locationStatus: Location['status']) =>
-    mapperWrapper('location_status.update', locationStatus),
+  locationStatus: (locationStatus: Location["status"]) =>
+    mapperWrapper("location_status.update", locationStatus),
 
   route: (directions: Directions) =>
-    mapperWrapper('directions.update', directions),
+    mapperWrapper("directions.update", directions),
 
   navigation: (navigation: Navigation) =>
     mapperWrapper(`navigation.${navigation.status}`, navigation),
@@ -44,7 +44,7 @@ const Mapper = {
   selectPoi: (poiId: number) =>
     mapperWrapper(`cartography.select_poi`, { identifier: poiId }),
 
-  followUser: (follow: boolean) => mapperWrapper('camera.follow_user', follow),
+  followUser: (follow: boolean) => mapperWrapper("camera.follow_user", follow),
 
   initialConfiguration: (
     style: any,
@@ -55,7 +55,7 @@ const Mapper = {
     initialZoom: any,
     useDashboardTheme: any
   ) =>
-    mapperWrapper('ui.initial_configuration', {
+    mapperWrapper("ui.initial_configuration", {
       ...(style && {
         style: style,
       }),
@@ -84,7 +84,7 @@ const Mapper = {
     return {
       status: navigation.status,
       destination: {
-        category: navigation?.destinationId ? 'POI' : 'COORDINATE',
+        category: navigation?.destinationId ? "POI" : "COORDINATE",
         identifier: navigation?.destinationId,
         //name:, //TODO
         point: {

@@ -1,8 +1,8 @@
-import React, { MutableRefObject, createContext, useReducer } from 'react';
+import React, { createContext, MutableRefObject, useReducer } from "react";
 //@ts-ignore
-import { Building, Poi } from 'react-native-situm-plugin';
+import { Building, Poi } from "react-native-situm-plugin";
 
-import { createReducer } from './utils';
+import { createReducer } from "./utils";
 
 export interface Location {
   position?: Position;
@@ -31,13 +31,13 @@ export interface Position {
 }
 
 export enum PositioningStatus {
-  STARTING = 'STARTING',
-  CALCULATING = 'CALCULATING',
+  STARTING = "STARTING",
+  CALCULATING = "CALCULATING",
   // This status will always be sent to mapviewer-web, in case we recieve
   // a location from SDK.
-  POSITIONING = 'POSITIONING',
-  USER_NOT_IN_BUILDING = 'USER_NOT_IN_BUILDING',
-  STOPPED = 'STOPPED',
+  POSITIONING = "POSITIONING",
+  USER_NOT_IN_BUILDING = "USER_NOT_IN_BUILDING",
+  STOPPED = "STOPPED",
 }
 
 export interface SDKNavigation {
@@ -58,15 +58,15 @@ export interface SDKNavigation {
 }
 
 export enum NavigationStatus {
-  START = 'start',
-  STOP = 'stop',
-  UPDATE = 'update',
+  START = "start",
+  STOP = "stop",
+  UPDATE = "update",
 }
 
 export enum NavigationUpdateType {
-  progress = 'PROGRESS',
-  userOutsideRoute = 'OUT_OF_ROUTE',
-  destinationReached = 'DESTINATION_REACHED',
+  progress = "PROGRESS",
+  userOutsideRoute = "OUT_OF_ROUTE",
+  destinationReached = "DESTINATION_REACHED",
 }
 
 // TODO: add types
@@ -119,16 +119,16 @@ export const SitumContext = createContext<
 >(undefined);
 
 const Reducer = createReducer<State>({
-  setWebViewRef: (state: State, payload: State['webViewRef']) => {
+  setWebViewRef: (state: State, payload: State["webViewRef"]) => {
     return { ...state, webViewRef: payload };
   },
-  setSdkInitialized: (state: State, payload: State['sdkInitialized']) => {
+  setSdkInitialized: (state: State, payload: State["sdkInitialized"]) => {
     return { ...state, sdkInitialized: payload };
   },
-  setAuth: (state: State, payload: State['user']) => {
+  setAuth: (state: State, payload: State["user"]) => {
     return { ...state, user: payload };
   },
-  setLocation: (state: State, payload: State['location']) => {
+  setLocation: (state: State, payload: State["location"]) => {
     return { ...state, location: payload };
   },
   setLocationStatus: (state: State, payload: PositioningStatus) => {
@@ -140,25 +140,25 @@ const Reducer = createReducer<State>({
       location: initialState.location,
     };
   },
-  setBuildings: (state: State, payload: State['buildings']) => {
+  setBuildings: (state: State, payload: State["buildings"]) => {
     return { ...state, buildings: payload };
   },
-  setCurrentBuilding: (state: State, payload: State['currentBuilding']) => {
+  setCurrentBuilding: (state: State, payload: State["currentBuilding"]) => {
     return { ...state, currentBuilding: payload };
   },
-  setPois: (state: State, payload: State['pois']) => {
+  setPois: (state: State, payload: State["pois"]) => {
     return { ...state, pois: payload };
   },
-  setDirections: (state: State, payload: State['directions']) => {
+  setDirections: (state: State, payload: State["directions"]) => {
     return { ...state, directions: payload };
   },
-  setNavigation: (state: State, payload: State['navigation']) => {
+  setNavigation: (state: State, payload: State["navigation"]) => {
     return { ...state, navigation: payload };
   },
-  setDestinationPoiID: (state: State, payload: State['destinationPoiID']) => {
+  setDestinationPoiID: (state: State, payload: State["destinationPoiID"]) => {
     return { ...state, destinationPoiID: payload };
   },
-  setError: (state: State, payload: State['error']) => {
+  setError: (state: State, payload: State["error"]) => {
     return { ...state, error: payload };
   },
 });

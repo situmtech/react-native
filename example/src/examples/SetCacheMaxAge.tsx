@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Button} from 'react-native';
-import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
-import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
-import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
+import {SITUM_BUILDING_ID} from '../situm';
+import {fetchBuilding} from './Utils/CommonFetchs';
 import SitumPlugin from 'react-native-situm-plugin';
 import styles from './styles/styles';
 

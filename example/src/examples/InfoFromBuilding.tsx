@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, ScrollView} from 'react-native';
+import {Text, ScrollView} from 'react-native';
 
 import SitumPlugin from 'react-native-situm-plugin';
 import {SITUM_BUILDING_ID} from '../situm';

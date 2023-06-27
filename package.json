@@ -2,20 +2,21 @@
   "name": "@situm/react-native",
   "version": "0.0.32",
   "private": false,
-  "repository": "https://github.com/situmtech/-react-native-wayfinding",
-  "author": "Situm Technologies <mobile@situm.com> (https://github.com/situmtech/situm-react-native-wayfinding)",
+  "repository": "https://github.com/situmtech/situm-react-native-plugin",
+  "author": "Situm Technologies <mobile@situm.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/situmtech/situm-react-native-wayfinding/issues"
+    "url": "https://github.com/situmtech/situm-react-native-plugin/issues"
   },
   "homepage": "https://github.com/situmtech/situm-react-native-wayfinding#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
+  "types": "lib/typescript/index.d.ts",
   "react-native": "src/index",
-  "main": "/src/index.js",
-  "source": "/src/index.js",
-  "types": "/typings/index.d.ts",
+  "source": "lib/index.js",
   "files": [
     "src",
     "lib",
@@ -33,6 +34,28 @@
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__"
+  ],
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "yarn lint && yarn test:jest",
+    "test:jest": "jest",
+    "typescript": "tsc --noEmit",
+    "lint:fix": "eslint \"**/*.{js,ts,tsx}\" --fix",
+    "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
+    "prepare": "bob build",
+    "release": "release-it",
+    "example": "yarn --cwd example",
+    "bootstrap": "yarn example && yarn && yarn example pods"
+  },
+  "keywords": [
+    "react-native",
+    "situm",
+    "indoor positioning",
+    "wayfinding",
+    "ios",
+    "android"
   ],
   "peerDependencies": {
     "react": "*",
@@ -100,21 +123,6 @@
         }
       ]
     ]
-  },
-  "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "start": "react-native start",
-    "test": "yarn validate:eslint && yarn test:jest",
-    "test:jest": "jest",
-    "typescript": "tsc --noEmit",
-    "lint:fix": "eslint \"**/*.{js,ts,tsx}\" --fix",
-    "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
-    "prepare": "bob build",
-    "release": "release-it",
-    "validate:eslint": "eslint 'src/**/*.js'",
-    "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn && yarn example pods"
   },
   "sdkVersions": {
     "android": "2.87.0@aar",

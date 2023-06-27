@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, Text} from 'react-native';
 import SitumPlugin from 'react-native-situm-plugin';
 import {SITUM_BUILDING_ID} from '../situm';
 import styles from './styles/styles';
@@ -24,7 +24,7 @@ export const RouteBetweenPOIs = () => {
 
   const requestDirections = () => {
     //check if we have 2 pois at least
-    if (indoorPOIs.length >= 2)
+    if (indoorPOIs.length >= 2) {
       SitumPlugin.requestDirections(
         [building, indoorPOIs[0], indoorPOIs[1]],
         (route: any) => {
@@ -34,6 +34,7 @@ export const RouteBetweenPOIs = () => {
           console.log(error);
         },
       );
+    }
   };
 
   useEffect(() => {
