@@ -1,22 +1,23 @@
 /* eslint-disable no-undef */
 
-import {NativeModules} from 'react-native';
+import { NativeModules } from 'react-native';
 import SitumPlugin from '..';
-import {logError} from '../utils';
+import { logError } from '../sdk/utils';
 
-jest.mock('../utils', () => {
+jest.mock('../sdk/utils', () => {
   return {
     logError: jest.fn(),
   };
 });
+
 describe('Test Positioning functions', () => {
   afterEach(() => {
     SitumPlugin.stopPositioningUpdates();
   });
   it('should add location and status listener to the start positioning', () => {
     const subId = SitumPlugin.startPositioningUpdates(
-      () => {},
-      () => {},
+      () => { },
+      () => { },
     );
 
     expect(subId).toEqual(0);
@@ -31,9 +32,9 @@ describe('Test Positioning functions', () => {
 
   it('should add error listener to the start positioning', () => {
     const subId = SitumPlugin.startPositioningUpdates(
-      () => {},
-      () => {},
-      () => {},
+      () => { },
+      () => { },
+      () => { },
     );
 
     expect(subId).toEqual(0);
@@ -50,10 +51,10 @@ describe('Test Positioning functions', () => {
 
   it('should clear all listeners associated with a subscriptionID', () => {
     const subId = SitumPlugin.startPositioningUpdates(
-      () => {},
-      () => {},
+      () => { },
+      () => { },
     );
-    SitumPlugin.stopPositioning(subId, () => {});
+    SitumPlugin.stopPositioning(subId, () => { });
 
     expect(NativeModules.RNCSitumPlugin.stopPositioning.mock.calls.length).toBe(
       1,
@@ -62,14 +63,14 @@ describe('Test Positioning functions', () => {
 
   it('should correctly assess if all listeners have been cleared', () => {
     const subId = SitumPlugin.startPositioningUpdates(
-      () => {},
-      () => {},
+      () => { },
+      () => { },
     );
     SitumPlugin.startPositioningUpdates(
-      () => {},
-      () => {},
+      () => { },
+      () => { },
     );
-    SitumPlugin.stopPositioning(subId, () => {});
+    SitumPlugin.stopPositioning(subId, () => { });
     expect(NativeModules.RNCSitumPlugin.stopPositioning.mock.calls.length).toBe(
       0,
     );
@@ -77,10 +78,10 @@ describe('Test Positioning functions', () => {
 
   it('should not fail if the subID one wants to clear does not exist', () => {
     SitumPlugin.startPositioningUpdates(
-      () => {},
-      () => {},
+      () => { },
+      () => { },
     );
-    SitumPlugin.stopPositioning(17, () => {});
+    SitumPlugin.stopPositioning(17, () => { });
     expect(NativeModules.RNCSitumPlugin.stopPositioning.mock.calls.length).toBe(
       0,
     );
@@ -91,8 +92,8 @@ describe('Test Positioning functions', () => {
     logError.mockImplementation(mockWarningCallback);
 
     SitumPlugin.startPositioningUpdates(
-      () => {},
-      () => {},
+      () => { },
+      () => { },
     );
     SitumPlugin.stopPositioningUpdates();
 

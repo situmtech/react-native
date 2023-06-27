@@ -1,8 +1,8 @@
-import {RNCSitumPlugin, SitumPluginEventEmitter} from './nativeInterface';
+import { RNCSitumPlugin, SitumPluginEventEmitter } from './nativeInterface';
 import invariant from 'invariant';
-import {logError} from './utils';
-import packageJson from './../package.json';
-import {Platform} from 'react-native';
+import { logError } from './utils';
+import packageJson from '../../package.json';
+import { Platform } from 'react-native';
 
 let positioningSubscriptions = [];
 let navigationSubscriptions = [];
@@ -148,9 +148,9 @@ const SitumPlugin = {
       SitumPluginEventEmitter.addListener('statusChanged', status),
       error
         ? SitumPluginEventEmitter.addListener(
-            'locationError',
-            error || logError,
-          )
+          'locationError',
+          error || logError,
+        )
         : null,
     );
     // Call native:
@@ -236,9 +236,9 @@ const SitumPlugin = {
     navigationSubscriptions.push(
       error
         ? SitumPluginEventEmitter.addListener(
-            'navigationError',
-            error || logError,
-          )
+          'navigationError',
+          error || logError,
+        )
         : null,
     );
   },
@@ -330,9 +330,9 @@ const SitumPlugin = {
       SitumPluginEventEmitter.addListener('realtimeUpdated', navigationUpdates),
       error
         ? SitumPluginEventEmitter.addListener(
-            'realtimeError',
-            error || logError,
-          )
+          'realtimeError',
+          error || logError,
+        )
         : null,
     ]);
   },

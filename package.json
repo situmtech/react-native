@@ -1,8 +1,18 @@
 {
-  "name": "react-native-situm-plugin",
+  "name": "@situm/react-native",
   "version": "0.0.32",
   "private": false,
-  "react-native": "src/index.js",
+  "repository": "https://github.com/situmtech/-react-native-wayfinding",
+  "author": "Situm Technologies <mobile@situm.com> (https://github.com/situmtech/situm-react-native-wayfinding)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/situmtech/situm-react-native-wayfinding/issues"
+  },
+  "homepage": "https://github.com/situmtech/situm-react-native-wayfinding#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "react-native": "src/index",
   "main": "/src/index.js",
   "source": "/src/index.js",
   "types": "/typings/index.d.ts",
@@ -29,28 +39,66 @@
     "react-native": "*"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@babel/preset-env": "^7.20.0",
-    "@babel/runtime": "^7.20.0",
-    "@react-native-community/eslint-config": "^1.0.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^24.9.0",
-    "babel-plugin-module-resolver": "^3.2.0",
-    "eslint": "^6.5.1",
-    "jest": "^24.9.0",
+    "@arkweid/lefthook": "^0.7.7",
+    "@babel/core": "^7.22.5",
+    "@babel/eslint-parser": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
+    "@babel/runtime": "^7.22.5",
+    "@react-native-community/eslint-config": "^3.2.0",
+    "@types/jest": "^29.5.2",
+    "@types/react": "^18.2.7",
+    "@types/react-native": "0.72.2",
+    "@types/react-test-renderer": "^18.0.0",
+    "babel-plugin-module-resolver": "^5.0.0",
+    "commitlint": "^17.6.6",
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-functional": "^5.0.8",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "jest": "^29.5.0",
     "metro-react-native-babel-preset": "0.73.7",
-    "prettier": "^2.0.4",
-    "react": "^16.11.0",
-    "react-native": "0.62.1",
-    "react-test-renderer": "16.11.0"
+    "prettier": "^2.8.8",
+    "react": "^18.2.0",
+    "react-native": "^0.72.0",
+    "react-native-builder-bob": "^0.20.4",
+    "react-test-renderer": "18.2.0",
+    "typescript": "^5.1.3"
   },
   "dependencies": {
-    "npm": "^9.3.1"
+    "eslint-plugin-import": "^2.27.5",
+    "react-dom": "^18.2.0",
+    "react-native-permissions": "*",
+    "react-native-webview": "*"
   },
   "jest": {
     "preset": "react-native",
     "setupFilesAfterEnv": [
       "<rootDir>/jest.setup.js"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
     ]
   },
   "scripts": {
@@ -58,9 +106,15 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "yarn validate:eslint && yarn test:jest",
-    "test:jest": "jest /src --no-watchman",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "validate:eslint": "eslint 'src/**/*.js'"
+    "test:jest": "jest",
+    "typescript": "tsc --noEmit",
+    "lint:fix": "eslint \"**/*.{js,ts,tsx}\" --fix",
+    "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
+    "prepare": "bob build",
+    "release": "release-it",
+    "validate:eslint": "eslint 'src/**/*.js'",
+    "example": "yarn --cwd example",
+    "bootstrap": "yarn example && yarn && yarn example pods"
   },
   "sdkVersions": {
     "android": "2.87.0@aar",
