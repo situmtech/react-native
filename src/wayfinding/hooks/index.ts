@@ -1,11 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import SitumPlugin, {
-  Building,
-  BuildingInfo,
-  Poi,
-  //@ts-ignore
-} from 'react-native-situm-plugin';
+import { useEffect, useRef, useState } from "react";
 
+import { Building, BuildingInfo, Poi } from "../../index";
+import SitumPlugin from "../../sdk";
 import {
   NavigateToPoiType,
   NavigationStatus,
@@ -39,11 +35,11 @@ import {
   setPois,
   setSdkInitialized,
   State,
-} from '../store/index';
-import { useDispatch, useSelector } from '../store/utils';
-import requestPermission from '../utils/requestPermission';
-import { sendMessageToViewer } from '../utils';
-import Mapper from '../utils/mapper';
+} from "../store/index";
+import { useDispatch, useSelector } from "../store/utils";
+import { sendMessageToViewer } from "../utils";
+import Mapper from "../utils/mapper";
+import requestPermission from "../utils/requestPermission";
 
 const defaultNavigationOptions = {
   distanceToGoalThreshold: 4,
@@ -114,14 +110,14 @@ const useSitum = () => {
 
       SitumPlugin.setApiKey(email, apiKey, (response: any) => {
         if (response && Boolean(response.success) === true) {
-          console.info('\u2713 Successful authentication.');
+          console.info("\u2713 Successful authentication.");
         } else {
-          reject('Failure while authenticating.');
+          reject("Failure while authenticating.");
         }
       });
 
       SitumPlugin.setUseRemoteConfig(`${useRemoteConfig}`, () => {
-        console.log('Using remote config');
+        console.log("Using remote config");
       });
 
       withPosition &&
@@ -146,11 +142,11 @@ const useSitum = () => {
   // Cartography
   const initializeBuildings = async () =>
     new Promise<Building[]>((resolve, reject) => {
-      console.log('Retrieving buildings from Situm Dashboard');
+      console.log("Retrieving buildings from Situm Dashboard");
       SitumPlugin.fetchBuildings(
         (buildingArray: Building[]) => {
           dispatch(setBuildings(buildingArray));
-          console.info('\u2713 Successfully retrieved buildings.');
+          console.info("\u2713 Successfully retrieved buildings.");
           resolve(buildingArray);
         },
         (error: string) => {
@@ -184,7 +180,7 @@ const useSitum = () => {
       b,
       (buildingInfo: BuildingInfo) => {
         console.info(
-          '\u2713 Successfully retrieved pois of the selected building. '
+          "\u2713 Successfully retrieved pois of the selected building. "
         );
 
         // Please, do not change the next line. iOS sends data as indoorPois and Android sends it as indoorPOIs
@@ -200,10 +196,10 @@ const useSitum = () => {
   };
 
   const startPositioning = () => {
-    console.debug('Starting positioning ...');
+    console.debug("Starting positioning ...");
 
     if (location.status !== PositioningStatus.STOPPED) {
-      console.log('Positioning has already started');
+      console.log("Positioning has already started");
       return;
     }
 
@@ -211,7 +207,7 @@ const useSitum = () => {
     const locationOptions = { useDeadReckoning: false };
     // Start positioning
     SitumPlugin.startPositioning(
-      (newLocation: State['location']) => {
+      (newLocation: State["location"]) => {
         dispatch(
           setLocation({
             ...newLocation,
@@ -239,9 +235,9 @@ const useSitum = () => {
     SitumPlugin.stopPositioning((success: boolean) => {
       if (success) {
         dispatch(resetLocation());
-        console.info('Successfully stopped positioning');
+        console.info("Successfully stopped positioning");
       } else {
-        console.error('Could not stop positioning');
+        console.error("Could not stop positioning");
       }
     });
   };
@@ -252,8 +248,8 @@ const useSitum = () => {
     from: Position,
     to: Position,
     directionsOptions?: any
-  ): Promise<State['directions']> => {
-    console.debug('Requesting directions');
+  ): Promise<State["directions"]> => {
+    console.debug("Requesting directions");
     const points = [
       {
         floorIdentifier: from.floorIdentifier,
@@ -270,8 +266,8 @@ const useSitum = () => {
     return new Promise((resolve, reject) => {
       SitumPlugin.requestDirections(
         [building, ...points, { ...directionsOptions }],
-        (newDirections: State['directions']) => {
-          console.info('\u2713 Successfully computed route');
+        (newDirections: State["directions"]) => {
+          console.info("\u2713 Successfully computed route");
           resolve(newDirections);
         },
         (error: string) => {
@@ -328,7 +324,7 @@ const useSitum = () => {
     // iOS workaround -> does not allow for several direction petitions
     setLockDirections(true);
     return requestDirections(currentBuilding, from, to, directionsOptions)
-      .then((directions: State['directions']) => {
+      .then((directions: State["directions"]) => {
         const extendedRoute = {
           ...directions,
           originId,
@@ -367,7 +363,7 @@ const useSitum = () => {
       updateRoute: false,
     }).then((r) => {
       if (originId !== -1 || !location || !r) {
-        callback && callback('error');
+        callback && callback("error");
         return;
       }
       dispatch(
@@ -376,7 +372,7 @@ const useSitum = () => {
           ...r,
         })
       );
-      callback && callback('success', r);
+      callback && callback("success", r);
       SitumPlugin.requestNavigationUpdates(
         (update: SDKNavigation) => {
           const newNavType =
@@ -400,7 +396,7 @@ const useSitum = () => {
         },
         (error: string) => {
           console.error(`Could not update navigation: ${error}`);
-          callback && callback('error');
+          callback && callback("error");
           dispatch(setError({ message: error, code: 3051 } as SDKError));
           stopNavigationRef.current();
         },
@@ -423,7 +419,7 @@ const useSitum = () => {
         p?.identifier === poi?.id?.toString()
     );
     if (!validPoi) {
-      console.error('invalid value as poi or poiId');
+      console.error("invalid value as poi or poiId");
       return;
     }
     sendMessageToViewer(
@@ -435,15 +431,15 @@ const useSitum = () => {
   };
 
   const stopNavigation = (): void => {
-    console.debug('Stopping navigation');
+    console.debug("Stopping navigation");
     if (!navigation || navigation.status === NavigationStatus.STOP) {
       return;
     }
     SitumPlugin.removeNavigationUpdates((response: any) => {
       if (response && response.success) {
-        console.debug('\u2713 Successfully removed navigation updates');
+        console.debug("\u2713 Successfully removed navigation updates");
       } else {
-        console.error('Could not remove navigation updates');
+        console.error("Could not remove navigation updates");
       }
     });
     dispatch(setNavigation({ status: NavigationStatus.STOP }));
@@ -458,11 +454,11 @@ const useSitum = () => {
   const selectPoi = (poiId: number): void => {
     const poi = pois?.find((p) => p?.identifier === poiId?.toString());
     if (!poi) {
-      console.error('invalid value as poiId');
+      console.error("invalid value as poiId");
       return;
     }
     if (navigation.status !== NavigationStatus.STOP) {
-      console.error('navigation on course, poi selection is unavailable');
+      console.error("navigation on course, poi selection is unavailable");
       return;
     }
     sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));

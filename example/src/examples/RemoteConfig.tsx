@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text, SafeAreaView, ScrollView, StyleSheet, Button} from 'react-native';
+import {Text, SafeAreaView, ScrollView, Button} from 'react-native';
 
 import SitumPlugin from 'react-native-situm-plugin';
 import styles from './styles/styles';
@@ -44,19 +44,15 @@ export const RemoteConfig = () => {
       null,
     );
 
-    SitumPlugin.onEnterGeofences(
-      (geofences: any) => {
-        console.log("Detected Entered geofences: " + JSON.stringify(geofences));
-        setGeofences("Inside "+ JSON.stringify(geofences));
-      }
-    );
+    SitumPlugin.onEnterGeofences((geofences: any) => {
+      console.log('Detected Entered geofences: ' + JSON.stringify(geofences));
+      setGeofences('Inside ' + JSON.stringify(geofences));
+    });
 
-    SitumPlugin.onExitGeofences(
-      (geofences: any) => {
-        console.log("Detected Exited geofences: " +  JSON.stringify(geofences));
-        setGeofences("Outside "+ JSON.stringify(geofences));
-      }
-    );
+    SitumPlugin.onExitGeofences((geofences: any) => {
+      console.log('Detected Exited geofences: ' + JSON.stringify(geofences));
+      setGeofences('Outside ' + JSON.stringify(geofences));
+    });
   };
 
   useEffect(() => {

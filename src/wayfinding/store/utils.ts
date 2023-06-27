@@ -1,6 +1,6 @@
-import { useContext } from 'react';
+import { useContext } from "react";
 
-import { SitumContext, State } from './index';
+import { SitumContext, State } from "./index";
 
 export const createReducer = <T>(
   reducers: Record<string, (state: T, payload: any) => T>
@@ -22,7 +22,7 @@ export const useSelector = (selector: (state: State) => any) => {
   const context = useContext(SitumContext);
 
   if (!context) {
-    throw new Error('No SitumProvider found.');
+    throw new Error("No SitumProvider found.");
   }
 
   return selector(context.state);
@@ -32,7 +32,7 @@ export const useDispatch = () => {
   const context = useContext(SitumContext);
 
   if (!context) {
-    throw new Error('No SitumProvider found.');
+    throw new Error("No SitumProvider found.");
   }
 
   return context.dispatch;

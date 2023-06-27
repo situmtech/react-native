@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
 /** @name
  * Building
  * @description
@@ -434,7 +436,7 @@ export type Circle = {
  * @property {boolean} autoEnableBleDuringPositioning - Set if the BLE should be re-enabled during positioning if the ble is used. Android only
  */
 
-export type LocationOptions = {
+export type LocationRequestOptions = {
   buildingIdentifier: number;
   interval: number;
   indoorProvider: string;
@@ -464,7 +466,7 @@ export type LocationOptions = {
 
 export type LocationRequest = {
   building: Building;
-  locationOptions: LocationOptions;
+  locationOptions: LocationRequestOptions;
 };
 
 /**
@@ -597,32 +599,32 @@ export interface SitumPluginStatic {
   setApiKey(
     email: string,
     apiKey: string,
-    callback?: (success: boolean) => void,
+    callback?: (success: boolean) => void
   ): void;
 
   setUserPass(
     email: string,
     password: string,
-    callback?: (success: boolean) => void,
+    callback?: (success: boolean) => void
   ): void;
 
   setCacheMaxAge(cacheAge: number, callback?: (success: boolean) => void): void;
 
   fetchBuildings(
     success: (buildings: Array<Building>) => void,
-    error?: (error: string) => void,
+    error?: (error: string) => void
   ): void;
 
   fetchBuildingInfo(
     building: Building,
     success: (building: Building) => void,
-    error?: (error: string) => void,
+    error?: (error: string) => void
   ): void;
 
   fetchFloorsFromBuilding(
     building: Building,
     success: (floors: Array<Floor>) => void,
-    error?: (error: string) => void,
+    error?: (error: string) => void
   ): void;
 
   fetchMapFromFloor(floor: Floor, success: Function, error: Function): void;
@@ -630,25 +632,22 @@ export interface SitumPluginStatic {
   fetchGeofencesFromBuilding(
     building: Building,
     success: (geofence: Array<Geofence>) => void,
-    error?: (error: string) => void,
+    error?: (error: string) => void
   ): void;
 
   startPositioning(
     location: (location: Location) => void,
     status: Function,
     error?: Function,
-    locationOptions: LocationRequestOptions,
+    locationOptions: LocationRequestOptions
   ): void;
 
-  stopPositioning(
-    success: Function,
-    error?: Function,
-  ): void;
+  stopPositioning(success: Function, error?: Function): void;
 
   requestDirections(
     directionParams: Array<any>,
     success: (route: Route) => void,
-    error?: Function,
+    error?: Function
   ): void;
 
   fetchPoiCategories(success: Function, error?: Function): void;
@@ -656,25 +655,25 @@ export interface SitumPluginStatic {
   fetchPoiCategoryIconNormal(
     category: PoiCategory,
     success: Function,
-    error?: Function,
+    error?: Function
   ): void;
 
   fetchPoiCategoryIconSelected(
     category: PoiCategory,
     success: Function,
-    error?: Function,
+    error?: Function
   ): void;
 
   requestNavigationUpdates(
     navigationUpdates: Function,
     error?: Function,
-    options?: LocationOptions,
+    options?: LocationOptions
   ): void;
 
   updateNavigationWithLocation(
     location,
     success: Function,
-    error?: Function,
+    error?: Function
   ): void;
 
   removeNavigationUpdates(callback?: Function): void;
@@ -682,25 +681,25 @@ export interface SitumPluginStatic {
   fetchIndoorPOIsFromBuilding(
     building: Building,
     success: Function,
-    error?: Function,
+    error?: Function
   ): void;
 
   fetchOutdoorPOIsFromBuilding(
     building: Building,
     success: Function,
-    error?: Function,
+    error?: Function
   ): void;
 
   fetchEventsFromBuilding(
     building: Building,
     success: Function,
-    error?: Function,
+    error?: Function
   ): void;
 
   requestRealTimeUpdates(
     navigationUpdates: Function,
     error?: Function,
-    request?: RealTimeRequest,
+    request?: RealTimeRequest
   ): void;
 
   removeRealTimeUpdates(callback?: Function): void;
