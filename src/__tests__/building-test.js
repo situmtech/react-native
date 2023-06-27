@@ -1,12 +1,12 @@
 /* eslint-disable no-undef */
 
-import {NativeModules} from 'react-native';
+import { NativeModules } from 'react-native';
 import SitumPlugin from '..';
 
 describe('Test buildings related data (list, info, floors)', () => {
   it('should fetch buildings list and pass it to given callback', () => {
-    const success = () => {};
-    const error = () => {};
+    const success = () => { };
+    const error = () => { };
 
     SitumPlugin.fetchBuildings(success, error);
 
@@ -24,8 +24,8 @@ describe('Test buildings related data (list, info, floors)', () => {
   });
   it('should fetch building info from building and pass it to given callback', () => {
     const building = jest.mock();
-    const success = () => {};
-    const error = () => {};
+    const success = () => { };
+    const error = () => { };
 
     SitumPlugin.fetchBuildingInfo(building, success, error);
 
@@ -47,8 +47,8 @@ describe('Test buildings related data (list, info, floors)', () => {
 
   it('should fetch floor list from building and pass it to given callback', () => {
     const building = jest.mock();
-    const success = () => {};
-    const error = () => {};
+    const success = () => { };
+    const error = () => { };
 
     SitumPlugin.fetchFloorsFromBuilding(building, success, error);
 
@@ -70,8 +70,8 @@ describe('Test buildings related data (list, info, floors)', () => {
 
   it('should fetch floor map from floor and pass it to given callback', () => {
     const floor = jest.mock();
-    const success = () => {};
-    const error = () => {};
+    const success = () => { };
+    const error = () => { };
 
     SitumPlugin.fetchMapFromFloor(floor, success, error);
 
@@ -93,8 +93,8 @@ describe('Test buildings related data (list, info, floors)', () => {
 
   it('should fetch geofence from building and pass it to given callback', () => {
     const building = jest.mock();
-    const success = () => {};
-    const error = () => {};
+    const success = () => { };
+    const error = () => { };
 
     SitumPlugin.fetchGeofencesFromBuilding(building, success, error);
 
@@ -116,7 +116,7 @@ describe('Test buildings related data (list, info, floors)', () => {
 
   it('should check if point is in a geofence', () => {
     const request = jest.mock();
-    const callback = () => {};
+    const callback = () => { };
 
     SitumPlugin.checkIfPointInsideGeofence(request, callback);
 
@@ -134,8 +134,8 @@ describe('Test buildings related data (list, info, floors)', () => {
 
   it('should fetch indoor POIs from building and pass it to given callback', () => {
     const building = jest.mock();
-    const success = () => {};
-    const error = () => {};
+    const success = () => { };
+    const error = () => { };
 
     SitumPlugin.fetchIndoorPOIsFromBuilding(building, success, error);
 
@@ -158,8 +158,8 @@ describe('Test buildings related data (list, info, floors)', () => {
 
   it('should fetch outdoor POIs from building and pass it to given callback', () => {
     const building = jest.mock();
-    const success = () => {};
-    const error = () => {};
+    const success = () => { };
+    const error = () => { };
 
     SitumPlugin.fetchOutdoorPOIsFromBuilding(building, success, error);
 
@@ -185,8 +185,8 @@ describe('Test buildings related data (list, info, floors)', () => {
 
   it('should fetch events from building and pass it to given callback', () => {
     const building = jest.mock();
-    const success = () => {};
-    const error = () => {};
+    const success = () => { };
+    const error = () => { };
 
     SitumPlugin.fetchEventsFromBuilding(building, success, error);
 
