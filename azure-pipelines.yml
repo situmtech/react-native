@@ -52,6 +52,7 @@ steps:
 
   - bash: |
 
+      cd situm-react-native-plugin
       echo -e "\n[+] Setting NPM version to $(version)"
       npm version $(version) --no-git-tag-version
 
@@ -78,12 +79,14 @@ steps:
         bitbucket_user: situmops
       system: "N/A"
       server: "github"
+      repoFolder: "situm-react-native-plugin"
       mergeBranches:
         - "master"
         - "develop"
      
 
   - bash: |
+      cd situm-react-native-plugin
       echo -e "\n[+] Fetch all branches\n"
       git fetch
 
