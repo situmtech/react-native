@@ -64,9 +64,12 @@
   },
   "sdkVersions": {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "android": "2.87.0@aar",
     "ios": "2.61.0"
 =======
+=======
+>>>>>>> Stashed changes
     "android": "2.88.0@aar",
     "ios": "2.60.3"
 >>>>>>> Stashed changes
