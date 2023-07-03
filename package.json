@@ -63,7 +63,12 @@
     "validate:eslint": "eslint 'src/**/*.js'"
   },
   "sdkVersions": {
+<<<<<<< Updated upstream
     "android": "2.87.0@aar",
     "ios": "2.61.0"
+=======
+    "android": "2.88.0@aar",
+    "ios": "2.60.3"
+>>>>>>> Stashed changes
   }
 }
