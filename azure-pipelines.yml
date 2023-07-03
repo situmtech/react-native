@@ -34,9 +34,7 @@ steps:
     displayName: Checkout self
 
   - bash: |
-      if [ -d "situm-react-native-plugin" ];then
-        cd situm-react-native-plugin
-      fi
+      cd situm-react-native-plugin
       echo "##vso[task.setvariable variable=version]$(echo ${{ parameters.RNVersion }})"
       currentBranch=$(echo $(Build.SourceBranch) | cut -d "/" -f 3,4)
       echo "##vso[task.setvariable variable=currentBranch]$(echo $currentBranch)"
@@ -54,6 +52,7 @@ steps:
 
   - bash: |
 
+      cd situm-react-native-plugin
       echo -e "\n[+] Setting NPM version to $(version)"
       npm version $(version) --no-git-tag-version
 
@@ -80,12 +79,14 @@ steps:
         bitbucket_user: situmops
       system: "N/A"
       server: "github"
+      repoFolder: "situm-react-native-plugin"
       mergeBranches:
         - "master"
         - "develop"
      
 
   - bash: |
+      cd situm-react-native-plugin
       echo -e "\n[+] Fetch all branches\n"
       git fetch
 
@@ -102,9 +103,7 @@ steps:
     displayName: NPM publish
  
   - bash: |
-      if [ -d "situm-react-native-plugin" ]; then
-        cd situm-react-native-plugin
-      fi
+      cd situm-react-native-plugin
 
       androidsdk=$(grep -oE '"android": "[0-9]+\.[0-9]+\.[0-9]+@aar"' package.json | awk -F'["@]' '{print $4}')
       iossdk=$(grep -oE '"ios": "[0-9]+\.[0-9]+\.[0-9]+"' package.json | awk -F'"' '{print $4}')
