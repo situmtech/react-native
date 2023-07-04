@@ -15,7 +15,7 @@ import {RemoteConfig} from './examples/RemoteConfig';
 import {GetPoisIcons} from './examples/GetPoisIcons';
 import {SetCacheMaxAge} from './examples/SetCacheMaxAge';
 import {TiledBuilding} from './examples/TiledBuilding';
-// import Wayfinding from './examples/Wayfinding';
+import Wayfinding from './examples/Wayfinding';
 
 function initSitumSdk() {
   SitumPlugin.initSitumSDK();
@@ -79,6 +79,10 @@ const HomeScreen = ({navigation}) => {
             title: 'Show building with tiles',
             key: 'TiledBuilding',
           },
+          {
+            title: 'Wayfinding',
+            key: 'Wayfinding',
+          },
         ]}
         renderItem={({item, index, separators}) => (
           <TouchableHighlight key={item.key}>
@@ -119,7 +123,7 @@ function App() {
         <Stack.Screen name="GetPoisIcons" component={GetPoisIcons} />
         <Stack.Screen name="SetCacheMaxAge" component={SetCacheMaxAge} />
         <Stack.Screen name="TiledBuilding" component={TiledBuilding} />
-        {/* <Stack.Screen name="Wayfinding" component={Wayfinding} /> */}
+        <Stack.Screen name="Wayfinding" component={Wayfinding} />
       </Stack.Navigator>
     </NavigationContainer>
   );

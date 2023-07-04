@@ -17,7 +17,7 @@ import {
   OnPoiSelectedResult,
   SitumProvider,
   WayfindingResult,
-} from '../../../src';
+} from '../../../src/wayfinding';
 import {SITUM_EMAIL, SITUM_API_KEY} from '../situm';
 
 const App: React.FC = () => {

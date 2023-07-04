@@ -16,14 +16,16 @@
     "react": "18.2.0",
     "react-native": "0.71.1",
     "react-native-maps": "^1.4.0",
-    "react-native-permissions": "^3.7.3",
+    "react-native-permissions": "^3.8.3",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",
-    "react-native-situm-plugin": "file:.."
+    "react-native-situm-plugin": "file:..",
+    "react-native-webview": "^13.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
+
     "@babel/runtime": "^7.20.0",
     "@react-native-community/eslint-config": "^3.2.0",
     "@tsconfig/react-native": "^2.0.2",
@@ -36,8 +38,8 @@
     "eslint": "^8.19.0",
     "jest": "^29.2.1",
     "metro-react-native-babel-preset": "0.73.7",
-    "prettier": "^2.4.1",
     "pod-install": "0.1.38",
+    "prettier": "^2.4.1",
     "react-test-renderer": "18.2.0",
     "typescript": "4.8.4"
   },
