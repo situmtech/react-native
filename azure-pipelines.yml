@@ -125,7 +125,7 @@ steps:
       if [ "$androidsdk" != "$androidsdk_old" ];then
         versions="$versions *$androidsdk* |"
       else
-        versions="$versions$iossdk|"
+        versions="$versions $androidsdk|"
       fi
 
       if [ "$iossdk" != "$iossdk_old" ];then
