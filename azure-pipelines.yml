@@ -108,8 +108,8 @@ steps:
       fi
       
       echo -e "\n[+] Pull master changes and change to master branch \n"
-      git pull origin master
       git checkout master
+      git pull origin master
 
       androidsdk=$(grep -oE '"android": "[0-9]+\.[0-9]+\.[0-9]+@aar"' package.json | awk -F'["@]' '{print $4}')
       iossdk=$(grep -oE '"ios": "[0-9]+\.[0-9]+\.[0-9]+"' package.json | awk -F'"' '{print $4}')
