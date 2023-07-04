@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { NativeModules } from "react-native";
 
-import SitumPlugin from "..";
+import SitumPlugin from "../..";
 
 describe("Test buildings related data (list, info, floors)", () => {
   it("should fetch buildings list and pass it to given callback", () => {

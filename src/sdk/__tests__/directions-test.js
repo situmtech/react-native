@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { NativeModules } from "react-native";
 
-import SitumPlugin from "../sdk";
+import SitumPlugin from "..";
 
 describe("Test Directions / Routes functions", () => {
   it("should fetch route between two points and pass it to given callback", () => {

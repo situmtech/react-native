@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import invariant from "invariant";
 import { NativeEventEmitter, NativeModules, Platform } from "react-native";
-import {
+
+import packageJson from "../../package.json";
+import type {
   Building,
   DirectionsOptions,
   Floor,
   LocationRequestOptions,
-} from "src/sdk/typings/index.js";
-
-import packageJson from "../../package.json";
+} from "./types/index.d.ts";
 import { logError } from "./utils";
 
 const LINKING_ERROR =
