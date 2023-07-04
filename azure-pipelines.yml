@@ -122,13 +122,13 @@ steps:
 
       versions="| *VERSIÓN* | *FECHA* | *ANDROID SDK* | *IOS SDK* |\n|$(version)|$(date +"%d/%m/%Y")|"
 
-      if [ "androidsdk" != "androidsdk_old" ];then
+      if [ "$androidsdk" != "$androidsdk_old" ];then
         versions="$versions *$androidsdk* |"
       else
         versions="$versions$iossdk|"
       fi
 
-      if [ "iossdk" != "$iossdk_old" ];then
+      if [ "$iossdk" != "$iossdk_old" ];then
         versions="$versions *$iossdk*|"
       else
         versions="$versions $iossdk|"
