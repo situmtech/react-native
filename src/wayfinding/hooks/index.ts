@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Building, BuildingInfo, Poi } from "../../index";
+import { Building, BuildingInfo, LocationRequestOptions, Poi } from "../../index";
 import SitumPlugin from "../../sdk";
 import {
   NavigateToPoiType,
@@ -204,7 +204,7 @@ const useSitum = () => {
     }
 
     // Declare the locationOptions (empty = default parameters)
-    const locationOptions = { useDeadReckoning: false };
+    const locationOptions = { useDeadReckoning: false } as LocationRequestOptions;
     // Start positioning
     SitumPlugin.startPositioning(
       (newLocation: State["location"]) => {
