@@ -163,8 +163,7 @@ steps:
   - ${{ if ne(variables['Build.Reason'],'manual') }}:
     - template: azure-templates/publish-changelog.yaml@sys_kubernetes_templates
       parameters:
-        changelogId: 
-        system: "android"
+        changelogId: $(RNSDK_Changelog_id)
         changelog_android: $(changelog_android)
         changelog_ios: $(changelog_ios)
   
