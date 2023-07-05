@@ -22,7 +22,7 @@ resources:
     type: bitbucket
     endpoint: Bitbucket - sistemas
     name: situm/sys-kubernetes-templates.git
-    ref: feature/SIS-672
+    ref: master
 
 steps:
 - ${{ if contains(variables['Build.SourceBranch'], 'release/') }}:
