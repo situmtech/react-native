@@ -141,41 +141,33 @@ steps:
 
       versions="| *VERSIÓN* | *FECHA* | *ANDROID SDK* | *IOS SDK* |\n|$(version)|$(date +"%d/%m/%Y")|"
 
-      changelog_sdk=""
-
       if [ "$androidsdk" != "$androidsdk_old" ];then
         versions="$versions *$androidsdk* |"
-        changelog_sdk="
-        <!-- wp:list-item -->
-        <li>Updated Android SDK to version $androidsdk </li>
-        <!-- /wp:list-item -->
-        "
+        changelog_android=$androidsdk
       else
+        changelog_sdk="0.0.0"
         versions="$versions $androidsdk|"
       fi
 
       if [ "$iossdk" != "$iossdk_old" ];then
         versions="$versions *$iossdk*|"
-        changelog_sdk="
-        $changelog_sdk
-        <!-- wp:list-item -->
-        <li>Updated iOS SDK to version $iosdk </li>
-        <!-- /wp:list-item -->"
+        changelog_ios=$iossdk
       else
+        changelog_sdk="0.0.0"
         versions="$versions $iossdk|"
       fi
 
       echo "##vso[task.setvariable variable=versions]$(echo $versions)"
-
-
-      echo "##vso[task.setvariable variable=changelog_sdk]$(echo $changelog_sdk)"
+      echo "##vso[task.setvariable variable=changelog_android]$(echo $changelog_android)"
+      echo "##vso[task.setvariable variable=changelog_ios]$(echo $changelog_ios)"
     displayName: Get Versions
 
   - template: azure-templates/publish-changelog.yaml@sys_kubernetes_templates
     parameters:
       changelogId: 30478
       system: "android"
-      changelog: $(changelog_sdk)
+      changelog_android: $(changelog_android)
+      changelog_ios: $(changelog_ios)
 
       
 
