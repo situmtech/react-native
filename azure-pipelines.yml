@@ -141,9 +141,15 @@ steps:
 
       versions="| *VERSIÓN* | *FECHA* | *ANDROID SDK* | *IOS SDK* |\n|$(version)|$(date +"%d/%m/%Y")|"
 
+      changelog_sdk=""
+
       if [ "$androidsdk" != "$androidsdk_old" ];then
         versions="$versions *$androidsdk* |"
-        changelog_sdk="<li>Updated Android SDK to version $androidsdk"
+        changelog_sdk="
+        <!-- wp:list-item -->
+        <li>Updated Android SDK to version $androidsdk </li>
+        <!-- /wp:list-item -->
+        "
       else
         versions="$versions $androidsdk|"
       fi
@@ -152,7 +158,9 @@ steps:
         versions="$versions *$iossdk*|"
         changelog_sdk="
         $changelog_sdk
-        <li>Updated iOS SDK to version $iossdk</li>"
+        <!-- wp:list-item -->
+        <li>Updated iOS SDK to version $iosdk </li>
+        <!-- /wp:list-item -->"
       else
         versions="$versions $iossdk|"
       fi
