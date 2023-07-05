@@ -35,7 +35,10 @@ steps:
     displayName: Checkout self
 
   - bash: |
-      cd situm-react-native-plugin
+
+      if [ -d "situm-react-native-plugin" ];then
+        cd situm-react-native-plugin
+      fi
       echo "##vso[task.setvariable variable=version]$(echo ${{ parameters.RNVersion }})"
       currentBranch=$(echo $(Build.SourceBranch) | cut -d "/" -f 3,4)
       echo "##vso[task.setvariable variable=currentBranch]$(echo $currentBranch)"
@@ -140,7 +143,7 @@ steps:
 
       if [ "$androidsdk" != "$androidsdk_old" ];then
         versions="$versions *$androidsdk* |"
-        changelog_sdk="<li>Updated Android SDK to version $(androidsdk)"
+        changelog_sdk="<li>Updated Android SDK to version $androidsdk"
       else
         versions="$versions $androidsdk|"
       fi
@@ -149,7 +152,7 @@ steps:
         versions="$versions *$iossdk*|"
         changelog_sdk="
         $changelog_sdk
-        <li>Updated iOS SDK to version $(iossdk)</li>"
+        <li>Updated iOS SDK to version $iossdk</li>"
       else
         versions="$versions $iossdk|"
       fi
