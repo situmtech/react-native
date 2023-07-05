@@ -55,6 +55,17 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         SitumSdk.init(reactContext);
     }
 
+    // Required for rn built in EventEmitter Calls.
+    @ReactMethod
+    public void addListener(String eventName) {
+
+    }
+
+    @ReactMethod
+    public void removeListeners(Integer count) {
+
+    }
+
     @Override
     @ReactMethod
     public void setApiKey(String email, String apiKey, Callback callback) {
