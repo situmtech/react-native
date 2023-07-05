@@ -25,6 +25,7 @@ resources:
     type: bitbucket
     endpoint: Bitbucket - sistemas
     name: situm/sys-kubernetes-templates.git
+    ref: feature/SIS-672
 
 steps:
 - ${{ if contains(variables['Build.SourceBranch'], 'feature/') }}:
@@ -107,6 +108,13 @@ steps:
         cd situm-react-native-plugin
       fi
       
+      #
+      #IMPORTANT: This code performs the following steps:
+      #- Switches to the master branch in the situm-react-native-plugin repository.
+      #- Stores the values of the android and iOS SDK in the androidsdk and iossdk variables respectively.
+      #- Switches to the previous commit of the master branch in the situm-react-native-plugin repository.
+      #- Stores the values of the android and iOS SDK in the androidsdk_old and iossdk_old variables respectively.
+      #- Compares the values, and if they have changed, publishes the new version in bold format.
       echo -e "\n[+] Pull master changes and change to master branch \n"
       git fetch
       git checkout master
@@ -120,7 +128,7 @@ steps:
 
       androidsdk_old=$(grep -oE '"android": "[0-9]+\.[0-9]+\.[0-9]+@aar"' package.json | awk -F'["@]' '{print $4}')
       iossdk_old=$(grep -oE '"ios": "[0-9]+\.[0-9]+\.[0-9]+"' package.json | awk -F'"' '{print $4}')
-  
+
       echo -e "\n[+] Versions:"
       echo -e "\t[+] RN SDK: $(version)"
       echo -e "\t[+] ANDROID SDK: $androidsdk"
@@ -132,30 +140,49 @@ steps:
 
       if [ "$androidsdk" != "$androidsdk_old" ];then
         versions="$versions *$androidsdk* |"
+        changelog_sdk="<li>Updated Android SDK to version $(androidsdk)"
       else
         versions="$versions $androidsdk|"
       fi
 
       if [ "$iossdk" != "$iossdk_old" ];then
         versions="$versions *$iossdk*|"
+        changelog_sdk="
+        $changelog_sdk
+        <li>Updated iOS SDK to version $(iossdk)</li>"
       else
         versions="$versions $iossdk|"
       fi
 
-      # versions="| *VERSIÓN* | *FECHA* | *ANDROID SDK* | *IOS SDK* |\n|$(version)|$(date +"%d/%m/%Y")|$androidsdk|$iossdk|"
-  
       echo "##vso[task.setvariable variable=versions]$(echo $versions)"
 
-  
-    displayName: Get Versions
-  
-  - template: azure-templates/release-table.yaml@sys_kubernetes_templates
-    parameters:
-      versions: $(versions)
-      releaseTable: RN_SDK_TABLE
-      confluence_release_page: $(RN_SDK_TABLE)
-      confluence_release_page_title: "SDK Automatic Release Table - React Native Plugin"
-      bitbucket:
-        bitbucket_user: $(bitbucket_user)
-        bitbucket_pass: $(bitbucket_pass)
+      changelog="
+      <h4>Version $(version) - $(LANG=en_EN date +'%B %d,%Y')
+      <b>Changed</b>
+      <ul>
+      $changelog_sdk 
+      </ul>
+      " 
 
+      echo "##vso[task.setvariable variable=changelog]$(echo $changelog)"
+    displayName: Get Versions
+
+  - template: azure-templates/publish-changelog.yaml
+    parameters:
+      changelogId: 30478
+      system: "android"
+      changelog: $(changelog)
+
+      
+
+  # 
+  # - template: azure-templates/release-table.yaml@sys_kubernetes_templates
+  #   parameters:
+  #     versions: $(versions)
+  #     releaseTable: RN_SDK_TABLE
+  #     confluence_release_page: $(RN_SDK_TABLE)
+  #     confluence_release_page_title: "SDK Automatic Release Table - React Native Plugin"
+  #     bitbucket:
+  #       bitbucket_user: $(bitbucket_user)
+  #       bitbucket_pass: $(bitbucket_pass)
+  #
