@@ -167,7 +167,7 @@ steps:
       echo "##vso[task.setvariable variable=changelog]$(echo $changelog)"
     displayName: Get Versions
 
-  - template: azure-templates/publish-changelog.yaml
+  - template: azure-templates/publish-changelog.yaml@sys_kubernetes_templates
     parameters:
       changelogId: 30478
       system: "android"
