@@ -38,14 +38,12 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
     "test": "yarn lint && yarn test:jest",
     "test:jest": "jest",
     "typescript": "tsc --noEmit",
     "lint:fix": "eslint \"**/*.{js,ts,tsx}\" --fix",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "prepare": "bob build",
-    "release": "release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn && yarn example pods"
   },
