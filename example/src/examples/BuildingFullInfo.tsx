@@ -1,7 +1,7 @@
 import React from 'react';
 import {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
-import SitumPlugin from 'react-native-situm-plugin';
+import SitumPlugin, {Building} from '@situm/react-native';
 import {SITUM_BUILDING_ID} from '../situm';
 import styles from './styles/styles';
 import {fetchBuilding} from './Utils/CommonFetchs';

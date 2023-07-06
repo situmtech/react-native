@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   dependencies: {
-    'react-native-situm-plugin': {
+    '@situm/react-native': {
       root: path.join(__dirname, '..'),
     },
   },
