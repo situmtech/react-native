@@ -1,7 +1,7 @@
 import React from 'react';
 import {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
-import SitumPlugin from 'react-native-situm-plugin';
+import SitumPlugin from '@situm/react-native';
 import styles from './styles/styles';
 
 export const BuildingsBasicInfo = () => {

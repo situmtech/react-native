@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, Button} from 'react-native';
 import {SITUM_BUILDING_ID} from '../situm';
 import {fetchBuilding} from './Utils/CommonFetchs';
-import SitumPlugin from 'react-native-situm-plugin';
+import SitumPlugin from '@situm/react-native';
 import styles from './styles/styles';
 
 const NUMBER_OF_SECONDS = 30 * 60;
