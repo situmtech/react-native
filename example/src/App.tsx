@@ -84,7 +84,7 @@ const HomeScreen = ({navigation}) => {
             key: 'Wayfinding',
           },
         ]}
-        renderItem={({item, index, separators}) => (
+        renderItem={({item}) => (
           <TouchableHighlight key={item.key}>
             <View>
               <Button

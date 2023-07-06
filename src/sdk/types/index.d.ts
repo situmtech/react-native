@@ -215,7 +215,11 @@ export type Point = {
   isIndoor: boolean;
   isOutdoor: boolean;
 };
-
+export type DirectionPoint = {
+  floorIdentifier: Floor["floorIdentifier"];
+  buildingIdentifier: Building["buildingIdentifier"];
+  coordinate: Coordinate;
+};
 /**
  * @name
  * Route
@@ -430,7 +434,7 @@ export type Circle = {
  * @property {boolean} useForegroundService - Defines whether or not to activate the {@link http://developers.situm.es/pages/android/using_situm_sdk_background.html foreground service}
  * @property {boolean} useDeadReckoning - Defines whether ot not to use dead reckoning to get fast position updates using only the inertial sensors, between the server position updates.
  * @property {OutdoorLocationOptions} outdoorLocationOptions - Outdoor location options. Only used in an indoor/outdoor request
- * @property {BeaconFilter[]} beaconFilters - Beacon filters to be handled during scan time, otherwise only Situm beacons will be scanned. Can be invoked multiple times to add as much beacon filters as you want @deprecated The SitumSDK now does it automatically
+ * @property {BeaconFilter[]} beaconFilters - Deprecated - Beacon filters to be handled during scan time, otherwise only Situm beacons will be scanned. Can be invoked multiple times to add as much beacon filters as you want. The SitumSDK now does it automatically
  * @property {number} smallestDisplacement - Default smallest displacement to nofiy location updates
  * @property {string} realtimeUpdateInterval - Default interval to send locations to the Realtime. Possible values are REALTIME, FAST, NORMAL, SLOW and BATTERY_SAVER
  * @property {boolean} autoEnableBleDuringPositioning - Set if the BLE should be re-enabled during positioning if the ble is used. Android only
@@ -523,8 +527,8 @@ export type DirectionsRequest = {
  * @description
  * A data object that contains the directions options.
  * @property {boolean} minimizeFloorChanges - Defines wheter or not the route should be calculated minimizing the floor changes even if the result is longer.
- * @property {boolean} accessibleRoute - Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false). @deprecated, use accessibilityMode
- * @property {boolean} accessible - Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false). @deprecated, use accessibilityMode
+ * @property {boolean} accessibleRoute - Deprecated, use accessibilityMode. Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false).
+ * @property {boolean} accessible - Deprecated, use accessibilityMode. Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false).
  * @property {string} accessibilityMode - Defines the accessibility mode of the route. Possible values are: CHOOSE_SHORTEST, ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES, ONLY_ACCESSIBLE
  * @property {number} startingAngle - Current user's orientation in degrees.
  */

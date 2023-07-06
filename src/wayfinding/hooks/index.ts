@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Building, BuildingInfo, LocationRequestOptions, Poi } from "../../index";
+import {
+  Building,
+  DirectionPoint,
+  LocationRequestOptions,
+  Poi,
+} from "../../index";
 import SitumPlugin from "../../sdk";
 import {
   NavigateToPoiType,
@@ -178,7 +183,7 @@ const useSitum = () => {
   const initializeBuildingPois = (b: Building) => {
     SitumPlugin.fetchBuildingInfo(
       b,
-      (buildingInfo: BuildingInfo) => {
+      (buildingInfo: any) => {
         console.info(
           "\u2713 Successfully retrieved pois of the selected building. "
         );
@@ -204,7 +209,9 @@ const useSitum = () => {
     }
 
     // Declare the locationOptions (empty = default parameters)
-    const locationOptions = { useDeadReckoning: false } as LocationRequestOptions;
+    const locationOptions = {
+      useDeadReckoning: false,
+    } as LocationRequestOptions;
     // Start positioning
     SitumPlugin.startPositioning(
       (newLocation: State["location"]) => {
@@ -250,22 +257,20 @@ const useSitum = () => {
     directionsOptions?: any
   ): Promise<State["directions"]> => {
     console.debug("Requesting directions");
-    const points = [
-      {
-        floorIdentifier: from.floorIdentifier,
-        buildingIdentifier: from.buildingIdentifier,
-        coordinate: from.coordinate,
-      },
-      {
-        floorIdentifier: to.floorIdentifier,
-        buildingIdentifier: to.buildingIdentifier,
-        coordinate: to.coordinate,
-      },
-    ];
+    const fromPoint = {
+      floorIdentifier: from.floorIdentifier,
+      buildingIdentifier: from.buildingIdentifier,
+      coordinate: from.coordinate,
+    } as DirectionPoint;
+    const toPoint = {
+      floorIdentifier: to.floorIdentifier,
+      buildingIdentifier: to.buildingIdentifier,
+      coordinate: to.coordinate,
+    } as DirectionPoint;
 
     return new Promise((resolve, reject) => {
       SitumPlugin.requestDirections(
-        [building, ...points, { ...directionsOptions }],
+        [building, fromPoint, toPoint, directionsOptions],
         (newDirections: State["directions"]) => {
           console.info("\u2713 Successfully computed route");
           resolve(newDirections);
@@ -416,15 +421,18 @@ const useSitum = () => {
     const validPoi = pois?.find(
       (p) =>
         p?.identifier === poiId?.toString() ||
+        // @ts-ignore
         p?.identifier === poi?.id?.toString()
     );
     if (!validPoi) {
       console.error("invalid value as poi or poiId");
       return;
     }
+
     sendMessageToViewer(
       webViewRef.current,
       Mapper.navigateToPoi({
+        // @ts-ignore
         navigationTo: poi?.id || poiId,
       } as NavigateToPoiType)
     );
