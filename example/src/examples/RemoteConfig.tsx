@@ -15,7 +15,7 @@ export const RemoteConfig = () => {
   //We will call this method from a <Button /> later
   const stopPositioning = async () => {
     console.log('Stopping positioning');
-    SitumPlugin.stopPositioning((success: any) => {});
+    SitumPlugin.stopPositioning((_success: any) => {});
   };
 
   const startPositioning = () => {
@@ -27,38 +27,38 @@ export const RemoteConfig = () => {
     setError('');
     //Start positioning
     SitumPlugin.startPositioning(
-      (location: any) => {
-        console.log(JSON.stringify(location, null, 3));
-        setLocation(JSON.stringify(location, null, 3));
+      (newLocation: any) => {
+        console.log(JSON.stringify(newLocation, null, 3));
+        setLocation(JSON.stringify(newLocation, null, 3));
       },
-      (status: any) => {
+      (newStatus: any) => {
         //returns positioning status
-        console.log(JSON.stringify(status));
-        setStatus(JSON.stringify(status, null, 3));
+        console.log(JSON.stringify(newStatus));
+        setStatus(JSON.stringify(newStatus, null, 3));
       },
-      (error: string) => {
+      (newError: string) => {
         // returns an error string
-        console.log(JSON.stringify(error));
-        setError(error);
+        console.log(JSON.stringify(newError));
+        setError(newError);
         stopPositioning();
       },
       null,
     );
 
-    SitumPlugin.onEnterGeofences((geofences: any) => {
-      console.log('Detected Entered geofences: ' + JSON.stringify(geofences));
-      setGeofences('Inside ' + JSON.stringify(geofences));
+    SitumPlugin.onEnterGeofences((items: any) => {
+      console.log('Detected Entered geofences: ' + JSON.stringify(items));
+      setGeofences('Inside ' + JSON.stringify(items));
     });
 
-    SitumPlugin.onExitGeofences((geofences: any) => {
-      console.log('Detected Exited geofences: ' + JSON.stringify(geofences));
-      setGeofences('Outside ' + JSON.stringify(geofences));
+    SitumPlugin.onExitGeofences((items: any) => {
+      console.log('Detected Exited geofences: ' + JSON.stringify(items));
+      setGeofences('Outside ' + JSON.stringify(items));
     });
   };
 
   useEffect(() => {
     // Set useRemoteConfig to true in order to be able to
-    SitumPlugin.setUseRemoteConfig('true', response => {
+    SitumPlugin.setUseRemoteConfig('true', (response: any) => {
       console.log(`Remote config enabled: ${JSON.stringify(response)}`);
     });
 

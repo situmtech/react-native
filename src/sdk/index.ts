@@ -8,6 +8,7 @@ import type {
   DirectionsOptions,
   Floor,
   LocationRequestOptions,
+  DirectionPoint,
 } from "./types/index.d.ts";
 import { logError } from "./utils";
 
@@ -145,7 +146,7 @@ const SitumPlugin = {
   },
 
   startPositioning: function (
-    location: Function,
+    location: (event: any) => void,
     status: Function,
     error?: Function,
     options?: LocationRequestOptions
@@ -160,9 +161,9 @@ const SitumPlugin = {
   },
 
   startPositioningUpdates: function (
-    location: Function,
-    status: Function,
-    error?: Function,
+    location: (event: any) => void,
+    status: (event: any) => void,
+    error?: (event: any) => void,
     options?: LocationRequestOptions
   ) {
     // Remove old positioning subscriptions:
@@ -188,7 +189,12 @@ const SitumPlugin = {
   },
 
   requestDirections: function (
-    directionParams: DirectionsOptions,
+    directionParams: [
+      Building,
+      DirectionPoint,
+      DirectionPoint,
+      DirectionsOptions
+    ],
     success: Function,
     error?: Function
   ) {
@@ -248,8 +254,8 @@ const SitumPlugin = {
   },
 
   requestNavigationUpdates: function (
-    navigationUpdates: Function,
-    error?: Function,
+    navigationUpdates: (event: any) => void,
+    error?: (event: any) => void,
     options?: LocationRequestOptions
   ) {
     RNCSitumPlugin.requestNavigationUpdates(options || {});
@@ -347,8 +353,8 @@ const SitumPlugin = {
   },
 
   requestRealTimeUpdates: function (
-    navigationUpdates: Function,
-    error?: Function,
+    navigationUpdates: (event: any) => void,
+    error?: (event: any) => void,
     options?: any
   ) {
     RNCSitumPlugin.requestRealTimeUpdates(options || {});
@@ -405,14 +411,14 @@ const SitumPlugin = {
     RNCSitumPlugin.getDeviceId(callback);
   },
 
-  onEnterGeofences: function (callback: Function) {
+  onEnterGeofences: function (callback: (event: any) => void) {
     RNCSitumPlugin.onEnterGeofences();
     // Adopts SDK behavior (setter):
     SitumPluginEventEmitter.removeAllListeners("onEnterGeofences");
     SitumPluginEventEmitter.addListener("onEnterGeofences", callback);
   },
 
-  onExitGeofences: function (callback: Function) {
+  onExitGeofences: function (callback: (event: any) => void) {
     RNCSitumPlugin.onExitGeofences();
     SitumPluginEventEmitter.removeAllListeners("onExitGeofences");
     SitumPluginEventEmitter.addListener("onExitGeofences", callback);
