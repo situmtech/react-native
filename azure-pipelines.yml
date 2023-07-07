@@ -130,6 +130,9 @@ steps:
       androidsdk_old=$(grep -oE '"android": "[0-9]+\.[0-9]+\.[0-9]+@aar"' package.json | awk -F'["@]' '{print $4}')
       iossdk_old=$(grep -oE '"ios": "[0-9]+\.[0-9]+\.[0-9]+"' package.json | awk -F'"' '{print $4}')
 
+      echo -e "\n[+] Return repository to master branch\n"
+      git checkout master
+
       echo -e "\n[+] Versions:"
       echo -e "\t[+] RN SDK: $(version)"
       echo -e "\t[+] ANDROID SDK: $androidsdk"
@@ -141,31 +144,31 @@ steps:
 
       if [ "$androidsdk" != "$androidsdk_old" ];then
         versions="$versions *$androidsdk* |"
-        changelog_android=$androidsdk
+        android_changelog_version=$androidsdk
       else
-        changelog_sdk="0.0.0"
+        android_changelog_version="0.0.0"
         versions="$versions $androidsdk|"
       fi
 
       if [ "$iossdk" != "$iossdk_old" ];then
         versions="$versions *$iossdk*|"
-        changelog_ios=$iossdk
+        ios_changelog_version=$iossdk
       else
-        changelog_sdk="0.0.0"
+        ios_changelog_version="0.0.0"
         versions="$versions $iossdk|"
       fi
 
       echo "##vso[task.setvariable variable=versions]$(echo $versions)"
-      echo "##vso[task.setvariable variable=changelog_android]$(echo $changelog_android)"
-      echo "##vso[task.setvariable variable=changelog_ios]$(echo $changelog_ios)"
+      echo "##vso[task.setvariable variable=android_changelog_version]$(echo $android_changelog_version)"
+      echo "##vso[task.setvariable variable=changelog_ios]$(echo $ios_changelog_version )"
     displayName: Get Versions
 
   - ${{ if ne(variables['Build.Reason'],'manual') }}:
     - template: azure-templates/publish-changelog.yaml@sys_kubernetes_templates
       parameters:
         changelogId: $(RNSDK_Changelog_id)
-        changelog_android: $(changelog_android)
-        changelog_ios: $(changelog_ios)
+        android_changelog_version: $(android_changelog_version)
+        ios_changelog_version: $(ios_changelog_version)
   
 
   - template: azure-templates/release-table.yaml@sys_kubernetes_templates
