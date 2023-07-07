@@ -19,13 +19,12 @@
     "react-native-permissions": "^3.8.3",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",
-    "react-native-situm-plugin": "file:..",
+    "@situm/react-native": "file:..",
     "react-native-webview": "^13.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
-
     "@babel/runtime": "^7.20.0",
     "@react-native-community/eslint-config": "^3.2.0",
     "@tsconfig/react-native": "^2.0.2",
