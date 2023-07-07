@@ -1,5 +1,5 @@
 trigger:
-  - feature/*
+  - release/*
 
 pr: none
 
@@ -26,7 +26,7 @@ resources:
     ref: master
 
 steps:
-- ${{ if contains(variables['Build.SourceBranch'], 'feature/') }}:
+- ${{ if contains(variables['Build.SourceBranch'], 'release/') }}:
   - checkout: self
     fetchDepth: 1
     fetchTags: false
@@ -48,7 +48,7 @@ steps:
     - bash: |
         RNVersion=$(echo $(Build.SourceBranch) | cut -d "/" -f 4)
         echo "##vso[task.setvariable variable=version]$(echo $RNVersion)"
-        echo -e "\n[+] I'm a shy step so I don't tell you anything\n"
+        echo -e "\n[+] I'm a shy step that only executes where this pipeline run automatic\n"
       displayName: Set RN Version
 
   - bash: |
