@@ -90,8 +90,8 @@ const useSitum = () => {
   const initSitumSdk = async ({
     email,
     apiKey,
-    withPosition,
-    fetch,
+    withPosition = true,
+    fetch = true,
     useRemoteConfig = true,
   }: {
     email?: string;
@@ -116,14 +116,14 @@ const useSitum = () => {
 
       SitumPlugin.setApiKey(email, apiKey, (response: any) => {
         if (response && Boolean(response.success) === true) {
-          console.info("\u2713 Successful authentication.");
+          console.debug("Situm > hook > Successful authentication.");
         } else {
-          reject("Failure while authenticating.");
+          reject("Situm > hook > Failure while authenticating.");
         }
       });
 
       SitumPlugin.setUseRemoteConfig(`${useRemoteConfig}`, () => {
-        console.log("Using remote config");
+        console.debug("Situm > hook > Using remote config");
       });
 
       withPosition &&
@@ -148,17 +148,20 @@ const useSitum = () => {
   // Cartography
   const initializeBuildings = async () =>
     new Promise<Building[]>((resolve, reject) => {
-      console.log("Retrieving buildings from Situm Dashboard");
+      console.debug("Retrieving buildings from Situm API");
+
       SitumPlugin.fetchBuildings(
         (buildingArray: Building[]) => {
           dispatch(setBuildings(buildingArray));
-          console.info("\u2713 Successfully retrieved buildings.");
+          console.debug("Situm > hook > Successfully retrieved buildings.");
           resolve(buildingArray);
         },
-        (error: string) => {
-          console.error(`Could not retrieve buildings: ${error}`);
-          reject(`Could not retrieve buildings: ${error}`);
-          dispatch(setError({ message: error, code: 3011 } as SDKError));
+        (_error: string) => {
+          console.error(
+            `Situm > hook > Could not retrieve buildings: ${_error}`
+          );
+          reject(`Could not retrieve buildings: ${_error}`);
+          dispatch(setError({ message: _error, code: 3011 } as SDKError));
         }
       );
     });
@@ -172,7 +175,7 @@ const useSitum = () => {
       dispatch(setCurrentBuilding(newBuilding));
       initializeBuildingPois(newBuilding);
     } else {
-      console.warn(`No building found for id ${buildingId}`);
+      console.warn(`Situm > hook > No building found for id ${buildingId}`);
     }
   };
 
@@ -185,8 +188,8 @@ const useSitum = () => {
     SitumPlugin.fetchBuildingInfo(
       b,
       (buildingInfo: any) => {
-        console.info(
-          "\u2713 Successfully retrieved pois of the selected building. "
+        console.debug(
+          "Situm > hook > Successfully retrieved pois of the selected building. "
         );
 
         // Please, do not change the next line. iOS sends data as indoorPois and Android sends it as indoorPOIs
@@ -195,17 +198,19 @@ const useSitum = () => {
         dispatch(setPois(buildingPois));
       },
       (error: string) => {
-        console.error(`Could not initialize building pois: ${error}`);
+        console.error(
+          `Situm > hook > Could not initialize building pois: ${error}`
+        );
         dispatch(setError({ message: error, code: 3021 } as SDKError));
       }
     );
   };
 
   const startPositioning = () => {
-    console.debug("Starting positioning ...");
+    console.debug("Situm > hook > Starting positioning...");
 
     if (location.status !== PositioningStatus.STOPPED) {
-      console.log("Positioning has already started");
+      console.debug("Situm > hook > Positioning has already started");
       return;
     }
 
@@ -224,18 +229,20 @@ const useSitum = () => {
       },
       (status: LocationStatus) => {
         if (status.statusName in PositioningStatus) {
-          console.debug(`Positioning state updated ${status.statusName}`);
+          console.debug(
+            `Situm > hook > Positioning state updated ${status.statusName}`
+          );
           dispatch(setLocationStatus(status.statusName as PositioningStatus));
         }
       },
       (error: string) => {
-        console.error(`Error while positioning: ${error}}`);
+        console.error(`Situm > hook > Error while positioning: ${error}}`);
         //@ts-ignore
         dispatch(setError({ message: error, code: 3001 } as SDKError));
       },
       locationOptions
     );
-    console.info(`Successfully started positioning`);
+    console.debug(`Successfully started positioning`);
   };
 
   const stopPositioning = async () => {
@@ -243,9 +250,9 @@ const useSitum = () => {
     SitumPlugin.stopPositioning((success: boolean) => {
       if (success) {
         dispatch(resetLocation());
-        console.info("Successfully stopped positioning");
+        console.debug("Situm > hook > Successfully stopped positioning");
       } else {
-        console.error("Could not stop positioning");
+        console.error("Situm > hook > Could not stop positioning");
       }
     });
   };
@@ -273,11 +280,11 @@ const useSitum = () => {
       SitumPlugin.requestDirections(
         [building, fromPoint, toPoint, directionsOptions],
         (newDirections: State["directions"]) => {
-          console.info("\u2713 Successfully computed route");
+          console.debug("Situm > hook > Successfully computed route");
           resolve(newDirections);
         },
         (error: string) => {
-          console.error(`Could not compute route: ${error}`);
+          console.debug(`Situm > hook > Could not compute route: ${error}`);
           dispatch(setError({ message: error, code: 3041 } as SDKError));
           reject(error);
         }
@@ -305,7 +312,7 @@ const useSitum = () => {
 
     if (!poiDestination || (!poiOrigin && originId !== -1) || lockDirections) {
       console.debug(
-        `Could not compute route for origin: ${originId} or destination: ${destinationId} (lockDirections: ${lockDirections})`
+        `Situm > hook >Could not compute route for origin: ${originId} or destination: ${destinationId} (lockDirections: ${lockDirections})`
       );
       return;
     }
@@ -401,7 +408,7 @@ const useSitum = () => {
           );
         },
         (error: string) => {
-          console.error(`Could not update navigation: ${error}`);
+          console.error(`Situm > hook >Could not update navigation: ${error}`);
           callback && callback("error");
           dispatch(setError({ message: error, code: 3051 } as SDKError));
           stopNavigationRef.current();
@@ -426,7 +433,7 @@ const useSitum = () => {
         p?.identifier === poi?.id?.toString()
     );
     if (!validPoi) {
-      console.error("invalid value as poi or poiId");
+      console.error("Situm > hook > Invalid value as poi or poiId");
       return;
     }
 
@@ -446,9 +453,9 @@ const useSitum = () => {
     }
     SitumPlugin.removeNavigationUpdates((response: any) => {
       if (response && response.success) {
-        console.debug("\u2713 Successfully removed navigation updates");
+        console.debug("Situm > hook > Successfully removed navigation updates");
       } else {
-        console.error("Could not remove navigation updates");
+        console.error("Situm > hook > Could not remove navigation updates");
       }
     });
     dispatch(setNavigation({ status: NavigationStatus.STOP }));
@@ -463,11 +470,13 @@ const useSitum = () => {
   const selectPoi = (poiId: number): void => {
     const poi = pois?.find((p) => p?.identifier === poiId?.toString());
     if (!poi) {
-      console.error("invalid value as poiId");
+      console.error("Situm > hook > Invalid value as poiId");
       return;
     }
     if (navigation.status !== NavigationStatus.STOP) {
-      console.error("navigation on course, poi selection is unavailable");
+      console.error(
+        "Situm > hook > Navigation on course, poi selection is unavailable"
+      );
       return;
     }
     sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
@@ -486,10 +495,10 @@ const useSitum = () => {
     SitumPlugin.updateNavigationWithLocation(
       location,
       (info: any) => {
-        console.info(info);
+        console.debug(info);
       },
       (e: string) => {
-        console.error(`Error on navigation update ${e}`);
+        console.error(`Situm > hook > Error on navigation update ${e}`);
       }
     );
   }, [location]);
