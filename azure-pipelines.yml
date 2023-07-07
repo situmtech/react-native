@@ -59,7 +59,7 @@ steps:
       echo "##vso[task.setvariable variable=currentBranch]$(echo $currentBranch)"
       echo -e "\n[+] Defined versions:"
       echo -e "\t[+] NPM cli version: $(npm --version)" 
-      echo -e "\t[+] React Native Plugin version: ${{ parameters.RNVersion }}"
+      echo -e "\t[+] React Native Plugin version: $(version)"
       echo -e "\t[+] Current branch: $currentBranch"
 
         
