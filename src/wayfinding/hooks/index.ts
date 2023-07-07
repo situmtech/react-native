@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
 
-import {
+import type {
   Building,
   DirectionPoint,
   LocationRequestOptions,
   Poi,
 } from "../../index";
 import SitumPlugin from "../../sdk";
+import requestPermission from "../../utils/requestPermission";
 import {
   NavigateToPoiType,
   NavigationStatus,
@@ -44,7 +46,6 @@ import {
 import { useDispatch, useSelector } from "../store/utils";
 import { sendMessageToViewer } from "../utils";
 import Mapper from "../utils/mapper";
-import requestPermission from "../utils/requestPermission";
 
 const defaultNavigationOptions = {
   distanceToGoalThreshold: 4,

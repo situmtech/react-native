@@ -53,6 +53,7 @@ const checkAndroidPermissions = async () => {
       );
       return true;
     }
+
     throw "ACCESS_FINE_LOCATION, BLUETOOTH_CONNECT and ACCESS_FINE_LOCATION permissions not granted";
   } else {
     console.info("ANDROID VERSION < 30");
