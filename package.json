@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/situmtech/situm-react-native-plugin/issues"
   },
-  "homepage": "https://github.com/situmtech/situm-react-native-wayfinding#readme",
+  "homepage": "https://github.com/situmtech/situm-react-native-plugin#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -41,8 +41,8 @@
     "test": "yarn lint && yarn test:jest",
     "test:jest": "jest",
     "typescript": "tsc --noEmit",
-    "lint:fix": "eslint \"**/*.{js,ts,tsx}\" --fix",
-    "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix",
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "prepare": "bob build",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn && yarn example pods"
@@ -72,7 +72,7 @@
     "@types/react-test-renderer": "^18.0.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "commitlint": "^17.6.6",
-    "eslint": "^8.43.0",
+    "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-functional": "^5.0.8",
     "eslint-plugin-import": "^2.27.5",
@@ -82,7 +82,7 @@
     "metro-react-native-babel-preset": "0.73.7",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
-    "react-native": "^0.72.0",
+    "react-native": "^0.72.1",
     "react-native-builder-bob": "^0.20.4",
     "react-test-renderer": "18.2.0",
     "typescript": "^5.1.3"
