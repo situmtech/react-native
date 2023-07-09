@@ -1,6 +1,4 @@
 //@ts-ignore
-import type { Building } from "react-native-situm-plugin";
-
 import { ErrorName } from "../components/MapView";
 
 interface MapViewError {
@@ -55,30 +53,4 @@ export interface Navigation {
 export interface OnNavigationResult {
   navigation: Navigation;
   error?: Error;
-}
-export interface MapViewProps {
-  domain?: string;
-  user?: string;
-  apikey?: string;
-  googleApikey?: string;
-  buildingId?: string;
-  building?: Building;
-  onMapReady?: (event: WayfindingResult) => void;
-  onFloorChanged?: (event: OnFloorChangedResult) => void;
-  onPoiSelected?: (event: OnPoiSelectedResult) => void;
-  onPoiDeselected?: (event: OnPoiDeselectedResult) => void;
-  onNavigationRequested?: (event: OnNavigationResult) => void;
-  onNavigationStarted?: (event: OnNavigationResult) => void;
-  onNavigationError?: (event: OnNavigationResult) => void;
-  onError?: (event: MapViewError) => void;
-  onNavigationFinished?: (event: OnNavigationResult) => void;
-  style?: any;
-  iOSMapViewIndex?: string;
-  enablePoiClustering?: boolean;
-  showPoiNames?: boolean;
-  useRemoteConfig?: boolean;
-  minZoom?: number;
-  maxZoom?: number;
-  initialZoom?: number;
-  useDashboardTheme?: boolean;
 }

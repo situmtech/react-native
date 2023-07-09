@@ -16,7 +16,6 @@ import {
 } from "../store";
 import { useDispatch } from "../store/utils";
 import {
-  MapViewProps,
   OnNavigationResult,
   WayfindingResult,
 } from "../types/index.d";
@@ -39,6 +38,34 @@ const NETWORK_ERROR_CODE = {
   macos: 0,
   web: 0,
 };
+
+export interface MapViewProps {
+  domain?: string;
+  user?: string;
+  apikey?: string;
+  configuration?: {
+    buildingIdentifier?: string;
+    enablePoiClustering?: boolean;
+    showPoiNames?: boolean;
+    useRemoteConfig?: boolean;
+    minZoom?: number;
+    maxZoom?: number;
+    initialZoom?: number;
+    useDashboardTheme?: boolean;
+  };
+  googleApikey?: string;
+  onLoadError?: (event: MapViewError) => void;
+  onLoad?: (event: WayfindingResult) => void;
+  onFloorChanged?: (event: OnFloorChangedResult) => void;
+  onPoiSelected?: (event: OnPoiSelectedResult) => void;
+  onPoiDeselected?: (event: OnPoiDeselectedResult) => void;
+  onNavigationRequested?: (event: OnNavigationResult) => void;
+  onNavigationStarted?: (event: OnNavigationResult) => void;
+  onNavigationError?: (event: OnNavigationResult) => void;
+  onNavigationFinished?: (event: OnNavigationResult) => void;
+  style?: any;
+  iOSMapViewIndex?: string;
+}
 
 const MapView: React.FC<MapViewProps> = ({
   domain,
