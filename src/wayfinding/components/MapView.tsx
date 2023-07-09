@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useEffect, useRef, useState } from "react";
-import { Platform } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 import {
   WebViewErrorEvent,
@@ -66,6 +67,13 @@ export interface MapViewProps {
   style?: any;
   iOSMapViewIndex?: string;
 }
+
+const viewerStyles = StyleSheet.create({
+  webview: {
+    minHeight: "100%",
+    minWidth: "100%",
+  },
+});
 
 const MapView: React.FC<MapViewProps> = ({
   domain,
@@ -174,12 +182,12 @@ const MapView: React.FC<MapViewProps> = ({
 
     sendMessageToViewer(webViewRef.current, Mapper.navigation(navigation));
 
-    if (navigation.status == NavigationStatus.START) {
+    if (navigation.status === NavigationStatus.START) {
       onNavigationStarted({
         navigation: Mapper.routeToResult(navigation),
       } as OnNavigationResult);
     }
-    if (navigation?.type == NavigationUpdateType.destinationReached) {
+    if (navigation?.type === NavigationUpdateType.destinationReached) {
       onNavigationFinished({
         navigation: Mapper.navigationToResult(navigation),
       } as OnNavigationResult);
@@ -294,10 +302,7 @@ const MapView: React.FC<MapViewProps> = ({
           buildingId ? `&buildingid=${buildingId}` : ""
         }&show=rts`,
       }}
-      style={{
-        minHeight: "100%",
-        minWidth: "100%",
-      }}
+      style={viewerStyles.webview}
       javaScriptEnabled={true}
       domStorageEnabled={true}
       startInLoadingState={true}

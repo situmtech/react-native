@@ -69,6 +69,7 @@ const checkAndroidPermissions = async () => {
 };
 
 const requestPermission = () =>
+  // eslint-disable-next-line no-async-promise-executor
   new Promise<void>(async (resolve, reject) => {
     console.log("Retrieving permissions for platform " + Platform.OS);
     if (Platform.OS === "ios") {
