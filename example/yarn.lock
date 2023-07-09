@@ -1741,6 +1741,14 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
+"@situm/react-native@file:..":
+  version "3.0.0"
+  dependencies:
+    eslint-plugin-import "^2.27.5"
+    react-dom "^18.2.0"
+    react-native-permissions "*"
+    react-native-webview "*"
+
 "@tsconfig/react-native@^2.0.2":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@tsconfig/react-native/-/react-native-2.0.3.tgz#79ad8efc6d3729152da6cb23725b6c364a7349b2"
@@ -6047,14 +6055,6 @@ react-native-screens@^3.18.2:
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
-
-"react-native-situm-plugin@file:..":
-  version "0.0.32"
-  dependencies:
-    eslint-plugin-import "^2.27.5"
-    react-dom "^18.2.0"
-    react-native-permissions "*"
-    react-native-webview "*"
 
 react-native-webview@*, react-native-webview@^13.2.2:
   version "13.2.2"

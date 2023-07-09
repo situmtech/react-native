@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, MutableRefObject, useReducer } from "react";
 //@ts-ignore
 import { Building, Poi } from "react-native-situm-plugin";
