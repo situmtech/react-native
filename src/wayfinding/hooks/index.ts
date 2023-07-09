@@ -65,6 +65,7 @@ const useCallbackRef = <T>(fn: T, deps: any[]) => {
 
   useEffect(() => {
     fnRef.current = fn;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
   return fnRef;
@@ -91,16 +92,17 @@ const useSitum = () => {
     email,
     apiKey,
     withPosition = true,
-    fetch = true,
+    fetchCartography = true,
     useRemoteConfig = true,
   }: {
     email?: string;
     apiKey?: string;
     withPosition?: boolean;
-    fetch?: boolean;
+    fetchCartography?: boolean;
     useRemoteConfig?: boolean;
   }) =>
     // TODO fix this async/await
+    // eslint-disable-next-line no-async-promise-executor
     new Promise<void>(async (resolve, reject) => {
       if (!isSdkInitialized) {
         SitumPlugin.initSitumSDK();
@@ -122,9 +124,10 @@ const useSitum = () => {
         }
       });
 
-      SitumPlugin.setUseRemoteConfig(`${useRemoteConfig}`, () => {
-        console.debug("Situm > hook > Using remote config");
-      });
+      useRemoteConfig &&
+        SitumPlugin.setUseRemoteConfig(`${useRemoteConfig}`, () => {
+          console.debug("Situm > hook > Using remote config");
+        });
 
       withPosition &&
         (await requestPermission()
@@ -136,7 +139,7 @@ const useSitum = () => {
             reject(e);
           }));
 
-      fetch &&
+      fetchCartography &&
         (await initializeBuildings().catch((e: string) => {
           console.error(e);
           reject(e);
@@ -167,7 +170,7 @@ const useSitum = () => {
     });
 
   const initializeBuildingById = async (buildingId: string) => {
-    if (buildings.length == 0) return;
+    if (buildings.length === 0) return;
     const newBuilding = buildings.find(
       (b: Building) => b.buildingIdentifier === buildingId
     );
@@ -197,11 +200,11 @@ const useSitum = () => {
           buildingInfo?.indoorPOIs || buildingInfo?.indoorPois || [];
         dispatch(setPois(buildingPois));
       },
-      (error: string) => {
+      (err: string) => {
         console.error(
           `Situm > hook > Could not initialize building pois: ${error}`
         );
-        dispatch(setError({ message: error, code: 3021 } as SDKError));
+        dispatch(setError({ message: err, code: 3021 } as SDKError));
       }
     );
   };
@@ -235,10 +238,10 @@ const useSitum = () => {
           dispatch(setLocationStatus(status.statusName as PositioningStatus));
         }
       },
-      (error: string) => {
-        console.error(`Situm > hook > Error while positioning: ${error}}`);
+      (err: string) => {
+        console.error(`Situm > hook > Error while positioning: ${err}}`);
         //@ts-ignore
-        dispatch(setError({ message: error, code: 3001 } as SDKError));
+        dispatch(setError({ message: err, code: 3001 } as SDKError));
       },
       locationOptions
     );
@@ -283,10 +286,10 @@ const useSitum = () => {
           console.debug("Situm > hook > Successfully computed route");
           resolve(newDirections);
         },
-        (error: string) => {
-          console.debug(`Situm > hook > Could not compute route: ${error}`);
-          dispatch(setError({ message: error, code: 3041 } as SDKError));
-          reject(error);
+        (err: string) => {
+          console.debug(`Situm > hook > Could not compute route: ${err}`);
+          dispatch(setError({ message: err, code: 3041 } as SDKError));
+          reject(err);
         }
       );
     });
@@ -319,7 +322,7 @@ const useSitum = () => {
 
     const from =
       originId === -1 && location
-        ? location.position!
+        ? location.position
         : {
             buildingIdentifier: poiOrigin.buildingIdentifier,
             floorIdentifier: poiOrigin.floorIdentifier,
@@ -337,9 +340,9 @@ const useSitum = () => {
     // iOS workaround -> does not allow for several direction petitions
     setLockDirections(true);
     return requestDirections(currentBuilding, from, to, directionsOptions)
-      .then((directions: State["directions"]) => {
+      .then((newDirections: State["directions"]) => {
         const extendedRoute = {
-          ...directions,
+          ...newDirections,
           originId,
           destinationId,
           type: directionsOptions?.accessibilityMode,
@@ -407,10 +410,10 @@ const useSitum = () => {
             })
           );
         },
-        (error: string) => {
-          console.error(`Situm > hook >Could not update navigation: ${error}`);
+        (err: string) => {
+          console.error(`Situm > hook >Could not update navigation: ${err}`);
           callback && callback("error");
-          dispatch(setError({ message: error, code: 3051 } as SDKError));
+          dispatch(setError({ message: err, code: 3051 } as SDKError));
           stopNavigationRef.current();
         },
         { ...defaultNavigationOptions, ...navigationOptions }
@@ -501,6 +504,7 @@ const useSitum = () => {
         console.error(`Situm > hook > Error on navigation update ${e}`);
       }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   return {

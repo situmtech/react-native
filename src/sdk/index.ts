@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import invariant from "invariant";
 import { NativeEventEmitter, NativeModules, Platform } from "react-native";

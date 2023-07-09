@@ -367,15 +367,15 @@ const testCartesianCoordinate = (cartesianCoordinate) => {
   expect(typeof cartesianCoordinate.y).toBe("number");
 };
 
-const testPoint = (point) => {
-  expect(typeof point.buildingIdentifier).toBe("string");
-  expect(typeof point.cartesianCoordinate).toBe("object");
-  expect(typeof point.coordinate).toBe("object");
-  expect(typeof point.floorIdentifier).toBe("string");
-  expect(typeof point.isIndoor).toBe("boolean");
-  expect(typeof point.isOutdoor).toBe("boolean");
-  testCartesianCoordinate(point.cartesianCoordinate);
-  testCoordinate(point.coordinate);
+const testPoint = (p) => {
+  expect(typeof p.buildingIdentifier).toBe("string");
+  expect(typeof p.cartesianCoordinate).toBe("object");
+  expect(typeof p.coordinate).toBe("object");
+  expect(typeof p.floorIdentifier).toBe("string");
+  expect(typeof p.isIndoor).toBe("boolean");
+  expect(typeof p.isOutdoor).toBe("boolean");
+  testCartesianCoordinate(p.cartesianCoordinate);
+  testCoordinate(p.coordinate);
 };
 
 const testConversionArea = (conversionArea) => {

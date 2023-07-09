@@ -46,7 +46,7 @@ NativeModules.RNCSitumPlugin = {
 
   // Realtime
   requestRealTimeUpdates: jest.fn(),
-  removeRealTimeUpdates: jest.fn(),
+  removeRealTimeUpdates: jest.fn()
 };
 
 // Reset the mocks before each test

@@ -13,14 +13,14 @@
   "dependencies": {
     "@react-navigation/native": "^6.1.1",
     "@react-navigation/native-stack": "^6.9.7",
+    "@situm/react-native": "file:..",
     "react": "18.2.0",
-    "react-native": "0.71.1",
     "react-native-maps": "^1.4.0",
     "react-native-permissions": "^3.8.3",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",
-    "@situm/react-native": "file:..",
-    "react-native-webview": "^13.2.2"
+    "react-native-webview": "^13.2.2",
+    "react-native": "0.71.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -29,8 +29,8 @@
     "@react-native-community/eslint-config": "^3.2.0",
     "@tsconfig/react-native": "^2.0.2",
     "@types/jest": "^29.2.1",
-    "@types/react": "^18.0.24",
     "@types/react-test-renderer": "^18.0.0",
+    "@types/react": "^18.0.24",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
     "babel-jest": "^29.2.1",
