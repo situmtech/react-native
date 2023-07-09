@@ -1,9 +1,37 @@
-# Situm React Native Plugin &middot; [![npm](https://img.shields.io/npm/dm/react-native-situm-plugin.svg)](https://www.npmjs.com/package/react-native-situm-plugin) [![npm](https://img.shields.io/npm/v/react-native-situm-plugin.svg)](https://www.npmjs.com/package/react-native-situm-plugin) [![npm](https://img.shields.io/github/license/situmtech/situm-react-native-plugin.svg)](https://opensource.org/licenses/MIT)
+<p align="center"> <img width="233" src="https://situm.com/wp-content/themes/situm/img/logo-situm.svg" style="margin-bottom:1rem" /> <h1 align="center">@situm/react-native</h1> </p>
 
+<p align="center" style="text-align:center">
 
-[![](https://situm.es/assets/svg/logo-situm.svg)](https://www.situm.com)
+Set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system.
 
+</p>
+
+<div align="center" style="text-align:center">
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+![Latest version:](https://img.shields.io/npm/v/@situm/sdk-js/latest)
+![Node compatibility:](https://img.shields.io/node/v/@situm/sdk-js)
+[![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
+![React Native](https://img.shields.io/badge/react--native%40lastest-0.68.2-blueviolet)
+
+</div>
 ---
+
+## Introduction
+
+Situm React Native Plugin is a set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system. Among many other capabilities, apps developed with Situm React Native Plugin will be able to:
+
+* Obtain information related to buildings where Situm's positioning system is already configured: floorplans, points of interest, geotriggered events, etc.
+
+* Retrieve the location of the smartphone inside these buildings (position, orientation, and floor where the smartphone is).
+
+* Compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
+
+* Trigger notifications when the user enters a certain area.
+
+* Show a fully featured Wayfinding experience to show your cartography on a map,
+offer your users point-to-point wayfinging routes, show indoor location, explore
+Points of interest on your buildings.
 
 ## Table of contents
 
@@ -51,23 +79,12 @@
 
 ---
 
-## Description
-
-Situm React Native Plugin is a set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system. Among many other capabilities, apps developed with Situm React Native Plugin will be able to:
-
-* Obtain information related to buildings where Situm's positioning system is already configured: floorplans, points of interest, geotriggered events, etc.
-
-* Retrieve the location of the smartphone inside these buildings (position, orientation, and floor where the smartphone is).
-
-* Compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
-
-* Trigger notifications when the user enters a certain area.
 
 ---
 
 ## Submitting Contributions
 
-You will need to sign a Contributor License Agreement (CLA) before making a submission. 
+You will need to sign a Contributor License Agreement (CLA) before making a submission.
 [Learn more here.](https://situm.com/contributions/)
 
 ---
@@ -108,19 +125,19 @@ yarn add https://github.com/situmtech/situm-react-native-plugin.git
 npm install --save https://github.com/situmtech/situm-react-native-plugin.git
 ```
 
-Make sure to delete `node_modulles/` at `project/node_modules/react-native-situm-plugin/node_modules`.
+Make sure to delete `node_modulles/` at `project/node_modules/@situm/react-native/node_modules`.
 
-Note: As of now the SDK is available only on Github. When updating the SDK, make sure to delete the existing one from `node_modules/react-native-situm-plugin`.
+Note: As of now the SDK is available only on Github. When updating the SDK, make sure to delete the existing one from `node_modules/@situm/react-native`.
 
 
-### 2) Integrate plugin into project from npm  
+### 2) Integrate plugin into project from npm
 
 ```shell
-yarn add react-native-situm-plugin
+yarn add @situm/react-native
 
 #OR
 
-npm install --save react-native-situm-plugin
+npm install --save @situm/react-native
 ```
 
 ### Android
@@ -143,7 +160,7 @@ You'll need to add depedency in `PodFile`
 ```js
   target 'YourApp' do
 
-    pod 'ReactNativeSitumPlugin', :path => '../node_modules/react-native-situm-plugin/ReactNativeSitumPlugin.podspec'
+    pod 'ReactNativeSitumPlugin', :path => '../node_modules/@situm/react-native/ReactNativeSitumPlugin.podspec'
 
   end
 ```
@@ -151,7 +168,7 @@ You'll need to add depedency in `PodFile`
 You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/docs/linking-libraries-ios.html#step-3))
 
 ```
-  $(SRCROOT)/../node_modules/react-native-situm-plugin/lib/ios
+  $(SRCROOT)/../node_modules/@situm/react-native/lib/ios
 ```
 
 ## Using the Plugin
@@ -164,7 +181,7 @@ Before start using our plugin in your own project, you can try out our [Getting 
 In order to use the plugin in a React Native component all you need is the following:
 
 ```js
-import  SitumPlugin  from  "react-native-situm-plugin";
+import  SitumPlugin  from  "@situm/react-native";
 
    SitumPlugin.fetchFloorsFromBuilding(building,
        (floors) => {...},
@@ -453,7 +470,7 @@ SitumPlugin.invalidateCache();
 
 #### - requestDirections
 
-Calculates a route between two points. Note that you can also specify the [accessibility mode](https://situm.com/docs/wayfinding/#route-types). The values allowed for this parameter are: `'CHOOSE_SHORTEST', 'ONLY_ACCESSIBLE'` or `'ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES'`. 
+Calculates a route between two points. Note that you can also specify the [accessibility mode](https://situm.com/docs/wayfinding/#route-types). The values allowed for this parameter are: `'CHOOSE_SHORTEST', 'ONLY_ACCESSIBLE'` or `'ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES'`.
 
 ```js
 
@@ -519,7 +536,7 @@ const requestNavigationUpdates = () => {
 ```
 
 #### - updateNavigationWithLocation
-    
+
 Usually, position variable should be one of the locations provided by the system on the [startPositioning](#--startpositioning) function.
 
 ```js
@@ -536,7 +553,7 @@ SitumPlugin.removeNavigationUpdates();
 
 #### - requestRealTimeUpdates
 
-Emits the real time location of devices 
+Emits the real time location of devices
 
 ```js
 const requestRealtime = () => {
@@ -583,7 +600,7 @@ SitumPlugin.requestAuthorization()
 
 #### - sdkVersions
 
-Returns iOS, Android and react native SDK versions depending on the platform the app is running on. 
+Returns iOS, Android and react native SDK versions depending on the platform the app is running on.
 
 ```js
 SitumPlugin.sdkVersions(response=>{
