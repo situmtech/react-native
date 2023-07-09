@@ -35,57 +35,19 @@ Points of interest on your buildings.
 
 ## Table of contents
 
-  * [Description](#description)
   * [Setup your account](#setup-your-account)
-  * [Submitting Contributions](#submitting-contributions)
   * [Installing pre-requisites](#installing-pre-requisites)
   * [Using the Plugin](#using-the-plugin)
     + [Getting Started](#getting-started)
     + [Accessing plugin object](#accessing-plugin-object)
     + [Methods](#methods)
-      - [initSitumSDK](#--initsitumsdk)
-      - [setDashboardURL](#--setdashboardurl)
-      - [setApiKey](#--setapikey)
-      - [setUserPass](#--setuserpass)
-      - [setDashboardURL](#--setdashboardurl)
-      - [setCacheMaxAge](#--setcachemaxage)
-      - [startPositioning](#--startpositioning)
-      - [stopPositioning](#--stoppositioning)
-      - [fetchBuildings](#--fetchbuildings)
-      - [fetchFloorsFromBuilding](#--fetchfloorsfrombuilding)
-      - [fetchIndoorPOIsFromBuilding](#--fetchindoorpoisfrombuilding)
-      - [fetchOutdoorPOIsFromBuilding](#--fetchoutdoorpoisfrombuilding)
-      - [fetchEventsFromBuilding](#--fetcheventsfrombuilding)
-      - [fetchPoiCategories](#--fetchpoicategories)
-      - [fetchMapFromFloor](#--fetchmapfromfloor)
-      - [fetchPoiCategoryIconNormal](#--fetchpoicategoryiconnormal)
-      - [fetchPoiCategoryIconSelected](#--fetchpoicategoryiconselected)
-      - [invalidateCache](#--invalidatecache)
-      - [requestDirections](#--requestdirections)
-      - [requestNavigationUpdates](#--requestnavigationupdates)
-      - [updateNavigationWithLocation](#--updatenavigationwithlocation)
-      - [removeNavigationUpdates](#--removenavigationupdates)
-      - [requestRealTimeUpdates](#--requestRealTimeUpdates)
-      - [removeRealTimeUpdates](#--removeRealTimeUpdates)
-      - [checkIfPointInsideGeofence](#--checkIfPointInsideGeofence)
-      - [requestAuthorization](#--requestAuthorization)
-      - [sdkVersions](#--sdkVersions)
-      - [getDeviceId](#--getDeviceId)
-      - [onEnterGeofences](#--onEnterGeofences)
-      - [onExitGeofences](#--onExitGeofences)
+  * [Submitting Contributions](#submitting-contributions)
   * [License](#license)
   * [More information](#more-information)
   * [Support information](#support-information)
 
 ---
 
-
----
-
-## Submitting Contributions
-
-You will need to sign a Contributor License Agreement (CLA) before making a submission.
-[Learn more here.](https://situm.com/contributions/)
 
 ---
 
@@ -640,13 +602,32 @@ SitumPlugin.onEnterGeofences((geofences) => {
 Get notified about exiting geofences. Take into account the considerations described at [onEnterGeofences](#--onEnterGeofences).
 
 
+## Versioning
+
+Please refer to [CHANGELOG.md](./CHANGELOG.md) for a list of notable changes for each version of the plugin.
+
+You can also see the [tags on this repository](https://github.com/situmtech/situm-react-native-wayfinding/tags).
+
+---
+
+## Submitting contributions
+
+You will need to sign a Contributor License Agreement (CLA) before making a submission. [Learn more here](https://situm.com/contributions/).
+
+---
+
 ## License
 
-Situm-React-Native-Plugin is licensed under [MIT License](https://opensource.org/licenses/MIT)
+This project is licensed under the MIT - see the [LICENSE](./LICENSE) file for further details.
+
+---
 
 ## More information
 
-More info is available at our [Developers Page](http://developers.situm.com/pages/mobile/react-native/).
+More info is available at our [Developers Page](https://situm.com/docs/01-introduction/).
+
+---
 
 ## Support information
-For any question or bug report, please send an email to [support@situm.com](mailto:support@situm.com)
+
+For any question or bug report, please send an email to [support@situm.es](mailto:support@situm.es)
