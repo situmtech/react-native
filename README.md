@@ -47,10 +47,8 @@ Points of interest on your buildings.
   * [More information](#more-information)
   * [Support information](#support-information)
 
----
 
 
----
 
 ## Setup your account
 
@@ -66,7 +64,6 @@ In this tutorial, we will guide you step by step to set up your first React Nati
 
 5. You are ready for building your own React Native applications. Please check next steps about requirements
 
----
 
 ## Installing pre-requisites
 
@@ -609,25 +606,21 @@ Please refer to [CHANGELOG.md](./CHANGELOG.md) for a list of notable changes for
 
 You can also see the [tags on this repository](https://github.com/situmtech/situm-react-native-wayfinding/tags).
 
----
 
 ## Submitting contributions
 
 You will need to sign a Contributor License Agreement (CLA) before making a submission. [Learn more here](https://situm.com/contributions/).
 
----
 
 ## License
 
 This project is licensed under the MIT - see the [LICENSE](./LICENSE) file for further details.
 
----
 
 ## More information
 
 More info is available at our [Developers Page](https://situm.com/docs/01-introduction/).
 
----
 
 ## Support information
 
