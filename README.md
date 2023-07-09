@@ -15,7 +15,6 @@ Set of utilities that allow any developer to build React Native location based a
 ![React Native](https://img.shields.io/badge/react--native%40lastest-0.68.2-blueviolet)
 
 </div>
----
 
 ## Introduction
 
@@ -32,6 +31,8 @@ Situm React Native Plugin is a set of utilities that allow any developer to buil
 * Show a fully featured Wayfinding experience to show your cartography on a map,
 offer your users point-to-point wayfinging routes, show indoor location, explore
 Points of interest on your buildings.
+
+![Preview of WYF module](https://raw.githubusercontent.com/situmtech/situm-react-native-plugin/feature/merge-wayfinding/docs/assets/preview.png)
 
 ## Table of contents
 
