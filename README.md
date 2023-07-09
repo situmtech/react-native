@@ -18,19 +18,26 @@ Set of utilities that allow any developer to build React Native location based a
 
 ## Introduction
 
-Situm React Native Plugin is a set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system. Among many other capabilities, apps developed with Situm React Native Plugin will be able to:
+Situm React Native Plugin is a set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system.
 
-* Obtain information related to buildings where Situm's positioning system is already configured: floorplans, points of interest, geotriggered events, etc.
+This plugin has two parts:
 
-* Retrieve the location of the smartphone inside these buildings (position, orientation, and floor where the smartphone is).
+- The base SDK, the building blocks that allow you
 
-* Compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
+  * Obtain information related to buildings where Situm's positioning system is already configured: floorplans, points of interest, geotriggered events, etc.
 
-* Trigger notifications when the user enters a certain area.
+  * Retrieve the location of the smartphone inside these buildings (position, orientation, and floor where the smartphone is).
 
-* Show a fully featured Wayfinding experience to show your cartography on a map,
-offer your users point-to-point wayfinging routes, show indoor location, explore
-Points of interest on your buildings.
+  * Compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
+
+  * Trigger notifications when the user enters a certain area.
+
+
+- A full featured and easy to integrate React Native component that allows you to:
+  * show your cartography on a map
+  * show the user location on the map
+  * calculate point-to-point wayfinging routes
+  * explore points of interest on your buildings on the map
 
 ![Preview of WYF module](https://raw.githubusercontent.com/situmtech/situm-react-native-plugin/feature/merge-wayfinding/docs/assets/preview.jpg)
 
