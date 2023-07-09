@@ -32,7 +32,7 @@ Situm React Native Plugin is a set of utilities that allow any developer to buil
 offer your users point-to-point wayfinging routes, show indoor location, explore
 Points of interest on your buildings.
 
-![Preview of WYF module](https://raw.githubusercontent.com/situmtech/situm-react-native-plugin/feature/merge-wayfinding/docs/assets/preview.png)
+![Preview of WYF module](https://raw.githubusercontent.com/situmtech/situm-react-native-plugin/feature/merge-wayfinding/docs/assets/preview.jpg)
 
 ## Table of contents
 
