@@ -2,7 +2,7 @@
 
 <p align="center" style="text-align:center">
 
-Set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system.
+Set of utilities that allow any developer to build React Native location based apps using [Situm](https://www.situm.com/)'s indoor positioning system.
 
 </p>
 
@@ -18,44 +18,36 @@ Set of utilities that allow any developer to build React Native location based a
 
 ## Introduction
 
-Situm React Native Plugin is a set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system.
+Situm React Native Plugin is a set of utilities that allow any developer to build React Native location based apps using [Situm](https://www.situm.com/)'s indoor positioning system.
 
 This plugin has two parts:
 
 - The base SDK, the building blocks that allow you
-
-  * Obtain information related to buildings where Situm's positioning system is already configured: floorplans, points of interest, geotriggered events, etc.
-
-  * Retrieve the location of the smartphone inside these buildings (position, orientation, and floor where the smartphone is).
-
-  * Compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
-
-  * Trigger notifications when the user enters a certain area.
-
+  - Obtain information related to buildings where Situm's positioning system is already configured: floorplans, points of interest, geotriggered events, etc.
+  - Retrieve the location of the smartphone inside these buildings (position, orientation, and floor where the smartphone is).
+  - Compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
+  - Trigger notifications when the user enters a certain area.
 
 - A full featured and easy to integrate React Native component that allows you to:
-  * show your cartography on a map
-  * show the user location on the map
-  * calculate point-to-point wayfinging routes
-  * explore points of interest on your buildings on the map
+  - show your cartography on a map
+  - show the user location on the map
+  - calculate point-to-point wayfinging routes
+  - explore points of interest on your buildings on the map
 
 ![Preview of WYF module](https://raw.githubusercontent.com/situmtech/situm-react-native-plugin/feature/merge-wayfinding/docs/assets/preview.jpg)
 
 ## Table of contents
 
-  * [Setup your account](#setup-your-account)
-  * [Installing pre-requisites](#installing-pre-requisites)
-  * [Using the Plugin](#using-the-plugin)
-    + [Getting Started](#getting-started)
-    + [Accessing plugin object](#accessing-plugin-object)
-    + [Methods](#methods)
-  * [Submitting Contributions](#submitting-contributions)
-  * [License](#license)
-  * [More information](#more-information)
-  * [Support information](#support-information)
-
-
-
+- [Setup your account](#setup-your-account)
+- [Installing pre-requisites](#installing-pre-requisites)
+- [Using the Plugin](#using-the-plugin)
+  - [Getting Started](#getting-started)
+  - [Accessing plugin object](#accessing-plugin-object)
+  - [Methods](#methods)
+- [Submitting Contributions](#submitting-contributions)
+- [License](#license)
+- [More information](#more-information)
+- [Support information](#support-information)
 
 ## Setup your account
 
@@ -71,10 +63,9 @@ In this tutorial, we will guide you step by step to set up your first React Nati
 
 5. You are ready for building your own React Native applications. Please check next steps about requirements
 
-
 ## Installing pre-requisites
 
-### Configure React Native:
+### Configure React Native
 
 Firstly you need to setup react-native development environment. To get started please follow instructions under section **React Native CLI Quickstart** on this [guide.](https://reactnative.dev/docs/environment-setup)
 
@@ -95,7 +86,6 @@ npm install --save https://github.com/situmtech/situm-react-native-plugin.git
 Make sure to delete `node_modulles/` at `project/node_modules/@situm/react-native/node_modules`.
 
 Note: As of now the SDK is available only on Github. When updating the SDK, make sure to delete the existing one from `node_modules/@situm/react-native`.
-
 
 ### 2) Integrate plugin into project from npm
 
@@ -122,6 +112,7 @@ allprojects {
 ```
 
 ### iOS
+
 You'll need to add depedency in `PodFile`
 
 ```js
@@ -134,13 +125,14 @@ You'll need to add depedency in `PodFile`
 
 You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/docs/linking-libraries-ios.html#step-3))
 
-```
+```bash
   $(SRCROOT)/../node_modules/@situm/react-native/lib/ios
 ```
 
 ## Using the Plugin
 
 ### Getting Started
+
 Before start using our plugin in your own project, you can try out our [Getting Started sample app](./example/README.md) in your device.
 
 ### Accessing plugin object
@@ -173,6 +165,7 @@ SitumPlugin.initSitumSDK();
 Set the environment that will be used to retrieve the data of your account. Return true if `url` was set successfully, otherwise false. The default environment is "https://dashboard.situm.com".
 
 - **NOTE**: You must set the environment with this method before authenticating with `setUserPass()` or `setApiKey()`. In case you are authenticating with the `AndroidManifest.xml` fields, make sure the credentials specified there belong to the enviroment specified with this method.
+
 ```js
 SitumPlugin.setDashboardURL("https://dashboard.situm.com", (success: any) => {});
 ```
@@ -188,20 +181,15 @@ SitumPlugin.setApiKey("SITUM_EMAIL","SITUM_API_KEY")
 #### - setUserPass
 
 Provides user's email and password.
+
 ```js
 SitumPlugin.setUserPass("SITUM_EMAIL","SITUM_USER_PASSWORD")
-```
-
-#### - setDashboardURL
-
-Set the enviroment that will be used to retrieve the data of your account. Return true if `url` was set successfully, otherwise false
-```js
-SitumPlugin.setDashboardURL("https://dashboard.situm.com", (success: any) => {});
 ```
 
 #### - setUseRemoteConfig
 
 Set the remote configuration state which allows to use the configuration (location request) stored on the web to find the location of the user.
+
 ```js
 SitumPlugin.setUseRemoteConfig("true", (success: any) => {});
 ```
@@ -209,6 +197,7 @@ SitumPlugin.setUseRemoteConfig("true", (success: any) => {});
 #### - setCacheMaxAge
 
 Sets the maximum age of a cached response in seconds.
+
 ```js
 SitumPlugin.setCacheMaxAge(1*60*60) // 1 hour
 ```
@@ -216,6 +205,7 @@ SitumPlugin.setCacheMaxAge(1*60*60) // 1 hour
 #### - startPositioning
 
 Starts the positioning system.
+
 ```js
 const locationOptions = {
   buildingIdentifier: building.buildingIdentifier,
@@ -223,11 +213,11 @@ const locationOptions = {
 
 SitumPlugin.startPositioning(
   (location) => {
-    //returns location object
+    // returns location object
     console.log(JSON.stringy(location))
   },
   (status) => {
-    //returns positioning status
+    // returns positioning status
     console.log(JSON.stringy(status))
   },
   (error: string) => {
@@ -241,6 +231,7 @@ SitumPlugin.startPositioning(
 #### - stopPositioning
 
 Stop the positioning system on current active listener.
+
 ```js
 SitumPlugin.stopPositioning((success: any) => {});
 ```
@@ -329,10 +320,10 @@ const getPOIsFromBuilding = () => {
   SitumPlugin.fetchOutdoorPOIsFromBuilding(
     building,
     (pois) => {
-    // returns list of POIs
-   },
+      // returns list of POIs
+    },
     (error) => {
-      //returns error string
+      // returns error string
     }
   );
 };
@@ -347,14 +338,15 @@ const getEventsFromBuilding = () => {
  SitumPlugin.fetchEventsFromBuilding(
     building,
     (events: any) => {
-    // returns list of events
-   },
+      // returns list of events
+    },
     (error) => {
       //returns error string
     }
   );
 };
 ```
+
 #### - fetchPoiCategories
 
 Get all POI categories, download and cache their icons asynchronously.
@@ -366,7 +358,7 @@ Get all POI categories, download and cache their icons asynchronously.
         // returns list of categories
       },
       (error) => {
-        //returns error string
+        // returns error string
       }
     );
   };
@@ -420,12 +412,11 @@ const getPoiCategoryIconSelected = (category) => {
         // returns base64 icon
       },
       (error) => {
-        //returns error string
+        // returns error string
       }
     );
   };
   ```
-
 
 #### - invalidateCache
 
@@ -570,8 +561,7 @@ SitumPlugin.requestAuthorization()
 Returns iOS, Android and react native SDK versions depending on the platform the app is running on.
 
 ```js
-SitumPlugin.sdkVersions(response=>{
-
+SitumPlugin.sdkVersions(response => {
   // e.g. {ios: "2.45.0", android: "1.60@aar", react_native:"0.0.3"}
 });
 ```
@@ -581,8 +571,7 @@ SitumPlugin.sdkVersions(response=>{
 Returns user's device Id generated by SitumSDK
 
 ```js
-SitumPlugin.getDeviceId(response=>{
-
+SitumPlugin.getDeviceId(response => {
   // e.g. {deviceId: 12345678}
 });
 ```
@@ -597,8 +586,9 @@ Get notified about entering geofences. Take into account:
 
 ```js
 SitumPlugin.onEnterGeofences((geofences) => {
-
-  // e.g. [{"polygonPoints": [], "customFields": {}, "updatedAt": "Thu Jan 01 01:00:00 +0100 1970", "buildingIdentifier": "1234", "floorIdentifier": "123456", "code": "", "createdAt": "Thu Jan 01 01:00:00 +0100 1970", "infoHtml": "", "name": "My Geofence", "identifier": "12345678-aaaa-bbbb-cccc-12345678abcd"}]
+  // e.g. [
+  //   {"polygonPoints": [], "customFields": {}, "updatedAt": "Thu Jan 01 01:00:00 +0100 1970", "buildingIdentifier": "1234", "floorIdentifier": "123456", "code": "", "createdAt": "Thu Jan 01 01:00:00 +0100 1970", "infoHtml": "", "name": "My Geofence", "identifier": "12345678-aaaa-bbbb-cccc-12345678abcd"}
+  // ]
 });
 ```
 
@@ -606,6 +596,42 @@ SitumPlugin.onEnterGeofences((geofences) => {
 
 Get notified about exiting geofences. Take into account the considerations described at [onEnterGeofences](#--onEnterGeofences).
 
+## Development
+
+### Run the tests
+
+```bash
+yarn test
+```
+
+Situm-React-Native-Plugin is licensed under [MIT License](https://opensource.org/licenses/MIT)
+
+### Build the library
+
+
+```bash
+yarn run prepare
+```
+
+More info is available at our [Developers Page](http://developers.situm.com/pages/mobile/react-native/).
+
+### Release version
+
+```bash
+yarn run prepare
+npm pack
+npm publish
+```
+
+or for beta channel
+
+```bash
+npm publish --tag beta
+```
+
+## Support information
+
+For any question or bug report, please send an email to [support@situm.com](mailto:support@situm.com)
 
 ## Versioning
 
@@ -613,21 +639,17 @@ Please refer to [CHANGELOG.md](./CHANGELOG.md) for a list of notable changes for
 
 You can also see the [tags on this repository](https://github.com/situmtech/situm-react-native-wayfinding/tags).
 
-
 ## Submitting contributions
 
 You will need to sign a Contributor License Agreement (CLA) before making a submission. [Learn more here](https://situm.com/contributions/).
-
 
 ## License
 
 This project is licensed under the MIT - see the [LICENSE](./LICENSE) file for further details.
 
-
 ## More information
 
 More info is available at our [Developers Page](https://situm.com/docs/01-introduction/).
-
 
 ## Support information
 
