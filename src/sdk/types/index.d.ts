@@ -598,6 +598,70 @@ export type RealTimeData = {
   locations: Location[];
 };
 
+export interface Location {
+  position?: Position;
+  accuracy?: number;
+  bearing?: {
+    degrees: number;
+    degreesClockwise: number;
+  };
+  hasBearing?: boolean;
+  status: LocationStatus;
+}
+
+export interface Position {
+  coordinate: {
+    latitude: number;
+    longitude: number;
+  };
+  cartesianCoordinate: {
+    x: number;
+    y: number;
+  };
+  isIndoor?: boolean;
+  isOutdoor?: boolean;
+  buildingIdentifier?: string;
+  floorIdentifier?: string;
+}
+
+export enum LocationStatus {
+  STARTING = "STARTING",
+  CALCULATING = "CALCULATING",
+  // This status will always be sent to mapviewer-web, in case we recieve
+  // a location from SDK.
+  POSITIONING = "POSITIONING",
+  USER_NOT_IN_BUILDING = "USER_NOT_IN_BUILDING",
+  STOPPED = "STOPPED",
+}
+
+export interface SDKNavigation {
+  //closestPositionInRoute: any;
+  currentIndication?: any;
+  //currentStepIndex:number;
+  //distanceToEndStep: number;
+  distanceToGoal?: number;
+  //nextIndication: any;
+  points?: any;
+  routeStep?: any;
+  segments?: any;
+  route?: Directions;
+  //timeToEndStep: number;
+  //timeToGoal: number;
+  type?: NavigationUpdateType;
+  status: NavigationStatus;
+}
+
+export enum NavigationStatus {
+  START = "start",
+  STOP = "stop",
+  UPDATE = "update",
+}
+
+export enum NavigationUpdateType {
+  progress = "PROGRESS",
+  userOutsideRoute = "OUT_OF_ROUTE",
+  destinationReached = "DESTINATION_REACHED",
+}
 export interface SitumPluginStatic {
   initSitumSDK(): void;
 
