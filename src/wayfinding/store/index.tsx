@@ -1,74 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, MutableRefObject, useReducer } from "react";
-//@ts-ignore
-import { Building, Poi } from "react-native-situm-plugin";
+import {
+  Building,
+  Location,
+  LocationStatus,
+  NavigationStatus,
+  Poi,
+  SDKNavigation,
+} from "src/sdk/types";
 
 import { createReducer } from "./utils";
-
-export interface Location {
-  position?: Position;
-  accuracy?: number;
-  bearing?: {
-    degrees: number;
-    degreesClockwise: number;
-  };
-  hasBearing?: boolean;
-  status: PositioningStatus;
-}
-
-export interface Position {
-  coordinate: {
-    latitude: number;
-    longitude: number;
-  };
-  cartesianCoordinate: {
-    x: number;
-    y: number;
-  };
-  isIndoor?: boolean;
-  isOutdoor?: boolean;
-  buildingIdentifier?: string;
-  floorIdentifier?: string;
-}
-
-export enum PositioningStatus {
-  STARTING = "STARTING",
-  CALCULATING = "CALCULATING",
-  // This status will always be sent to mapviewer-web, in case we recieve
-  // a location from SDK.
-  POSITIONING = "POSITIONING",
-  USER_NOT_IN_BUILDING = "USER_NOT_IN_BUILDING",
-  STOPPED = "STOPPED",
-}
-
-export interface SDKNavigation {
-  //closestPositionInRoute: any;
-  currentIndication?: any;
-  //currentStepIndex:number;
-  //distanceToEndStep: number;
-  distanceToGoal?: number;
-  //nextIndication: any;
-  points?: any;
-  routeStep?: any;
-  segments?: any;
-  route?: Directions;
-  //timeToEndStep: number;
-  //timeToGoal: number;
-  type?: NavigationUpdateType;
-  status: NavigationStatus;
-}
-
-export enum NavigationStatus {
-  START = "start",
-  STOP = "stop",
-  UPDATE = "update",
-}
-
-export enum NavigationUpdateType {
-  progress = "PROGRESS",
-  userOutsideRoute = "OUT_OF_ROUTE",
-  destinationReached = "DESTINATION_REACHED",
-}
 
 // TODO: add types
 export type Directions = any;
@@ -105,7 +46,7 @@ export const initialState: State = {
   webViewRef: undefined,
   sdkInitialized: false,
   user: undefined,
-  location: { status: PositioningStatus.STOPPED },
+  location: { status: LocationStatus.STOPPED },
   buildings: [],
   currentBuilding: undefined,
   pois: [],
@@ -132,7 +73,7 @@ const Reducer = createReducer<State>({
   setLocation: (state: State, payload: State["location"]) => {
     return { ...state, location: payload };
   },
-  setLocationStatus: (state: State, payload: PositioningStatus) => {
+  setLocationStatus: (state: State, payload: LocationStatus) => {
     return { ...state, location: { ...state.location, status: payload } };
   },
   resetLocation: (state: State) => {
