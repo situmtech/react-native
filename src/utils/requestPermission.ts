@@ -49,12 +49,12 @@ const checkAndroidPermissions = async () => {
       granted["android.permission.BLUETOOTH_SCAN"] === RESULTS.GRANTED
     ) {
       console.info(
-        "ACCESS_FINE_LOCATION, BLUETOOTH_CONNECT and ACCESS_FINE_LOCATION permissions granted"
+        "ACCESS_FINE_LOCATION, BLUETOOTH_CONNECT and BLUETOOTH_SCAN permissions granted"
       );
       return true;
     }
 
-    throw "ACCESS_FINE_LOCATION, BLUETOOTH_CONNECT and ACCESS_FINE_LOCATION permissions not granted";
+    throw "ACCESS_FINE_LOCATION, BLUETOOTH_CONNECT and BLUETOOTH_SCAN permissions not granted";
   } else {
     console.info("ANDROID VERSION < 30");
     granted = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
