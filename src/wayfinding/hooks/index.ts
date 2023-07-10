@@ -91,13 +91,13 @@ const useSitum = () => {
   const initSitumSdk = async ({
     email,
     apiKey,
-    withPosition = true,
+    startPositions = true,
     fetchCartography = true,
     useRemoteConfig = true,
   }: {
     email?: string;
     apiKey?: string;
-    withPosition?: boolean;
+    startPositions?: boolean;
     fetchCartography?: boolean;
     useRemoteConfig?: boolean;
   }) =>
@@ -129,7 +129,7 @@ const useSitum = () => {
           console.debug("Situm > hook > Using remote config");
         });
 
-      withPosition &&
+      startPositions &&
         (await requestPermission()
           .then(() => {
             startPositioning();
