@@ -17,7 +17,11 @@ import {
 } from "../store";
 import { useDispatch } from "../store/utils";
 import {
+  MapViewError,
+  OnFloorChangedResult,
   OnNavigationResult,
+  OnPoiDeselectedResult,
+  OnPoiSelectedResult,
   WayfindingResult,
 } from "../types/index.d";
 import { sendMessageToViewer } from "../utils";
@@ -77,28 +81,20 @@ const viewerStyles = StyleSheet.create({
 
 const MapView: React.FC<MapViewProps> = ({
   domain,
-  user,
-  apikey,
-  building,
-  buildingId,
-  onMapReady = () => {},
+  // user,
+  // apikey,
+  configuration,
+  onLoad = () => {},
+  onLoadError = () => {},
   onFloorChanged = () => {},
   onPoiSelected = () => {},
   onPoiDeselected = () => {},
   onNavigationRequested = () => {},
   onNavigationStarted = () => {},
   onNavigationError = () => {},
-  onError = () => {},
   onNavigationFinished = () => {},
   style,
   //iOSMapViewIndex,
-  enablePoiClustering,
-  showPoiNames,
-  useRemoteConfig,
-  minZoom,
-  maxZoom,
-  initialZoom,
-  useDashboardTheme,
 }) => {
   const dispatch = useDispatch();
   const webViewRef = useRef();
@@ -111,8 +107,6 @@ const MapView: React.FC<MapViewProps> = ({
     directions,
     navigation,
     currentBuilding,
-    initSitumSdk,
-    initializeBuilding,
     initializeBuildingById,
     calculateRoute,
     startNavigation,
@@ -124,39 +118,18 @@ const MapView: React.FC<MapViewProps> = ({
     if (
       webViewRef.current &&
       mapLoaded &&
-      (location?.position?.buildingIdentifier ===
-        building?.buildingIdentifier ||
-        location?.position?.buildingIdentifier === buildingId)
+      location?.position?.buildingIdentifier ===
+        configuration?.buildingIdentifier
     ) {
       sendMessageToViewer(webViewRef.current, Mapper.followUser(true));
     }
   };
 
-  // Initialize SDK when mounting map
   useEffect(() => {
-    initSitumSdk({
-      email: user,
-      apiKey: apikey,
-      withPosition: true,
-      fetch: true,
-      useRemoteConfig,
-    })
-      .then(() => {
-        console.info("SDK initialized successfully");
-      })
-      .catch((e) => {
-        console.error(`Error on SDK initialization: ${e}`);
-      });
-  }, []);
-
-  // Set current building to the one passed as prop
-  useEffect(() => {
-    building && initializeBuilding(building);
-  }, [building]);
-
-  useEffect(() => {
-    buildingId && initializeBuildingById(buildingId);
-  }, [buildingId]);
+    configuration.buildingIdentifier &&
+      initializeBuildingById(configuration.buildingIdentifier);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [configuration.buildingIdentifier]);
 
   useEffect(() => {
     if (error) {
@@ -192,6 +165,7 @@ const MapView: React.FC<MapViewProps> = ({
         navigation: Mapper.navigationToResult(navigation),
       } as OnNavigationResult);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
 
   // Updated SDK route
@@ -207,12 +181,12 @@ const MapView: React.FC<MapViewProps> = ({
         webViewRef.current,
         Mapper.initialConfiguration(
           style,
-          enablePoiClustering,
-          showPoiNames,
-          minZoom,
-          maxZoom,
-          initialZoom,
-          useDashboardTheme
+          configuration.enablePoiClustering,
+          configuration.showPoiNames,
+          configuration.minZoom,
+          configuration.maxZoom,
+          configuration.initialZoom,
+          configuration.useDashboardTheme
         )
       );
     }
@@ -220,19 +194,19 @@ const MapView: React.FC<MapViewProps> = ({
     webViewRef,
     mapLoaded,
     style,
-    enablePoiClustering,
-    showPoiNames,
-    minZoom,
-    maxZoom,
-    initialZoom,
-    useDashboardTheme,
+    configuration.enablePoiClustering,
+    configuration.showPoiNames,
+    configuration.minZoom,
+    configuration.maxZoom,
+    configuration.initialZoom,
+    configuration.useDashboardTheme,
   ]);
 
   const handleRequestFromViewer = (event: WebViewMessageEvent) => {
     const eventParsed = JSON.parse(event.nativeEvent.data);
     switch (eventParsed.type) {
       case "app.map_is_ready":
-        onMapReady({
+        onLoad({
           status: "SUCCESS",
           message: "Map is ready!",
         } as WayfindingResult);
@@ -254,12 +228,12 @@ const MapView: React.FC<MapViewProps> = ({
             .destinationIdentifier,
           directionsOptions: JSON.parse(event.nativeEvent.data).payload
             .directionsOptions,
-          callback: (status, navigation?) =>
-            status == "success" && navigation
+          callback: (status, _navigation?) =>
+            status === "success" && navigation
               ? onNavigationRequested({
-                  navigation: Mapper.routeToResult(navigation),
+                  navigation: Mapper.routeToResult(_navigation),
                 } as OnNavigationResult)
-              : status == "error" &&
+              : status === "error" &&
                 onNavigationError({} as OnNavigationResult),
         });
         break;
@@ -299,7 +273,9 @@ const MapView: React.FC<MapViewProps> = ({
         uri: `${domain || SITUM_BASE_DOMAIN}/?email=${fullUser?.email}&apikey=${
           fullUser?.apiKey
         }&wl=true&global=true&mode=embed${
-          buildingId ? `&buildingid=${buildingId}` : ""
+          configuration.buildingIdentifier
+            ? `&buildingid=${configuration.buildingIdentifier}`
+            : ""
         }&show=rts`,
       }}
       style={viewerStyles.webview}
@@ -317,13 +293,13 @@ const MapView: React.FC<MapViewProps> = ({
         const { nativeEvent } = evt;
         // TODO: on render error should probably still try to render an html
         if (nativeEvent.code === NETWORK_ERROR_CODE[Platform.OS]) {
-          onError({
+          onLoadError({
             name: ErrorName.ERR_INTERNET_DISCONNECTED,
             description: nativeEvent.description,
           });
         } else {
           // TODO: handle more errors
-          onError({
+          onLoadError({
             name: ErrorName.ERR_INTERNAL_SERVER_ERROR,
             description: nativeEvent.description,
           });
