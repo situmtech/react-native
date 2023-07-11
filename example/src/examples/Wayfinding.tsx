@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
@@ -12,6 +12,7 @@ import {
   useSitum,
 } from '../../../src/wayfinding';
 import {SITUM_EMAIL, SITUM_API_KEY, SITUM_BUILDING_ID} from '../situm';
+import {MapViewRef} from '../../../src/wayfinding/components/MapView';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,8 +27,24 @@ const styles = StyleSheet.create({
 });
 
 const Screen: React.FC = () => {
-  // const {initSitumSdk} = useSitum();
-  // const [controller, setController] = useState();
+  const {initSitumSdk} = useSitum();
+  const [controller, setController] = useState<MapViewRef>();
+
+  // Initialize SDK when mounting map
+  useEffect(() => {
+    initSitumSdk({
+      startPositions: true,
+      fetchCartography: true,
+      useRemoteConfig: true,
+    })
+      .then(() => {
+        console.info('SDK initialized successfully');
+      })
+      .catch(e => {
+        console.error(`Error on SDK initialization: ${e}`);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onLoad = (controller: any) => {
     console.log('Map is ready now' + JSON.stringify(controller));
@@ -61,24 +78,9 @@ const Screen: React.FC = () => {
     console.log('on navigation finished detected: ' + JSON.stringify(event));
   };
 
-  // Initialize SDK when mounting map
-  // useEffect(() => {
-  //   initSitumSdk({
-  //     startPositions: true,
-  //     fetchCartography: true,
-  //     useRemoteConfig: true,
-  //   })
-  //     .then(() => {
-  //       console.info('SDK initialized successfully');
-  //     })
-  //     .catch(e => {
-  //       console.error(`Error on SDK initialization: ${e}`);
-  //     });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
   return (
     <MapView
+      ref={ref => setController(ref)}
       style={styles.mapview}
       configuration={{
         buildingIdentifier: SITUM_BUILDING_ID,

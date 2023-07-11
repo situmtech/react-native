@@ -1,23 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
+import { PositioningStatus } from "lib/typescript/src/wayfinding/store";
 
 import type {
   Building,
   DirectionPoint,
   LocationRequestOptions,
   Poi,
+  SDKError,
 } from "../../index";
 import SitumPlugin from "../../sdk";
 import requestPermission from "../../utils/requestPermission";
 import {
-  NavigateToPoiType,
-  NavigationStatus,
-  NavigationUpdateType,
-  Position,
-  PositioningStatus,
   resetLocation,
-  SDKError,
-  SDKNavigation,
   selectBuildings,
   selectCurrentBuilding,
   selectDestinationPoiID,
@@ -29,7 +24,6 @@ import {
   selectNavigation,
   selectPois,
   selectUser,
-  selectWebViewRef,
   setAuth,
   setBuildings,
   setCurrentBuilding,
@@ -44,8 +38,6 @@ import {
   State,
 } from "../store/index";
 import { useDispatch, useSelector } from "../store/utils";
-import { sendMessageToViewer } from "../utils";
-import Mapper from "../utils/mapper";
 
 const defaultNavigationOptions = {
   distanceToGoalThreshold: 4,
@@ -73,7 +65,6 @@ const useCallbackRef = <T>(fn: T, deps: any[]) => {
 
 const useSitum = () => {
   const dispatch = useDispatch();
-  const webViewRef = useSelector(selectWebViewRef);
   const isSdkInitialized = useSelector(selectIsSdkInitialized);
   const user = useSelector(selectUser);
   const location = useSelector(selectLocation);
@@ -421,34 +412,6 @@ const useSitum = () => {
     });
   };
 
-  const navigateToPoi = async ({
-    poi,
-    poiId,
-  }: {
-    poi?: Poi;
-    poiId?: number;
-  }) => {
-    if (!poi && !poiId) return;
-    const validPoi = pois?.find(
-      (p) =>
-        p?.identifier === poiId?.toString() ||
-        // @ts-ignore
-        p?.identifier === poi?.id?.toString()
-    );
-    if (!validPoi) {
-      console.error("Situm > hook > Invalid value as poi or poiId");
-      return;
-    }
-
-    sendMessageToViewer(
-      webViewRef.current,
-      Mapper.navigateToPoi({
-        // @ts-ignore
-        navigationTo: poi?.id || poiId,
-      } as NavigateToPoiType)
-    );
-  };
-
   const stopNavigation = (): void => {
     console.debug("Stopping navigation");
     if (!navigation || navigation.status === NavigationStatus.STOP) {
@@ -464,27 +427,6 @@ const useSitum = () => {
     dispatch(setNavigation({ status: NavigationStatus.STOP }));
     dispatch(setDestinationPoiID(undefined));
   };
-
-  const cancelNavigation = (): void => {
-    stopNavigation();
-    sendMessageToViewer(webViewRef.current, Mapper.cancelNavigation());
-  };
-
-  const selectPoi = (poiId: number): void => {
-    const poi = pois?.find((p) => p?.identifier === poiId?.toString());
-    if (!poi) {
-      console.error("Situm > hook > Invalid value as poiId");
-      return;
-    }
-    if (navigation.status !== NavigationStatus.STOP) {
-      console.error(
-        "Situm > hook > Navigation on course, poi selection is unavailable"
-      );
-      return;
-    }
-    sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
-  };
-
   const stopNavigationRef = useCallbackRef(stopNavigation, [navigation]);
 
   useEffect(() => {
@@ -530,9 +472,6 @@ const useSitum = () => {
     calculateRoute,
     startNavigation,
     stopNavigation,
-    cancelNavigation,
-    selectPoi,
-    navigateToPoi,
   };
 };
 
