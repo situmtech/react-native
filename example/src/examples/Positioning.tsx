@@ -8,7 +8,7 @@ import requestPermissions from './Utils/RequestPermissions';
 function PositioningScreen() {
   useEffect(() => {
     //Set remote config to false, so we actually use local request
-    SitumPlugin.setUseRemoteConfig('false', response => {
+    SitumPlugin.setUseRemoteConfig('false', (response: any) => {
       console.log(`Remote config disabled: ${JSON.stringify(response)}`);
     });
 
@@ -65,7 +65,7 @@ function PositioningScreen() {
     setLocation('');
     setStatus('');
     setError('');
-    SitumPlugin.stopPositioning((success: any) => {});
+    SitumPlugin.stopPositioning((_success: any) => {});
   };
 
   return (

@@ -2,12 +2,16 @@
 import { useEffect, useRef, useState } from "react";
 import { PositioningStatus } from "lib/typescript/src/wayfinding/store";
 
-import type {
-  Building,
-  DirectionPoint,
-  LocationRequestOptions,
-  Poi,
-  SDKError,
+import {
+  type Building,
+  type DirectionPoint,
+  type LocationRequestOptions,
+  NavigationStatus,
+  NavigationUpdateType,
+  type Poi,
+  type Position,
+  type SDKError,
+  type SDKNavigation,
 } from "../../index";
 import SitumPlugin from "../../sdk";
 import requestPermission from "../../utils/requestPermission";

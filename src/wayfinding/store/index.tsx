@@ -6,6 +6,7 @@ import {
   LocationStatus,
   NavigationStatus,
   Poi,
+  SDKError,
   SDKNavigation,
 } from "src/sdk/types";
 
@@ -14,18 +15,9 @@ import { createReducer } from "./utils";
 // TODO: add types
 export type Directions = any;
 
-export type NavigateToPoiType = {
-  navigationTo: number;
-  type?: string;
-};
-
 interface User {
   email?: string;
   apiKey?: string;
-}
-export interface SDKError {
-  code?: number;
-  message: string;
 }
 
 export interface State {

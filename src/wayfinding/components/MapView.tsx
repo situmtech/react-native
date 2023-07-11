@@ -7,7 +7,7 @@ import {
   WebViewErrorEvent,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
-import { NavigationStatus, Poi } from "src/sdk/types";
+import { NavigationStatus, NavigationUpdateType, Poi } from "src/sdk/types";
 
 //This icon should either be inside plugin or not be used rat all
 import useSitum from "../hooks";
@@ -289,7 +289,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       const eventParsed = JSON.parse(event.nativeEvent.data);
       switch (eventParsed.type) {
         case "app.map_is_ready":
-          onLoad(controller);
+          onLoad({
+            status: "SUCCESS",
+            message: "Map is ready!",
+          } as WayfindingResult);
           sendFollowUser();
           break;
         case "directions.requested":

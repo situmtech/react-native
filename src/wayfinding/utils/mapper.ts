@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { NavigateToPoiType } from "lib/typescript/src/wayfinding/store";
+import { Location, SDKNavigation } from "src/sdk/types";
+
 import { Destination, Navigation, Point } from "..";
-import {
-  Directions,
-  Location,
-  NavigateToPoiType,
-  SDKNavigation,
-} from "../store/index";
+import { Directions } from "../store/index";
 
 const mapperWrapper = (type: string, payload: unknown) =>
   JSON.stringify({ type, payload });

@@ -39,7 +39,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "test": "yarn lint && yarn test:jest",
+    "test": "yarn typescript && yarn lint && yarn test:jest",
     "test:jest": "jest",
     "typescript": "tsc --noEmit",
     "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix",

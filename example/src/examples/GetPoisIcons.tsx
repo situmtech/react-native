@@ -89,7 +89,7 @@ export const GetPoisIcons = () => {
       .then(data => {
         setBuilding(data);
       })
-      .catch(err => console.log);
+      .catch(console.log);
   }, []);
 
   useEffect(() => {
@@ -109,14 +109,14 @@ export const GetPoisIcons = () => {
           return;
         }
         var selectedFloor = data.floors.filter(
-          f => f.identifier == SITUM_FLOOR_ID,
+          (f: any) => f.identifier === SITUM_FLOOR_ID,
         )[0];
         setCurrentFloor(selectedFloor);
         setMapImage(selectedFloor.mapUrl);
 
-        getPoisInfo(data).then(res => setPois(res));
+        getPoisInfo(data).then((res: any) => setPois(res));
       })
-      .catch(err => console.log);
+      .catch(console.log);
   }, [building]);
 
   return (

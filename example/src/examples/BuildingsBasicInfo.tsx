@@ -6,7 +6,7 @@ import styles from './styles/styles';
 
 export const BuildingsBasicInfo = () => {
   const [buildings, setBuildings] = useState<any>();
-  const [error, setError] = useState<String>();
+  const [_error, setError] = useState<String>();
 
   const getBuildings = () => {
     SitumPlugin.fetchBuildings(
