@@ -1,14 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {View, ActivityIndicator, Image, Dimensions} from 'react-native';
+import {View, ActivityIndicator} from 'react-native';
 
 import SitumPlugin from '@situm/react-native';
-import MapView, {
-  PROVIDER_GOOGLE,
-  Overlay,
-  Marker,
-  UrlTile,
-  MapLocalTile,
-} from 'react-native-maps';
+import MapView, {MapLocalTile} from 'react-native-maps';
 import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
 
 //This example shows how to display a tiled floorplan hosted in Situm Platform.
@@ -25,8 +19,8 @@ export const TiledBuilding = () => {
     SitumPlugin.fetchBuildings(
       (buildings: any) => {
         // returns list of buildings
-        if (!buildings || buildings.length == 0) {
-          alert(
+        if (!buildings || buildings.length === 0) {
+          console.error(
             'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
           );
         }
@@ -84,6 +78,7 @@ export const TiledBuilding = () => {
 
   useEffect(() => {
     getBuildingInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

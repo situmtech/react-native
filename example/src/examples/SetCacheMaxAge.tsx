@@ -8,7 +8,7 @@ import styles from './styles/styles';
 const NUMBER_OF_SECONDS = 30 * 60;
 
 export const SetCacheMaxAge = () => {
-  const [building, setBuilding] = useState<any>();
+  const [_building, setBuilding] = useState<any>();
   const [status, setStatus] = useState('');
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export const SetCacheMaxAge = () => {
       .then(data => {
         setBuilding(data);
       })
-      .catch(err => console.log);
+      .catch(console.log);
   }, []);
 
   const invalidateCache = () => {

@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 
 const Screen: React.FC = () => {
   const {initSitumSdk} = useSitum();
-  const [controller, setController] = useState<MapViewRef>();
+  const [_controller, setController] = useState<MapViewRef | null>();
 
   // Initialize SDK when mounting map
   useEffect(() => {
@@ -46,8 +46,8 @@ const Screen: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onLoad = (controller: any) => {
-    console.log('Map is ready now' + JSON.stringify(controller));
+  const onLoad = (event: any) => {
+    console.log('Map is ready now' + JSON.stringify(event));
   };
 
   const onFloorChanged = (event: OnFloorChangedResult) => {
