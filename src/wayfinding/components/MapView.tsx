@@ -48,6 +48,7 @@ export interface MapViewProps {
   configuration?: {
     situmUser?: string;
     situmApiKey?: string;
+    remoteIdentifier?: string;
     buildingIdentifier?: string;
     enablePoiClustering?: boolean;
     showPoiNames?: boolean;
@@ -208,6 +209,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       },
       [navigation.status, pois, stopNavigation]
     );
+
     useEffect(() => {
       configuration.buildingIdentifier &&
         initializeBuildingById(configuration.buildingIdentifier);
@@ -355,9 +357,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       <WebView
         ref={webViewRef}
         source={{
-          uri: `${domain || SITUM_BASE_DOMAIN}/?email=${
-            fullUser?.email
-          }&apikey=${fullUser?.apiKey}&wl=true&global=true&mode=embed${
+          uri: `${domain || SITUM_BASE_DOMAIN}/${
+            configuration.remoteIdentifier
+              ? `id/${configuration.remoteIdentifier}`
+              : ""
+          }?email=${fullUser?.email}&apikey=${
+            fullUser?.apiKey
+          }&wl=true&global=true&mode=embed${
             configuration.buildingIdentifier
               ? `&buildingid=${configuration.buildingIdentifier}`
               : ""
