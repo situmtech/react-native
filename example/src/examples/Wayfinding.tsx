@@ -32,11 +32,7 @@ const Screen: React.FC = () => {
 
   // Initialize SDK when mounting map
   useEffect(() => {
-    initSitumSdk({
-      startPositions: true,
-      fetchCartography: true,
-      useRemoteConfig: true,
-    })
+    initSitumSdk({})
       .then(() => {
         console.info('SDK initialized successfully');
       })
