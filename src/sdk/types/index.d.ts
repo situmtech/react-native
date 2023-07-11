@@ -606,7 +606,7 @@ export interface Location {
     degreesClockwise: number;
   };
   hasBearing?: boolean;
-  status: LocationStatus;
+  status: PositioningStatus;
 }
 
 export interface Position {
@@ -632,6 +632,11 @@ export enum LocationStatus {
   POSITIONING = "POSITIONING",
   USER_NOT_IN_BUILDING = "USER_NOT_IN_BUILDING",
   STOPPED = "STOPPED",
+}
+
+export interface SDKError {
+  code?: number;
+  message: string;
 }
 
 export interface SDKNavigation {
