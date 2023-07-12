@@ -4,6 +4,7 @@ import {getDefaultLocationOptions} from '../settings';
 import SitumPlugin from '@situm/react-native';
 import styles from './styles/styles';
 import requestPermissions from './Utils/RequestPermissions';
+import {setBuildings} from '../../../src/wayfinding/store';
 
 function PositioningScreen() {
   useEffect(() => {
@@ -65,6 +66,7 @@ function PositioningScreen() {
     setLocation('');
     setStatus('');
     setError('');
+    setBuildings(null);
     SitumPlugin.stopPositioning((success: any) => {});
   };
 
