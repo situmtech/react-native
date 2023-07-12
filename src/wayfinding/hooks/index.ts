@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
-import { PositioningStatus } from "lib/typescript/src/wayfinding/store";
 
 import {
   type Building,
   type DirectionPoint,
   type LocationRequestOptions,
+  LocationStatus,
   NavigationStatus,
   NavigationUpdateType,
   type Poi,
   type Position,
   type SDKError,
   type SDKNavigation,
+  LocationStatusName,
 } from "../../index";
 import SitumPlugin from "../../sdk";
 import requestPermission from "../../utils/requestPermission";
@@ -47,11 +48,6 @@ const defaultNavigationOptions = {
   distanceToGoalThreshold: 4,
   outsideRouteThreshold: 5,
 };
-
-export interface LocationStatus {
-  statusName: string;
-  statusCode: number;
-}
 
 // Hook to define references that point to functions
 // used on listeners. These references are updated whenever
@@ -207,7 +203,7 @@ const useSitum = () => {
   const startPositioning = () => {
     console.debug("Situm > hook > Starting positioning...");
 
-    if (location.status !== PositioningStatus.STOPPED) {
+    if (location.status !== LocationStatusName.STOPPED) {
       console.debug("Situm > hook > Positioning has already started");
       return;
     }
@@ -226,11 +222,11 @@ const useSitum = () => {
         );
       },
       (status: LocationStatus) => {
-        if (status.statusName in PositioningStatus) {
+        if (status.statusName in LocationStatusName) {
           console.debug(
             `Situm > hook > Positioning state updated ${status.statusName}`
           );
-          dispatch(setLocationStatus(status.statusName as PositioningStatus));
+          dispatch(setLocationStatus(status.statusName as LocationStatusName));
         }
       },
       (err: string) => {

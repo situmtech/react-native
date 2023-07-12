@@ -606,7 +606,7 @@ export interface Location {
     degreesClockwise: number;
   };
   hasBearing?: boolean;
-  status: PositioningStatus;
+  status: LocationStatusName;
 }
 
 export interface Position {
@@ -623,8 +623,12 @@ export interface Position {
   buildingIdentifier?: string;
   floorIdentifier?: string;
 }
+export interface LocationStatus {
+  statusName: LocationStatusName;
+  statusCode: number;
+}
 
-export enum LocationStatus {
+export enum LocationStatusName {
   STARTING = "STARTING",
   CALCULATING = "CALCULATING",
   // This status will always be sent to mapviewer-web, in case we recieve
@@ -667,6 +671,12 @@ export enum NavigationUpdateType {
   userOutsideRoute = "OUT_OF_ROUTE",
   destinationReached = "DESTINATION_REACHED",
 }
+
+export type NavigateToPoiType = {
+  navigationTo: number;
+  type?: string;
+};
+
 export interface SitumPluginStatic {
   initSitumSDK(): void;
 

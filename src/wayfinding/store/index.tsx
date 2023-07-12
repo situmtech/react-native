@@ -3,7 +3,7 @@ import React, { createContext, MutableRefObject, useReducer } from "react";
 import {
   Building,
   Location,
-  LocationStatus,
+  LocationStatusName,
   NavigationStatus,
   Poi,
   SDKError,
@@ -38,7 +38,7 @@ export const initialState: State = {
   webViewRef: undefined,
   sdkInitialized: false,
   user: undefined,
-  location: { status: LocationStatus.STOPPED },
+  location: { status: LocationStatusName.STOPPED },
   buildings: null,
   currentBuilding: undefined,
   pois: [],
@@ -65,7 +65,7 @@ const Reducer = createReducer<State>({
   setLocation: (state: State, payload: State["location"]) => {
     return { ...state, location: payload };
   },
-  setLocationStatus: (state: State, payload: LocationStatus) => {
+  setLocationStatus: (state: State, payload: LocationStatusName) => {
     return { ...state, location: { ...state.location, status: payload } };
   },
   resetLocation: (state: State) => {
