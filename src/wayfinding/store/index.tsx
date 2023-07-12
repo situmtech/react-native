@@ -25,7 +25,7 @@ export interface State {
   sdkInitialized: boolean;
   user?: User;
   location?: Location;
-  buildings: Building[];
+  buildings: Building[] | null;
   currentBuilding: Building;
   pois: Poi[];
   directions?: Directions;
@@ -39,7 +39,7 @@ export const initialState: State = {
   sdkInitialized: false,
   user: undefined,
   location: { status: LocationStatus.STOPPED },
-  buildings: [],
+  buildings: null,
   currentBuilding: undefined,
   pois: [],
   directions: undefined,
