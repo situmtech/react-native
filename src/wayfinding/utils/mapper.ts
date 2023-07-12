@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NavigateToPoiType } from "lib/typescript/src/wayfinding/store";
-import { Location, SDKNavigation } from "src/sdk/types";
+import { Location, NavigateToPoiType, SDKNavigation } from "src/sdk/types";
 
 import { Destination, Navigation, Point } from "..";
 import { Directions } from "../store/index";
