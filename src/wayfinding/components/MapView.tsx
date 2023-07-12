@@ -361,9 +361,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           }&show=rts`,
         }}
         style={viewerStyles.webview}
+        limitsNavigationsToAppBoundDomains={true}
         javaScriptEnabled={true}
         domStorageEnabled={true}
         startInLoadingState={true}
+        cacheEnabled
         onMessage={handleRequestFromViewer}
         // This is called on a lot of interactions with the map because of url change probably
         onLoadEnd={() => {
