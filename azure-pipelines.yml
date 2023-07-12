@@ -1,9 +1,5 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-trigger: none
+trigger:
+  - release/*
 
 pr: none
 
@@ -14,10 +10,12 @@ parameters:
   - name: RNVersion
     type: string
     displayName: React Native Plugin Version
+    default: "0.0.0"
 
 variables:
   - group: Passwords
   - group: ConfluencePages
+  - group: ChangelogIds
 
 resources:
   repositories:
@@ -25,6 +23,7 @@ resources:
     type: bitbucket
     endpoint: Bitbucket - sistemas
     name: situm/sys-kubernetes-templates.git
+    ref: master
 
 steps:
 - ${{ if contains(variables['Build.SourceBranch'], 'release/') }}:
@@ -33,14 +32,34 @@ steps:
     fetchTags: false
     displayName: Checkout self
 
+  - ${{ if eq(variables['Build.Reason'],'manual') }}:
+    - bash: |
+        if [[ "${{ parameters.RNVersion }}" == "0.0.0" ]];then
+          echo -e "\n[!] IMPORTANT: You don't set the plugin version when you run the release branch and I'm not fortune teller\n"
+          exit 1
+        else
+          echo "##vso[task.setvariable variable=version]$(echo ${{ parameters.RNVersion }})"
+          echo -e "\n[+] I'm a shy step so I don't tell you anything\n"
+        fi
+
+      displayName: Set RN Version Manual
+
+  - ${{ if ne(variables['Build.Reason'],'manual') }}:
+    - bash: |
+        RNVersion=$(echo $(Build.SourceBranch) | cut -d "/" -f 4)
+        echo "##vso[task.setvariable variable=version]$(echo $RNVersion)"
+        echo -e "\n[+] I'm a shy step that only executes where this pipeline run automatic\n"
+      displayName: Set RN Version Automatic
+
   - bash: |
-      cd situm-react-native-plugin
-      echo "##vso[task.setvariable variable=version]$(echo ${{ parameters.RNVersion }})"
+      if [ -d "situm-react-native-plugin" ];then
+        cd situm-react-native-plugin
+      fi
       currentBranch=$(echo $(Build.SourceBranch) | cut -d "/" -f 3,4)
       echo "##vso[task.setvariable variable=currentBranch]$(echo $currentBranch)"
       echo -e "\n[+] Defined versions:"
       echo -e "\t[+] NPM cli version: $(npm --version)" 
-      echo -e "\t[+] React Native Plugin version: ${{ parameters.RNVersion }}"
+      echo -e "\t[+] React Native Plugin version: $(version)"
       echo -e "\t[+] Current branch: $currentBranch"
 
         
@@ -101,25 +120,75 @@ steps:
       npm publish
 
     displayName: NPM publish
- 
+
   - bash: |
-      cd situm-react-native-plugin
+      if [ -d "situm-react-native-plugin" ];then
+        cd situm-react-native-plugin
+      fi
+      
+      #
+      #IMPORTANT: This code performs the following steps:
+      #- Switches to the master branch in the situm-react-native-plugin repository.
+      #- Stores the values of the android and iOS SDK in the androidsdk and iossdk variables respectively.
+      #- Switches to the previous commit of the master branch in the situm-react-native-plugin repository.
+      #- Stores the values of the android and iOS SDK in the androidsdk_old and iossdk_old variables respectively.
+      #- Compares the values, and if they have changed, publishes the new version in bold format.
+      #- From the previous comparation it sets the SDK version and pass it (if is necessary) to template to publish changelog
+      echo -e "\n[+] Pull master changes and change to master branch \n"
+      git fetch
+      git checkout master
+      git pull origin master
 
       androidsdk=$(grep -oE '"android": "[0-9]+\.[0-9]+\.[0-9]+@aar"' package.json | awk -F'["@]' '{print $4}')
       iossdk=$(grep -oE '"ios": "[0-9]+\.[0-9]+\.[0-9]+"' package.json | awk -F'"' '{print $4}')
 
-  
+      echo -e "\n[+] Checkout to previous commit\n"
+      git checkout HEAD~1
+
+      androidsdk_old=$(grep -oE '"android": "[0-9]+\.[0-9]+\.[0-9]+@aar"' package.json | awk -F'["@]' '{print $4}')
+      iossdk_old=$(grep -oE '"ios": "[0-9]+\.[0-9]+\.[0-9]+"' package.json | awk -F'"' '{print $4}')
+
+      echo -e "\n[+] Return repository to master branch\n"
+      git checkout master
+
       echo -e "\n[+] Versions:"
       echo -e "\t[+] RN SDK: $(version)"
       echo -e "\t[+] ANDROID SDK: $androidsdk"
       echo -e "\t[+] IOS SDK: $iossdk"
-  
-      versions="| *VERSIÓN* | *FECHA* | *ANDROID SDK* | *IOS SDK* |\n|$(version)|$(date +"%d/%m/%Y")|$androidsdk|$iossdk|"
-  
+      echo -e "\t[+] ANDROID SDK (OLD VERSION): $androidsdk_old"
+      echo -e "\t[+] IOS SDK (OLD IOS): $iossdk_old"
+
+      versions="| *VERSIÓN* | *FECHA* | *ANDROID SDK* | *IOS SDK* |\n|$(version)|$(date +"%d/%m/%Y")|"
+
+      if [ "$androidsdk" != "$androidsdk_old" ];then
+        versions="$versions *$androidsdk* |"
+        android_changelog_version=$androidsdk
+      else
+        android_changelog_version="0.0.0"
+        versions="$versions $androidsdk|"
+      fi
+
+      if [ "$iossdk" != "$iossdk_old" ];then
+        versions="$versions *$iossdk*|"
+        ios_changelog_version=$iossdk
+      else
+        ios_changelog_version="0.0.0"
+        versions="$versions $iossdk|"
+      fi
+
       echo "##vso[task.setvariable variable=versions]$(echo $versions)"
-  
+      echo "##vso[task.setvariable variable=android_changelog_version]$(echo $android_changelog_version)"
+      echo "##vso[task.setvariable variable=changelog_ios]$(echo $ios_changelog_version )"
     displayName: Get Versions
+
+  - ${{ if ne(variables['Build.Reason'],'manual') }}:
+    - template: azure-templates/publish-changelog.yaml@sys_kubernetes_templates
+      parameters:
+        changelogId: $(RNSDK_Changelog_id)
+        android_changelog_version: $(android_changelog_version)
+        ios_changelog_version: $(ios_changelog_version)
   
+
   - template: azure-templates/release-table.yaml@sys_kubernetes_templates
     parameters:
       versions: $(versions)
@@ -129,4 +198,4 @@ steps:
       bitbucket:
         bitbucket_user: $(bitbucket_user)
         bitbucket_pass: $(bitbucket_pass)
- 
+
