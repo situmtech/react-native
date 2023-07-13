@@ -46,7 +46,8 @@
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "prepare": "bob build",
     "example": "yarn --cwd example",
-    "bootstrap": "yarn example && yarn && yarn example pods"
+    "bootstrap": "yarn example && yarn && yarn example pods",
+    "doc": "typedoc --out ./docs/types ./src  --tsconfig ./tsconfig.json"
   },
   "keywords": [
     "react-native",
@@ -86,6 +87,7 @@
     "react-native": "^0.72.1",
     "react-native-builder-bob": "^0.20.4",
     "react-test-renderer": "18.2.0",
+    "typedoc": "^0.24.8",
     "typescript": "^5.0.4"
   },
   "dependencies": {
