@@ -216,6 +216,7 @@ export type Point = {
   isIndoor: boolean;
   isOutdoor: boolean;
 };
+
 export type DirectionPoint = {
   floorIdentifier: Floor["floorIdentifier"];
   buildingIdentifier: Building["buildingIdentifier"];

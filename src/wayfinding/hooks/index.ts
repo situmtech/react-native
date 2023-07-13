@@ -6,13 +6,13 @@ import {
   type DirectionPoint,
   type LocationRequestOptions,
   LocationStatus,
+  LocationStatusName,
   NavigationStatus,
   NavigationUpdateType,
   type Poi,
   type Position,
   type SDKError,
   type SDKNavigation,
-  LocationStatusName,
 } from "../../index";
 import SitumPlugin from "../../sdk";
 import requestPermission from "../../utils/requestPermission";

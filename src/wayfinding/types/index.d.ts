@@ -36,10 +36,7 @@ export interface Point {
   latitude: number;
   longitude: number;
 }
-export interface Error {
-  code: number;
-  message: string;
-}
+
 export interface Destination {
   category: string;
   identifier?: string;
