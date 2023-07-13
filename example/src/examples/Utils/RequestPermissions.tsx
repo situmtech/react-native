@@ -16,16 +16,16 @@ export interface PermissionsRequestResult {
 }
 
 async function requestPermissions(): Promise<PermissionsRequestResult> {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, _reject) => {
     console.log('Retrieving permissions for platform ' + Platform.OS);
     if (Platform.OS === 'ios') {
-      const granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      let granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
 
       if (granted === RESULTS.GRANTED) {
         console.info('LOCATION_WHEN_IN_USE permission granted');
 
-        if (Platform.OS == 'ios' && parseInt(Platform.Version, 10) > 12) {
-          let granted = await request(PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL);
+        if (Platform.OS === 'ios' && parseInt(Platform.Version, 10) > 12) {
+          granted = await request(PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL);
 
           if (granted === RESULTS.GRANTED) {
             console.log('BLUETOOTH_PERIPHERAL permission granted');
@@ -44,6 +44,7 @@ async function requestPermissions(): Promise<PermissionsRequestResult> {
       }
     } else {
       try {
+        //@ts-ignore
         if (Platform.Version > 30) {
           console.log('ANDROID VERSION > 30');
           let granted = await requestMultiple([
