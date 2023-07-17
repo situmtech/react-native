@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, MutableRefObject, useReducer } from "react";
+
 import {
   Building,
   Location,
@@ -8,8 +9,7 @@ import {
   Poi,
   SDKError,
   SDKNavigation,
-} from "src/sdk/types";
-
+} from "../../sdk/types/index.d";
 import { createReducer } from "./utils";
 
 // TODO: add types
