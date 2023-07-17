@@ -7,13 +7,13 @@ import {
   WebViewErrorEvent,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
+
 import {
   NavigateToPoiType,
   NavigationStatus,
   NavigationUpdateType,
   Poi,
-} from "src/sdk/types";
-
+} from "../../sdk/types/index.d";
 //This icon should either be inside plugin or not be used rat all
 import useSitum from "../hooks";
 import { setWebViewRef } from "../store";

@@ -74,9 +74,10 @@ const Screen: React.FC = () => {
     console.log('on navigation finished detected: ' + JSON.stringify(event));
   };
 
+  // TODO: review ref
   return (
     <MapView
-      ref={ref => setController(ref)}
+      // ref={ref => setController(ref)}
       style={styles.mapview}
       configuration={{
         buildingIdentifier: SITUM_BUILDING_ID,
