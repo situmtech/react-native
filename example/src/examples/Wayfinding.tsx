@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
 
 const Screen: React.FC = () => {
   const {initSitumSdk} = useSitum();
+  const mapViewRef = useRef<MapViewRef>(null);
   const [_controller, setController] = useState<MapViewRef | null>();
 
   // Initialize SDK when mounting map
@@ -41,6 +42,15 @@ const Screen: React.FC = () => {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Initialize controller
+  useEffect(() => {
+    if (!mapViewRef) {
+      return;
+    }
+
+    setController(mapViewRef.current);
+  }, [mapViewRef]);
 
   const onLoad = (event: any) => {
     console.log('Map is ready now' + JSON.stringify(event));
@@ -74,10 +84,9 @@ const Screen: React.FC = () => {
     console.log('on navigation finished detected: ' + JSON.stringify(event));
   };
 
-  // TODO: review ref
   return (
     <MapView
-      // ref={ref => setController(ref)}
+      ref={mapViewRef}
       style={styles.mapview}
       configuration={{
         buildingIdentifier: SITUM_BUILDING_ID,
