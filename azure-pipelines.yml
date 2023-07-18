@@ -69,28 +69,27 @@ steps:
 
     displayName: Initial Vars & Configs
 
-  - ${{ if eq(variables['Build.Reason'],'manual') }}:
-    - bash: |
+  - bash: |
 
-        cd react-native
-        echo -e "\n[+] Setting NPM version to $(version)"
-        npm version $(version) --no-git-tag-version
+      cd react-native
+      echo -e "\n[+] Setting NPM version to $(version)"
+      npm version $(version) --no-git-tag-version
 
-        echo -e "\n[+] Setting git to push NPM version\n"
-        git config --global user.email "sistemas@situm.es"
-        git config --global user.name "Situmops"
+      echo -e "\n[+] Setting git to push NPM version\n"
+      git config --global user.email "sistemas@situm.es"
+      git config --global user.name "Situmops"
 
-        echo -e "\n[+] Fetch branches \n"
-        git fetch
+      echo -e "\n[+] Fetch branches \n"
+      git fetch
 
-        echo -e "\n[+] Changing to $(currentBranch)"
-        git checkout $(currentBranch)
+      echo -e "\n[+] Changing to $(currentBranch)"
+      git checkout $(currentBranch)
 
-        echo -e "\n[+] Add,Commit and Push to $(currentBranch)"
-        git commit -am "Setting the NPM version to $(version)"
-        git push --set-upstream origin $(currentBranch)
-        git push
-      displayName: Make changes
+      echo -e "\n[+] Add,Commit and Push to $(currentBranch)"
+      git commit -am "[skip ci] Setting the React Native version to $(version)"
+      git push --set-upstream origin $(currentBranch)
+      git push
+    displayName: Make changes
 
 
   - template: azure-templates/publish_release.yml@sys_kubernetes_templates
