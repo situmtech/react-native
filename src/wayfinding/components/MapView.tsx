@@ -16,6 +16,7 @@ import {
 } from "../../sdk/types/index.d";
 //This icon should either be inside plugin or not be used rat all
 import useSitum from "../hooks";
+import { useCallbackRef } from "../hooks";
 import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
 import {
@@ -149,77 +150,82 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
      *    }}
      *    onLoad={onLoad} />
      */
+    const navigateToPoiRef = useCallbackRef(
+      ({ poi, poiId }: { poi?: Poi; poiId?: number }) => {
+        if (!webViewRef.current || (!poi && !poiId)) return;
+        const validPoi = pois?.find(
+          (p) =>
+            p?.identifier === poiId?.toString() ||
+            // @ts-ignore
+            p?.identifier === poi?.id?.toString()
+        );
+        if (!validPoi) {
+          console.error("Situm > hook > Invalid value as poi or poiId");
+          return;
+        }
+
+        sendMessageToViewer(
+          webViewRef.current,
+          Mapper.navigateToPoi({
+            // @ts-ignore
+            navigationTo: poi?.id || poiId,
+          } as NavigateToPoiType)
+        );
+      },
+      [pois]
+    );
+
+    const selectPoiRef = useCallbackRef(
+      (poiId: number) => {
+        if (!webViewRef.current) {
+          return;
+        }
+        const poi = pois?.find((p) => p?.identifier === poiId?.toString());
+        if (!poi) {
+          console.error("Situm > hook > Invalid value as poiId");
+          return;
+        }
+        if (navigation.status !== NavigationStatus.STOP) {
+          console.error(
+            "Situm > hook > Navigation on course, poi selection is unavailable"
+          );
+          return;
+        }
+        sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
+      },
+      [pois, navigation.status]
+    );
+
     useImperativeHandle(
       ref,
       () => {
         return {
           followUser() {
-            sendMessageToViewer(
-              this.mapViewRef.current,
-              Mapper.followUser(true)
-            );
+            webViewRef.current &&
+              sendMessageToViewer(webViewRef.current, Mapper.followUser(true));
           },
           unFollowUser() {
-            sendMessageToViewer(
-              this.mapViewRef.current,
-              Mapper.followUser(false)
-            );
+            webViewRef.current &&
+              sendMessageToViewer(webViewRef.current, Mapper.followUser(false));
           },
           selectPoi(poiId: number) {
-            const poi = pois?.find((p) => p?.identifier === poiId?.toString());
-            if (!poi) {
-              console.error("Situm > hook > Invalid value as poiId");
-              return;
-            }
-            if (navigation.status !== NavigationStatus.STOP) {
-              console.error(
-                "Situm > hook > Navigation on course, poi selection is unavailable"
-              );
-              return;
-            }
-            sendMessageToViewer(
-              this.mapViewRef.current,
-              Mapper.selectPoi(poiId)
-            );
+            selectPoiRef.current(poiId);
           },
           deselectPoi() {
-            sendMessageToViewer(
-              this.mapViewRef.current,
-              Mapper.selectPoi(null)
-            );
+            webViewRef.current &&
+              sendMessageToViewer(webViewRef.current, Mapper.selectPoi(null));
           },
           navigateToPoi({ poi, poiId }: { poi?: Poi; poiId?: number }): void {
-            if (!poi && !poiId) return;
-            const validPoi = pois?.find(
-              (p) =>
-                p?.identifier === poiId?.toString() ||
-                // @ts-ignore
-                p?.identifier === poi?.id?.toString()
-            );
-            if (!validPoi) {
-              console.error("Situm > hook > Invalid value as poi or poiId");
-              return;
-            }
-
-            sendMessageToViewer(
-              this.mapViewRef.current,
-              Mapper.navigateToPoi({
-                // @ts-ignore
-                navigationTo: poi?.id || poiId,
-              } as NavigateToPoiType)
-            );
+            navigateToPoiRef.current({ poi, poiId });
           },
-
           cancelNavigation(): void {
+            if (!webViewRef.current) return;
             stopNavigation();
-            sendMessageToViewer(
-              this.mapViewRef.current,
-              Mapper.cancelNavigation()
-            );
+            sendMessageToViewer(webViewRef.current, Mapper.cancelNavigation());
           },
         };
       },
-      [navigation.status, pois, stopNavigation]
+      [stopNavigation, navigateToPoiRef, selectPoiRef]
     );
 
     useEffect(() => {
