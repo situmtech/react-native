@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { NativeModules } from "react-native";
 
-import SitumPlugin from "../..";
+import SitumPlugin from "..";
 import { logError } from "../utils";
 
 jest.mock("../utils", () => {
