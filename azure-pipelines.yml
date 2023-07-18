@@ -52,8 +52,8 @@ steps:
       displayName: Set RN Version Automatic
 
   - bash: |
-      if [ -d "situm-react-native-plugin" ];then
-        cd situm-react-native-plugin
+      if [ -d "react-native" ];then
+        cd react-native
       fi
       currentBranch=$(echo $(Build.SourceBranch) | cut -d "/" -f 3,4)
       echo "##vso[task.setvariable variable=currentBranch]$(echo $currentBranch)"
@@ -69,27 +69,28 @@ steps:
 
     displayName: Initial Vars & Configs
 
-  - bash: |
+  - ${{ if eq(variables['Build.Reason'],'manual') }}:
+    - bash: |
 
-      cd situm-react-native-plugin
-      echo -e "\n[+] Setting NPM version to $(version)"
-      npm version $(version) --no-git-tag-version
+        cd react-native
+        echo -e "\n[+] Setting NPM version to $(version)"
+        npm version $(version) --no-git-tag-version
 
-      echo -e "\n[+] Setting git to push NPM version\n"
-      git config --global user.email "sistemas@situm.es"
-      git config --global user.name "Situmops"
+        echo -e "\n[+] Setting git to push NPM version\n"
+        git config --global user.email "sistemas@situm.es"
+        git config --global user.name "Situmops"
 
-      echo -e "\n[+] Fetch branches \n"
-      git fetch
+        echo -e "\n[+] Fetch branches \n"
+        git fetch
 
-      echo -e "\n[+] Changing to $(currentBranch)"
-      git checkout $(currentBranch)
+        echo -e "\n[+] Changing to $(currentBranch)"
+        git checkout $(currentBranch)
 
-      echo -e "\n[+] Add,Commit and Push to $(currentBranch)"
-      git commit -am "Setting the NPM version to $(version)"
-      git push --set-upstream origin $(currentBranch)
-      git push
-    displayName: Make changes
+        echo -e "\n[+] Add,Commit and Push to $(currentBranch)"
+        git commit -am "Setting the NPM version to $(version)"
+        git push --set-upstream origin $(currentBranch)
+        git push
+      displayName: Make changes
 
 
   - template: azure-templates/publish_release.yml@sys_kubernetes_templates
@@ -98,14 +99,14 @@ steps:
         bitbucket_user: situmops
       system: "N/A"
       server: "github"
-      repoFolder: "situm-react-native-plugin"
+      repoFolder: "react-native"
       mergeBranches:
         - "master"
         - "develop"
      
 
   - bash: |
-      cd situm-react-native-plugin
+      cd react-native
       echo -e "\n[+] Fetch all branches\n"
       git fetch
 
@@ -122,8 +123,8 @@ steps:
     displayName: NPM publish
 
   - bash: |
-      if [ -d "situm-react-native-plugin" ];then
-        cd situm-react-native-plugin
+      if [ -d "react-native" ];then
+        cd react-native
       fi
       
       #
