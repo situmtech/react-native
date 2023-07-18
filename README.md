@@ -22,17 +22,18 @@ Situm React Native Plugin is a set of utilities that allow any developer to buil
 
 This plugin has two parts:
 
-- The base SDK, the building blocks that allow you to:
-  - obtain information related to buildings where Situm's positioning system is already configured: floorplans, points of interest, geotriggered events, etc.
-  - retrieve the location of the smartphone inside these buildings (position, orientation, and floor where the smartphone is).
-  - compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
-  - trigger notifications when the user enters a certain area.
+-   The base SDK, the building blocks that allow you to:
 
-- A full featured and easy to integrate React Native component that allows you to:
-  - show your cartography on a map
-  - show the user location on the map
-  - calculate point-to-point wayfinging routes
-  - explore points of interest on your buildings on the map
+    -   obtain information related to buildings where Situm's positioning system is already configured: floorplans, points of interest, geotriggered events, etc.
+    -   retrieve the location of the smartphone inside these buildings (position, orientation, and floor where the smartphone is).
+    -   compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
+    -   trigger notifications when the user enters a certain area.
+
+-   A full featured and easy to integrate React Native component that allows you to:
+    -   show your cartography on a map
+    -   show the user location on the map
+    -   calculate point-to-point wayfinging routes
+    -   explore points of interest on your buildings on the map
 
 ![Preview of WYF module](https://raw.githubusercontent.com/situmtech/situm-react-native-plugin/feature/merge-wayfinding/docs/assets/preview.jpg)
 
@@ -49,7 +50,6 @@ This plugin has two parts:
 - [More information](#more-information)
 - [Support information](#support-information) -->
 
-
 ## Getting started
 
 There is a comprehensive tutorial on how to set-up a new application using this plugin on the Situm [documentation page](https://situm.com/docs/a-basic-react-native-app/).
@@ -58,7 +58,7 @@ Below you will find the basic steps to install and configure the plugin on your 
 
 ## Running the example
 
-Check the [example/README](./example/README.md) file of this repository to create your first Flutter application using Situm React Native. In this example app you will find example screens for each method the plugin exposes.
+Check the [example/README](./example/README.md) file of this repository to create your first React Native application using Situm React Native. In this example app you will find example screens for each method the plugin exposes.
 
 ### Configure the plugin on your React Native project
 
@@ -146,9 +146,10 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
   <string>map-viewer.situm.com</string>
 </array>
 ```
+
 ## Migrate from the old Situm React Native Wayfinding plugin
 
-The new [Situm React Native](https://www.npmjs.com/package/@situm/react-native-wayfinding) package breaks compatibility with the previous Situm React Native Wayfinding plugin. Integrating the new version is simpler and more straightforward. If you want to migrate your application, follow the steps described in the [Situm documentation](https://situm.com/docs/react-nativ-wayfinding-migration-guide)..
+The new [Situm React Native](https://www.npmjs.com/package/@situm/react-native) package breaks compatibility with the previous Situm React Native Wayfinding plugin. Integrating the new version is simpler and more straightforward. If you want to migrate your application, follow the steps described in the [Situm documentation](https://situm.com/docs/react-native-wayfinding-migration-guide).
 
 ## Development
 
