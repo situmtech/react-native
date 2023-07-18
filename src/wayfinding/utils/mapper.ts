@@ -43,7 +43,7 @@ const Mapper = {
 
   cancelNavigation: () => mapperWrapper(`navigation.cancel`, {}),
 
-  selectPoi: (poiId: number) =>
+  selectPoi: (poiId: number | null) =>
     mapperWrapper(`cartography.select_poi`, { identifier: poiId }),
 
   followUser: (follow: boolean) => mapperWrapper("camera.follow_user", follow),

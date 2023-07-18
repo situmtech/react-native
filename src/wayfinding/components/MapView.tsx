@@ -107,7 +107,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     ref
   ) => {
     const dispatch = useDispatch();
-    const webViewRef = useRef();
+    const webViewRef = useRef(null);
     // Local states
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
 
@@ -154,10 +154,16 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       () => {
         return {
           followUser() {
-            sendMessageToViewer(webViewRef.current, Mapper.followUser(true));
+            sendMessageToViewer(
+              this.mapViewRef.current,
+              Mapper.followUser(true)
+            );
           },
           unFollowUser() {
-            sendMessageToViewer(webViewRef.current, Mapper.followUser(false));
+            sendMessageToViewer(
+              this.mapViewRef.current,
+              Mapper.followUser(false)
+            );
           },
           selectPoi(poiId: number) {
             const poi = pois?.find((p) => p?.identifier === poiId?.toString());
@@ -171,10 +177,16 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
               );
               return;
             }
-            sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
+            sendMessageToViewer(
+              this.mapViewRef.current,
+              Mapper.selectPoi(poiId)
+            );
           },
           deselectPoi() {
-            sendMessageToViewer(webViewRef.current, Mapper.selectPoi(null));
+            sendMessageToViewer(
+              this.mapViewRef.current,
+              Mapper.selectPoi(null)
+            );
           },
           navigateToPoi({ poi, poiId }: { poi?: Poi; poiId?: number }): void {
             if (!poi && !poiId) return;
@@ -211,10 +223,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     );
 
     useEffect(() => {
-      configuration.buildingIdentifier &&
+      configuration?.buildingIdentifier &&
         initializeBuildingById(configuration.buildingIdentifier);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [configuration.buildingIdentifier]);
+    }, [configuration?.buildingIdentifier]);
 
     useEffect(() => {
       if (error) {
@@ -266,12 +278,12 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           webViewRef.current,
           Mapper.initialConfiguration(
             style,
-            configuration.enablePoiClustering,
-            configuration.showPoiNames,
-            configuration.minZoom,
-            configuration.maxZoom,
-            configuration.initialZoom,
-            configuration.useDashboardTheme
+            configuration?.enablePoiClustering,
+            configuration?.showPoiNames,
+            configuration?.minZoom,
+            configuration?.maxZoom,
+            configuration?.initialZoom,
+            configuration?.useDashboardTheme
           )
         );
       }
@@ -279,12 +291,12 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       webViewRef,
       mapLoaded,
       style,
-      configuration.enablePoiClustering,
-      configuration.showPoiNames,
-      configuration.minZoom,
-      configuration.maxZoom,
-      configuration.initialZoom,
-      configuration.useDashboardTheme,
+      configuration?.enablePoiClustering,
+      configuration?.showPoiNames,
+      configuration?.minZoom,
+      configuration?.maxZoom,
+      configuration?.initialZoom,
+      configuration?.useDashboardTheme,
     ]);
 
     const handleRequestFromViewer = (event: WebViewMessageEvent) => {
@@ -358,13 +370,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         ref={webViewRef}
         source={{
           uri: `${domain || SITUM_BASE_DOMAIN}/${
-            configuration.remoteIdentifier
+            configuration?.remoteIdentifier
               ? `id/${configuration.remoteIdentifier}`
               : ""
           }?email=${fullUser?.email}&apikey=${
             fullUser?.apiKey
           }&wl=true&global=true&mode=embed${
-            configuration.buildingIdentifier
+            configuration?.buildingIdentifier
               ? `&buildingid=${configuration.buildingIdentifier}`
               : ""
           }&show=rts`,
