@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  DirectionPoint,
   Location,
   NavigateToPoiType,
   SDKNavigation,
 } from "../../sdk/types/index.d";
-import { Destination, Navigation, Point } from "..";
+import { Destination, Navigation } from "..";
 import { Directions } from "../store/index";
 
 const mapperWrapper = (type: string, payload: unknown) =>
@@ -89,18 +90,20 @@ const Mapper = {
         identifier: navigation?.destinationId,
         //name:, //TODO
         point: {
-          buildingId:
+          buildingIdentifier:
             navigation.to.buildingIdentifier ||
             navigation.TO.buildingIdentifier,
-          floorId:
+          floorIdentifier:
             navigation.to.floorIdentifier || navigation.TO.floorIdentifier,
-          latitude:
-            navigation.to.coordinate.latitude ||
-            navigation.TO.coordinate.latitude,
-          longitude:
-            navigation.to.coordinate.longitude ||
-            navigation.TO.coordinate.longitude,
-        } as Point,
+          coordinate: {
+            latitude:
+              navigation.to.coordinate.latitude ||
+              navigation.TO.coordinate.latitude,
+            longitude:
+              navigation.to.coordinate.longitude ||
+              navigation.TO.coordinate.longitude,
+          },
+        } as DirectionPoint,
       } as Destination,
     } as Navigation;
   },
