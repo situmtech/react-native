@@ -3,13 +3,13 @@
   "version": "3.0.0-beta.0",
   "description": "Set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system.",
   "private": false,
-  "repository": "https://github.com/situmtech/situm-react-native-plugin",
+  "repository": "https://github.com/situmtech/react-native",
   "author": "Situm Technologies <mobile@situm.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/situmtech/situm-react-native-plugin/issues"
+    "url": "https://github.com/situmtech/react-native/issues"
   },
-  "homepage": "https://github.com/situmtech/situm-react-native-plugin#readme",
+  "homepage": "https://github.com/situmtech/react-native#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

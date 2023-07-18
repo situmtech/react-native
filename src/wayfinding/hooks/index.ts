@@ -52,7 +52,7 @@ const defaultNavigationOptions = {
 // Hook to define references that point to functions
 // used on listeners. These references are updated whenever
 // one of the dependencies on the array change
-const useCallbackRef = <T>(fn: T, deps: any[]) => {
+export const useCallbackRef = <T>(fn: T, deps: any[]) => {
   const fnRef = useRef(fn);
 
   useEffect(() => {
