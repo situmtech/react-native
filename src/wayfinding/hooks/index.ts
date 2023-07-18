@@ -161,7 +161,7 @@ const useSitum = () => {
     });
 
   const initializeBuildingById = async (buildingId: string) => {
-    if (buildings.length === 0) return;
+    if (!buildings || buildings.length === 0) return;
     const newBuilding = buildings.find(
       (b: Building) => b.buildingIdentifier === buildingId
     );

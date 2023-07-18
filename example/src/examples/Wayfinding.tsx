@@ -10,9 +10,9 @@ import {
   OnPoiSelectedResult,
   SitumProvider,
   useSitum,
-} from '../../../src/wayfinding';
+} from '@situm/react-native';
 import {SITUM_EMAIL, SITUM_API_KEY, SITUM_BUILDING_ID} from '../situm';
-import {MapViewRef} from '../../../src/wayfinding/components/MapView';
+import {MapViewRef} from '@situm/react-native';
 
 const styles = StyleSheet.create({
   container: {

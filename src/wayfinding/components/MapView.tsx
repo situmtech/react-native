@@ -20,6 +20,7 @@ import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
 import {
   MapViewError,
+  MapViewRef,
   OnFloorChangedResult,
   OnNavigationResult,
   OnPoiDeselectedResult,
@@ -75,12 +76,6 @@ export interface MapViewProps {
   onNavigationFinished?: (event: OnNavigationResult) => void;
   style?: any;
   iOSMapViewIndex?: string;
-}
-
-export interface MapViewRef {
-  selectPoi: (poiId: number) => void;
-  navigateToPoi: ({ poi, poiId }: { poi?: Poi; poiId?: number }) => void;
-  cancelNavigation: () => void;
 }
 
 const viewerStyles = StyleSheet.create({
