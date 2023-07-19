@@ -127,7 +127,7 @@
     ]
   },
   "sdkVersions": {
-    "android": "2.88.0@aar",
+    "android": "3.0.1@aar",
     "ios": "2.61.0"
   }
 }
