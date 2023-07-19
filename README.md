@@ -191,7 +191,7 @@ For any question or bug report, please send an email to [support@situm.com](mail
 
 Please refer to [CHANGELOG.md](./CHANGELOG.md) for a list of notable changes for each version of the plugin.
 
-You can also see the [tags on this repository](https://github.com/situmtech/situm-react-native-wayfinding/tags).
+You can also see the [tags on this repository](https://github.com/situmtech/situm-react-native/tags).
 
 ## Submitting contributions
 
