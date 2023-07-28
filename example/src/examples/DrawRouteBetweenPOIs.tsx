@@ -29,7 +29,7 @@ const fetchPOIsFromBuilding = (building: any) => {
 const requestDirections = (building: any, pois: any) => {
   return new Promise((resolve, reject) => {
     SitumPlugin.requestDirections(
-      [building, pois[0], pois[1]],
+      [building, pois[0], pois[1], null],
       (route: any) => {
         let latlngs = [];
         for (let segment of route.segments) {
