@@ -3,20 +3,30 @@ import { useContext } from "react";
 
 import { SitumContext, State } from "./index";
 
-export const createReducer = <T>(
-  reducers: Record<string, (state: T, payload: any) => T>
-) => {
-  // Actions
+export const createReducer = <T>() => {
+  const reducer = (state: T, action: (state: T) => T): T => {
+    return action(state);
+  };
+  return reducer;
+};
+
+export const createStore = <T>({
+  initialState,
+  reducers,
+}: {
+  initialState: T;
+  reducers: Record<string, (state: T, payload: any) => T>;
+}) => {
   const actions = Object.keys(reducers).reduce((acc, r) => {
     acc[r] = (payload: any) => (state: T) => reducers[r](state, payload);
     return acc;
   }, {} as Record<string, (payload?: any) => (state: T) => T>);
 
-  // Reducer
-  const reducer = (state: T, action: (state: T) => T): T => {
-    return action(state);
+  return {
+    initialState,
+    actions,
+    reducer: createReducer<T>(),
   };
-  return { actions, reducer };
 };
 
 export const useSelector = (selector: (state: State) => any) => {

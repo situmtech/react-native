@@ -10,7 +10,8 @@ import {
   SDKError,
   SDKNavigation,
 } from "../../sdk/types/index.d";
-import { createReducer } from "./utils";
+import { useSitumInternal } from "../hooks";
+import { createStore } from "./utils";
 
 // TODO: add types
 export type Directions = any;
@@ -52,48 +53,51 @@ export const SitumContext = createContext<
   { state: State; dispatch: React.Dispatch<(s: State) => State> } | undefined
 >(undefined);
 
-const Reducer = createReducer<State>({
-  setWebViewRef: (state: State, payload: State["webViewRef"]) => {
-    return { ...state, webViewRef: payload };
-  },
-  setSdkInitialized: (state: State, payload: State["sdkInitialized"]) => {
-    return { ...state, sdkInitialized: payload };
-  },
-  setAuth: (state: State, payload: State["user"]) => {
-    return { ...state, user: payload };
-  },
-  setLocation: (state: State, payload: State["location"]) => {
-    return { ...state, location: payload };
-  },
-  setLocationStatus: (state: State, payload: LocationStatusName) => {
-    return { ...state, location: { ...state.location, status: payload } };
-  },
-  resetLocation: (state: State) => {
-    return {
-      ...state,
-      location: initialState.location,
-    };
-  },
-  setBuildings: (state: State, payload: State["buildings"]) => {
-    return { ...state, buildings: payload };
-  },
-  setCurrentBuilding: (state: State, payload: State["currentBuilding"]) => {
-    return { ...state, currentBuilding: payload };
-  },
-  setPois: (state: State, payload: State["pois"]) => {
-    return { ...state, pois: payload };
-  },
-  setDirections: (state: State, payload: State["directions"]) => {
-    return { ...state, directions: payload };
-  },
-  setNavigation: (state: State, payload: State["navigation"]) => {
-    return { ...state, navigation: payload };
-  },
-  setDestinationPoiID: (state: State, payload: State["destinationPoiID"]) => {
-    return { ...state, destinationPoiID: payload };
-  },
-  setError: (state: State, payload: State["error"]) => {
-    return { ...state, error: payload };
+const store = createStore<State>({
+  initialState,
+  reducers: {
+    setWebViewRef: (state: State, payload: State["webViewRef"]) => {
+      return { ...state, webViewRef: payload };
+    },
+    setSdkInitialized: (state: State, payload: State["sdkInitialized"]) => {
+      return { ...state, sdkInitialized: payload };
+    },
+    setAuth: (state: State, payload: State["user"]) => {
+      return { ...state, user: payload };
+    },
+    setLocation: (state: State, payload: State["location"]) => {
+      return { ...state, location: payload };
+    },
+    setLocationStatus: (state: State, payload: LocationStatusName) => {
+      return { ...state, location: { ...state.location, status: payload } };
+    },
+    resetLocation: (state: State) => {
+      return {
+        ...state,
+        location: initialState.location,
+      };
+    },
+    setBuildings: (state: State, payload: State["buildings"]) => {
+      return { ...state, buildings: payload };
+    },
+    setCurrentBuilding: (state: State, payload: State["currentBuilding"]) => {
+      return { ...state, currentBuilding: payload };
+    },
+    setPois: (state: State, payload: State["pois"]) => {
+      return { ...state, pois: payload };
+    },
+    setDirections: (state: State, payload: State["directions"]) => {
+      return { ...state, directions: payload };
+    },
+    setNavigation: (state: State, payload: State["navigation"]) => {
+      return { ...state, navigation: payload };
+    },
+    setDestinationPoiID: (state: State, payload: State["destinationPoiID"]) => {
+      return { ...state, destinationPoiID: payload };
+    },
+    setError: (state: State, payload: State["error"]) => {
+      return { ...state, error: payload };
+    },
   },
 });
 
@@ -114,7 +118,7 @@ export const selectLocation = (state: State) => {
 };
 
 export const selectLocationStatus = (state: State) => {
-  return state.location.status;
+  return state.location?.status;
 };
 
 export const selectBuildings = (state: State) => {
@@ -159,16 +163,40 @@ export const {
   setNavigation,
   setDestinationPoiID,
   setError,
-} = Reducer.actions;
+} = store.actions;
 
+/**
+ * Context specifically to store the only instance of our hook.
+ */
+export const UseSitumContext = createContext<{ useSitum: any } | undefined>(
+  undefined
+);
+
+const UseSitumProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  // TODO: if we have this, there is no need to have a context for the rest of the state
+  // as there is only one instance of the hook
+  const useSitum = useSitumInternal();
+
+  return (
+    <UseSitumContext.Provider value={{ useSitum }}>
+      {children}
+    </UseSitumContext.Provider>
+  );
+};
+
+/**
+ * Main context of the application, stores the plugins' state.
+ */
 const SitumProvider: React.FC<
   React.PropsWithChildren<{
     email?: string;
     apiKey?: string;
   }>
 > = ({ email, apiKey, children }) => {
-  const [state, dispatch] = useReducer(Reducer.reducer, {
-    ...initialState,
+  const [state, dispatch] = useReducer(store.reducer, {
+    ...store.initialState,
     user: { email, apiKey },
   });
 
@@ -179,7 +207,7 @@ const SitumProvider: React.FC<
         dispatch,
       }}
     >
-      {children}
+      <UseSitumProvider>{children}</UseSitumProvider>
     </SitumContext.Provider>
   );
 };
