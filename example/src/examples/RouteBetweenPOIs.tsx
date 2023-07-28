@@ -26,7 +26,7 @@ export const RouteBetweenPOIs = () => {
     //check if we have 2 pois at least
     if (indoorPOIs.length >= 2) {
       SitumPlugin.requestDirections(
-        [building, indoorPOIs[0], indoorPOIs[1]],
+        [building, indoorPOIs[0], indoorPOIs[1], null],
         (route: any) => {
           setRoute(JSON.stringify(route));
         },
