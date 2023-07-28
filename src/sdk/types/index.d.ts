@@ -444,20 +444,20 @@ export type Circle = {
 
 export type LocationRequestOptions = {
   buildingIdentifier: number;
-  interval: number;
-  indoorProvider: string;
-  useBle: boolean;
-  useWifi: boolean;
-  useGps: boolean;
-  useBarometer: boolean;
-  motionMode: string;
-  useForegroundService: boolean;
-  useDeadReckoning: boolean;
-  outdoorLocationOptions: OutdoorLocationOptions;
-  beaconFilters: BeaconFilter[];
-  smallestDisplacement: number;
-  realtimeUpdateInterval: string;
-  autoEnableBleDuringPositioning: boolean;
+  interval?: number;
+  indoorProvider?: string;
+  useBle?: boolean;
+  useWifi?: boolean;
+  useGps?: boolean;
+  useBarometer?: boolean;
+  motionMode?: string;
+  useForegroundService?: boolean;
+  useDeadReckoning?: boolean;
+  outdoorLocationOptions?: OutdoorLocationOptions;
+  beaconFilters?: BeaconFilter[];
+  smallestDisplacement?: number;
+  realtimeUpdateInterval?: string;
+  autoEnableBleDuringPositioning?: boolean;
 };
 
 /**
@@ -555,10 +555,10 @@ export type DirectionsOptions = {
  */
 
 export type OutdoorLocationOptions = {
-  continuousMode: boolean;
-  userDefinedThreshold: boolean;
-  burstInterval: number;
-  averageSnrThreshold: number;
+  continuousMode?: boolean;
+  userDefinedThreshold?: boolean;
+  burstInterval?: number;
+  averageSnrThreshold?: number;
 };
 
 /**
