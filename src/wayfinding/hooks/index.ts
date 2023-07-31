@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import {
   type Building,
@@ -41,6 +41,7 @@ import {
   setPois,
   setSdkInitialized,
   State,
+  UseSitumContext,
 } from "../store/index";
 import { useDispatch, useSelector } from "../store/utils";
 
@@ -63,7 +64,7 @@ export const useCallbackRef = <T>(fn: T, deps: any[]) => {
   return fnRef;
 };
 
-const useSitum = () => {
+export const useSitumInternal = () => {
   const dispatch = useDispatch();
   const isSdkInitialized = useSelector(selectIsSdkInitialized);
   const user = useSelector(selectUser);
@@ -363,6 +364,7 @@ const useSitum = () => {
     originId: number;
     updateRoute?: boolean;
   }) => {
+    stopNavigation();
     calculateRoute({
       originId,
       destinationId,
@@ -473,6 +475,16 @@ const useSitum = () => {
     startNavigation,
     stopNavigation,
   };
+};
+
+const useSitum = () => {
+  const context = useContext(UseSitumContext);
+
+  if (!context) {
+    throw new Error("No SitumProvider found.");
+  }
+
+  return context.useSitum;
 };
 
 export default useSitum;
