@@ -35,7 +35,7 @@ This plugin has two parts:
     -   calculate point-to-point wayfinging routes
     -   explore points of interest on your buildings on the map
 
-![Preview of WYF module](https://raw.githubusercontent.com/situmtech/situm-react-native-plugin/feature/merge-wayfinding/docs/assets/preview.jpg)
+![Preview of WYF module](./docs/assets/preview.png)
 
 <!-- ## Table of contents
 
@@ -62,7 +62,7 @@ Check the [example/README](./example/README.md) file of this repository to creat
 
 ### Configure the plugin on your React Native project
 
-### Install the plugin
+#### Install the plugin
 
 Firstly you need to setup react-native development environment. To get started please follow instructions under section **React Native CLI Quickstart** on this [guide.](https://reactnative.dev/docs/environment-setup)
 
@@ -76,14 +76,14 @@ yarn add @situm/react-native react-native-webview react-native-permissions
 npm install --save @situm/react-native react-native-webview react-native-permissions
 ```
 
-### Set up your Situm credentials
+#### Set up your Situm credentials
 
 Create a new `situm.tsx` file with your Situm credentials. You can use the contents of [example/src/situm.tsx](./example/src/situm.tsx) as example.
 
 Follow the [Wayfinding guide](https://situm.com/docs/first-steps-for-wayfinding/) if you haven't set
 up a Situm account.
 
-### Android
+#### Android
 
 1. Include the Situm repository in your project level `build.gradle`:
 
@@ -105,7 +105,7 @@ allprojects {
 
 3. Set the `minSdkVersion` to 21 or later on your app's `build.gradle` file.
 
-### iOS
+#### iOS
 
 1. Add depedency in `PodFile`
 
@@ -182,10 +182,6 @@ or for beta channel
 ```bash
 npm publish --tag beta
 ```
-
-## Support information
-
-For any question or bug report, please send an email to [support@situm.com](mailto:support@situm.com)
 
 ## Versioning
 
