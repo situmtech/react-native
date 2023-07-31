@@ -143,7 +143,7 @@ export const useSitumInternal = () => {
   // Cartography
   const initializeBuildings = async () =>
     new Promise<Building[]>((resolve, reject) => {
-      console.debug("Retrieving buildings from Situm API");
+      console.debug("Situm > hook > Retrieving buildings from Situm API");
 
       SitumPlugin.fetchBuildings(
         (buildingArray: Building[]) => {
@@ -155,7 +155,7 @@ export const useSitumInternal = () => {
           console.error(
             `Situm > hook > Could not retrieve buildings: ${_error}`
           );
-          reject(`Could not retrieve buildings: ${_error}`);
+          reject(`Situm > hook> Could not retrieve buildings: ${_error}`);
           dispatch(setError({ message: _error, code: 3011 } as SDKError));
         }
       );
@@ -237,11 +237,11 @@ export const useSitumInternal = () => {
       },
       locationOptions
     );
-    console.debug(`Successfully started positioning`);
+    console.debug(`Situm > hook > Successfully started positioning`);
   };
 
   const stopPositioning = async () => {
-    console.debug(`Stopping positioning ...`);
+    console.debug(`Situ> hook > Stopping positioning ...`);
     SitumPlugin.stopPositioning((success: boolean) => {
       if (success) {
         dispatch(resetLocation());
@@ -259,7 +259,7 @@ export const useSitumInternal = () => {
     to: Position,
     directionsOptions?: any
   ): Promise<State["directions"]> => {
-    console.debug("Requesting directions");
+    console.debug("Situm > hook > Requesting directions");
     const fromPoint = {
       floorIdentifier: from.floorIdentifier,
       buildingIdentifier: from.buildingIdentifier,
@@ -307,7 +307,7 @@ export const useSitumInternal = () => {
 
     if (!poiDestination || (!poiOrigin && originId !== -1) || lockDirections) {
       console.debug(
-        `Situm > hook >Could not compute route for origin: ${originId} or destination: ${destinationId} (lockDirections: ${lockDirections})`
+        `Situm > hook > Could not compute route for origin: ${originId} or destination: ${destinationId} (lockDirections: ${lockDirections})`
       );
       return;
     }
@@ -415,7 +415,7 @@ export const useSitumInternal = () => {
   };
 
   const stopNavigation = (): void => {
-    console.debug("Stopping navigation");
+    console.debug("Situm > hook > Stopping navigation");
     if (!navigation || navigation.status === NavigationStatus.STOP) {
       return;
     }
@@ -481,7 +481,7 @@ const useSitum = () => {
   const context = useContext(UseSitumContext);
 
   if (!context) {
-    throw new Error("No SitumProvider found.");
+    throw new Error("Situm > hook > No SitumProvider found.");
   }
 
   return context.useSitum;
