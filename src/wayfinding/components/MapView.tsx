@@ -193,7 +193,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         }
         sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
       },
-      [pois, navigation.status]
+      [pois, navigation?.status]
     );
 
     useImperativeHandle(
