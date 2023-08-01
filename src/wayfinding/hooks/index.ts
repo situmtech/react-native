@@ -241,7 +241,8 @@ export const useSitumInternal = () => {
   };
 
   const stopPositioning = async () => {
-    console.debug(`Situ> hook > Stopping positioning ...`);
+    console.debug(`Situm > hook > Stopping positioning…`);
+
     SitumPlugin.stopPositioning((success: boolean) => {
       if (success) {
         dispatch(resetLocation());
@@ -260,6 +261,7 @@ export const useSitumInternal = () => {
     directionsOptions?: any
   ): Promise<State["directions"]> => {
     console.debug("Situm > hook > Requesting directions");
+
     const fromPoint = {
       floorIdentifier: from.floorIdentifier,
       buildingIdentifier: from.buildingIdentifier,
