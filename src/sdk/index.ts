@@ -4,6 +4,7 @@ import invariant from "invariant";
 import { NativeEventEmitter, NativeModules, Platform } from "react-native";
 
 import packageJson from "../../package.json";
+import { logError } from "../utils/logError";
 import type {
   Building,
   DirectionPoint,
@@ -11,7 +12,6 @@ import type {
   Floor,
   LocationRequestOptions,
 } from "./types/index.d.ts";
-import { logError } from "./utils";
 
 const LINKING_ERROR =
   `The package 'situm-react-native-plugin' doesn't seem to be linked. Make sure: \n\n` +
