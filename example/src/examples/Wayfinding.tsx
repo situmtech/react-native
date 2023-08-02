@@ -110,11 +110,11 @@ const App: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={{...styles.container, ...backgroundStyle}}>
-      <SitumProvider email={SITUM_EMAIL} apiKey={SITUM_API_KEY}>
+    <SitumProvider email={SITUM_EMAIL} apiKey={SITUM_API_KEY}>
+      <SafeAreaView style={{...styles.container, ...backgroundStyle}}>
         <Screen />
-      </SitumProvider>
-    </SafeAreaView>
+      </SafeAreaView>
+    </SitumProvider>
   );
 };
 
