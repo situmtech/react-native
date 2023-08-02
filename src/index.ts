@@ -1,8 +1,8 @@
 import SitumPlugin from "./sdk";
 
 // Definitions
-export type * from "./sdk/types/index.d";
-export type * from "./wayfinding/types/index.d";
+export * from "./sdk/types/index.d";
+export * from "./wayfinding/types/index.d";
 
 // APIs
 export * from "./utils/requestPermission";
