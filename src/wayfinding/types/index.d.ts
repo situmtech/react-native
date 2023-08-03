@@ -1,5 +1,4 @@
-//@ts-ignore
-import { DirectionPoint } from "src/sdk/types";
+import { DirectionPoint, Poi } from "src/sdk/types";
 
 import { ErrorName } from "../components/MapView";
 
@@ -18,6 +17,7 @@ export interface WayfindingResult {
   status: string;
   message: string;
 }
+
 export interface OnPoiSelectedResult {
   buildingId: string;
   buildingName: string;
@@ -26,10 +26,12 @@ export interface OnPoiSelectedResult {
   poiId: string;
   poiName: string;
 }
+
 export interface OnPoiDeselectedResult {
   buildingId: string;
   buildingName: string;
 }
+
 export interface OnFloorChangedResult {
   buildingId: string;
   buildingName: string;
@@ -45,10 +47,12 @@ export interface Destination {
   name?: string;
   point: DirectionPoint;
 }
+
 export interface Navigation {
   status: string;
   destination?: Destination;
 }
+
 export interface OnNavigationResult {
   navigation: Navigation;
   error?: Error;
