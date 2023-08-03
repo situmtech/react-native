@@ -1,5 +1,5 @@
 // Definitions
-export * from "./types";
+export * from "src/wayfinding/types";
 
 // Hook
 export { default as useSitum } from "./hooks";
