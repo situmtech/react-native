@@ -64,9 +64,9 @@ export interface MapViewProps {
     maxZoom?: number;
     initialZoom?: number;
     useDashboardTheme?: boolean;
+    language?: string;
   };
   googleApikey?: string;
-  lang?: string;
   onLoadError?: (event: MapViewError) => void;
   onLoad?: (event: WayfindingResult) => void;
   onFloorChanged?: (event: OnFloorChangedResult) => void;
@@ -104,7 +104,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onNavigationError = () => {},
       onNavigationFinished = () => {},
       style,
-      lang,
       //iOSMapViewIndex,
     },
     ref
@@ -281,9 +280,12 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     }, [directions]);
 
     useEffect(() => {
-      if (!webViewRef.current || !lang || !mapLoaded) return;
-      sendMessageToViewer(webViewRef.current, Mapper.configLang(lang));
-    }, [lang, mapLoaded]);
+      if (!webViewRef.current || !configuration.language || !mapLoaded) return;
+      sendMessageToViewer(
+        webViewRef.current,
+        Mapper.configLang(configuration.language)
+      );
+    }, [configuration.language, mapLoaded]);
 
     useEffect(() => {
       if (webViewRef.current && mapLoaded) {
