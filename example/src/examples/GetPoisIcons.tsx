@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Image, View} from 'react-native';
 import MapView, {Marker, Overlay, PROVIDER_GOOGLE} from 'react-native-maps';
-import SitumPlugin from 'react-native-situm-plugin';
+import SitumPlugin from '@situm/react-native';
 import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
 import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
 import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
@@ -89,11 +89,13 @@ export const GetPoisIcons = () => {
       .then(data => {
         setBuilding(data);
       })
-      .catch(err => console.log);
+      .catch(console.log);
   }, []);
 
   useEffect(() => {
-    if (!building) return;
+    if (!building) {
+      return;
+    }
 
     fetchBuildingInfo(building)
       .then(data => {
@@ -103,16 +105,18 @@ export const GetPoisIcons = () => {
         setBearing(bearing);
         setBounds(bounds);
         setMapRegion(map_region);
-        if (data?.floors.length == 0) return;
+        if (data?.floors.length == 0) {
+          return;
+        }
         var selectedFloor = data.floors.filter(
-          f => f.identifier == SITUM_FLOOR_ID,
+          (f: any) => f.identifier === SITUM_FLOOR_ID,
         )[0];
         setCurrentFloor(selectedFloor);
         setMapImage(selectedFloor.mapUrl);
 
-        getPoisInfo(data).then(res => setPois(res));
+        getPoisInfo(data).then((res: any) => setPois(res));
       })
-      .catch(err => console.log);
+      .catch(console.log);
   }, [building]);
 
   return (
