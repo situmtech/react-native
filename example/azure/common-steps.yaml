@@ -17,19 +17,11 @@ steps:
    fetchTags: false
    displayName: Clone repository
 
- - task: NodeTool@0
-   inputs:
-     versionSource: 'spec' # 'spec' | 'fromFile'. Required. Source of version. Default: spec.
-     versionSpec: $(nodeVersion)
-
  - bash: |
 
-     echo -e "\n[+] Installing NPM version $(npmVersion)\n"
-     npm install -g $(npmVersion)
-
-
      echo -e "\n[+] Install plugin dependencies\n"
-     npm install
+     yarn install
+     yarn typescript
 
      echo -e "\n[+] Install example dependencies\n"
      cd example
