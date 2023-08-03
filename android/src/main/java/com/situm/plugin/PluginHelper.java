@@ -95,10 +95,11 @@ public class PluginHelper {
     private Map<Geofence, Polygon> geofencePolygonMap = new HashMap<>();
 
     private CommunicationManager getCommunicationManagerInstance() {
-        if (cmInstance == null) { //Check for the first time
-            synchronized (CommunicationManager.class) {   //Check for the second time.
-                //if there is no instance available... create new one
-                if (cmInstance == null) cmInstance = SitumSdk.communicationManager();
+        if (cmInstance == null) { // Check for the first time
+            synchronized (CommunicationManager.class) { // Check for the second time.
+                // if there is no instance available... create new one
+                if (cmInstance == null)
+                    cmInstance = SitumSdk.communicationManager();
             }
         }
         return cmInstance;
@@ -110,19 +111,21 @@ public class PluginHelper {
 
     private RealTimeManager getRealtimeManagerInstance() {
         if (rmInstance == null) {
-            synchronized (RealTimeManager.class) {   //Check for the second time.
-                //if there is no instance available... create new one
-                if (rmInstance == null) rmInstance = SitumSdk.realtimeManager();
+            synchronized (RealTimeManager.class) { // Check for the second time.
+                // if there is no instance available... create new one
+                if (rmInstance == null)
+                    rmInstance = SitumSdk.realtimeManager();
             }
         }
         return rmInstance;
     }
 
     private NavigationManager getNavigationManagerInstance() {
-        if (nmInstance == null) { //Check for the first time
-            synchronized (NavigationManager.class) {   //Check for the second time.
-                //if there is no instance available... create new one
-                if (nmInstance == null) nmInstance = SitumSdk.navigationManager();
+        if (nmInstance == null) { // Check for the first time
+            synchronized (NavigationManager.class) { // Check for the second time.
+                // if there is no instance available... create new one
+                if (nmInstance == null)
+                    nmInstance = SitumSdk.navigationManager();
             }
         }
         return nmInstance;
@@ -168,56 +171,20 @@ public class PluginHelper {
         }
     }
 
-        // building, floors, events, indoorPois, outdoorPois, ¿geofences? ¿Paths?
-        public void fetchTilesFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
-            try {
-                JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
-                Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
-    
-                getCommunicationManagerInstance().fetchTilesFromBuilding(building.getIdentifier(), new Handler<String>() {
-                    @Override
-                    public void onSuccess(String url) {
-                        try {
-                            Log.d(PluginHelper.TAG, "onSuccess: fetch building tiles offline fetched successfully.");
-    
-    
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("results", url);
-    
-                            invokeCallback(success, ReactNativeJson.convertJsonToMap(jsonObject));
-                        } catch (JSONException e) {
-                            invokeCallback(error, e.getMessage());
-                        }
-                    }
-    
-                    @Override
-                    public void onFailure(Error e) {
-                        Log.e(PluginHelper.TAG, "onFailure:" + e);
-                        invokeCallback(error, e.getMessage());
-                    }
-                });
-    
-            } catch (Exception e) {
-                Log.e(TAG, "Unexpected error in building info response", e.getCause());
-                invokeCallback(error, e.getMessage());
-            }
-        }
-    
-
     // building, floors, events, indoorPois, outdoorPois, ¿geofences? ¿Paths?
-    public void fetchBuildingInfo(ReadableMap buildingMap, Callback success, Callback error) {
+    public void fetchTilesFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
         try {
             JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
 
-            getCommunicationManagerInstance().fetchBuildingInfo(building, new Handler<BuildingInfo>() {
+            getCommunicationManagerInstance().fetchTilesFromBuilding(building.getIdentifier(), new Handler<String>() {
                 @Override
-                public void onSuccess(BuildingInfo object) {
+                public void onSuccess(String url) {
                     try {
-                        Log.d(PluginHelper.TAG, "onSuccess: building info fetched successfully.");
+                        Log.d(PluginHelper.TAG, "onSuccess: fetch building tiles offline fetched successfully.");
 
-
-                        JSONObject jsonObject = SitumMapper.buildingInfoToJsonObject(object); // Include geofences to parse ? This needs to be on sdk
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("results", url);
 
                         invokeCallback(success, ReactNativeJson.convertJsonToMap(jsonObject));
                     } catch (JSONException e) {
@@ -238,6 +205,40 @@ public class PluginHelper {
         }
     }
 
+    // building, floors, events, indoorPois, outdoorPois, ¿geofences? ¿Paths?
+    public void fetchBuildingInfo(ReadableMap buildingMap, Callback success, Callback error) {
+        try {
+            JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
+            Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
+
+            getCommunicationManagerInstance().fetchBuildingInfo(building, new Handler<BuildingInfo>() {
+                @Override
+                public void onSuccess(BuildingInfo object) {
+                    try {
+                        Log.d(PluginHelper.TAG, "onSuccess: building info fetched successfully.");
+
+                        JSONObject jsonObject = SitumMapper.buildingInfoToJsonObject(object); // Include geofences to
+                                                                                              // parse ? This needs to
+                                                                                              // be on sdk
+
+                        invokeCallback(success, ReactNativeJson.convertJsonToMap(jsonObject));
+                    } catch (JSONException e) {
+                        invokeCallback(error, e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(Error e) {
+                    Log.e(PluginHelper.TAG, "onFailure:" + e);
+                    invokeCallback(error, e.getMessage());
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected error in building info response", e.getCause());
+            invokeCallback(error, e.getMessage());
+        }
+    }
 
     public void fetchFloorsFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
         try {
@@ -346,8 +347,8 @@ public class PluginHelper {
         }
     }
 
-
-    public void startPositioning(final ReadableMap locationRequestMap, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
+    public void startPositioning(final ReadableMap locationRequestMap,
+            DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
         try {
             if (locationListener != null) {
                 SitumSdk.locationManager().removeLocationListener(locationListener);
@@ -357,7 +358,6 @@ public class PluginHelper {
             LocationRequest.Builder locationBuilder = new LocationRequest.Builder();
             SitumMapper.locationRequestJSONObjectToLocationRequest(jsonRequst, locationBuilder);
             LocationRequest locationRequest = locationBuilder.build();
-
 
             locationListener = new LocationListener() {
                 public void onLocationChanged(Location location) {
@@ -414,7 +414,8 @@ public class PluginHelper {
         }
     }
 
-    public void requestDirections(ReadableArray requestArray, Callback success, Callback error, ReactApplicationContext context) {
+    public void requestDirections(ReadableArray requestArray, Callback success, Callback error,
+            ReactApplicationContext context) {
         try {
             JSONObject jsonBuilding = convertMapToJson(Objects.requireNonNull(requestArray.getMap(0)));
             JSONObject jsonFrom = convertMapToJson(Objects.requireNonNull(requestArray.getMap(1)));
@@ -424,7 +425,8 @@ public class PluginHelper {
                 jsonOptions = convertMapToJson(Objects.requireNonNull(requestArray.getMap(3)));
             }
 
-            DirectionsRequest directionRequest = SitumMapper.jsonObjectToDirectionsRequest(jsonBuilding, jsonFrom, jsonTo, jsonOptions);
+            DirectionsRequest directionRequest = SitumMapper.jsonObjectToDirectionsRequest(jsonBuilding, jsonFrom,
+                    jsonTo, jsonOptions);
 
             SitumSdk.directionsManager().requestDirections(directionRequest, new Handler<Route>() {
                 @Override
@@ -541,16 +543,19 @@ public class PluginHelper {
         }
     }
 
-    public void requestNavigationUpdates(ReadableMap options, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter, Context context) {
+    public void requestNavigationUpdates(ReadableMap options,
+            DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter, Context context) {
         // 1) Parse and check arguments
 
         if (this.computedRoute == null) {
             Log.d(TAG, "Situm >> There is not an stored route so you are not allowed to navigate");
-            eventEmitter.emit(EVENT_NAVIGATION_ERROR, "Compute a valid route with requestDirections before trying to navigate within a route");
+            eventEmitter.emit(EVENT_NAVIGATION_ERROR,
+                    "Compute a valid route with requestDirections before trying to navigate within a route");
             return;
         }
         // try??
-        Route route = this.computedRoute; // args.getJSONObject(0); // Retrieve route from arguments, we do this since Route object has internal properties that we do not want to expose
+        Route route = this.computedRoute; // args.getJSONObject(0); // Retrieve route from arguments, we do this since
+                                          // Route object has internal properties that we do not want to expose
         // 2) Build Navigation Arguments
         // 2.1) Build Navigation Request
         Log.d(TAG, "requestNavigationUpdates executed: passed route: " + route);
@@ -560,7 +565,8 @@ public class PluginHelper {
             JSONObject navigationJSONOptions = convertMapToJson(options);
 
             if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_IGNORE_FIRST_INDICATION)) {
-                Double distanceToIgnoreFirstIndication = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_IGNORE_FIRST_INDICATION);
+                Double distanceToIgnoreFirstIndication = navigationJSONOptions
+                        .getDouble(SitumMapper.DISTANCE_TO_IGNORE_FIRST_INDICATION);
                 builder.distanceToIgnoreFirstIndication(distanceToIgnoreFirstIndication);
             }
 
@@ -570,17 +576,20 @@ public class PluginHelper {
             }
 
             if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_GOAL_THRESHOLD)) {
-                Double distanceToGoalThreshold = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_GOAL_THRESHOLD);
+                Double distanceToGoalThreshold = navigationJSONOptions
+                        .getDouble(SitumMapper.DISTANCE_TO_GOAL_THRESHOLD);
                 builder.distanceToGoalThreshold(distanceToGoalThreshold);
             }
 
             if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_CHANGE_FLOOR_THRESHOLD)) {
-                Double distanceToChangeFloorThreshold = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_CHANGE_FLOOR_THRESHOLD);
+                Double distanceToChangeFloorThreshold = navigationJSONOptions
+                        .getDouble(SitumMapper.DISTANCE_TO_CHANGE_FLOOR_THRESHOLD);
                 builder.distanceToChangeFloorThreshold(distanceToChangeFloorThreshold);
             }
 
             if (navigationJSONOptions.has(SitumMapper.DISTANCE_TO_CHANGE_INDICATION_THRESHOLD)) {
-                Double distanceToChangeIndicationThreshold = navigationJSONOptions.getDouble(SitumMapper.DISTANCE_TO_CHANGE_INDICATION_THRESHOLD);
+                Double distanceToChangeIndicationThreshold = navigationJSONOptions
+                        .getDouble(SitumMapper.DISTANCE_TO_CHANGE_INDICATION_THRESHOLD);
                 builder.distanceToChangeIndicationThreshold(distanceToChangeIndicationThreshold);
             }
 
@@ -600,17 +609,19 @@ public class PluginHelper {
             }
 
             if (navigationJSONOptions.has(SitumMapper.TIME_TO_IGNORE_UNEXPECTED_FLOOR_CHANGES)) {
-                Integer timeToIgnoreUnexpectedFloorChanges = navigationJSONOptions.getInt(SitumMapper.TIME_TO_IGNORE_UNEXPECTED_FLOOR_CHANGES);
+                Integer timeToIgnoreUnexpectedFloorChanges = navigationJSONOptions
+                        .getInt(SitumMapper.TIME_TO_IGNORE_UNEXPECTED_FLOOR_CHANGES);
                 builder.timeToIgnoreUnexpectedFloorChanges(timeToIgnoreUnexpectedFloorChanges);
             }
 
             if (navigationJSONOptions.has(SitumMapper.IGNORE_LOW_QUALITY_LOCATIONS)) {
-                Boolean ignoreLowQualityLocations = navigationJSONOptions.getBoolean(SitumMapper.IGNORE_LOW_QUALITY_LOCATIONS);
+                Boolean ignoreLowQualityLocations = navigationJSONOptions
+                        .getBoolean(SitumMapper.IGNORE_LOW_QUALITY_LOCATIONS);
                 builder.ignoreLowQualityLocations(ignoreLowQualityLocations);
             }
 
         } catch (Exception e) {
-            //TODO: handle exception
+            // TODO: handle exception
             Log.d(TAG, "Situm >> Unable to retrieve navigation options. Applying default ones");
         }
 
@@ -677,7 +688,8 @@ public class PluginHelper {
             JSONObject jsonLocation = convertMapToJson(locationMap);
 
             // 2) Create a Location Object from argument
-            Location actualLocation = SitumMapper.jsonLocationObjectToLocation(jsonLocation); // Location Objet from JSON
+            Location actualLocation = SitumMapper.jsonLocationObjectToLocation(jsonLocation); // Location Objet from
+                                                                                              // JSON
             // Location actualLocation = PluginHelper.computedLocation;
             Log.i(TAG, "UpdateNavigation with Location: " + actualLocation);
 
@@ -712,7 +724,8 @@ public class PluginHelper {
 
                                 for (Poi poi : pois) {
                                     Log.i(PluginHelper.TAG,
-                                            "onSuccess: " + poi.getIdentifier() + " - " + poi.getName() + "-" + poi.getCustomFields());
+                                            "onSuccess: " + poi.getIdentifier() + " - " + poi.getName() + "-"
+                                                    + poi.getCustomFields());
 
                                     Log.d(PluginHelper.TAG, "Some log that should appear");
                                     JSONObject jsonoPoi = SitumMapper.poiToJsonObject(poi);
@@ -818,8 +831,8 @@ public class PluginHelper {
         }
     }
 
-
-    public void requestRealTimeUpdates(ReadableMap options, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
+    public void requestRealTimeUpdates(ReadableMap options,
+            DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
         try {
             // Convert request to native
             JSONObject jsonRequest = convertMapToJson(options);
@@ -836,12 +849,11 @@ public class PluginHelper {
                         // Parse information
                         JSONObject jsonResult = SitumMapper.realtimeDataToJson(realTimeData);
 
-                        eventEmitter.emit(EVENT_REALTIME_UPDATE,convertJsonToMap(jsonResult));
+                        eventEmitter.emit(EVENT_REALTIME_UPDATE, convertJsonToMap(jsonResult));
                     } catch (Exception e) {
                         Log.d(TAG, "Error  exception realtime data" + e);
                         eventEmitter.emit(EVENT_REALTIME_ERROR, e.getMessage());
                     }
-
 
                 }
 
@@ -881,7 +893,8 @@ public class PluginHelper {
                 floorId = map.getString("floorIdentifier");
             }
             ReadableMap latLngMap = map.getMap("coordinate");
-            org.locationtech.jts.geom.Point point = geometryFactory.createPoint(new Coordinate(latLngMap.getDouble("latitude"), latLngMap.getDouble("longitude")));
+            org.locationtech.jts.geom.Point point = geometryFactory
+                    .createPoint(new Coordinate(latLngMap.getDouble("latitude"), latLngMap.getDouble("longitude")));
 
             Geofence geofence = null;
 
@@ -926,7 +939,8 @@ public class PluginHelper {
         for (Geofence geofence : geofences) {
             List<Coordinate> jtsCoordinates = new ArrayList<>();
             for (Point point : geofence.getPolygonPoints()) {
-                Coordinate coordinate = new Coordinate(point.getCoordinate().getLatitude(), point.getCoordinate().getLongitude());
+                Coordinate coordinate = new Coordinate(point.getCoordinate().getLatitude(),
+                        point.getCoordinate().getLongitude());
                 jtsCoordinates.add(coordinate);
             }
             if (!jtsCoordinates.isEmpty()) {
@@ -935,7 +949,6 @@ public class PluginHelper {
             }
         }
     }
-
 
     private void invokeCallback(Callback callback, Object args) {
         if (callback != null) {

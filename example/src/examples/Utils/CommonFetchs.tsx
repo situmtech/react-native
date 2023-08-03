@@ -1,4 +1,4 @@
-import SitumPlugin from 'react-native-situm-plugin';
+import SitumPlugin from '@situm/react-native';
 
 const fetchBuilding = async (buildingId: String) => {
   return new Promise((resolve, reject) => {
