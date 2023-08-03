@@ -3,7 +3,7 @@ import { DirectionPoint } from "src/sdk/types";
 
 import { ErrorName } from "../components/MapView";
 
-interface MapViewError {
+export interface MapViewError {
   name: ErrorName;
   description: string;
 }
