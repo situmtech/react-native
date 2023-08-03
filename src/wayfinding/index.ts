@@ -1,5 +1,5 @@
 // Definitions
-export type * from "./types";
+export * from "./types";
 
 // Hook
 export { default as useSitum } from "./hooks";

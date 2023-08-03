@@ -594,7 +594,6 @@ export type RealTimeRequest = {
  * A data object that contains information of the location of users in realtime.
  * @property {Array<Location>} locations object
  */
-
 export type RealTimeData = {
   locations: Location[];
 };
