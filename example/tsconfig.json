@@ -3,6 +3,5 @@
     "jsx": "react"
   },
   "extends": "@tsconfig/react-native/tsconfig.json",
-  "include": ["../src/types/index.d.ts"]
 
 }
