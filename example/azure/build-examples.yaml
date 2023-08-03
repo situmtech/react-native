@@ -47,7 +47,13 @@ steps:
 
           sudo xcode-select -switch $(xcodeVersion)
 
-          cd example/ios/fastlane
+          cp src/wayfinding/types/index.d.ts src/wayfinding/types/index.ts
+
+          cd example
+
+          npx react-native bundle --entry-file index.js --bundle-output ios/main.jsbundle --dev false --platform ios
+
+          cd ios/fastlane
 
           echo -e "\n[+] Setting Apple connection options"
 
