@@ -66,6 +66,7 @@ export interface MapViewProps {
     useDashboardTheme?: boolean;
   };
   googleApikey?: string;
+  lang?: string;
   onLoadError?: (event: MapViewError) => void;
   onLoad?: (event: WayfindingResult) => void;
   onFloorChanged?: (event: OnFloorChangedResult) => void;
@@ -103,6 +104,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onNavigationError = () => {},
       onNavigationFinished = () => {},
       style,
+      lang,
       //iOSMapViewIndex,
     },
     ref
@@ -277,6 +279,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       sendMessageToViewer(webViewRef.current, Mapper.route(directions));
     }, [directions]);
+
+    useEffect(() => {
+      if (!webViewRef.current || !lang || !mapLoaded) return;
+      sendMessageToViewer(webViewRef.current, Mapper.configLang(lang));
+    }, [lang, mapLoaded]);
 
     useEffect(() => {
       if (webViewRef.current && mapLoaded) {
