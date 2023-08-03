@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Button} from 'react-native';
-import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
-import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
-import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
-import SitumPlugin from 'react-native-situm-plugin';
+import {SITUM_BUILDING_ID} from '../situm';
+import {fetchBuilding} from './Utils/CommonFetchs';
+import SitumPlugin from '@situm/react-native';
 import styles from './styles/styles';
 
 const NUMBER_OF_SECONDS = 30 * 60;
 
 export const SetCacheMaxAge = () => {
-  const [building, setBuilding] = useState<any>();
+  const [_building, setBuilding] = useState<any>();
   const [status, setStatus] = useState('');
 
   useEffect(() => {
@@ -28,7 +27,7 @@ export const SetCacheMaxAge = () => {
       .then(data => {
         setBuilding(data);
       })
-      .catch(err => console.log);
+      .catch(console.log);
   }, []);
 
   const invalidateCache = () => {

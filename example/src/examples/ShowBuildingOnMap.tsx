@@ -17,11 +17,13 @@ export const ShowBuildingOnMap = () => {
       .then(data => {
         setBuilding(data);
       })
-      .catch(err => console.log);
+      .catch(console.log);
   }, []);
 
   useEffect(() => {
-    if (!building) return;
+    if (!building) {
+      return;
+    }
 
     fetchBuildingInfo(building)
       .then(data => {
@@ -31,13 +33,15 @@ export const ShowBuildingOnMap = () => {
         setBearing(bearing);
         setBounds(bounds);
         setMapRegion(map_region);
-        if (data?.floors.length == 0) return;
+        if (data?.floors.length === 0) {
+          return;
+        }
         var selectedFloor = data.floors.filter(
-          f => f.identifier == SITUM_FLOOR_ID,
+          (f: any) => f.identifier === SITUM_FLOOR_ID,
         )[0];
         setMapImage(selectedFloor.mapUrl);
       })
-      .catch(err => console.log);
+      .catch(console.log);
   }, [building]);
 
   return (

@@ -1,22 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Button,
-  PermissionsAndroid,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Button, ScrollView, Text} from 'react-native';
 import {getDefaultLocationOptions} from '../settings';
-import SitumPlugin from 'react-native-situm-plugin';
+import SitumPlugin from '@situm/react-native';
 import styles from './styles/styles';
 import requestPermissions from './Utils/RequestPermissions';
+import {setBuildings} from '../../../src/wayfinding/store';
 
 function PositioningScreen() {
   useEffect(() => {
     //Set remote config to false, so we actually use local request
-    SitumPlugin.setUseRemoteConfig('false', response => {
+    SitumPlugin.setUseRemoteConfig('false', (response: any) => {
       console.log(`Remote config disabled: ${JSON.stringify(response)}`);
     });
 
@@ -73,7 +66,8 @@ function PositioningScreen() {
     setLocation('');
     setStatus('');
     setError('');
-    SitumPlugin.stopPositioning((success: any) => {});
+    setBuildings(null);
+    SitumPlugin.stopPositioning((_success: any) => {});
   };
 
   return (
