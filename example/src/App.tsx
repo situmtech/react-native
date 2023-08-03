@@ -2,7 +2,7 @@ import * as React from 'react';
 import {View, FlatList, TouchableHighlight, Button} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import SitumPlugin from 'react-native-situm-plugin';
+import SitumPlugin from '@situm/react-native';
 import {SITUM_EMAIL, SITUM_API_KEY, SITUM_DASHBOARD_URL} from './situm';
 import PositioningScreen from './examples/Positioning';
 import {BuildingsBasicInfo} from './examples/BuildingsBasicInfo';
@@ -14,7 +14,8 @@ import {DrawRouteBetweenPOIs} from './examples/DrawRouteBetweenPOIs';
 import {RemoteConfig} from './examples/RemoteConfig';
 import {GetPoisIcons} from './examples/GetPoisIcons';
 import {SetCacheMaxAge} from './examples/SetCacheMaxAge';
-import { TiledBuilding } from './examples/TiledBuilding';
+import {TiledBuilding} from './examples/TiledBuilding';
+import Wayfinding from './examples/Wayfinding';
 
 function initSitumSdk() {
   SitumPlugin.initSitumSDK();
@@ -76,10 +77,14 @@ const HomeScreen = ({navigation}) => {
           },
           {
             title: 'Show building with tiles',
-            key: 'TiledBuilding'
-          }
+            key: 'TiledBuilding',
+          },
+          {
+            title: 'Wayfinding',
+            key: 'Wayfinding',
+          },
         ]}
-        renderItem={({item, index, separators}) => (
+        renderItem={({item}) => (
           <TouchableHighlight key={item.key}>
             <View>
               <Button
@@ -118,6 +123,7 @@ function App() {
         <Stack.Screen name="GetPoisIcons" component={GetPoisIcons} />
         <Stack.Screen name="SetCacheMaxAge" component={SetCacheMaxAge} />
         <Stack.Screen name="TiledBuilding" component={TiledBuilding} />
+        <Stack.Screen name="Wayfinding" component={Wayfinding} />
       </Stack.Navigator>
     </NavigationContainer>
   );

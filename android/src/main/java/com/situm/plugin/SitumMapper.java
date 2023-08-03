@@ -66,7 +66,6 @@ import es.situm.sdk.v1.Point2f;
 import es.situm.sdk.v1.SitumConversionArea;
 import es.situm.sdk.v1.SitumEvent;
 
-
 class SitumMapper {
 
     public static final float MIN_SNR = 10;
@@ -201,7 +200,6 @@ class SitumMapper {
     public static final String OUTDOOR_MINIMUM_OUTDOOR_LOCATION_ACCURACY = "minimumOutdoorLocationAccuracy";
     public static final String OUTDOOR_SCAN_BASE_DETECTOR_ALWAYS_ON = "scansBasedDetectorAlwaysOn";
     public static final String OUTDOOR_ENABLE_OPEN_SKY_DETECTOR = "enableOpenSkyDetector";
-
 
     public static final String BEACON_FILTERS = "beaconFilters";
     public static final String UUID = "uuid";
@@ -510,7 +508,8 @@ class SitumMapper {
         jo.put(POI_CATEGORY_NAME, poiCategory.getName());
 
         JSONObject nameJO = new JSONObject();
-        // TODO 2022-02-23: make this programming friendly (loop through array or extract from inner values)
+        // TODO 2022-02-23: make this programming friendly (loop through array or
+        // extract from inner values)
         if (poiCategory.getNameAsI18n().has("en")) {
             nameJO.put("en", poiCategory.getNameAsI18n().get("en"));
         }
@@ -647,7 +646,8 @@ class SitumMapper {
     static Point pointJsonObjectToPoint(JSONObject jo, JSONObject joBuilding) throws JSONException, ParseException {
 
         Building building = buildingJsonObjectToBuilding(joBuilding);
-        CoordinateConverter coordinateConverter = new CoordinateConverter(building.getDimensions(), building.getCenter(),
+        CoordinateConverter coordinateConverter = new CoordinateConverter(building.getDimensions(),
+                building.getCenter(),
                 building.getRotation());
 
         if (!jo.has(COORDINATE)) {
@@ -842,7 +842,8 @@ class SitumMapper {
         if (jsonoBuilding.get(SitumMapper.BUILDING_IDENTIFIER) instanceof String) {
             sBuildingId = jsonoBuilding.getString(SitumMapper.BUILDING_IDENTIFIER);
         } else {
-            sBuildingId = String.format(Locale.getDefault(), "%d", jsonoBuilding.getInt(SitumMapper.BUILDING_IDENTIFIER));
+            sBuildingId = String.format(Locale.getDefault(), "%d",
+                    jsonoBuilding.getInt(SitumMapper.BUILDING_IDENTIFIER));
         }
 
         if (args.length() > 1) {
@@ -854,13 +855,15 @@ class SitumMapper {
         return locationBuilder.build();
     }
 
-    static LocationRequest.Builder locationRequestJSONObjectToLocationRequest(JSONObject request, LocationRequest.Builder locationBuilder) throws JSONException {
+    static LocationRequest.Builder locationRequestJSONObjectToLocationRequest(JSONObject request,
+            LocationRequest.Builder locationBuilder) throws JSONException {
         if (request.has(SitumMapper.BUILDING_IDENTIFIER)) {
             String buildingIdentifier;
             if (request.get(SitumMapper.BUILDING_IDENTIFIER) instanceof String) {
                 buildingIdentifier = request.getString(SitumMapper.BUILDING_IDENTIFIER);
             } else {
-                buildingIdentifier = String.format(Locale.getDefault(), "%d", request.getInt(SitumMapper.BUILDING_IDENTIFIER));
+                buildingIdentifier = String.format(Locale.getDefault(), "%d",
+                        request.getInt(SitumMapper.BUILDING_IDENTIFIER));
             }
 
             locationBuilder.buildingIdentifier(buildingIdentifier);
@@ -984,7 +987,6 @@ class SitumMapper {
             locationBuilder.addBeaconFilters(filtersList);
         }
 
-
         if (request.has(SitumMapper.SMALLEST_DISPLACEMENT)) {
             Float smallestDisplacement = new Float(request.getDouble(SitumMapper.SMALLEST_DISPLACEMENT));
             if (smallestDisplacement != null && smallestDisplacement > 0) {
@@ -1057,15 +1059,18 @@ class SitumMapper {
         }
 
         if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_COMPUTE_USE_GEOFENCES_IN_BUILDING_SELECTOR)) {
-            optionsBuilder.useGeofencesInBuildingSelector(outdoorLocationOptions.getBoolean(OUTDOOR_COMPUTE_USE_GEOFENCES_IN_BUILDING_SELECTOR));
+            optionsBuilder.useGeofencesInBuildingSelector(
+                    outdoorLocationOptions.getBoolean(OUTDOOR_COMPUTE_USE_GEOFENCES_IN_BUILDING_SELECTOR));
         }
 
         if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_MINIMUM_OUTDOOR_LOCATION_ACCURACY)) {
-            optionsBuilder.minimumOutdoorLocationAccuracy(outdoorLocationOptions.getInt(OUTDOOR_MINIMUM_OUTDOOR_LOCATION_ACCURACY));
+            optionsBuilder.minimumOutdoorLocationAccuracy(
+                    outdoorLocationOptions.getInt(OUTDOOR_MINIMUM_OUTDOOR_LOCATION_ACCURACY));
         }
 
         if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_SCAN_BASE_DETECTOR_ALWAYS_ON)) {
-            optionsBuilder.scansBasedDetectorAlwaysOn(outdoorLocationOptions.getBoolean(OUTDOOR_SCAN_BASE_DETECTOR_ALWAYS_ON));
+            optionsBuilder.scansBasedDetectorAlwaysOn(
+                    outdoorLocationOptions.getBoolean(OUTDOOR_SCAN_BASE_DETECTOR_ALWAYS_ON));
         }
 
         if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_ENABLE_OPEN_SKY_DETECTOR)) {
@@ -1089,7 +1094,7 @@ class SitumMapper {
     }
 
     static DirectionsRequest jsonObjectToDirectionsRequest(JSONObject joBuilding, JSONObject joFrom,
-                                                           JSONObject joTo, @Nullable JSONObject joOptions) throws JSONException, ParseException {
+            JSONObject joTo, @Nullable JSONObject joOptions) throws JSONException, ParseException {
         Point from = SitumMapper.pointJsonObjectToPoint(joFrom, joBuilding);
         Point to = SitumMapper.pointJsonObjectToPoint(joTo, joBuilding);
         DirectionsRequest.AccessibilityMode accessibilityMode = DirectionsRequest.AccessibilityMode.CHOOSE_SHORTEST;
@@ -1106,7 +1111,8 @@ class SitumMapper {
                 }
             } else if (joOptions.has(SitumMapper.ACCESSIBLE) && joOptions.getBoolean(SitumMapper.ACCESSIBLE)) {
                 accessibilityMode = DirectionsRequest.AccessibilityMode.ONLY_ACCESSIBLE;
-            } else if (joOptions.has(SitumMapper.ACCESSIBLE_ROUTE) && joOptions.getBoolean(SitumMapper.ACCESSIBLE_ROUTE)) {
+            } else if (joOptions.has(SitumMapper.ACCESSIBLE_ROUTE)
+                    && joOptions.getBoolean(SitumMapper.ACCESSIBLE_ROUTE)) {
                 accessibilityMode = DirectionsRequest.AccessibilityMode.ONLY_ACCESSIBLE;
             }
             if (joOptions.has(SitumMapper.STARTING_ANGLE)) {
@@ -1116,7 +1122,8 @@ class SitumMapper {
                 minimizeFloorChanges = joOptions.getBoolean(SitumMapper.MINIMIZE_FLOOR_CHANGES);
             }
         }
-        return new DirectionsRequest.Builder().from(from, Angle.fromDegrees(startingAngle)).to(to).accessibilityMode(accessibilityMode).minimizeFloorChanges(minimizeFloorChanges).build();
+        return new DirectionsRequest.Builder().from(from, Angle.fromDegrees(startingAngle)).to(to)
+                .accessibilityMode(accessibilityMode).minimizeFloorChanges(minimizeFloorChanges).build();
     }
 
     static ReadableArray mapList(List<? extends MapperInterface> modelObjects) {

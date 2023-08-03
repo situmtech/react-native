@@ -6,12 +6,10 @@ import MapView, {
   Polyline,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
-import SitumPlugin from 'react-native-situm-plugin';
+import SitumPlugin from '@situm/react-native';
 import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
 import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
 import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
-const LATITUDE_DELTA = 0.001;
-const LONGITUDE_DELTA = 0.001;
 
 const fetchPOIsFromBuilding = (building: any) => {
   return new Promise((resolve, reject) => {
@@ -31,7 +29,7 @@ const fetchPOIsFromBuilding = (building: any) => {
 const requestDirections = (building: any, pois: any) => {
   return new Promise((resolve, reject) => {
     SitumPlugin.requestDirections(
-      [building, pois[0], pois[1]],
+      [building, pois[0], pois[1], null],
       (route: any) => {
         let latlngs = [];
         for (let segment of route.segments) {
@@ -66,20 +64,24 @@ export const DrawRouteBetweenPOIs = () => {
       .then(data => {
         setBuilding(data);
       })
-      .catch(err => console.log);
+      .catch(_err => console.log);
   }, []);
 
   useEffect(() => {
-    if (!building) return;
+    if (!building) {
+      return;
+    }
     fetchPOIsFromBuilding(building)
       .then(data => {
         setPois(data);
       })
-      .catch(err => console.log);
+      .catch(_err => console.log);
   }, [building]);
 
   useEffect(() => {
-    if (!building) return;
+    if (!building) {
+      return;
+    }
     fetchBuildingInfo(building)
       .then(data => {
         const {bearing, bounds, map_region} = calculateBuildingLocation(
@@ -88,18 +90,22 @@ export const DrawRouteBetweenPOIs = () => {
         setBearing(bearing);
         setBounds(bounds);
         setMapRegion(map_region);
-        if (data?.floors.length == 0) return;
+        if (data?.floors.length == 0) {
+          return;
+        }
         var selectedFloor = data.floors.filter(
-          f => f.identifier == SITUM_FLOOR_ID,
+          (f: any) => f.identifier == SITUM_FLOOR_ID,
         )[0];
         setMapImage(selectedFloor.mapUrl);
       })
-      .catch(err => console.log);
+      .catch(_err => console.log);
   }, [building]);
 
   //ask for directions once we know the building and the 2 POIS we use as origin and destination
   useEffect(() => {
-    if (!building || !pois) return;
+    if (!building || !pois) {
+      return;
+    }
     requestDirections(building, pois).then(res => setPolylineLatlng(res));
   }, [building, pois]);
 
