@@ -21,12 +21,13 @@ steps:
 
      echo -e "\n[+] Install plugin dependencies\n"
      yarn install
-     yarn typescript
 
      echo -e "\n[+] Install example dependencies\n"
      cd example
-     npm install
+     yarn install
 
+     cd ..
+     yarn typescript
    displayName: Install plugin dependencies
 
  - bash: |
