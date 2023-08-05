@@ -5,7 +5,7 @@ import {
   type Building,
   type DirectionPoint,
   type LocationRequestOptions,
-  LocationStatus,
+  type LocationStatus,
   LocationStatusName,
   NavigationStatus,
   NavigationUpdateType,
@@ -40,7 +40,7 @@ import {
   setNavigation,
   setPois,
   setSdkInitialized,
-  State,
+  type State,
   UseSitumContext,
 } from "../store/index";
 import { useDispatch, useSelector } from "../store/utils";

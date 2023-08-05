@@ -1,20 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { createContext, MutableRefObject, useReducer } from "react";
+import React, { createContext, type MutableRefObject, useReducer } from "react";
 
 import {
-  Building,
-  Location,
+  type Building,
+  type Directions,
+  type Location,
   LocationStatusName,
   NavigationStatus,
-  Poi,
-  SDKError,
-  SDKNavigation,
-} from "../../sdk/types/index.d";
+  type Poi,
+  type SDKError,
+  type SDKNavigation,
+} from "../../sdk/types";
 import { useSitumInternal } from "../hooks";
 import { createStore } from "./utils";
-
-// TODO: add types
-export type Directions = any;
 
 interface User {
   email?: string;
