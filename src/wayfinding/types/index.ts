@@ -1,6 +1,10 @@
-import { DirectionPoint, Poi } from "src/sdk/types";
+import type { DirectionPoint, Poi } from "../../sdk/types";
 
-import { ErrorName } from "../components/MapView";
+// Define class that handles errors
+export enum ErrorName {
+  ERR_INTERNET_DISCONNECTED = "ERR_INTERNET_DISCONNECTED",
+  ERR_INTERNAL_SERVER_ERROR = "ERR_INTERNAL_SERVER_ERROR",
+}
 
 export interface MapViewError {
   name: ErrorName;
@@ -57,3 +61,8 @@ export interface OnNavigationResult {
   navigation: Navigation;
   error?: Error;
 }
+
+export type NavigateToPoiType = {
+  navigationTo: number;
+  type?: string;
+};

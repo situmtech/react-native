@@ -3,41 +3,36 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Platform, StyleSheet } from "react-native";
 import WebView from "react-native-webview";
-import {
+import type {
   WebViewErrorEvent,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
 import {
-  NavigateToPoiType,
   NavigationStatus,
   NavigationUpdateType,
-  Poi,
-} from "../../sdk/types/index.d";
+  type Poi,
+} from "../../sdk/types";
 //This icon should either be inside plugin or not be used rat all
 import useSitum from "../hooks";
 import { useCallbackRef } from "../hooks";
 import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
 import {
-  MapViewError,
-  MapViewRef,
-  OnFloorChangedResult,
-  OnNavigationResult,
-  OnPoiDeselectedResult,
-  OnPoiSelectedResult,
-  WayfindingResult,
-} from "../types/index.d";
+  ErrorName,
+  type MapViewError,
+  type MapViewRef,
+  type NavigateToPoiType,
+  type OnFloorChangedResult,
+  type OnNavigationResult,
+  type OnPoiDeselectedResult,
+  type OnPoiSelectedResult,
+  type WayfindingResult,
+} from "../types";
 import { sendMessageToViewer } from "../utils";
 import Mapper from "../utils/mapper";
 
 const SITUM_BASE_DOMAIN = "https://map-viewer.situm.com";
-
-// Define class that handles errors
-export enum ErrorName {
-  ERR_INTERNET_DISCONNECTED = "ERR_INTERNET_DISCONNECTED",
-  ERR_INTERNAL_SERVER_ERROR = "ERR_INTERNAL_SERVER_ERROR",
-}
 
 const NETWORK_ERROR_CODE = {
   android: -2,
