@@ -19,17 +19,21 @@ import Wayfinding from './examples/Wayfinding';
 
 function initSitumSdk() {
   SitumPlugin.initSitumSDK();
-  SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL, response => {
+  SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL, (response: any) => {
     console.log(
       `Set dashboard url to [${SITUM_DASHBOARD_URL}]: ${JSON.stringify(
         response,
       )}`,
     );
   });
-  SitumPlugin.setApiKey(SITUM_EMAIL, SITUM_API_KEY, response => {
-    console.log(`Authenticated Succesfully: ${response.success}`);
-  });
-  SitumPlugin.setCacheMaxAge(1, response => {
+  SitumPlugin.setApiKey(
+    SITUM_EMAIL,
+    SITUM_API_KEY,
+    (response: {success: any}) => {
+      console.log(`Authenticated Succesfully: ${response.success}`);
+    },
+  );
+  SitumPlugin.setCacheMaxAge(1, (response: {success: any}) => {
     console.log(`Cache Age: ${response.success}`);
   });
   SitumPlugin.sdkVersions(response => {

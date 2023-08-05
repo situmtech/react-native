@@ -2,14 +2,12 @@ import React, {useEffect, useState, useRef} from 'react';
 import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import {
-  MapView,
+import {MapView, SitumProvider, useSitum} from '@situm/react-native';
+import type {
   OnFloorChangedResult,
   OnNavigationResult,
   OnPoiDeselectedResult,
   OnPoiSelectedResult,
-  SitumProvider,
-  useSitum,
   MapViewRef,
 } from '@situm/react-native';
 import {SITUM_EMAIL, SITUM_API_KEY, SITUM_BUILDING_ID} from '../situm';
@@ -19,6 +17,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
+    height: '100%',
   },
   mapview: {
     width: '100%',
