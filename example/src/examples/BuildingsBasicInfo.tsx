@@ -10,14 +10,14 @@ export const BuildingsBasicInfo = () => {
 
   const getBuildings = () => {
     SitumPlugin.fetchBuildings(
-      (buildings: any) => {
-        if (!buildings || buildings.length == 0) {
+      (b: any) => {
+        if (!b || b.length === 0) {
           setError(
             'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
           );
         }
-        console.log(JSON.stringify(buildings));
-        setBuildings(JSON.stringify(buildings, null, 2));
+        console.log(JSON.stringify(b));
+        setBuildings(JSON.stringify(b, null, 2));
       },
       (error: any) => {
         console.log(error);
