@@ -283,7 +283,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (!webViewRef.current || !configuration.language || !mapLoaded) return;
       sendMessageToViewer(
         webViewRef.current,
-        Mapper.configLang(configuration.language)
+        Mapper.setLanguage(configuration.language)
       );
     }, [configuration.language, mapLoaded]);
 
