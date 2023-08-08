@@ -1,21 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext, useEffect, useRef, useState } from "react";
 
+import SitumPlugin from "../../sdk";
 import {
   type Building,
   type DirectionPoint,
   type LocationRequestOptions,
   type LocationStatus,
-  LocationStatusName,
-  NavigationStatus,
-  NavigationUpdateType,
   type Poi,
   type Position,
   type SDKError,
   type SDKNavigation,
-} from "../../index";
-import SitumPlugin from "../../sdk";
-import requestPermission from "../../utils/requestPermission";
+} from "../../sdk/types";
+import {
+  LocationStatusName,
+  NavigationStatus,
+  NavigationUpdateType,
+} from "../../sdk/types/constants";
+import { requestPermission } from "../../utils/requestPermission";
 import {
   resetLocation,
   selectBuildings,

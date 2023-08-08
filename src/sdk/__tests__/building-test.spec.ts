@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { mock } from "jest-mock-extended";
 import { NativeModules } from "react-native";
 
+import type { Building, Floor } from "..";
 import SitumPlugin from "..";
 
 describe("Test buildings related data (list, info, floors)", () => {
@@ -23,7 +25,7 @@ describe("Test buildings related data (list, info, floors)", () => {
     );
   });
   it("should fetch building info from building and pass it to given callback", () => {
-    const building = jest.mock();
+    const building = mock<Building>();
     const success = () => {};
     const error = () => {};
 
@@ -46,7 +48,7 @@ describe("Test buildings related data (list, info, floors)", () => {
   });
 
   it("should fetch floor list from building and pass it to given callback", () => {
-    const building = jest.mock();
+    const building = mock<Building>();
     const success = () => {};
     const error = () => {};
 
@@ -69,7 +71,7 @@ describe("Test buildings related data (list, info, floors)", () => {
   });
 
   it("should fetch floor map from floor and pass it to given callback", () => {
-    const floor = jest.mock();
+    const floor = mock<Floor>();
     const success = () => {};
     const error = () => {};
 
@@ -92,7 +94,7 @@ describe("Test buildings related data (list, info, floors)", () => {
   });
 
   it("should fetch geofence from building and pass it to given callback", () => {
-    const building = jest.mock();
+    const building = mock<Building>();
     const success = () => {};
     const error = () => {};
 
@@ -115,7 +117,7 @@ describe("Test buildings related data (list, info, floors)", () => {
   });
 
   it("should check if point is in a geofence", () => {
-    const request = jest.mock();
+    const request = mock<unknown>();
     const callback = () => {};
 
     SitumPlugin.checkIfPointInsideGeofence(request, callback);
@@ -133,7 +135,7 @@ describe("Test buildings related data (list, info, floors)", () => {
   });
 
   it("should fetch indoor POIs from building and pass it to given callback", () => {
-    const building = jest.mock();
+    const building = mock<Building>();
     const success = () => {};
     const error = () => {};
 
@@ -156,7 +158,7 @@ describe("Test buildings related data (list, info, floors)", () => {
   });
 
   it("should fetch outdoor POIs from building and pass it to given callback", () => {
-    const building = jest.mock();
+    const building = mock<Building>();
     const success = () => {};
     const error = () => {};
 
@@ -180,7 +182,7 @@ describe("Test buildings related data (list, info, floors)", () => {
   });
 
   it("should fetch events from building and pass it to given callback", () => {
-    const building = jest.mock();
+    const building = mock<Building>();
     const success = () => {};
     const error = () => {};
 
