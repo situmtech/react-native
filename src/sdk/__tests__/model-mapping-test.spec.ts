@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 import expect from "expect";
 
 import buildings from "./resources/fetchBuildings.json";
@@ -34,6 +32,7 @@ describe("Test fetchBuildings -> ", () => {
     expect(buildings).toBeDefined();
     expect(buildings instanceof Array).toBe(true);
   });
+
   it("Check building", () => {
     expect((building = buildings[0]));
     expect(typeof building).toBe("object");
@@ -51,15 +50,19 @@ describe("Test fetchBuildings -> ", () => {
     expect(typeof building.buildingIdentifier).toBe("string");
     expect(typeof building.customFields).toBe("object");
   });
+
   it("Check building bounds", () => {
     testBounds(building.bounds);
   });
+
   it("Check building boundsRotated", () => {
     testBounds(building.boundsRotated);
   });
+
   it("Check building center", () => {
     testCoordinate(building.center);
   });
+
   it("Check building dimensions", () => {
     testDimension(building.dimensions);
   });
@@ -70,6 +73,7 @@ describe("Test fetchFloorsFromBuilding ->", () => {
     expect(floors).toBeDefined();
     expect(floors instanceof Array).toBe(true);
   });
+
   it("Check floor", () => {
     expect((floor = floors[0]));
     expect(typeof floor).toBe("object");
@@ -87,6 +91,7 @@ describe("Test fetchIndoorPOIsFromBuilding ->", () => {
     expect(indoorPois).toBeDefined();
     expect(indoorPois instanceof Array).toBe(true);
   });
+
   it("Check indoorPOI", () => {
     expect((indoorPoi = indoorPois[0]));
     expect(typeof indoorPoi).toBe("object");
@@ -103,21 +108,26 @@ describe("Test fetchIndoorPOIsFromBuilding ->", () => {
     expect(typeof indoorPoi.infoHtml).toBe("string");
     expect(typeof indoorPoi.customFields).toBe("object");
   });
+
   it("Check indoorPOI cartesiansCoordinate", () => {
     testCartesianCoordinate(indoorPoi.cartesianCoordinate);
   });
+
   it("Check indoorPOI coordinate", () => {
     testCoordinate(indoorPoi.coordinate);
   });
+
   it("Check indoorPOI position", () => {
     testPoint(indoorPoi.position);
   });
 });
+
 describe("Test fetchOutdoorPOIsFromBuilding ->", () => {
   it("Check returned value", () => {
     expect(outdoorPois).toBeDefined();
     expect(outdoorPois instanceof Array).toBe(true);
   });
+
   it("Check outdoorPOI", () => {
     expect((outdoorPoi = outdoorPois[0]));
     expect(typeof outdoorPoi).toBe("object");
@@ -134,21 +144,26 @@ describe("Test fetchOutdoorPOIsFromBuilding ->", () => {
     expect(typeof outdoorPoi.infoHtml).toBe("string");
     expect(typeof outdoorPoi.customFields).toBe("object");
   });
+
   it("Check outdoorPOI cartesiansCoordinate", () => {
     testCartesianCoordinate(outdoorPoi.cartesianCoordinate);
   });
+
   it("Check outdoorPOI coordinate", () => {
     testCoordinate(outdoorPoi.coordinate);
   });
+
   it("Check outdoorPOI position", () => {
     testPoint(outdoorPoi.position);
   });
 });
+
 describe("Test fetchEventsFromBuilding ->", () => {
   it("Check returned value", () => {
     expect(events).toBeDefined();
     expect(events instanceof Array).toBe(true);
   });
+
   it("Check event", () => {
     expect((event = events[0]));
     expect(typeof event).toBe("object");
@@ -165,21 +180,26 @@ describe("Test fetchEventsFromBuilding ->", () => {
     expect(typeof event.trigger).toBe("object");
     expect(typeof event.conversion).toBe("object");
   });
+
   it("Check event conversionArea", () => {
     testConversionArea(event.conversionArea);
   });
+
   it("Check event conversion", () => {
     testCircle(event.conversion);
   });
+
   it("Check event trigger", () => {
     testCircle(event.trigger);
   });
 });
+
 describe("Test fetchPoiCategories ->", () => {
   it("Check returned value", () => {
     expect(poiCategories).toBeDefined();
     expect(poiCategories instanceof Array).toBe(true);
   });
+
   it("Check POICategory", () => {
     expect((poiCategory = poiCategories[0]));
     expect(typeof poiCategory).toBe("object");
@@ -190,29 +210,34 @@ describe("Test fetchPoiCategories ->", () => {
     expect(typeof poiCategory.public).toBe("boolean");
   });
 });
+
 describe("Test fetchMapFromFloor ->", () => {
   it("Check map", () => {
     expect(map).toBeDefined();
     expect(typeof map.data).toBe("string");
   });
 });
+
 describe("Test fetchPoiCategoryIconNormal ->", () => {
   it("Check iconNormal", () => {
     expect(iconNormal).toBeDefined();
     expect(typeof iconNormal.data).toBe("string");
   });
 });
+
 describe("Test fetchPoiCategoryIconSelected ->", () => {
   it("Chek iconSelected", () => {
     expect(iconSelected).toBeDefined();
     expect(typeof iconSelected.data).toBe("string");
   });
 });
+
 describe("Test requestDirections ->", () => {
   it("Check returned value", () => {
     expect(route).toBeDefined();
     expect(typeof route).toBe("object");
   });
+
   it("Check route", () => {
     expect(route.edges instanceof Array).toBe(true);
     expect(typeof route.firstStep).toBe("object");
@@ -225,86 +250,106 @@ describe("Test requestDirections ->", () => {
     expect(typeof route.TO).toBe("object");
     expect(route.steps instanceof Array).toBe(true);
   });
+
   it("Check edge route", () => {
     expect((edge = route.edges[0]));
     expect(typeof edge).toBe("object");
     testRouteStep(edge);
   });
+
   it("Check firstStep route", () => {
     testRouteStep(route.firstStep);
   });
+
   it("Check from route", () => {
     testPoint(route.from);
   });
+
   it("Check indication route", () => {
-    expect((indication = route.indications[0]));
+    const indication = route.indications[0];
     expect(typeof indication).toBe("object");
     testIndication(indication);
   });
+
   it("Check lastStep route", () => {
     testRouteStep(route.lastStep);
   });
+
   it("Check node route", () => {
     expect((node = route.nodes[0]));
     expect(typeof node).toBe("object");
     testPoint(node);
   });
+
   it("Check point route", () => {
     expect((point = route.points[0]));
     expect(typeof point).toBe("object");
     testPoint(point);
   });
+
   it("Check segment route", () => {
-    expect((segment = route.segments[0]));
+    const segment = route.segments[0];
     expect(typeof segment).toBe("object");
     testSegment(segment);
   });
+
   it("Check TO route", () => {
     testPoint(route.TO);
   });
+
   it("Check step route", () => {
     expect((step = route.steps[0]));
     expect(typeof step).toBe("object");
     testRouteStep(step);
   });
 });
+
 describe("Test startPositioning ->", () => {
   it("Check returned value", () => {
     expect(starting).toBeDefined();
     expect(typeof starting).toBe("object");
   });
+
   it("Check starting - statusOrdinal_0", () => {
     expect(typeof starting.statusName).toBe("string");
     expect(typeof starting.statusOrdinal).toBe("number");
   });
+
   it("Check returned value - statusOrdinal_1", () => {
     expect(preparePositioningModel).toBeDefined();
     expect(typeof preparePositioningModel).toBe("object");
   });
+
   it("Check preparePositioningModel", () => {
     expect(typeof preparePositioningModel.statusName).toBe("string");
     expect(typeof preparePositioningModel.statusOrdinal).toBe("number");
   });
+
   it("Check returned value - statusOrdinal_5", () => {
     expect(startingPositioning).toBeDefined();
     expect(typeof startingPositioning).toBe("object");
   });
+
   it("Check startingPositioning", () => {
     expect(typeof startingPositioning.statusName).toBe("string");
     expect(typeof startingPositioning.statusOrdinal).toBe("number");
   });
+
   it("Check returned value - statusOrdinal_7", () => {
     expect(calculating).toBeDefined();
     expect(typeof calculating).toBe("object");
   });
+
   it("Check calculating", () => {
     expect(typeof calculating.statusName).toBe("string");
     expect(typeof calculating.statusOrdinal).toBe("number");
   });
+
   it("Check returned value - position", () => {
     expect(position).toBeDefined();
     expect(typeof position).toBe("object");
   });
+
   it("Check position", () => {
     expect(typeof position.accuracy).toBe("number");
     expect(typeof position.bearing).toBe("object");
@@ -324,18 +369,23 @@ describe("Test startPositioning ->", () => {
     expect(typeof position.isOutdoor).toBe("boolean");
     expect(typeof position.deviceId).toBe("string");
   });
+
   it("Check position bearing", () => {
     testBearing(position.bearing);
   });
+
   it("Check position cartesianBearing", () => {
     testBearing(position.cartesianBearing);
   });
+
   it("Check position cartesianCoordinate", () => {
     testCartesianCoordinate(position.cartesianCoordinate);
   });
+
   it("Check position coordinate", () => {
     testCoordinate(position.coordinate);
   });
+
   it("Check position position", () => {
     testPoint(position.position);
   });

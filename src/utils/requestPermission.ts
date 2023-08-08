@@ -77,7 +77,7 @@ const checkAndroidPermissions = async () => {
   throw "Situm > permissions > ACCESS_FINE_LOCATION, BLUETOOTH_CONNECT or BLUETOOTH_SCAN permissions not granted";
 };
 
-const requestPermission = () =>
+export const requestPermission = () =>
   // eslint-disable-next-line no-async-promise-executor
   new Promise<void>(async (resolve, reject) => {
     console.log(

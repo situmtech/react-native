@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import type {
+  LocationStatusName,
+  NavigationStatus,
+  NavigationUpdateType,
+} from "src/sdk";
+
 /**
  * @name Building
  * @description A Building object definition
@@ -405,7 +411,7 @@ export type Circle = {
  * @property {boolean} autoEnableBleDuringPositioning - Set if the BLE should be re-enabled during positioning if the ble is used. Android only
  */
 export type LocationRequestOptions = {
-  buildingIdentifier: number;
+  buildingIdentifier?: number;
   interval?: number;
   indoorProvider?: string;
   useBle?: boolean;
@@ -450,16 +456,16 @@ export type LocationRequest = {
  * @property {number} timeToIgnoreUnexpectedFloorChanges - Time (in millis) to ignore the locations received during navigation, when the next indication is a floor change, if the locations are in a wrong floor (not in origin or destination floors).
  */
 export type NavigationRequest = {
-  distanceToIgnoreFirstIndication: number;
-  ignoreLowQualityLocations: number;
-  distanceToGoalThreshold: number;
-  outsideRouteThreshold: number;
-  distanceToFloorChangeThreshold: number;
-  distanceToChangeIndicationThreshold: number;
-  indicationsInterval: number;
-  timeToFirstIndication: number;
-  roundIndicationsStep: number;
-  timeToIgnoreUnexpectedFloorChanges: number;
+  distanceToIgnoreFirstIndication?: number;
+  ignoreLowQualityLocations?: number;
+  distanceToGoalThreshold?: number;
+  outsideRouteThreshold?: number;
+  distanceToFloorChangeThreshold?: number;
+  distanceToChangeIndicationThreshold?: number;
+  indicationsInterval?: number;
+  timeToFirstIndication?: number;
+  roundIndicationsStep?: number;
+  timeToIgnoreUnexpectedFloorChanges?: number;
 };
 
 /**
@@ -574,16 +580,6 @@ export interface LocationStatus {
   statusCode: number;
 }
 
-export enum LocationStatusName {
-  STARTING = "STARTING",
-  CALCULATING = "CALCULATING",
-  // This status will always be sent to mapviewer-web, in case we recieve
-  // a location from SDK.
-  POSITIONING = "POSITIONING",
-  USER_NOT_IN_BUILDING = "USER_NOT_IN_BUILDING",
-  STOPPED = "STOPPED",
-}
-
 export interface SDKError {
   code?: number;
   message: string;
@@ -607,16 +603,4 @@ export interface SDKNavigation {
   //timeToGoal: number;
   type?: NavigationUpdateType;
   status: NavigationStatus;
-}
-
-export enum NavigationStatus {
-  START = "start",
-  STOP = "stop",
-  UPDATE = "update",
-}
-
-export enum NavigationUpdateType {
-  progress = "PROGRESS",
-  userOutsideRoute = "OUT_OF_ROUTE",
-  destinationReached = "DESTINATION_REACHED",
 }

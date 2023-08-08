@@ -3,6 +3,9 @@
 import invariant from "invariant";
 import { NativeEventEmitter, NativeModules, Platform } from "react-native";
 
+export type * from "./types";
+export * from "./types/constants";
+
 import packageJson from "../../package.json";
 import { logError } from "../utils/logError";
 import type {
@@ -11,7 +14,8 @@ import type {
   DirectionsOptions,
   Floor,
   LocationRequestOptions,
-} from "./types/index.d.ts";
+  NavigationRequest,
+} from "./types";
 
 const LINKING_ERROR =
   `The package 'situm-react-native-plugin' doesn't seem to be linked. Make sure: \n\n` +
@@ -524,7 +528,7 @@ export default {
   requestNavigationUpdates: function (
     navigationUpdates: (event: any) => void,
     error?: (event: any) => void,
-    options?: LocationRequestOptions
+    options?: NavigationRequest
   ) {
     RNCSitumPlugin.requestNavigationUpdates(options || {});
     navigationSubscriptions.push(

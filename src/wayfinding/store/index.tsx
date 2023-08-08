@@ -5,12 +5,14 @@ import {
   type Building,
   type Directions,
   type Location,
-  LocationStatusName,
-  NavigationStatus,
   type Poi,
   type SDKError,
   type SDKNavigation,
 } from "../../sdk/types";
+import {
+  LocationStatusName,
+  NavigationStatus,
+} from "../../sdk/types/constants";
 import { useSitumInternal } from "../hooks";
 import { createStore } from "./utils";
 

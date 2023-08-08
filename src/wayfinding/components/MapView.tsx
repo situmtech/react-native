@@ -9,17 +9,15 @@ import type {
 } from "react-native-webview/lib/WebViewTypes";
 
 import {
+  ErrorName,
   NavigationStatus,
   NavigationUpdateType,
   type Poi,
-} from "../../sdk/types";
-//This icon should either be inside plugin or not be used rat all
-import useSitum from "../hooks";
-import { useCallbackRef } from "../hooks";
+} from "../../";
+import useSitum, { useCallbackRef } from "../hooks";
 import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
 import {
-  ErrorName,
   type MapViewError,
   type MapViewRef,
   type NavigateToPoiType,
