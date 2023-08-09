@@ -2,12 +2,11 @@ require "json"
 package = JSON.parse(File.read('package.json'))
 
 Pod::Spec.new do |s|
-  s.name          = "ReactNativeSitumPlugin"
-  s.version       = package['version']
-  s.version      = package["version"]
+  s.name         = "ReactNativeSitumPlugin"
+  s.version      = package['version']
   s.summary      = package["description"]
   s.homepage     = package["homepage"]
-  s.license      = package["license"]
+  s.license      = "../LICENSE"
   s.authors      = package["author"]
   s.platform     = :ios, "8.0"
   s.source       = { :http => 'file:' + __dir__ + '/' }
