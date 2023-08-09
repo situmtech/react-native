@@ -47,6 +47,7 @@ const Mapper = {
     mapperWrapper(`cartography.select_poi`, { identifier: poiId }),
 
   followUser: (follow: boolean) => mapperWrapper("camera.follow_user", follow),
+  setLanguage: (lang: string) => mapperWrapper("ui.set_language", lang),
 
   initialConfiguration: (
     style: any,
