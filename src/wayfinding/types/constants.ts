@@ -1,0 +1,5 @@
+// Define class that handles errors
+export enum ErrorName {
+  ERR_INTERNET_DISCONNECTED = "ERR_INTERNET_DISCONNECTED",
+  ERR_INTERNAL_SERVER_ERROR = "ERR_INTERNAL_SERVER_ERROR",
+}

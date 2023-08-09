@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Button, ScrollView, Text} from 'react-native';
+import {ScrollView, Text} from 'react-native';
 import {getDefaultLocationOptions} from '../settings';
 import SitumPlugin from '@situm/react-native';
 import styles from './styles/styles';
 import requestPermissions from './Utils/RequestPermissions';
 import {setBuildings} from '../../../src/wayfinding/store';
+import {Button, Divider, List} from 'react-native-paper';
 
 function PositioningScreen() {
   useEffect(() => {
@@ -71,13 +72,20 @@ function PositioningScreen() {
   };
 
   return (
-    <ScrollView>
-      <Button
-        title="request permissions"
-        onPress={requestLocationPermissions}
-      />
-      <Button title="start" onPress={startPositioning} />
-      <Button title="stop" onPress={stopPositioning} />
+    <ScrollView style={{...styles.screenWrapper}}>
+      <List.Section>
+        <Button onPress={requestLocationPermissions} mode="contained">
+          Request permissions
+        </Button>
+        <Divider style={{marginVertical: 5}} />
+        <Button onPress={startPositioning} mode="contained">
+          Start positioning
+        </Button>
+        <Divider style={{marginVertical: 5}} />
+        <Button onPress={stopPositioning} mode="contained">
+          Stop positioning
+        </Button>
+      </List.Section>
       <Text style={styles.text}>Error: {error}</Text>
       <Text style={styles.text}>Status: {status}</Text>
       <Text style={styles.text}>Location: {location}</Text>

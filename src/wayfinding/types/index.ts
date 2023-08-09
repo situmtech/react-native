@@ -1,6 +1,5 @@
-import { DirectionPoint, Poi } from "src/sdk/types";
-
-import { ErrorName } from "../components/MapView";
+import type { DirectionPoint, Poi } from "../../sdk/types";
+import { ErrorName } from "./constants";
 
 export interface MapViewError {
   name: ErrorName;
@@ -57,3 +56,8 @@ export interface OnNavigationResult {
   navigation: Navigation;
   error?: Error;
 }
+
+export type NavigateToPoiType = {
+  navigationTo: number;
+  type?: string;
+};
