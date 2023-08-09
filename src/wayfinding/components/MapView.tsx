@@ -64,6 +64,7 @@ export interface MapViewProps {
     maxZoom?: number;
     initialZoom?: number;
     useDashboardTheme?: boolean;
+    language?: string;
   };
   googleApikey?: string;
   onLoadError?: (event: MapViewError) => void;
@@ -277,6 +278,14 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       sendMessageToViewer(webViewRef.current, Mapper.route(directions));
     }, [directions]);
+
+    useEffect(() => {
+      if (!webViewRef.current || !configuration.language || !mapLoaded) return;
+      sendMessageToViewer(
+        webViewRef.current,
+        Mapper.setLanguage(configuration.language)
+      );
+    }, [configuration.language, mapLoaded]);
 
     useEffect(() => {
       if (webViewRef.current && mapLoaded) {
