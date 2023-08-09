@@ -31,7 +31,7 @@ export const BuildingsBasicInfo = () => {
   }, []);
 
   return (
-    <ScrollView>
+    <ScrollView style={{...styles.screenWrapper}}>
       <Text style={styles.text}>{buildings}</Text>
     </ScrollView>
   );

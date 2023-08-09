@@ -52,7 +52,10 @@ export const BuildingFullInfo = () => {
   }, [building]);
 
   return (
-    <ScrollView>
+    <ScrollView style={{...styles.screenWrapper}}>
+      {!SITUM_BUILDING_ID && (
+        <Text>No building id provided, please edit your situm.tsx file</Text>
+      )}
       <Text style={styles.text}>FLOORS</Text>
       <Text style={styles.text}>{floors}</Text>
       <Text style={styles.text}>------------------------------</Text>
