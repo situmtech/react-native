@@ -3,41 +3,34 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Platform, StyleSheet } from "react-native";
 import WebView from "react-native-webview";
-import {
+import type {
   WebViewErrorEvent,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
 import {
-  NavigateToPoiType,
+  ErrorName,
   NavigationStatus,
   NavigationUpdateType,
-  Poi,
-} from "../../sdk/types/index.d";
-//This icon should either be inside plugin or not be used rat all
-import useSitum from "../hooks";
-import { useCallbackRef } from "../hooks";
+  type Poi,
+} from "../../";
+import useSitum, { useCallbackRef } from "../hooks";
 import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
 import {
-  MapViewError,
-  MapViewRef,
-  OnFloorChangedResult,
-  OnNavigationResult,
-  OnPoiDeselectedResult,
-  OnPoiSelectedResult,
-  WayfindingResult,
-} from "../types/index.d";
+  type MapViewError,
+  type MapViewRef,
+  type NavigateToPoiType,
+  type OnFloorChangedResult,
+  type OnNavigationResult,
+  type OnPoiDeselectedResult,
+  type OnPoiSelectedResult,
+  type WayfindingResult,
+} from "../types";
 import { sendMessageToViewer } from "../utils";
 import Mapper from "../utils/mapper";
 
 const SITUM_BASE_DOMAIN = "https://map-viewer.situm.com";
-
-// Define class that handles errors
-export enum ErrorName {
-  ERR_INTERNET_DISCONNECTED = "ERR_INTERNET_DISCONNECTED",
-  ERR_INTERNAL_SERVER_ERROR = "ERR_INTERNAL_SERVER_ERROR",
-}
 
 const NETWORK_ERROR_CODE = {
   android: -2,
@@ -64,6 +57,7 @@ export interface MapViewProps {
     maxZoom?: number;
     initialZoom?: number;
     useDashboardTheme?: boolean;
+    language?: string;
   };
   googleApikey?: string;
   onLoadError?: (event: MapViewError) => void;
@@ -277,6 +271,14 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       sendMessageToViewer(webViewRef.current, Mapper.route(directions));
     }, [directions]);
+
+    useEffect(() => {
+      if (!webViewRef.current || !configuration.language || !mapLoaded) return;
+      sendMessageToViewer(
+        webViewRef.current,
+        Mapper.setLanguage(configuration.language)
+      );
+    }, [configuration.language, mapLoaded]);
 
     useEffect(() => {
       if (webViewRef.current && mapLoaded) {

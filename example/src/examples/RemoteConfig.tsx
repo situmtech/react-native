@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Text, SafeAreaView, ScrollView, Button} from 'react-native';
+import {Text, SafeAreaView, ScrollView} from 'react-native';
 
 import SitumPlugin from '@situm/react-native';
 
 import styles from './styles/styles';
 import requestPermissions from './Utils/RequestPermissions';
+import {Button, Divider, List} from 'react-native-paper';
 
 export const RemoteConfig = () => {
   const [location, setLocation] = useState<String>('ready to be used');
@@ -69,18 +70,18 @@ export const RemoteConfig = () => {
   }, []);
 
   return (
-    <ScrollView>
+    <ScrollView style={{...styles.screenWrapper}}>
       <SafeAreaView>
-        <Button
-          onPress={startPositioning}
-          title="START POSITIONING"
-          color="#07F736"
-        />
-        <Button
-          onPress={stopPositioning}
-          title="STOP POSITIONING"
-          color="#F71D07"
-        />
+        <List.Section>
+          <Button onPress={startPositioning} mode="contained">
+            Start positioning
+          </Button>
+          <Divider style={{marginVertical: 5}} />
+          <Button onPress={stopPositioning} mode="contained">
+            Stop positioning
+          </Button>
+        </List.Section>
+
         <Text style={styles.text}>Error: {error}</Text>
         <Text style={styles.text}>Status: {status}</Text>
         <Text style={styles.text}>Location: {location}</Text>

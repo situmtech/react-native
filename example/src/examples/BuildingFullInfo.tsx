@@ -1,7 +1,8 @@
 import React from 'react';
 import {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
-import SitumPlugin, {Building} from '@situm/react-native';
+import SitumPlugin from '@situm/react-native';
+import type {Building} from '@situm/react-native';
 
 import {SITUM_BUILDING_ID} from '../situm';
 import styles from './styles/styles';
@@ -13,29 +14,29 @@ export const BuildingFullInfo = () => {
   const [outdoorPOIs, setOutdoorPOIs] = useState<any>();
   const [building, setBuilding] = useState<any>();
 
-  const populateFloorsFromBuilding = (building: any) => {
+  const populateFloorsFromBuilding = (b: any) => {
     SitumPlugin.fetchFloorsFromBuilding(
-      building,
-      (floors: any) => {
-        setFloors(JSON.stringify(floors, null, 2));
+      b,
+      (f: any) => {
+        setFloors(JSON.stringify(f, null, 2));
       },
       (_error: any) => {},
     );
   };
 
-  const populatePOIsFromBuilding = (building: Building) => {
+  const populatePOIsFromBuilding = (b: Building) => {
     SitumPlugin.fetchIndoorPOIsFromBuilding(
-      building,
-      (indoorPOIs: any) => {
-        setIndoorPOIs(JSON.stringify(indoorPOIs, null, 2));
+      b,
+      (ip: any) => {
+        setIndoorPOIs(JSON.stringify(ip, null, 2));
       },
       (_error: any) => {},
     );
 
     SitumPlugin.fetchOutdoorPOIsFromBuilding(
-      building,
-      (outdoorPOIs: any) => {
-        setOutdoorPOIs(JSON.stringify(outdoorPOIs, null, 2));
+      b,
+      (op: any) => {
+        setOutdoorPOIs(JSON.stringify(op, null, 2));
       },
       (_error: any) => {},
     );
@@ -51,7 +52,10 @@ export const BuildingFullInfo = () => {
   }, [building]);
 
   return (
-    <ScrollView>
+    <ScrollView style={{...styles.screenWrapper}}>
+      {!SITUM_BUILDING_ID && (
+        <Text>No building id provided, please edit your situm.tsx file</Text>
+      )}
       <Text style={styles.text}>FLOORS</Text>
       <Text style={styles.text}>{floors}</Text>
       <Text style={styles.text}>------------------------------</Text>

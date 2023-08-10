@@ -30,10 +30,11 @@ export const InfoFromBuilding = () => {
 
   useEffect(() => {
     loadBuilding(SITUM_BUILDING_ID);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <ScrollView>
+    <ScrollView style={{...styles.screenWrapper}}>
       <Text style={styles.text}>{buildingInfo}</Text>
     </ScrollView>
   );

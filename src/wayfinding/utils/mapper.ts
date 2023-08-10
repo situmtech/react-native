@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
+import type {
   DirectionPoint,
+  Directions,
   Location,
-  NavigateToPoiType,
   SDKNavigation,
-} from "../../sdk/types/index.d";
-import { Destination, Navigation } from "..";
-import { Directions } from "../store/index";
+} from "../../sdk/types";
+import type { Destination, NavigateToPoiType, Navigation } from "../types";
 
 const mapperWrapper = (type: string, payload: unknown) =>
   JSON.stringify({ type, payload });
@@ -47,6 +46,7 @@ const Mapper = {
     mapperWrapper(`cartography.select_poi`, { identifier: poiId }),
 
   followUser: (follow: boolean) => mapperWrapper("camera.follow_user", follow),
+  setLanguage: (lang: string) => mapperWrapper("ui.set_language", lang),
 
   initialConfiguration: (
     style: any,
