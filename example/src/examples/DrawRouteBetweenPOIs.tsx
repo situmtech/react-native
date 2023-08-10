@@ -90,11 +90,11 @@ export const DrawRouteBetweenPOIs = () => {
         setBearing(bearing);
         setBounds(bounds);
         setMapRegion(map_region);
-        if (data?.floors.length == 0) {
+        if (data?.floors.length === 0) {
           return;
         }
         var selectedFloor = data.floors.filter(
-          (f: any) => f.identifier == SITUM_FLOOR_ID,
+          (f: any) => f.identifier === SITUM_FLOOR_ID,
         )[0];
         setMapImage(selectedFloor.mapUrl);
       })

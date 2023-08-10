@@ -49,7 +49,7 @@ export const SetCacheMaxAge = () => {
   };
 
   return (
-    <View>
+    <View style={{...styles.screenWrapper}}>
       <Button
         onPress={setCacheMaxAge}
         title="set max cache age"

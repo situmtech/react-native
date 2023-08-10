@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "build:android": "cd android/ && ./gradlew assembleRelease",
     "ios": "react-native run-ios",
-    "postinstall": "react-native setup-ios-permissions && pod-install",
     "lint": "eslint .",
+    "postinstall": "react-native setup-ios-permissions && pod-install",
     "start": "react-native start",
     "test": "jest"
   },
@@ -15,8 +16,9 @@
     "@react-navigation/native-stack": "^6.9.7",
     "@situm/react-native": "file:..",
     "react": "18.2.0",
-    "react-native": "0.71.1",
+    "react-native": "0.72.3",
     "react-native-maps": "^1.4.0",
+    "react-native-paper": "^5.10.0",
     "react-native-permissions": "^3.8.3",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",

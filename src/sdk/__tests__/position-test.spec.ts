@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { NativeModules } from "react-native";
 
-import { logError } from "../../utils/logError";
+// import { logError } from "../../utils/logError";
 import SitumPlugin from "..";
 
 jest.mock("../../utils/logError", () => {
@@ -86,8 +86,8 @@ describe("Test Positioning functions", () => {
   });
 
   it("should stop positioning and warn about removing existing subscriptions", () => {
-    const mockWarningCallback = jest.fn();
-    logError.mockImplementation(mockWarningCallback);
+    // const mockWarningCallback = jest.fn();
+    // logError.mockImplementation(mockWarningCallback);
 
     SitumPlugin.startPositioningUpdates(
       () => {},
