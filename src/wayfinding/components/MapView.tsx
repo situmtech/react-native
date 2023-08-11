@@ -307,6 +307,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       configuration?.useDashboardTheme,
     ]);
 
+    useEffect(() => {
+      mapLoaded && sendFollowUser();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mapLoaded]);
+
     const handleRequestFromViewer = (event: WebViewMessageEvent) => {
       const eventParsed = JSON.parse(event.nativeEvent.data);
       switch (eventParsed.type) {
@@ -315,7 +320,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
             status: "SUCCESS",
             message: "Map is ready!",
           } as WayfindingResult);
-          sendFollowUser();
+
+          setMapLoaded(true);
           break;
         case "directions.requested":
           calculateRoute({
@@ -400,7 +406,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         onLoadEnd={() => {
           if (!webViewRef.current) return;
           dispatch(setWebViewRef(webViewRef));
-          setMapLoaded(true);
         }}
         onError={(evt: WebViewErrorEvent) => {
           const { nativeEvent } = evt;
