@@ -143,8 +143,9 @@ export const useSitumInternal = () => {
 
       resolve();
     });
-    const getDeviceId = async ()=> new Promise<String>((resolve, reject) =>{
+    const getDeviceId = async ()=> new Promise<String>((resolve) =>{
       SitumPlugin.getDeviceId((c)=>{resolve(c)})
+
     })
   // Cartography
   const initializeBuildings = async () =>
