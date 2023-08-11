@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
 import SitumPlugin from '@situm/react-native';
+
 import {SITUM_BUILDING_ID} from '../situm';
 import styles from './styles/styles';
 import {fetchBuilding} from './Utils/CommonFetchs';
@@ -45,15 +46,17 @@ export const RouteBetweenPOIs = () => {
   useEffect(() => {
     // later get pois
     building && populatePOIsFromBuilding();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [building]);
 
   useEffect(() => {
     //finaly ask for directions
     building && indoorPOIs && requestDirections();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [building, indoorPOIs]);
 
   return (
-    <ScrollView>
+    <ScrollView style={{...styles.screenWrapper}}>
       <Text style={styles.text}>{route}</Text>
     </ScrollView>
   );
