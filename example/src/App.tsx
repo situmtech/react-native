@@ -229,27 +229,62 @@ function App() {
             name="@situm/react-native examples"
             component={HomeScreen}
           />
-          <Stack.Screen name="Positioning" component={PositioningScreen} />
+          <Stack.Screen
+            name="Positioning"
+            component={PositioningScreen}
+            options={{title: 'Positioning example'}}
+          />
           <Stack.Screen
             name="BuildingsBasicInfo"
             component={BuildingsBasicInfo}
+            options={{title: 'Basic building info'}}
           />
-          <Stack.Screen name="BuildingFullInfo" component={BuildingFullInfo} />
+          <Stack.Screen
+            name="BuildingFullInfo"
+            component={BuildingFullInfo}
+            options={{title: 'Full building info'}}
+          />
           <Stack.Screen
             name="ShowBuildingOnMap"
             component={ShowBuildingOnMap}
+            options={{title: 'Building on map'}}
           />
-          <Stack.Screen name="InfoFromBuilding" component={InfoFromBuilding} />
+          <Stack.Screen
+            name="InfoFromBuilding"
+            component={InfoFromBuilding}
+            options={{title: 'Building info multiple calls'}}
+          />
           <Stack.Screen name="RouteBetweenPOIs" component={RouteBetweenPOIs} />
           <Stack.Screen
             name="DrawRouteBetweenPOIs"
             component={DrawRouteBetweenPOIs}
+            options={{title: 'Route between POIs on map'}}
           />
-          <Stack.Screen name="RemoteConfig" component={RemoteConfig} />
-          <Stack.Screen name="GetPoisIcons" component={GetPoisIcons} />
-          <Stack.Screen name="SetCacheMaxAge" component={SetCacheMaxAge} />
-          <Stack.Screen name="TiledBuilding" component={TiledBuilding} />
-          <Stack.Screen name="Wayfinding" component={Wayfinding} />
+          <Stack.Screen
+            name="RemoteConfig"
+            component={RemoteConfig}
+            options={{title: 'Positioning with remote connfiguration'}}
+          />
+          <Stack.Screen
+            name="GetPoisIcons"
+            component={GetPoisIcons}
+            options={{title: 'POIs on map'}}
+          />
+          <Stack.Screen
+            name="SetCacheMaxAge"
+            component={SetCacheMaxAge}
+            options={{title: 'Max cache age and cache invalidation'}}
+          />
+          <Stack.Screen
+            name="TiledBuilding"
+            component={TiledBuilding}
+            options={{title: 'Building with tiles on map'}}
+          />
+          <Stack.Screen
+            name="Wayfinding"
+            component={Wayfinding}
+            options={{title: 'Full Wayfinding'}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
