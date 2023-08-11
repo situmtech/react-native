@@ -7,6 +7,7 @@ import type {Building} from '@situm/react-native';
 import {SITUM_BUILDING_ID} from '../situm';
 import styles from './styles/styles';
 import {fetchBuilding} from './Utils/CommonFetchs';
+import {Card} from 'react-native-paper';
 
 export const BuildingFullInfo = () => {
   const [floors, setFloors] = useState<any>();
@@ -56,15 +57,24 @@ export const BuildingFullInfo = () => {
       {!SITUM_BUILDING_ID && (
         <Text>No building id provided, please edit your situm.tsx file</Text>
       )}
-      <Text style={styles.text}>FLOORS</Text>
-      <Text style={styles.text}>{floors}</Text>
-      <Text style={styles.text}>------------------------------</Text>
-      <Text style={styles.text}>POIs</Text>
-      <Text style={styles.text}>{indoorPOIs}</Text>
-      <Text style={styles.text}>------------------------------</Text>
-      <Text style={styles.text}>Outdoor POIs</Text>
-      <Text style={styles.text}>{outdoorPOIs}</Text>
-      <Text style={styles.text}>------------------------------</Text>
+      <Card mode="contained" style={{marginVertical: 5}}>
+        <Card.Title titleVariant="headlineSmall" title={'Floors'} />
+        <Card.Content>
+          <Text style={styles.text}>{floors}</Text>
+        </Card.Content>
+      </Card>
+      <Card mode="contained" style={{marginVertical: 5}}>
+        <Card.Title titleVariant="headlineSmall" title={'POIs'} />
+        <Card.Content>
+          <Text style={styles.text}>{indoorPOIs}</Text>
+        </Card.Content>
+      </Card>
+      <Card mode="contained" style={{marginVertical: 5}}>
+        <Card.Title titleVariant="headlineSmall" title={'Outdoor POIs'} />
+        <Card.Content>
+          <Text style={styles.text}>{outdoorPOIs}</Text>
+        </Card.Content>
+      </Card>
     </ScrollView>
   );
 };

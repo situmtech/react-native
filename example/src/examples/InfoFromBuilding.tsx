@@ -5,6 +5,7 @@ import SitumPlugin from '@situm/react-native';
 import {SITUM_BUILDING_ID} from '../situm';
 import styles from './styles/styles';
 import {fetchBuilding} from './Utils/CommonFetchs';
+import {Card} from 'react-native-paper';
 
 export const InfoFromBuilding = () => {
   const [buildingInfo, setBuildingInfo] = useState<any>();
@@ -35,7 +36,15 @@ export const InfoFromBuilding = () => {
 
   return (
     <ScrollView style={{...styles.screenWrapper}}>
-      <Text style={styles.text}>{buildingInfo}</Text>
+      <Card mode="contained" style={{marginVertical: 5}}>
+        <Card.Title
+          titleVariant="headlineSmall"
+          title={'Buildings information'}
+        />
+        <Card.Content>
+          <Text style={styles.text}>{buildingInfo}</Text>
+        </Card.Content>
+      </Card>
     </ScrollView>
   );
 };
