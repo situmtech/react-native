@@ -86,12 +86,14 @@ export const useSitumInternal = () => {
     email,
     apiKey,
     startPositions = true,
+    asksPermissions = true,
     fetchCartography = true,
     useRemoteConfig = true,
   }: {
     email?: string;
     apiKey?: string;
     startPositions?: boolean;
+    asksPermissions?: boolean;
     fetchCartography?: boolean;
     useRemoteConfig?: boolean;
   }) =>
@@ -102,7 +104,7 @@ export const useSitumInternal = () => {
         SitumPlugin.initSitumSDK();
         setSdkInitialized(true);
       }
-
+ 
       if (email && apiKey) {
         dispatch(setAuth({ email, apiKey }));
       } else {
@@ -123,10 +125,10 @@ export const useSitumInternal = () => {
           console.debug("Situm > hook > Using remote config");
         });
 
-      startPositions &&
+      asksPermissions && 
         (await requestPermission()
           .then(() => {
-            startPositioning();
+            startPositions && startPositioning({});
           })
           .catch((e: string) => {
             console.error(e);
@@ -141,7 +143,9 @@ export const useSitumInternal = () => {
 
       resolve();
     });
-
+    const getDeviceId = async ()=> new Promise<String>((resolve, reject) =>{
+      SitumPlugin.getDeviceId((c)=>{resolve(c)})
+    })
   // Cartography
   const initializeBuildings = async () =>
     new Promise<Building[]>((resolve, reject) => {
@@ -203,16 +207,17 @@ export const useSitumInternal = () => {
     );
   };
 
-  const startPositioning = () => {
+  const startPositioning = (locationRequestOptions: LocationRequestOptions) => {
     console.debug("Situm > hook > Starting positioning...");
 
-    if (location.status !== LocationStatusName.STOPPED) {
-      console.debug("Situm > hook > Positioning has already started");
-      return;
-    }
+    // if (location.status !== LocationStatusName.STOPPED) {
+    //   console.debug("Situm > hook > Positioning has already started");
+    //   return;
+    // }
 
     // Declare the locationOptions (empty = default parameters)
     const locationOptions = {
+      ... locationRequestOptions,
       useDeadReckoning: false,
     } as LocationRequestOptions;
     // Start positioning
@@ -478,6 +483,7 @@ export const useSitumInternal = () => {
     calculateRoute,
     startNavigation,
     stopNavigation,
+    getDeviceId
   };
 };
 
