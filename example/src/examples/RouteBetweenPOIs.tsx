@@ -5,6 +5,7 @@ import SitumPlugin from '@situm/react-native';
 import {SITUM_BUILDING_ID} from '../situm';
 import styles from './styles/styles';
 import {fetchBuilding} from './Utils/CommonFetchs';
+import {Card} from 'react-native-paper';
 
 export const RouteBetweenPOIs = () => {
   const [building, setBuilding] = useState<any>();
@@ -57,7 +58,12 @@ export const RouteBetweenPOIs = () => {
 
   return (
     <ScrollView style={{...styles.screenWrapper}}>
-      <Text style={styles.text}>{route}</Text>
+      <Card mode="contained" style={{marginVertical: 5}}>
+        <Card.Title title="Route" />
+        <Card.Content>
+          <Text style={styles.text}>{route}</Text>
+        </Card.Content>
+      </Card>
     </ScrollView>
   );
 };

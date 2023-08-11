@@ -3,10 +3,11 @@ import {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
 import SitumPlugin from '@situm/react-native';
 import styles from './styles/styles';
+import {Card} from 'react-native-paper';
 
 export const BuildingsBasicInfo = () => {
   const [buildings, setBuildings] = useState<any>();
-  const [_error, setError] = useState<String>();
+  const [error, setError] = useState<String>();
 
   const getBuildings = () => {
     SitumPlugin.fetchBuildings(
@@ -32,7 +33,24 @@ export const BuildingsBasicInfo = () => {
 
   return (
     <ScrollView style={{...styles.screenWrapper}}>
-      <Text style={styles.text}>{buildings}</Text>
+      {error ? (
+        <Card mode="contained" style={{marginVertical: 5}}>
+          <Card.Title title={'Error'} />
+          <Card.Content>
+            <Text style={styles.text}>{error}</Text>
+          </Card.Content>
+        </Card>
+      ) : (
+        <Card mode="contained" style={{marginVertical: 5}}>
+          <Card.Title
+            titleVariant="headlineSmall"
+            title={'Buildings information'}
+          />
+          <Card.Content>
+            <Text style={styles.text}>{buildings}</Text>
+          </Card.Content>
+        </Card>
+      )}
     </ScrollView>
   );
 };

@@ -1,6 +1,12 @@
 import * as React from 'react';
 import {View, useColorScheme, StyleSheet, ScrollView, Text} from 'react-native';
-import {Card, List, PaperProvider, TouchableRipple} from 'react-native-paper';
+import {
+  Avatar,
+  Card,
+  List,
+  PaperProvider,
+  TouchableRipple,
+} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SitumPlugin from '@situm/react-native';
@@ -50,11 +56,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     overflow: 'hidden',
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  subtitle: {},
   wrapper: {
     margin: 16,
   },
@@ -71,14 +72,14 @@ const HomeScreen = ({navigation}) => {
 
   const screensAndSections = [
     {
-      title: 'UI',
+      title: 'Examples rendered on a map',
       screens: [
         {
-          title: 'Full wayfinding',
+          title: 'Full wayfinding experience',
           subtitle:
             'Easy to integrate full experience of wayfinding implemented by Situm',
           key: 'Wayfinding',
-          icon: '',
+          // icon: 'dots-vertical',
         },
         {
           title: 'Draw a building on top of a map',
@@ -87,34 +88,31 @@ const HomeScreen = ({navigation}) => {
           key: 'ShowBuildingOnMap',
           icon: '',
         },
-        {
-          title: 'Draw a route between 2 POIs on a map',
-          subtitle: 'Calculates and shows on a map a route between two POI',
-          key: 'RouteBetweenPOIs',
-          icon: '',
-        },
+
         {
           title: 'Draw route between POIs',
-          subtitle: '',
+          subtitle:
+            'Renders the route calculated using our SDK between to POIs on your building on top of a map',
           key: 'DrawRouteBetweenPOIs',
           icon: '',
         },
         {
           title: 'Draw pois with custom icons on a map',
-          subtitle: '',
+          subtitle:
+            'This example renders your building POIs as markers on a map',
           key: 'GetPoisIcons',
           icon: '',
         },
         {
           title: 'Draw a building with tiles on a map',
-          subtitle: '',
+          subtitle: 'Show a building on a map using map tiels.',
           key: 'TiledBuilding',
           icon: '',
         },
       ],
     },
     {
-      title: 'Primitives',
+      title: 'Examples of RAW api calls (JSON)',
       screens: [
         {
           title: 'Positioning',
@@ -131,14 +129,14 @@ const HomeScreen = ({navigation}) => {
           icon: '',
         },
         {
-          title: 'Show buildings basic info',
+          title: 'Buildings basic info',
           subtitle:
-            'Example that fetches and shows the list of buildings in your account',
+            'Fetches the buildings available on your account and shows them in RAW format',
           key: 'BuildingsBasicInfo',
           icon: '',
         },
         {
-          title: 'Show a building full info from different calls',
+          title: 'Building full information using different calls',
           subtitle:
             'Example that fetches and shows all the information of a building. Information fetched using differente calls to our API',
           key: 'BuildingFullInfo',
@@ -157,6 +155,13 @@ const HomeScreen = ({navigation}) => {
           key: 'SetCacheMaxAge',
           icon: '',
         },
+        {
+          title: 'Calculate route between two POIs on RAW format',
+          subtitle:
+            'Calculates and shows on RAW format a route between two POI',
+          key: 'RouteBetweenPOIs',
+          icon: '',
+        },
       ],
     },
   ];
@@ -168,7 +173,10 @@ const HomeScreen = ({navigation}) => {
       showsVerticalScrollIndicator={false}>
       <View style={styles.wrapper}>
         {screensAndSections.map(item => (
-          <List.Section title={item.title} key={item.title}>
+          <List.Section
+            title={item.title}
+            titleStyle={{fontSize: 20}}
+            key={item.title}>
             {item.screens.map(screen => (
               <Card
                 key={screen.key}
@@ -180,16 +188,20 @@ const HomeScreen = ({navigation}) => {
                   onPress={() => navigation.navigate(screen.key)}>
                   <Card.Title
                     title={screen.title}
-                    titleStyle={{...styles.title}}
+                    titleNumberOfLines={4}
+                    titleVariant="titleMedium"
                     subtitle={screen.subtitle}
-                    subtitleStyle={styles.subtitle}
+                    subtitleNumberOfLines={5}
+                    style={{paddingVertical: 16}}
+                    left={props => {
+                      return screen.icon ? (
+                        <Avatar.Icon {...props} icon={screen.icon} />
+                      ) : (
+                        false
+                      );
+                    }}
                   />
                 </TouchableRipple>
-                {/* <Card.Content>
-              <TextComponent>
-                This is a pressable chameleon. If you press me, I will alert.
-              </TextComponent>
-            </Card.Content> */}
               </Card>
             ))}
           </List.Section>
