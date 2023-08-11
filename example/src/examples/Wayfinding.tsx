@@ -2,14 +2,12 @@ import React, {useEffect, useState, useRef} from 'react';
 import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import {
-  MapView,
+import {MapView, SitumProvider, useSitum} from '@situm/react-native';
+import type {
   OnFloorChangedResult,
   OnNavigationResult,
   OnPoiDeselectedResult,
   OnPoiSelectedResult,
-  SitumProvider,
-  useSitum,
   MapViewRef,
 } from '@situm/react-native';
 import {SITUM_EMAIL, SITUM_API_KEY, SITUM_BUILDING_ID} from '../situm';
@@ -19,6 +17,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
+    height: '100%',
   },
   mapview: {
     width: '100%',
@@ -35,10 +35,10 @@ const Screen: React.FC = () => {
   useEffect(() => {
     initSitumSdk({})
       .then(() => {
-        console.info('SDK initialized successfully');
+        console.debug('Situm > example > SDK initialized successfully');
       })
-      .catch(e => {
-        console.error(`Error on SDK initialization: ${e}`);
+      .catch((e: string) => {
+        console.error(`Situm > example > Error on SDK initialization: ${e}`);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -53,35 +53,53 @@ const Screen: React.FC = () => {
   }, [mapViewRef]);
 
   const onLoad = (event: any) => {
-    console.log('Map is ready now' + JSON.stringify(event));
+    console.log('Situm > example > Map is ready now' + JSON.stringify(event));
   };
 
   const onFloorChanged = (event: OnFloorChangedResult) => {
-    console.log('on floor change detected: ' + JSON.stringify(event));
+    console.log(
+      'Situm > example > on floor change detected: ' + JSON.stringify(event),
+    );
   };
 
   const onPoiSelected = (event: OnPoiSelectedResult) => {
-    console.log('on poi selected detected: ' + JSON.stringify(event));
+    console.log(
+      'Situm > example > on poi selected detected: ' + JSON.stringify(event),
+    );
   };
 
   const onPoiDeselected = (event: OnPoiDeselectedResult) => {
-    console.log('on poi deselected detected: ' + JSON.stringify(event));
+    console.log(
+      'Situm > example > on poi deselected detected: ' + JSON.stringify(event),
+    );
   };
 
   const onNavigationRequested = (event: OnNavigationResult) => {
-    console.log('on navigation requested detected: ' + JSON.stringify(event));
+    console.log(
+      'Situm > example > on navigation requested detected: ' +
+        JSON.stringify(event),
+    );
   };
 
   const onNavigationStarted = (event: OnNavigationResult) => {
-    console.log('on navigation started detected: ' + JSON.stringify(event));
+    console.log(
+      'Situm > example > on navigation started detected: ' +
+        JSON.stringify(event),
+    );
   };
 
   const onNavigationError = (event: OnNavigationResult) => {
-    console.log('on navigation error detected: ' + JSON.stringify(event));
+    console.log(
+      'Situm > example > on navigation error detected: ' +
+        JSON.stringify(event),
+    );
   };
 
   const onNavigationFinished = (event: OnNavigationResult) => {
-    console.log('on navigation finished detected: ' + JSON.stringify(event));
+    console.log(
+      'Situm > example > on navigation finished detected: ' +
+        JSON.stringify(event),
+    );
   };
 
   return (

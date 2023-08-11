@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext } from "react";
 
-import { SitumContext, State } from "./index";
+import { SitumContext, type State } from "./index";
 
 export const createReducer = <T>() => {
   const reducer = (state: T, action: (state: T) => T): T => {

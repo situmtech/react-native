@@ -1,4 +1,5 @@
 {
+  "include": ["./src"],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
@@ -22,6 +23,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     // "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "verbatimModuleSyntax": true
   }
 }
