@@ -1,15 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
-import SitumPlugin from '@situm/react-native';
+import SitumPlugin, {Building} from '@situm/react-native';
 
 import {SITUM_BUILDING_ID} from '../situm';
 import styles from './styles/styles';
 import {fetchBuilding} from './Utils/CommonFetchs';
+import {Card} from 'react-native-paper';
 
 export const RouteBetweenPOIs = () => {
-  const [building, setBuilding] = useState<any>();
+  const [building, setBuilding] = useState<Building>();
   const [indoorPOIs, setIndoorPOIs] = useState<any>();
   const [route, setRoute] = useState<any>();
+  const [error, setError] = useState('');
 
   const populatePOIsFromBuilding = () => {
     SitumPlugin.fetchIndoorPOIsFromBuilding(
@@ -25,17 +27,21 @@ export const RouteBetweenPOIs = () => {
 
   const requestDirections = () => {
     //check if we have 2 pois at least
-    if (indoorPOIs.length >= 2) {
-      SitumPlugin.requestDirections(
-        [building, indoorPOIs[0], indoorPOIs[1], null],
-        (route: any) => {
-          setRoute(JSON.stringify(route));
-        },
-        (error: any) => {
-          console.log(error);
-        },
-      );
+    if (indoorPOIs.length < 2 || !building) {
+      console.error('Your building has less than two POIs');
+      return;
     }
+
+    SitumPlugin.requestDirections(
+      [building, indoorPOIs[0], indoorPOIs[1], null],
+      (route: any) => {
+        setRoute(JSON.stringify(route));
+      },
+      (error: any) => {
+        setError(error);
+        console.log(error);
+      },
+    );
   };
 
   useEffect(() => {
@@ -57,7 +63,15 @@ export const RouteBetweenPOIs = () => {
 
   return (
     <ScrollView style={{...styles.screenWrapper}}>
-      <Text style={styles.text}>{route}</Text>
+      <Card mode="contained" style={{marginVertical: 5}}>
+        <Card.Title title="Route" />
+        <Card.Content>
+          <Text>
+            Showing route from '{indoorPOIs[0]}.name' to '{indoorPOIs[1].name}'
+          </Text>
+          <Text style={styles.text}>{route || error}</Text>
+        </Card.Content>
+      </Card>
     </ScrollView>
   );
 };

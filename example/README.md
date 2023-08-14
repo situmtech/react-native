@@ -14,10 +14,10 @@ A sample React-Native application to start learning the power of [Situm's React 
 
 ## Getting Started
 
-<div align="center" style="display: flex;">
-    <img src="./docs/assets/home_preview.png" alt="home_preview">
-    <img src="./docs/assets/positioning_preview.png" alt="positioning_preview">
-    <img src="./docs/assets/map_preview.png" alt="map_preview">
+<div align="center" style="display: flex; gap: 1rem;">
+    <img src="./docs/assets/home_preview.jpg" width="33%" alt="home_preview">
+    <img src="./docs/assets/positioning_preview.jpg" width="33%" alt="positioning_preview">
+    <img src="./docs/assets/map_preview.jpg" width="33%" alt="map_preview">
 </div>
 
 ## What's in here <a name="whatsinhere"/>
