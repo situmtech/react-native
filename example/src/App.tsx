@@ -79,14 +79,12 @@ const HomeScreen = ({navigation}) => {
           subtitle:
             'Easy to integrate full experience of wayfinding implemented by Situm',
           key: 'Wayfinding',
-          // icon: 'dots-vertical',
         },
         {
           title: 'Draw a building on top of a map',
           subtitle:
             'Basic example that renders a building on top of Google Maps',
           key: 'ShowBuildingOnMap',
-          icon: '',
         },
 
         {
@@ -94,73 +92,63 @@ const HomeScreen = ({navigation}) => {
           subtitle:
             'Renders the route calculated using our SDK between to POIs on your building on top of a map',
           key: 'DrawRouteBetweenPOIs',
-          icon: '',
         },
         {
           title: 'Draw pois with custom icons on a map',
           subtitle:
             'This example renders your building POIs as markers on a map',
           key: 'GetPoisIcons',
-          icon: '',
         },
         {
           title: 'Draw a building with tiles on a map',
           subtitle: 'Show a building on a map using map tiels.',
           key: 'TiledBuilding',
-          icon: '',
         },
       ],
     },
     {
-      title: 'Examples of RAW api calls (JSON)',
+      title: 'Examples using primitives (JSON)',
       screens: [
         {
           title: 'Positioning',
           subtitle:
             'Example that ilustrates how to start/stop the Situm indoor positioning',
           key: 'Positioning',
-          icon: '',
         },
         {
           title: 'Positioning with remote configuration',
           subtitle:
             'This example shows how to start positioning using the remote configuration feature',
           key: 'RemoteConfig',
-          icon: '',
         },
         {
           title: 'Buildings basic info',
           subtitle:
             'Fetches the buildings available on your account and shows them in RAW format',
           key: 'BuildingsBasicInfo',
-          icon: '',
         },
         {
           title: 'Building full information using different calls',
           subtitle:
             'Example that fetches and shows all the information of a building. Information fetched using differente calls to our API',
           key: 'BuildingFullInfo',
-          icon: '',
         },
         {
           title: "Building's full information",
           subtitle: 'Shows the building full information on RAW text',
           key: 'InfoFromBuilding',
-          icon: '',
         },
         {
           title: 'Set cache max age and invalidate it',
           subtitle:
             'Example that shows how to set a custom max age to the cache elements.',
           key: 'SetCacheMaxAge',
-          icon: '',
         },
         {
           title: 'Calculate route between two POIs on RAW format',
           subtitle:
             'Calculates and shows on RAW format a route between two POI',
           key: 'RouteBetweenPOIs',
-          icon: '',
         },
       ],
     },
@@ -193,13 +181,6 @@ const HomeScreen = ({navigation}) => {
                     subtitle={screen.subtitle}
                     subtitleNumberOfLines={5}
                     style={{paddingVertical: 16}}
-                    left={props => {
-                      return screen.icon ? (
-                        <Avatar.Icon {...props} icon={screen.icon} />
-                      ) : (
-                        false
-                      );
-                    }}
                   />
                 </TouchableRipple>
               </Card>
