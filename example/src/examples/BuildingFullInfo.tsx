@@ -1,13 +1,13 @@
 import React from 'react';
 import {useEffect, useState} from 'react';
-import {ScrollView, Text} from 'react-native';
+import {ScrollView} from 'react-native';
 import SitumPlugin from '@situm/react-native';
 import type {Building} from '@situm/react-native';
 
 import {SITUM_BUILDING_ID} from '../situm';
 import styles from './styles/styles';
 import {fetchBuilding} from './Utils/CommonFetchs';
-import {Card} from 'react-native-paper';
+import {Card, Text} from 'react-native-paper';
 
 export const BuildingFullInfo = () => {
   const [floors, setFloors] = useState<any>();
@@ -60,19 +60,19 @@ export const BuildingFullInfo = () => {
       <Card mode="contained" style={{marginVertical: 5}}>
         <Card.Title titleVariant="headlineSmall" title={'Floors'} />
         <Card.Content>
-          <Text style={styles.text}>{floors}</Text>
+          <Text variant="bodyMedium">{floors}</Text>
         </Card.Content>
       </Card>
       <Card mode="contained" style={{marginVertical: 5}}>
         <Card.Title titleVariant="headlineSmall" title={'POIs'} />
         <Card.Content>
-          <Text style={styles.text}>{indoorPOIs}</Text>
+          <Text>{indoorPOIs}</Text>
         </Card.Content>
       </Card>
       <Card mode="contained" style={{marginVertical: 5}}>
         <Card.Title titleVariant="headlineSmall" title={'Outdoor POIs'} />
         <Card.Content>
-          <Text style={styles.text}>{outdoorPOIs}</Text>
+          <Text>{outdoorPOIs}</Text>
         </Card.Content>
       </Card>
     </ScrollView>
