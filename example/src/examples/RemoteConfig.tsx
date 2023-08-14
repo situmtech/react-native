@@ -5,7 +5,7 @@ import SitumPlugin from '@situm/react-native';
 
 import styles from './styles/styles';
 import requestPermissions from './Utils/RequestPermissions';
-import {Button, Divider, List} from 'react-native-paper';
+import {Button, Card, Divider, List} from 'react-native-paper';
 
 export const RemoteConfig = () => {
   const [location, setLocation] = useState<String>('ready to be used');
@@ -82,10 +82,33 @@ export const RemoteConfig = () => {
           </Button>
         </List.Section>
 
-        <Text style={styles.text}>Error: {error}</Text>
-        <Text style={styles.text}>Status: {status}</Text>
-        <Text style={styles.text}>Location: {location}</Text>
-        <Text style={styles.text}>Geofence actions: {geofences} </Text>
+        <Card mode="contained" style={{marginVertical: 5}}>
+          <Card.Title title="Error" />
+          <Card.Content>
+            <Text style={styles.text}>{error}</Text>
+          </Card.Content>
+        </Card>
+
+        <Card mode="contained" style={{marginVertical: 5}}>
+          <Card.Title title="Status" />
+          <Card.Content>
+            <Text style={styles.text}>{status}</Text>
+          </Card.Content>
+        </Card>
+
+        <Card mode="contained" style={{marginVertical: 5}}>
+          <Card.Title title="Location" />
+          <Card.Content>
+            <Text style={styles.text}>{location}</Text>
+          </Card.Content>
+        </Card>
+
+        <Card mode="contained" style={{marginVertical: 5}}>
+          <Card.Title title="Geofences actions" />
+          <Card.Content>
+            <Text style={styles.text}>{geofences}</Text>
+          </Card.Content>
+        </Card>
       </SafeAreaView>
     </ScrollView>
   );
