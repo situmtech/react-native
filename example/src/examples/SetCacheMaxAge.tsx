@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Button} from 'react-native';
+import {View, Text} from 'react-native';
 import {SITUM_BUILDING_ID} from '../situm';
 import {fetchBuilding} from './Utils/CommonFetchs';
 import SitumPlugin from '@situm/react-native';
 import styles from './styles/styles';
+import {Button, Card} from 'react-native-paper';
 
 const NUMBER_OF_SECONDS = 30 * 60;
 
@@ -52,16 +53,23 @@ export const SetCacheMaxAge = () => {
     <View style={{...styles.screenWrapper}}>
       <Button
         onPress={setCacheMaxAge}
-        title="set max cache age"
-        color="#07F736"
-      />
+        mode="contained"
+        style={{marginVertical: 5}}>
+        set max cache age to {NUMBER_OF_SECONDS} seconds
+      </Button>
       <Button
         onPress={invalidateCache}
-        title="invalidate cache"
-        color="#F71D07"
-      />
-      <Text style={styles.text}>Status:</Text>
-      <Text style={styles.text}>{status}</Text>
+        buttonColor="#B22222"
+        mode="contained"
+        style={{marginVertical: 5}}>
+        invalidate cache
+      </Button>
+      <Card mode="contained" style={{marginVertical: 5}}>
+        <Card.Title titleVariant="headlineSmall" title={'Status'} />
+        <Card.Content>
+          <Text style={styles.text}>{status}</Text>
+        </Card.Content>
+      </Card>
     </View>
   );
 };

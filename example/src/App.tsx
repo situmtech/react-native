@@ -1,6 +1,12 @@
 import * as React from 'react';
 import {View, useColorScheme, StyleSheet, ScrollView, Text} from 'react-native';
-import {Card, List, PaperProvider, TouchableRipple} from 'react-native-paper';
+import {
+  Avatar,
+  Card,
+  List,
+  PaperProvider,
+  TouchableRipple,
+} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SitumPlugin from '@situm/react-native';
@@ -50,11 +56,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     overflow: 'hidden',
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  subtitle: {},
   wrapper: {
     margin: 16,
   },
@@ -71,91 +72,83 @@ const HomeScreen = ({navigation}) => {
 
   const screensAndSections = [
     {
-      title: 'UI',
+      title: 'Examples rendered on a map',
       screens: [
         {
-          title: 'Full wayfinding',
+          title: 'Full wayfinding experience',
           subtitle:
             'Easy to integrate full experience of wayfinding implemented by Situm',
           key: 'Wayfinding',
-          icon: '',
         },
         {
           title: 'Draw a building on top of a map',
           subtitle:
             'Basic example that renders a building on top of Google Maps',
           key: 'ShowBuildingOnMap',
-          icon: '',
         },
-        {
-          title: 'Draw a route between 2 POIs on a map',
-          subtitle: 'Calculates and shows on a map a route between two POI',
-          key: 'RouteBetweenPOIs',
-          icon: '',
-        },
+
         {
           title: 'Draw route between POIs',
-          subtitle: '',
+          subtitle:
+            'Renders the route calculated using our SDK between to POIs on your building on top of a map',
           key: 'DrawRouteBetweenPOIs',
-          icon: '',
         },
         {
           title: 'Draw pois with custom icons on a map',
-          subtitle: '',
+          subtitle:
+            'This example renders your building POIs as markers on a map',
           key: 'GetPoisIcons',
-          icon: '',
         },
         {
           title: 'Draw a building with tiles on a map',
-          subtitle: '',
+          subtitle: 'Show a building on a map using map tiels.',
           key: 'TiledBuilding',
-          icon: '',
         },
       ],
     },
     {
-      title: 'Primitives',
+      title: 'Examples using primitives (JSON)',
       screens: [
         {
           title: 'Positioning',
           subtitle:
             'Example that ilustrates how to start/stop the Situm indoor positioning',
           key: 'Positioning',
-          icon: '',
         },
         {
           title: 'Positioning with remote configuration',
           subtitle:
             'This example shows how to start positioning using the remote configuration feature',
           key: 'RemoteConfig',
-          icon: '',
         },
         {
-          title: 'Show buildings basic info',
+          title: 'Buildings basic info',
           subtitle:
-            'Example that fetches and shows the list of buildings in your account',
+            'Fetches the buildings available on your account and shows them in RAW format',
           key: 'BuildingsBasicInfo',
-          icon: '',
         },
         {
-          title: 'Show a building full info from different calls',
+          title: 'Building full information using different calls',
           subtitle:
             'Example that fetches and shows all the information of a building. Information fetched using differente calls to our API',
           key: 'BuildingFullInfo',
-          icon: '',
         },
         {
           title: "Building's full information",
           subtitle: 'Shows the building full information on RAW text',
           key: 'InfoFromBuilding',
-          icon: '',
         },
         {
           title: 'Set cache max age and invalidate it',
           subtitle:
             'Example that shows how to set a custom max age to the cache elements.',
           key: 'SetCacheMaxAge',
-          icon: '',
+        },
+        {
+          title: 'Calculate route between two POIs on RAW format',
+          subtitle:
+            'Calculates and shows on RAW format a route between two POI',
+          key: 'RouteBetweenPOIs',
         },
       ],
     },
@@ -168,7 +161,10 @@ const HomeScreen = ({navigation}) => {
       showsVerticalScrollIndicator={false}>
       <View style={styles.wrapper}>
         {screensAndSections.map(item => (
-          <List.Section title={item.title} key={item.title}>
+          <List.Section
+            title={item.title}
+            titleStyle={{fontSize: 20}}
+            key={item.title}>
             {item.screens.map(screen => (
               <Card
                 key={screen.key}
@@ -180,16 +176,13 @@ const HomeScreen = ({navigation}) => {
                   onPress={() => navigation.navigate(screen.key)}>
                   <Card.Title
                     title={screen.title}
-                    titleStyle={{...styles.title}}
+                    titleNumberOfLines={4}
+                    titleVariant="titleMedium"
                     subtitle={screen.subtitle}
-                    subtitleStyle={styles.subtitle}
+                    subtitleNumberOfLines={5}
+                    style={{paddingVertical: 16}}
                   />
                 </TouchableRipple>
-                {/* <Card.Content>
-              <TextComponent>
-                This is a pressable chameleon. If you press me, I will alert.
-              </TextComponent>
-            </Card.Content> */}
               </Card>
             ))}
           </List.Section>
@@ -217,27 +210,62 @@ function App() {
             name="@situm/react-native examples"
             component={HomeScreen}
           />
-          <Stack.Screen name="Positioning" component={PositioningScreen} />
+          <Stack.Screen
+            name="Positioning"
+            component={PositioningScreen}
+            options={{title: 'Positioning example'}}
+          />
           <Stack.Screen
             name="BuildingsBasicInfo"
             component={BuildingsBasicInfo}
+            options={{title: 'Basic building info'}}
           />
-          <Stack.Screen name="BuildingFullInfo" component={BuildingFullInfo} />
+          <Stack.Screen
+            name="BuildingFullInfo"
+            component={BuildingFullInfo}
+            options={{title: 'Full building info'}}
+          />
           <Stack.Screen
             name="ShowBuildingOnMap"
             component={ShowBuildingOnMap}
+            options={{title: 'Building on map'}}
           />
-          <Stack.Screen name="InfoFromBuilding" component={InfoFromBuilding} />
+          <Stack.Screen
+            name="InfoFromBuilding"
+            component={InfoFromBuilding}
+            options={{title: 'Building info multiple calls'}}
+          />
           <Stack.Screen name="RouteBetweenPOIs" component={RouteBetweenPOIs} />
           <Stack.Screen
             name="DrawRouteBetweenPOIs"
             component={DrawRouteBetweenPOIs}
+            options={{title: 'Route between POIs on map'}}
           />
-          <Stack.Screen name="RemoteConfig" component={RemoteConfig} />
-          <Stack.Screen name="GetPoisIcons" component={GetPoisIcons} />
-          <Stack.Screen name="SetCacheMaxAge" component={SetCacheMaxAge} />
-          <Stack.Screen name="TiledBuilding" component={TiledBuilding} />
-          <Stack.Screen name="Wayfinding" component={Wayfinding} />
+          <Stack.Screen
+            name="RemoteConfig"
+            component={RemoteConfig}
+            options={{title: 'Positioning with remote connfiguration'}}
+          />
+          <Stack.Screen
+            name="GetPoisIcons"
+            component={GetPoisIcons}
+            options={{title: 'POIs on map'}}
+          />
+          <Stack.Screen
+            name="SetCacheMaxAge"
+            component={SetCacheMaxAge}
+            options={{title: 'Max cache age and cache invalidation'}}
+          />
+          <Stack.Screen
+            name="TiledBuilding"
+            component={TiledBuilding}
+            options={{title: 'Building with tiles on map'}}
+          />
+          <Stack.Screen
+            name="Wayfinding"
+            component={Wayfinding}
+            options={{title: 'Full Wayfinding'}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
