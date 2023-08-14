@@ -5,6 +5,6 @@ export default StyleSheet.create({
     color: 'black',
   },
   screenWrapper: {
-    margin: 16,
+    padding: 16,
   },
 });
