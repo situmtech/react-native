@@ -13,9 +13,13 @@ import type {
   DirectionPoint,
   DirectionsOptions,
   Floor,
+  Location,
   LocationRequestOptions,
+  LocationStatus,
   NavigationRequest,
 } from "./types";
+import type { SDKError } from "./types";
+import type { Navigation } from "@situm/react-native/src/wayfinding";
 
 const LINKING_ERROR =
   `The package 'situm-react-native-plugin' doesn't seem to be linked. Make sure: \n\n` +
@@ -36,9 +40,10 @@ const RNCSitumPlugin = NativeModules.RNCSitumPlugin
 
 const SitumPluginEventEmitter = new NativeEventEmitter(RNCSitumPlugin);
 
-let positioningSubscriptions = [];
+
 let navigationSubscriptions = [];
 let realtimeSubscriptions = [];
+
 
 export default {
   /**
@@ -435,42 +440,25 @@ export default {
    *
    * @returns the id of the subscription
    */
-  startPositioning: function (
-    location: (event: any) => void,
-    status: Function,
-    error?: Function,
+  // startPositioning: function (
+  //   location: (event: any) => void,
+  //   status: Function,
+  //   error?: Function,
+  //   options?: LocationRequestOptions
+  // ): void {
+  //   this.requestAuthorization();
+  //   return this.startPositioningUpdates(
+  //     location,
+  //     status,
+  //     error || logError,
+  //     options || {}
+  //   );
+  // },
+
+  requestPositioningUpdates: function (
     options?: LocationRequestOptions
   ): void {
-    this.requestAuthorization();
-    return this.startPositioningUpdates(
-      location,
-      status,
-      error || logError,
-      options || {}
-    );
-  },
 
-  startPositioningUpdates: function (
-    location: (event: any) => void,
-    status: (event: any) => void,
-    error?: (event: any) => void,
-    options?: LocationRequestOptions
-  ): void {
-    // Remove old positioning subscriptions:
-    positioningSubscriptions.forEach((subscription) => subscription?.remove());
-    positioningSubscriptions = [];
-
-    positioningSubscriptions.push(
-      SitumPluginEventEmitter.addListener("locationChanged", location),
-      SitumPluginEventEmitter.addListener("statusChanged", status),
-      error
-        ? SitumPluginEventEmitter.addListener(
-            "locationError",
-            error || logError
-          )
-        : null
-    );
-    // Call native:
     RNCSitumPlugin.startPositioning(options || {});
   },
 
@@ -546,6 +534,10 @@ export default {
         : null
     );
   },
+
+
+  
+
 
   /**
    * Informs NavigationManager object the change of the user's location
@@ -657,4 +649,34 @@ export default {
     SitumPluginEventEmitter.removeAllListeners("onExitGeofences");
     SitumPluginEventEmitter.addListener("onExitGeofences", callback);
   },
+
+  onLocationUpdate: function (callback: (location: Location)=> void){
+    SitumPluginEventEmitter.addListener("locationChanged", callback);
+  },
+
+  onLocationStatus: function (callback: (status: LocationStatus)=> void){
+    SitumPluginEventEmitter.addListener("statusChanged", callback);
+  },
+
+  onLocationError: function (callback: (status: SDKError)=> void){
+    SitumPluginEventEmitter.addListener("locationError", callback);
+  },
+
+  onLocationStopped: function(callback: ()=>void){
+    SitumPluginEventEmitter.addListener("locationStopped", callback);
+  },
+ 
+  requestLocationUpdates: function(locationRequest?: LocationRequestOptions){
+    RNCSitumPlugin.startPositioning(locationRequest || {});
+  },
+  
+  removeLocationUpdates: function(callback: (event: any)=> void){
+    RNCSitumPlugin.stopPositioning(callback || logError);
+  },
+  requestNavigationUpdates2: function(navigationRequest?: NavigationRequest){
+    RNCSitumPlugin.startPositioning(navigationRequest || {});
+  }
+
+   
+ 
 };

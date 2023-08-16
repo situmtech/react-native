@@ -5,6 +5,7 @@ import SitumPlugin from "../../sdk";
 import {
   type Building,
   type DirectionPoint,
+  type Location,
   type LocationRequestOptions,
   type LocationStatus,
   type Poi,
@@ -86,12 +87,14 @@ export const useSitumInternal = () => {
     email,
     apiKey,
     startPositions = true,
+    asksPermissions = true,
     fetchCartography = true,
     useRemoteConfig = true,
   }: {
     email?: string;
     apiKey?: string;
     startPositions?: boolean;
+    asksPermissions?: boolean;
     fetchCartography?: boolean;
     useRemoteConfig?: boolean;
   }) =>
@@ -102,7 +105,7 @@ export const useSitumInternal = () => {
         SitumPlugin.initSitumSDK();
         setSdkInitialized(true);
       }
-
+ 
       if (email && apiKey) {
         dispatch(setAuth({ email, apiKey }));
       } else {
@@ -123,10 +126,10 @@ export const useSitumInternal = () => {
           console.debug("Situm > hook > Using remote config");
         });
 
-      startPositions &&
+      asksPermissions && 
         (await requestPermission()
           .then(() => {
-            startPositioning();
+            //startPositions && startPositioning({});
           })
           .catch((e: string) => {
             console.error(e);
@@ -139,8 +142,48 @@ export const useSitumInternal = () => {
           reject(e);
         }));
 
+        registerCallbacks();
+
       resolve();
     });
+    const getDeviceId = async ()=> new Promise<String>((resolve) =>{
+      SitumPlugin.getDeviceId((c)=>{resolve(c)})
+
+    })
+
+
+function registerCallbacks(){
+    
+    SitumPlugin.onLocationUpdate(location => {
+      dispatch(
+                setLocation({
+                  ...location,
+                })
+              );
+    });
+
+    SitumPlugin.onLocationStatus(status => {
+            if (status.statusName in LocationStatusName) {
+          console.debug(
+            `Situm > hook > Positioning state updated ${status.statusName}`
+          );
+          dispatch(setLocationStatus(status.statusName as LocationStatusName));
+        }
+    });
+
+    SitumPlugin.onLocationError(err => {
+        console.error(`Situm > hook > Error while positioning: ${err}}`);
+        //@ts-ignore
+        dispatch(setError({ message: err, code: 3001 } as SDKError));
+    });
+
+    SitumPlugin.onLocationStopped(()=>{
+      console.log("Situm > hook > Stopped positioning");
+      dispatch(resetLocation());
+    })
+
+}
+
 
   // Cartography
   const initializeBuildings = async () =>
@@ -202,45 +245,7 @@ export const useSitumInternal = () => {
       }
     );
   };
-
-  const startPositioning = () => {
-    console.debug("Situm > hook > Starting positioning...");
-
-    if (location.status !== LocationStatusName.STOPPED) {
-      console.debug("Situm > hook > Positioning has already started");
-      return;
-    }
-
-    // Declare the locationOptions (empty = default parameters)
-    const locationOptions = {
-      useDeadReckoning: false,
-    } as LocationRequestOptions;
-    // Start positioning
-    SitumPlugin.startPositioning(
-      (newLocation: State["location"]) => {
-        dispatch(
-          setLocation({
-            ...newLocation,
-          })
-        );
-      },
-      (status: LocationStatus) => {
-        if (status.statusName in LocationStatusName) {
-          console.debug(
-            `Situm > hook > Positioning state updated ${status.statusName}`
-          );
-          dispatch(setLocationStatus(status.statusName as LocationStatusName));
-        }
-      },
-      (err: string) => {
-        console.error(`Situm > hook > Error while positioning: ${err}}`);
-        //@ts-ignore
-        dispatch(setError({ message: err, code: 3001 } as SDKError));
-      },
-      locationOptions
-    );
-    console.debug(`Situm > hook > Successfully started positioning`);
-  };
+ 
 
   const stopPositioning = async () => {
     console.debug(`Situm > hook > Stopping positioning…`);
@@ -473,11 +478,11 @@ export const useSitumInternal = () => {
     initializeBuildings,
     initializeBuilding,
     initializeBuildingById,
-    startPositioning,
     stopPositioning,
     calculateRoute,
     startNavigation,
     stopNavigation,
+    getDeviceId
   };
 };
 
