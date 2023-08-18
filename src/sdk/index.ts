@@ -13,8 +13,10 @@ import type {
   DirectionPoint,
   DirectionsOptions,
   Floor,
+  Geofence,
   LocationRequestOptions,
   NavigationRequest,
+  PoiCategory,
 } from "./types";
 
 const LINKING_ERROR =
@@ -82,14 +84,25 @@ export default {
    */
   setUserPass: function (
     email: string,
-    password: string,
-    onSuccess?: Function
-  ): void {
-    RNCSitumPlugin.setUserPass(email, password, onSuccess);
+    password: string
+  ): Promise<{ success: boolean }> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.setUserPass(
+        email,
+        password,
+        (response: { success: boolean }) => {
+          resolve(response);
+        }
+      );
+    });
   },
 
-  setDashboardURL: function (url: string, success: Function): void {
-    RNCSitumPlugin.setDashboardURL(url, success);
+  setDashboardURL: function (url: string): Promise<{ success: boolean }> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.setDashboardURL(url, (response: { success: boolean }) => {
+        resolve(response);
+      });
+    });
   },
 
   /**
@@ -98,10 +111,13 @@ export default {
    * Default value is true from SDK version 2.83.5
    *
    * @param useRemoteConfig boolean
-   * @param success function called on sucess
    */
-  setUseRemoteConfig(useRemoteConfig: string, onSuccess?: Function): void {
-    RNCSitumPlugin.setUseRemoteConfig(useRemoteConfig, onSuccess);
+  setUseRemoteConfig(useRemoteConfig: string): Promise<{ success: boolean }> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.setUseRemoteConfig(useRemoteConfig, (response) =>
+        resolve(response)
+      );
+    });
   },
 
   /**
@@ -109,17 +125,21 @@ export default {
    * maxAge, it will not be used and a network request will be made.
    *
    * @param cacheAge a non-negative integer
-   * @param success function called on success
    */
-  setCacheMaxAge: function (cacheAge: number, success?: Function): void {
-    RNCSitumPlugin.setCacheMaxAge(cacheAge, success);
+  setCacheMaxAge: function (cacheAge: number): Promise<{ success: boolean }> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.setCacheMaxAge(cacheAge, (response) => resolve(response));
+    });
   },
 
   /**
    * Invalidate all the resources in the cache
    */
-  invalidateCache: function (): void {
-    RNCSitumPlugin.invalidateCache();
+  invalidateCache: function (): Promise<{ success: boolean }> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.invalidateCache();
+      resolve({ success: true });
+    });
   },
 
   /**
@@ -127,13 +147,7 @@ export default {
    *
    * @param callback callback to use on success
    */
-  sdkVersions: function (
-    callback: (event: {
-      ios?: string;
-      android?: string;
-      react_native: string;
-    }) => void
-  ): void {
+  sdkVersions: function () {
     const versions: { react_native: string; ios?: string; android?: string } = {
       react_native: packageJson.version,
     };
@@ -144,16 +158,16 @@ export default {
       versions.android = packageJson.sdkVersions.android;
     }
 
-    callback(versions);
+    return versions;
   },
 
   /**
    * Returns the device identifier that has generated the location
-   *
-   * @param callback function called on sucess, returns the id of the current device
    */
-  getDeviceId: function (callback: Function): void {
-    RNCSitumPlugin.getDeviceId(callback);
+  getDeviceId: function (): Promise<number> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.getDeviceId((response) => resolve(response));
+    });
   },
 
   /**
@@ -166,17 +180,17 @@ export default {
 
   /**
    * Download all the buildings for the current user
-   *
-   * @param success function called on sucess, returns a list of Building objects
-   * @param error function called on failure, returns an error string
    */
-  fetchBuildings: function (success: Function, error?: Function): void {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.fetchBuildings(success, error || logError);
+  fetchBuildings: function (): Promise<unknown> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.fetchBuildings(
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          throw error;
+        }
+      );
+    });
   },
 
   /**
@@ -185,32 +199,31 @@ export default {
    * maps and POI category icons to local storage.
    *
    * @param building
-   * @param success function called on sucess, returns a list of Building objects
-   * @param error function called on failure, returns an error string
    */
-  fetchBuildingInfo: function (
-    building: Building,
-    success: Function,
-    error?: Function
-  ): void {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.fetchBuildingInfo(building, success, error || logError);
+  fetchBuildingInfo: function (building: Building): Promise<unknown> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.fetchBuildingInfo(
+        building,
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          throw error;
+        }
+      );
+    });
   },
 
-  fetchTilesFromBuilding: function (
-    building: Building,
-    success: Function,
-    error?: Function
-  ) {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-    RNCSitumPlugin.fetchTilesFromBuilding(building, success, error || logError);
+  fetchTilesFromBuilding: function (building: Building): Promise<unknown> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.fetchTilesFromBuilding(
+        building,
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          throw error;
+        }
+      );
+    });
   },
 
   /**
@@ -220,41 +233,35 @@ export default {
    * @param success function called on sucess, returns a list of Floor objects
    * @param error function called on failure, returns an error string
    */
-  fetchFloorsFromBuilding: function (
-    building: Building,
-    success: Function,
-    error?: Function
-  ): void {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.fetchFloorsFromBuilding(
-      building,
-      success,
-      error || logError
-    );
+  fetchFloorsFromBuilding: function (building: Building): Promise<Floor[]> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.fetchFloorsFromBuilding(
+        building,
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          throw error;
+        }
+      );
+    });
   },
 
   /**
    * Download the map image of a floor
    *
    * @param floor the floor object. Not null.
-   * @param success function called on sucess, returns a list of Map url objects
-   * @param error function called on failure, returns an error string
    */
-  fetchMapFromFloor: function (
-    floor: Floor,
-    success: Function,
-    error?: Function
-  ): void {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.fetchMapFromFloor(floor, success, error || logError);
+  fetchMapFromFloor: function (floor: Floor): Promise<string> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.fetchMapFromFloor(
+        floor,
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          throw error;
+        }
+      );
+    });
   },
 
   /**
@@ -265,83 +272,69 @@ export default {
    * @param error function called on failure, returns an error string
    */
   fetchGeofencesFromBuilding: function (
-    building: Building,
-    success: Function,
-    error?: Function
-  ): void {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.fetchGeofencesFromBuilding(
-      building,
-      success,
-      error || logError
-    );
+    building: Building
+  ): Promise<Geofence[]> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.fetchGeofencesFromBuilding(
+        building,
+        (response: Geofence[]) => resolve(response),
+        (error) => {
+          logError(error);
+          throw error;
+        }
+      );
+    });
   },
 
   /**
    * Get all POI categories, download and cache their icons asynchronously.
-   *
-   * @param success function called on sucess, returns a list of POI categories
-   * @param error function called on failure, returns an error string
    */
-  fetchPoiCategories: function (success: Function, error?: Function) {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.fetchPoiCategories(success, error || logError);
+  fetchPoiCategories: function (): Promise<PoiCategory[]> {
+    return new Promise((resolve, reject) => {
+      RNCSitumPlugin.fetchPoiCategories(
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          reject(error);
+        }
+      );
+    });
   },
 
   /**
    * Get the normal category icon for a category
    *
    * @param category the category. Not null.
-   * @param success function called on sucess, returns the icon in normal state.
-   * @param error function called on failure, returns an error string
    */
-  fetchPoiCategoryIconNormal: function (
-    category: any,
-    success: Function,
-    error?: Function
-  ): void {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.fetchPoiCategoryIconNormal(
-      category,
-      success,
-      error || logError
-    );
+  fetchPoiCategoryIconNormal: function (category: any): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      RNCSitumPlugin.fetchPoiCategoryIconNormal(
+        category,
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          reject(error);
+        }
+      );
+    });
   },
 
   /**
    * Get the selected category icon for a category
    *
    * @param category the category. Not null.
-   * @param success function called on sucess, returns the icon in selected state.
-   * @param error function called on failure, returns an error string
    */
-  fetchPoiCategoryIconSelected: function (
-    category: any,
-    success: Function,
-    error?: Function
-  ): void {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.fetchPoiCategoryIconSelected(
-      category,
-      success,
-      error || logError
-    );
+  fetchPoiCategoryIconSelected: function (category: any): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      RNCSitumPlugin.fetchPoiCategoryIconSelected(
+        category,
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          reject(error);
+        }
+      );
+    });
   },
 
   /**
@@ -351,69 +344,53 @@ export default {
    * @param success function called on sucess, returns a list of POI objects
    * @param error function called on failure, returns an error string
    */
-  fetchIndoorPOIsFromBuilding: function (
-    building: any,
-    success: Function,
-    error?: Function
-  ): void {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.fetchIndoorPOIsFromBuilding(
-      building,
-      success,
-      error || logError
-    );
+  fetchIndoorPOIsFromBuilding: function (building: any): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      RNCSitumPlugin.fetchIndoorPOIsFromBuilding(
+        building,
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          reject(error);
+        }
+      );
+    });
   },
 
   /**
    * Download the outdoor POIs of a building
    *
    * @param building
-   * @param success function called on sucess, returns a list of POI objects
-   * @param error function called on failure, returns an error string
    */
-  fetchOutdoorPOIsFromBuilding: function (
-    building: any,
-    success: Function,
-    error?: Function
-  ): void {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.fetchOutdoorPOIsFromBuilding(
-      building,
-      success,
-      error || logError
-    );
+  fetchOutdoorPOIsFromBuilding: function (building: any): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      RNCSitumPlugin.fetchOutdoorPOIsFromBuilding(
+        building,
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          reject(error);
+        }
+      );
+    });
   },
 
   /**
    * Download the events of a building
    *
    * @param building
-   * @param success Callback to asynchronously receive the events of a building. Not null.
-   * @param error function called on failure, returns an error string
    */
-  fetchEventsFromBuilding: function (
-    building: any,
-    success: Function,
-    error?: Function
-  ): void {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.fetchEventsFromBuilding(
-      building,
-      success,
-      error || logError
-    );
+  fetchEventsFromBuilding: function (building: any): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      RNCSitumPlugin.fetchEventsFromBuilding(
+        building,
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          reject(error);
+        }
+      );
+    });
   },
 
   /**
@@ -476,12 +453,17 @@ export default {
 
   /**
    * Stops positioning, removing all location updates
-   *
-   * @param callback the callback to use when the function successfully ends
-   * @returns
    */
-  stopPositioning: function (callback?: Function): void {
-    RNCSitumPlugin.stopPositioning(callback || logError);
+  stopPositioning: function (): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      RNCSitumPlugin.stopPositioning(
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          reject(error);
+        }
+      );
+    });
   },
 
   /**
@@ -489,8 +471,6 @@ export default {
    * asynchronously using the callback.
    *
    * @param directionParams
-   * @param success function called on sucess, returns a Route object
-   * @param error function called on failure, returns an error string
    */
   requestDirections: function (
     directionParams: [
@@ -498,20 +478,18 @@ export default {
       DirectionPoint,
       DirectionPoint,
       DirectionsOptions
-    ],
-    success: Function,
-    error?: Function
+    ]
   ) {
-    invariant(
-      typeof success === "function",
-      "Must provide a valid success callback."
-    );
-
-    RNCSitumPlugin.requestDirections(
-      directionParams,
-      success,
-      error || logError
-    );
+    return new Promise((resolve, reject) => {
+      RNCSitumPlugin.requestDirections(
+        directionParams,
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          reject(error);
+        }
+      );
+    });
   },
 
   /**
@@ -521,30 +499,25 @@ export default {
    * Can only exist one navigation with one listener at a time. If this method was
    * previously invoked, but removeUpdates() wasn't, removeUpdates() is called internally.
    *
-   * @param navigationUpdates
-   * @param error function called on failure, returns an error string
    * @param options
    */
-  requestNavigationUpdates: function (
-    navigationUpdates: (event: any) => void,
-    error?: (event: any) => void,
-    options?: NavigationRequest
-  ) {
-    RNCSitumPlugin.requestNavigationUpdates(options || {});
-    navigationSubscriptions.push(
-      SitumPluginEventEmitter.addListener(
-        "navigationUpdated",
-        navigationUpdates
-      )
-    );
-    navigationSubscriptions.push(
-      error
-        ? SitumPluginEventEmitter.addListener(
-            "navigationError",
-            error || logError
-          )
-        : null
-    );
+  requestNavigationUpdates: function (options?: NavigationRequest) {
+    return new Promise((resolve, reject) => {
+      RNCSitumPlugin.requestNavigationUpdates(options || {});
+
+      navigationSubscriptions.push(
+        SitumPluginEventEmitter.addListener("navigationUpdated", (response) =>
+          resolve(response)
+        )
+      );
+
+      navigationSubscriptions.push(
+        SitumPluginEventEmitter.addListener("navigationError", (error) => {
+          logError(error);
+          reject(error);
+        })
+      );
+    });
   },
 
   /**
@@ -554,21 +527,22 @@ export default {
    * @param success callback to use when the navigation updates
    * @param error callback to use when an error on navigation udpates raises
    */
-  updateNavigationWithLocation: function (
-    location,
-    success: Function,
-    error?: Function
-  ) {
-    if (navigationSubscriptions.length === 0) {
-      error("No active navigation!!");
-      return;
-    }
+  updateNavigationWithLocation: function (location) {
+    return new Promise((resolve, reject) => {
+      if (navigationSubscriptions.length === 0) {
+        reject("No active navigation!!");
+        return;
+      }
 
-    RNCSitumPlugin.updateNavigationWithLocation(
-      location,
-      success,
-      error || logError
-    );
+      RNCSitumPlugin.updateNavigationWithLocation(
+        location,
+        (response) => resolve(response),
+        (error) => {
+          logError(error);
+          reject(error);
+        }
+      );
+    });
   },
 
   /**
@@ -616,6 +590,10 @@ export default {
     RNCSitumPlugin.removeRealTimeUpdates();
   },
 
+  /**
+   * Checks if a point is inside a geofence
+   *
+   */
   checkIfPointInsideGeofence: function (request: any, callback?: Function) {
     invariant(
       typeof callback === "function",
