@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, ActivityIndicator} from 'react-native';
 
-import SitumPlugin from '@situm/react-native';
+import SitumPlugin, {Building} from '@situm/react-native';
 import MapView, {MapLocalTile} from 'react-native-maps';
 import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
 
@@ -15,65 +15,52 @@ export const TiledBuilding = () => {
   const [offlineTilePath, setOfflineTilePath] = useState<String>();
   const mapRef = React.createRef<MapView>();
 
-  const getBuildingInfo = () => {
-    SitumPlugin.fetchBuildings(
-      (buildings: any) => {
-        // returns list of buildings
-        if (!buildings || buildings.length === 0) {
-          console.error(
-            'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
+  const getBuildingInfo = async () => {
+    try {
+      const buildings = await SitumPlugin.fetchBuildings();
+
+      if (!buildings || buildings.length === 0) {
+        console.error(
+          'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
+        );
+        return;
+      }
+
+      for (const [key, b] of buildings.entries()) {
+        //console.log(key + JSON.stringify(b));
+        if (b.buildingIdentifier === SITUM_BUILDING_ID) {
+          console.log(
+            'Found required building, going to download entire building',
           );
+
+          const buildingInfo = await SitumPlugin.fetchBuildingInfo(b);
+          console.log('FetchBuildingInfo ' + JSON.stringify(buildingInfo));
+
+          mapRef.current?.animateToRegion({
+            latitude: buildingInfo.building.center.latitude,
+            longitude: buildingInfo.building.center.longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          });
+
+          getOfflineTiles(b);
         }
-
-        for (const [key, b] of buildings.entries()) {
-          console.log(key + JSON.stringify(b));
-          if (b.buildingIdentifier === SITUM_BUILDING_ID) {
-            console.log(
-              'Found required building, going to download entire building',
-            );
-            SitumPlugin.fetchBuildingInfo(
-              b,
-              (buildingInfo: any) => {
-                console.log(
-                  'FetchBuildingInfo ' + JSON.stringify(buildingInfo),
-                );
-
-                mapRef.current?.animateToRegion({
-                  latitude: buildingInfo.building.center.latitude,
-                  longitude: buildingInfo.building.center.longitude,
-                  latitudeDelta: 0.005,
-                  longitudeDelta: 0.005,
-                });
-
-                getOfflineTiles(b);
-              },
-              (error: any) => {
-                console.log('FetchBuildingInfoError ' + error);
-              },
-            );
-          }
-        }
-      },
-      (error: any) => {
-        // returns an error string
-        console.log('Error: ' + error);
-      },
-    );
+      }
+    } catch (error) {
+      console.log('Error: ' + error);
+    }
   };
 
-  const getOfflineTiles = (building: any) => {
-    SitumPlugin.fetchTilesFromBuilding(
-      building,
-      (result: any) => {
-        console.log('result is' + JSON.stringify(result));
+  const getOfflineTiles = async (building: Building) => {
+    try {
+      const result = await SitumPlugin.fetchTilesFromBuilding(building);
+      console.log('result is' + JSON.stringify(result));
 
-        setOfflineTilePath(result.results);
-        setIsLoading(false);
-      },
-      (error: any) => {
-        console.log('Fetch tiles from building error' + error);
-      },
-    );
+      setOfflineTilePath(result.results);
+      setIsLoading(false);
+    } catch (error) {
+      console.log('Fetch tiles from building error: ' + error);
+    }
   };
 
   useEffect(() => {

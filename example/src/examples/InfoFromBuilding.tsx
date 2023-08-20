@@ -15,18 +15,14 @@ export const InfoFromBuilding = () => {
       getInfoFromBuilding(myBuilding),
     );
   };
-
-  const getInfoFromBuilding = (building: any) => {
-    SitumPlugin.fetchBuildingInfo(
-      building,
-      (buildingInfo: any) => {
-        console.log('buildingInfo:', buildingInfo);
-        setBuildingInfo(JSON.stringify(buildingInfo, null, 2));
-      },
-      (error: string) => {
-        console.log('fetching building error:', error);
-      },
-    );
+  const getInfoFromBuilding = async (building: any) => {
+    try {
+      const buildingInfo = await SitumPlugin.fetchBuildingInfo(building);
+      console.log('buildingInfo:', buildingInfo);
+      setBuildingInfo(JSON.stringify(buildingInfo, null, 2));
+    } catch (error) {
+      console.log('fetching building error:', error);
+    }
   };
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
-import SitumPlugin from '@situm/react-native';
+import SitumPlugin, {Building} from '@situm/react-native';
 import styles from './styles/styles';
 import {Card} from 'react-native-paper';
 
@@ -9,22 +9,22 @@ export const BuildingsBasicInfo = () => {
   const [buildings, setBuildings] = useState<any>();
   const [error, setError] = useState<String>();
 
-  const getBuildings = () => {
-    SitumPlugin.fetchBuildings(
-      (b: any) => {
-        if (!b || b.length === 0) {
-          setError(
-            'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
-          );
-        }
-        console.log(JSON.stringify(b));
-        setBuildings(JSON.stringify(b, null, 2));
-      },
-      (error: any) => {
-        console.log(error);
-        setError(error);
-      },
-    );
+  const getBuildings = async () => {
+    try {
+      const buildings: Building[] = await SitumPlugin.fetchBuildings();
+
+      if (!buildings || buildings.length === 0) {
+        setError(
+          'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
+        );
+      } else {
+        console.log(JSON.stringify(buildings));
+        setBuildings(JSON.stringify(buildings, null, 2));
+      }
+    } catch (error: any) {
+      console.log(error);
+      setError(error);
+    }
   };
 
   useEffect(() => {

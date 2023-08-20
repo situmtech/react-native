@@ -13,34 +13,29 @@ export const BuildingFullInfo = () => {
   const [floors, setFloors] = useState<any>();
   const [indoorPOIs, setIndoorPOIs] = useState<any>();
   const [outdoorPOIs, setOutdoorPOIs] = useState<any>();
-  const [building, setBuilding] = useState<any>();
+  const [building, setBuilding] = useState<any>(undefined);
 
-  const populateFloorsFromBuilding = (b: any) => {
-    SitumPlugin.fetchFloorsFromBuilding(
-      b,
-      (f: any) => {
-        setFloors(JSON.stringify(f, null, 2));
-      },
-      (_error: any) => {},
-    );
+  const populateFloorsFromBuilding = async (b: any) => {
+    try {
+      const floors = await SitumPlugin.fetchFloorsFromBuilding(b);
+      setFloors(JSON.stringify(floors, null, 2));
+    } catch (error) {
+      console.error(`Failed to fetch floors: ${error}`);
+      // Handle the error as needed
+    }
   };
 
-  const populatePOIsFromBuilding = (b: Building) => {
-    SitumPlugin.fetchIndoorPOIsFromBuilding(
-      b,
-      (ip: any) => {
-        setIndoorPOIs(JSON.stringify(ip, null, 2));
-      },
-      (_error: any) => {},
-    );
+  const populatePOIsFromBuilding = async (b: Building) => {
+    try {
+      const indoorPOIs = await SitumPlugin.fetchIndoorPOIsFromBuilding(b);
+      setIndoorPOIs(JSON.stringify(indoorPOIs, null, 2));
 
-    SitumPlugin.fetchOutdoorPOIsFromBuilding(
-      b,
-      (op: any) => {
-        setOutdoorPOIs(JSON.stringify(op, null, 2));
-      },
-      (_error: any) => {},
-    );
+      const outdoorPOIs = await SitumPlugin.fetchOutdoorPOIsFromBuilding(b);
+      setOutdoorPOIs(JSON.stringify(outdoorPOIs, null, 2));
+    } catch (error) {
+      console.error(`Failed to fetch POIs: ${error}`);
+      // Handle the error as needed
+    }
   };
 
   useEffect(() => {
@@ -48,8 +43,8 @@ export const BuildingFullInfo = () => {
   }, []);
 
   useEffect(() => {
-    populateFloorsFromBuilding(building);
-    populatePOIsFromBuilding(building);
+    building && populateFloorsFromBuilding(building);
+    building && populatePOIsFromBuilding(building);
   }, [building]);
 
   return (

@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type {
-  LocationStatusName,
-  NavigationStatus,
-  NavigationUpdateType,
-} from "src/sdk";
+import type { LocationStatusName, NavigationUpdateType } from "src/sdk";
 
 /**
  * @name Building
@@ -38,6 +34,25 @@ export type Building = {
   rotation: number;
   userIdentifier: string;
   customFields: object;
+};
+
+/**
+ * @name BuildingInfo
+ * @description Full information of a building
+ *
+ * @property {Building} building - Building basic information
+ * @property {Floor[]} floors - Array with the information of each floor
+ * @property {Poi[]} indoorPOIs - Array with the information of each indoor POI
+ * @property {Poi[]} outdoorPOIs - Array with the information of each outdoor POI
+ * @property {Geofence} geofences - Array with the information of each geofence
+ */
+
+export type BuildingInfo = {
+  building: Building;
+  floors: Floor[];
+  indoorPOIs: Poi[];
+  outdoorPOIs: Poi[];
+  geofences: Geofence[];
 };
 
 /** @name Bounds
@@ -184,6 +199,16 @@ export type PoiCategory = {
 };
 
 /**
+ * @name PoiIcon
+ * @description Category of Point of Interest.
+ *
+ * @property {string} data - Base64 POI icon image
+ */
+export type PoiIcon = {
+  data: string;
+};
+
+/**
  * @name Point
  * @description Associate geographical coordinate (Location) with Building and Floor (Cartography) and cartesian coordinate relative to that building.
  *
@@ -298,7 +323,6 @@ export type Indication = {
  * @name NavigationProgress
  * @description Provides information of the progress of a user while following a route.
  *
- * @property {Point} closestPointInRoute - Closest point in the route from the user location provided . @deprecated Use closestLocationInRoute instead.
  * @property {Location} closestLocationInRoute - Closest location in the route from the user location provided .
  * @property {number} distanceToClosestPointInRoute - Distance between the real user location (provided to updateWithLocation(Location)) and the closest route location.
  * @property {Indication} currentIndication - The current indication.
@@ -313,7 +337,6 @@ export type Indication = {
  * @property {RouteSegment[]} segments - List of segments formed by consecutive points and a floor identifier
  */
 export type NavigationProgress = {
-  closestPointInRoute: Point;
   closestLocationInRoute: Location;
   distanceToClosestPointInRoute: number;
   currentIndication: number;
@@ -326,72 +349,11 @@ export type NavigationProgress = {
   routeStep: RouteStep;
   points: Point[];
   segments: RouteSegment[];
+  type: NavigationUpdateType;
 };
 
 /**
- * @name SitumEvent
- * @description An event: POI with radius, conversion area and asociated statistics. It is intended for usage in marketing apps.
- *
- * @property {number} buildingIdentifier - The identifier of the building this floor belongs to. Deprecated, use trigger.center.buildingIdentifier instead
- * @property {number} identifier - Unique identifier of the SitumEvent.
- * @property {number} floorIdentifier - The identifier of the floor this event is located at. @deprecated, use trigger.center.floorIdentifier instead
- * @property {string} infoHtml - Information contained into the event, in HTML format.
- * @property {SitumConversionArea} conversionArea - Location where the event is located. @deprecated, use conversion instead
- * @property {Circle} conversion - Location where the event is located.
- * @property {Circle} trigger - Location where the event should be fired
- * @property {object} customFields - Key-value pairs that allow to extend and fully customize the information associated with the event.
- * @property {number} radius - Radius of the event associated area. @deprecated, use trigger.radius instead
- * @property {string} name - Name of the event
- * @property {number} x - Center of the event in the x-axis. @deprecated, use trigger.center.cartesianCoordinate.x instead
- * @property {number} y - Center of the event in the y-axis. @deprecated, use trigger.center.cartesianCoordinate.y instead
- */
-export type SitumEvent = {
-  buildingIdentifier: number;
-  identifier: number;
-  floorIdentifier: number;
-  infoHtml: string;
-  conversionArea: SitumConversionArea;
-  conversion: Circle;
-  trigget: Circle;
-  customFields: object;
-  radius: number;
-  name: string;
-  x: number;
-  y: number;
-};
-
-/**
- * @name SitumConversionArea
- * @description A rectangular area of a floor defining the conversion area of an event
- *
- * @property {number} floorIdentifier - The identifier of the floor the SitumConversionArea is located at.
- * @property {object} topLeft - Top-left corner
- * @property {object} topRight - Top-right corner
- * @property {object} bottomLeft - Bottom-left corner
- * @property {object} bottomRight - Bottom-right corner
- */
-export type SitumConversionArea = {
-  floorIdentifier: number;
-  topLeft: object;
-  topRight: object;
-  bottomLeft: object;
-  bottomRight: object;
-};
-
-/**
- * @name Circle
- * @description A circular area
- *
- * @property {Point} center - The center of the circle
- * @property {number} radius - The radius of the circle
- */
-export type Circle = {
-  center: Point;
-  radius: number;
-};
-
-/**
- * @name LocationOptions
+ * @name LocationRequest
  * @description A data object that contains parameters for the location service, LocationManager.
  *
  * @property {number} buildingIdentifier - Identifier of the building on which the positioning will be started
@@ -410,7 +372,7 @@ export type Circle = {
  * @property {string} realtimeUpdateInterval - Default interval to send locations to the Realtime. Possible values are REALTIME, FAST, NORMAL, SLOW and BATTERY_SAVER
  * @property {boolean} autoEnableBleDuringPositioning - Set if the BLE should be re-enabled during positioning if the ble is used. Android only
  */
-export type LocationRequestOptions = {
+export type LocationRequest = {
   buildingIdentifier?: number;
   interval?: number;
   indoorProvider?: string;
@@ -428,17 +390,17 @@ export type LocationRequestOptions = {
   autoEnableBleDuringPositioning?: boolean;
 };
 
-/**
- * @name LocationRequest
- * @description A data object that contains parameters for the location service, LocationManager.
- *
- * @property {Building} building 0 - Building on which the positioning will be started
- * @property {LocationOptions} locationOptions 1 - Location options.
- */
-export type LocationRequest = {
-  building: Building;
-  locationOptions: LocationRequestOptions;
-};
+// /**
+//  * @name LocationRequest
+//  * @description A data object that contains parameters for the location service, LocationManager.
+//  *
+//  * @property {Building} building 0 - Building on which the positioning will be started
+//  * @property {LocationOptions} locationOptions 1 - Location options.
+//  */
+// export type LocationRequest = {
+//   building: Building;
+//   locationOptions: LocationRequestOptions;
+// };
 
 /**
  * @name NavigationRequest
@@ -474,7 +436,7 @@ export type NavigationRequest = {
  *
  * @property {Building} positioningBuilding
  * @property {Point|Location} from - Current user's position as the starting point of the route.
- * @property {Point|POI} to - Point to, where the route should end.
+ * @property {Point|Poi} to - Point to, where the route should end.
  * @property {DirectionsOptions} options - Options that can be added to the request.
  */
 export type DirectionsRequest = {
@@ -489,17 +451,13 @@ export type DirectionsRequest = {
  * @description A data object that contains the directions options.
  *
  * @property {boolean} minimizeFloorChanges - Defines wheter or not the route should be calculated minimizing the floor changes even if the result is longer.
- * @property {boolean} accessibleRoute - Deprecated, use accessibilityMode. Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false).
- * @property {boolean} accessible - Deprecated, use accessibilityMode. Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false).
  * @property {string} accessibilityMode - Defines the accessibility mode of the route. Possible values are: CHOOSE_SHORTEST, ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES, ONLY_ACCESSIBLE
  * @property {number} startingAngle - Current user's orientation in degrees.
  */
 export type DirectionsOptions = {
-  minimizeFloorChanges: boolean;
-  accessibleRoute: boolean;
-  accessible: boolean;
-  assebilityMode: string;
-  startingAngle: number;
+  minimizeFloorChanges?: boolean;
+  accessibilityMode?: "ONLY_ACCESSIBLE" | "ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES";
+  startingAngle?: number;
 };
 
 /**
@@ -550,6 +508,12 @@ export type RealTimeData = {
   locations: Location[];
 };
 
+export type SdkVersion = {
+  react_native: string;
+  ios?: string;
+  android?: string;
+};
+
 export interface Location {
   position?: Position;
   accuracy?: number;
@@ -580,27 +544,10 @@ export interface LocationStatus {
   statusCode: number;
 }
 
-export interface SDKError {
+export interface Error {
   code?: number;
   message: string;
 }
 
 // TODO: add types
 export type Directions = any;
-
-export interface SDKNavigation {
-  //closestPositionInRoute: any;
-  currentIndication?: any;
-  //currentStepIndex:number;
-  //distanceToEndStep: number;
-  distanceToGoal?: number;
-  //nextIndication: any;
-  points?: any;
-  routeStep?: any;
-  segments?: any;
-  route?: Directions;
-  //timeToEndStep: number;
-  //timeToGoal: number;
-  type?: NavigationUpdateType;
-  status: NavigationStatus;
-}

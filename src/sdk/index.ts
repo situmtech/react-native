@@ -10,13 +10,22 @@ import packageJson from "../../package.json";
 import { logError } from "../utils/logError";
 import type {
   Building,
+  BuildingInfo,
   DirectionPoint,
+  Directions,
   DirectionsOptions,
   Floor,
   Geofence,
-  LocationRequestOptions,
+  Location,
+  LocationStatus,
   NavigationRequest,
+  Poi,
   PoiCategory,
+  PoiIcon,
+  Error,
+  SdkVersion,
+  LocationRequest,
+  NavigationProgress,
 } from "./types";
 
 const LINKING_ERROR =
@@ -38,8 +47,8 @@ const RNCSitumPlugin = NativeModules.RNCSitumPlugin
 
 const SitumPluginEventEmitter = new NativeEventEmitter(RNCSitumPlugin);
 
-let positioningSubscriptions = [];
-let navigationSubscriptions = [];
+let isNavigating = false;
+
 let realtimeSubscriptions = [];
 
 export default {
@@ -50,7 +59,7 @@ export default {
    * This method can be safely called many times as it will only initialise the SDK
    * if it is not already initialised.
    */
-  initSitumSDK: function (): void {
+  init: function (): void {
     RNCSitumPlugin.initSitumSDK();
   },
 
@@ -62,14 +71,18 @@ export default {
    *
    * @param email user's email.
    * @param apiKey user's apikey.
-   * @param onSuccess callback to use when the function returns successfully
    */
-  setApiKey: function (
-    email: string,
-    apiKey: string,
-    onSuccess?: Function
-  ): void {
-    RNCSitumPlugin.setApiKey(email, apiKey, onSuccess);
+  setApiKey: function (email: string, apiKey: string): Promise<boolean> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.setApiKey(
+        email,
+        apiKey,
+        (response: { success: boolean }) => {
+          resolve(response.success);
+        }
+      );
+    });
+    //RNCSitumPlugin.setApiKey(email, apiKey, onSuccess);
   },
 
   /**
@@ -82,25 +95,22 @@ export default {
    * @param password user's password.
    * @param onSuccess callback to use when the function returns successfully
    */
-  setUserPass: function (
-    email: string,
-    password: string
-  ): Promise<{ success: boolean }> {
+  setUserPass: function (email: string, password: string): Promise<boolean> {
     return new Promise((resolve, _reject) => {
       RNCSitumPlugin.setUserPass(
         email,
         password,
         (response: { success: boolean }) => {
-          resolve(response);
+          resolve(response.success);
         }
       );
     });
   },
 
-  setDashboardURL: function (url: string): Promise<{ success: boolean }> {
+  setDashboardURL: function (url: string): Promise<boolean> {
     return new Promise((resolve, _reject) => {
       RNCSitumPlugin.setDashboardURL(url, (response: { success: boolean }) => {
-        resolve(response);
+        resolve(response.success);
       });
     });
   },
@@ -112,10 +122,11 @@ export default {
    *
    * @param useRemoteConfig boolean
    */
-  setUseRemoteConfig(useRemoteConfig: string): Promise<{ success: boolean }> {
+  setUseRemoteConfig(useRemoteConfig: boolean): Promise<boolean> {
     return new Promise((resolve, _reject) => {
-      RNCSitumPlugin.setUseRemoteConfig(useRemoteConfig, (response) =>
-        resolve(response)
+      RNCSitumPlugin.setUseRemoteConfig(
+        useRemoteConfig ? "true" : "false",
+        (response) => resolve(response)
       );
     });
   },
@@ -124,30 +135,31 @@ export default {
    * Sets the maximum age of a cached response. If the cache response's age exceeds
    * maxAge, it will not be used and a network request will be made.
    *
-   * @param cacheAge a non-negative integer
+   * @param cacheAge Number of seconds after which the cache will expire
    */
-  setCacheMaxAge: function (cacheAge: number): Promise<{ success: boolean }> {
+  setCacheMaxAge: function (cacheAge: number): Promise<boolean> {
     return new Promise((resolve, _reject) => {
-      RNCSitumPlugin.setCacheMaxAge(cacheAge, (response) => resolve(response));
+      RNCSitumPlugin.setCacheMaxAge(cacheAge, (response) =>
+        resolve(response.success)
+      );
     });
   },
 
   /**
    * Invalidate all the resources in the cache
    */
-  invalidateCache: function (): Promise<{ success: boolean }> {
+  invalidateCache: function (): Promise<boolean> {
     return new Promise((resolve, _reject) => {
       RNCSitumPlugin.invalidateCache();
-      resolve({ success: true });
+      resolve(true);
     });
   },
 
   /**
    * Gets the list of versions for the current plugin and environment
    *
-   * @param callback callback to use on success
    */
-  sdkVersions: function () {
+  sdkVersion: function (): SdkVersion {
     const versions: { react_native: string; ios?: string; android?: string } = {
       react_native: packageJson.version,
     };
@@ -163,25 +175,18 @@ export default {
 
   /**
    * Returns the device identifier that has generated the location
+   *
    */
-  getDeviceId: function (): Promise<number> {
+  getDeviceId: function (): Promise<string> {
     return new Promise((resolve, _reject) => {
       RNCSitumPlugin.getDeviceId((response) => resolve(response));
     });
   },
 
   /**
-   * Request authorization for the provided authentication
-   * and stores it internally for subsequent requests
+   * Downloads all the buildings
    */
-  requestAuthorization: function (): void {
-    RNCSitumPlugin.requestAuthorization();
-  },
-
-  /**
-   * Download all the buildings for the current user
-   */
-  fetchBuildings: function (): Promise<unknown> {
+  fetchBuildings: function (): Promise<Building[]> {
     return new Promise((resolve, _reject) => {
       RNCSitumPlugin.fetchBuildings(
         (response) => resolve(response),
@@ -194,13 +199,13 @@ export default {
   },
 
   /**
-   * Download all the building data for the selected building. This info includes
+   * Downloads all the building data for the selected building. This info includes
    * floors, indoor and outdoor POIs, events and paths. Also it download floor
    * maps and POI category icons to local storage.
    *
    * @param building
    */
-  fetchBuildingInfo: function (building: Building): Promise<unknown> {
+  fetchBuildingInfo: function (building: Building): Promise<BuildingInfo> {
     return new Promise((resolve, _reject) => {
       RNCSitumPlugin.fetchBuildingInfo(
         building,
@@ -213,21 +218,26 @@ export default {
     });
   },
 
-  fetchTilesFromBuilding: function (building: Building): Promise<unknown> {
+  /**
+   * (Experimental) Downloads the tiled-map of a certain building
+   * @param building Building whose tiles will be downloaded
+   * @returns
+   */
+  fetchTilesFromBuilding: function (building: Building): Promise<string> {
     return new Promise((resolve, _reject) => {
       RNCSitumPlugin.fetchTilesFromBuilding(
         building,
         (response) => resolve(response),
         (error) => {
           logError(error);
-          throw error;
+          _reject(error);
         }
       );
     });
   },
 
   /**
-   * Download all the floors of a building
+   * Downloads all the floors of a building
    *
    * @param building
    * @param success function called on sucess, returns a list of Floor objects
@@ -237,7 +247,10 @@ export default {
     return new Promise((resolve, _reject) => {
       RNCSitumPlugin.fetchFloorsFromBuilding(
         building,
-        (response) => resolve(response),
+        (response) => {
+          console.log(response);
+          resolve(response);
+        },
         (error) => {
           logError(error);
           throw error;
@@ -247,7 +260,7 @@ export default {
   },
 
   /**
-   * Download the map image of a floor
+   * Downloads the map image of a floor
    *
    * @param floor the floor object. Not null.
    */
@@ -306,7 +319,7 @@ export default {
    *
    * @param category the category. Not null.
    */
-  fetchPoiCategoryIconNormal: function (category: any): Promise<unknown> {
+  fetchPoiCategoryIconNormal: function (category: any): Promise<PoiIcon> {
     return new Promise((resolve, reject) => {
       RNCSitumPlugin.fetchPoiCategoryIconNormal(
         category,
@@ -324,7 +337,7 @@ export default {
    *
    * @param category the category. Not null.
    */
-  fetchPoiCategoryIconSelected: function (category: any): Promise<unknown> {
+  fetchPoiCategoryIconSelected: function (category: any): Promise<PoiIcon> {
     return new Promise((resolve, reject) => {
       RNCSitumPlugin.fetchPoiCategoryIconSelected(
         category,
@@ -344,7 +357,7 @@ export default {
    * @param success function called on sucess, returns a list of POI objects
    * @param error function called on failure, returns an error string
    */
-  fetchIndoorPOIsFromBuilding: function (building: any): Promise<unknown> {
+  fetchIndoorPOIsFromBuilding: function (building: any): Promise<Poi[]> {
     return new Promise((resolve, reject) => {
       RNCSitumPlugin.fetchIndoorPOIsFromBuilding(
         building,
@@ -362,7 +375,7 @@ export default {
    *
    * @param building
    */
-  fetchOutdoorPOIsFromBuilding: function (building: any): Promise<unknown> {
+  fetchOutdoorPOIsFromBuilding: function (building: any): Promise<Poi[]> {
     return new Promise((resolve, reject) => {
       RNCSitumPlugin.fetchOutdoorPOIsFromBuilding(
         building,
@@ -376,93 +389,19 @@ export default {
   },
 
   /**
-   * Download the events of a building
-   *
-   * @param building
+   * Starts positioning.
+   * @param locationRequest Positioning options to configure how positioning will behave.
    */
-  fetchEventsFromBuilding: function (building: any): Promise<unknown> {
-    return new Promise((resolve, reject) => {
-      RNCSitumPlugin.fetchEventsFromBuilding(
-        building,
-        (response) => resolve(response),
-        (error) => {
-          logError(error);
-          reject(error);
-        }
-      );
-    });
-  },
-
-  /**
-   * Starts positioning with the configuration specified by the LocationRequest;
-   * computed geolocations, status codes and errors will be received through the LocationListener callbacks.
-   * You may call this method more than once, with the following effect:
-   *
-   *  - If you provide a new LocationRequest instance, positioning will be re-started
-   *    with the new positioning options specified by this new instance.
-   *  - If you provide a new LocationListener, the former LocationListener will be
-   *    replaced, therefore geolocations will be communicated to the new one.
-   *  - If neither LocationRequest nor LocationListener change, nothing will happen.
-   *    You may stop positioning at any time by calling the LocationManager.removeUpdates() method.
-   *
-   * @param location callback to use when location is udpated
-   * @param status callback to use when the positioning status changes
-   * @param error callback to use when error is raised
-   * @param locationOptions hashmap with options
-   *
-   * @returns the id of the subscription
-   */
-  startPositioning: function (
-    location: (event: any) => void,
-    status: Function,
-    error?: Function,
-    options?: LocationRequestOptions
-  ): void {
-    this.requestAuthorization();
-    return this.startPositioningUpdates(
-      location,
-      status,
-      error || logError,
-      options || {}
-    );
-  },
-
-  startPositioningUpdates: function (
-    location: (event: any) => void,
-    status: (event: any) => void,
-    error?: (event: any) => void,
-    options?: LocationRequestOptions
-  ): void {
-    // Remove old positioning subscriptions:
-    positioningSubscriptions.forEach((subscription) => subscription?.remove());
-    positioningSubscriptions = [];
-
-    positioningSubscriptions.push(
-      SitumPluginEventEmitter.addListener("locationChanged", location),
-      SitumPluginEventEmitter.addListener("statusChanged", status),
-      error
-        ? SitumPluginEventEmitter.addListener(
-            "locationError",
-            error || logError
-          )
-        : null
-    );
-    // Call native:
-    RNCSitumPlugin.startPositioning(options || {});
+  requestLocationUpdates: function (locationRequest?: LocationRequest) {
+    RNCSitumPlugin.startPositioning(locationRequest || {});
   },
 
   /**
    * Stops positioning, removing all location updates
    */
-  stopPositioning: function (): Promise<unknown> {
-    return new Promise((resolve, reject) => {
-      RNCSitumPlugin.stopPositioning(
-        (response) => resolve(response),
-        (error) => {
-          logError(error);
-          reject(error);
-        }
-      );
+  removeUpdates: function (): Promise<boolean> {
+    return new Promise((resolve, _reject) => {
+      RNCSitumPlugin.stopPositioning((response) => resolve(response.success));
     });
   },
 
@@ -473,19 +412,25 @@ export default {
    * @param directionParams
    */
   requestDirections: function (
-    directionParams: [
-      Building,
-      DirectionPoint,
-      DirectionPoint,
-      DirectionsOptions
-    ]
-  ) {
+    building: Building,
+    from: DirectionPoint,
+    to: DirectionPoint,
+    directionOptions?: DirectionsOptions
+  ): Promise<Directions> {
     return new Promise((resolve, reject) => {
+      const params: (Building | DirectionPoint | DirectionsOptions)[] = [
+        building,
+        from,
+        to,
+      ];
+      if (directionOptions) {
+        params.push(directionOptions);
+      }
+
       RNCSitumPlugin.requestDirections(
-        directionParams,
+        params,
         (response) => resolve(response),
         (error) => {
-          logError(error);
           reject(error);
         }
       );
@@ -501,22 +446,13 @@ export default {
    *
    * @param options
    */
-  requestNavigationUpdates: function (options?: NavigationRequest) {
-    return new Promise((resolve, reject) => {
+  requestNavigationUpdates: function (
+    options?: NavigationRequest
+  ): Promise<boolean> {
+    return new Promise((resolve, _reject) => {
       RNCSitumPlugin.requestNavigationUpdates(options || {});
-
-      navigationSubscriptions.push(
-        SitumPluginEventEmitter.addListener("navigationUpdated", (response) =>
-          resolve(response)
-        )
-      );
-
-      navigationSubscriptions.push(
-        SitumPluginEventEmitter.addListener("navigationError", (error) => {
-          logError(error);
-          reject(error);
-        })
-      );
+      isNavigating = true;
+      resolve(true);
     });
   },
 
@@ -527,16 +463,17 @@ export default {
    * @param success callback to use when the navigation updates
    * @param error callback to use when an error on navigation udpates raises
    */
-  updateNavigationWithLocation: function (location) {
+  updateNavigationWithLocation: function (location): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      if (navigationSubscriptions.length === 0) {
+      if (isNavigating === false) {
         reject("No active navigation!!");
         return;
       }
 
       RNCSitumPlugin.updateNavigationWithLocation(
         location,
-        (response) => resolve(response),
+        // (response) => resolve(response),
+        () => resolve(true),
         (error) => {
           logError(error);
           reject(error);
@@ -553,11 +490,7 @@ export default {
    * @param callback
    */
   removeNavigationUpdates: function (callback?: Function) {
-    for (let i = 0; i < navigationSubscriptions.length; i++) {
-      navigationSubscriptions[i].remove();
-    }
-
-    navigationSubscriptions = [];
+    isNavigating = false;
     RNCSitumPlugin.removeNavigationUpdates(callback || logError);
   },
 
@@ -634,5 +567,29 @@ export default {
     RNCSitumPlugin.onExitGeofences();
     SitumPluginEventEmitter.removeAllListeners("onExitGeofences");
     SitumPluginEventEmitter.addListener("onExitGeofences", callback);
+  },
+  onLocationUpdate: function (callback: (location: Location) => void) {
+    SitumPluginEventEmitter.addListener("locationChanged", callback);
+  },
+
+  onLocationStatus: function (callback: (status: LocationStatus) => void) {
+    SitumPluginEventEmitter.addListener("statusChanged", callback);
+  },
+
+  onLocationError: function (callback: (status: Error) => void) {
+    SitumPluginEventEmitter.addListener("locationError", callback);
+  },
+
+  onLocationStopped: function (callback: () => void) {
+    SitumPluginEventEmitter.addListener("locationStopped", callback);
+  },
+
+  onNavigationProgress: function (
+    callback: (progress: NavigationProgress) => void
+  ) {
+    SitumPluginEventEmitter.addListener("navigationUpdated", callback);
+  },
+  onNavigationError: function (callback: (error: any) => void) {
+    SitumPluginEventEmitter.addListener("navigationError", callback);
   },
 };

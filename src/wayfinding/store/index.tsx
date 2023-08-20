@@ -6,13 +6,10 @@ import {
   type Directions,
   type Location,
   type Poi,
-  type SDKError,
-  type SDKNavigation,
+  type Error,
+  type NavigationProgress,
 } from "../../sdk/types";
-import {
-  LocationStatusName,
-  NavigationStatus,
-} from "../../sdk/types/constants";
+import { LocationStatusName } from "../../sdk/types/constants";
 import { useSitumInternal } from "../hooks";
 import { createStore } from "./utils";
 
@@ -20,6 +17,23 @@ interface User {
   email?: string;
   apiKey?: string;
 }
+
+// interface SDKNavigation {
+//   //closestPositionInRoute: any;
+//   currentIndication?: any;
+//   //currentStepIndex:number;
+//   //distanceToEndStep: number;
+//   distanceToGoal?: number;
+//   //nextIndication: any;
+//   points?: any;
+//   routeStep?: any;
+//   segments?: any;
+//   route?: Directions;
+//   //timeToEndStep: number;
+//   //timeToGoal: number;
+//   type?: NavigationUpdateType;
+//   status: NavigationStatus;
+// }
 
 export interface State {
   webViewRef: MutableRefObject<undefined>;
@@ -30,9 +44,9 @@ export interface State {
   currentBuilding: Building;
   pois: Poi[];
   directions?: Directions;
-  navigation?: SDKNavigation;
+  navigation?: NavigationProgress;
   destinationPoiID?: number;
-  error?: SDKError;
+  error?: Error;
 }
 
 export const initialState: State = {
@@ -44,7 +58,7 @@ export const initialState: State = {
   currentBuilding: undefined,
   pois: [],
   directions: undefined,
-  navigation: { status: NavigationStatus.STOP },
+  navigation: undefined,
   destinationPoiID: undefined,
   error: undefined,
 };
