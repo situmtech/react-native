@@ -13,40 +13,50 @@ export const SetCacheMaxAge = () => {
   const [status, setStatus] = useState('');
 
   useEffect(() => {
-    //usually set before any fetch
-    SitumPlugin.setCacheMaxAge(NUMBER_OF_SECONDS, (response: Response) => {
-      console.log('Cache Age Set: ' + response);
+    const initialize = async () => {
+      try {
+        const success: boolean = await SitumPlugin.setCacheMaxAge(
+          NUMBER_OF_SECONDS,
+        );
+        if (success) {
+          console.log('Cache Age Set:', success);
+          setStatus(
+            'cache max age set to ' +
+              NUMBER_OF_SECONDS +
+              ' seconds: ' +
+              JSON.stringify(success),
+          );
+        }
+        const buildingData = await fetchBuilding(SITUM_BUILDING_ID);
+        setBuilding(buildingData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    initialize();
+  }, []);
+
+  const invalidateCache = async () => {
+    //invalidates current cache
+    const success: boolean = await SitumPlugin.invalidateCache();
+    if (success) setStatus('Cache invalidated');
+    else setStatus('Cache not invalidated');
+  };
+
+  const setCacheMaxAge = async () => {
+    //it can be set again after certain actions
+
+    const success = await SitumPlugin.setCacheMaxAge(NUMBER_OF_SECONDS);
+    if (success) {
+      console.log('Cache Age Set: ' + success);
       setStatus(
         'cache max age set to ' +
           NUMBER_OF_SECONDS +
           ' seconds: ' +
-          JSON.stringify(response),
+          JSON.stringify(success),
       );
-    });
-
-    fetchBuilding(SITUM_BUILDING_ID)
-      .then(data => {
-        setBuilding(data);
-      })
-      .catch(console.log);
-  }, []);
-
-  const invalidateCache = () => {
-    //invalidates current cache
-    SitumPlugin.invalidateCache();
-    setStatus('cache invalidated');
-  };
-
-  const setCacheMaxAge = () => {
-    //it can be set again after certain actions
-    SitumPlugin.setCacheMaxAge(NUMBER_OF_SECONDS, (response: Response) => {
-      setStatus(
-        'cache max age reset to ' +
-          NUMBER_OF_SECONDS +
-          ' seconds: ' +
-          JSON.stringify(response),
-      );
-    });
+    }
   };
 
   return (

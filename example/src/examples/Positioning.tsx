@@ -1,7 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
 import {getDefaultLocationOptions} from '../settings';
-import SitumPlugin from '@situm/react-native';
+import SitumPlugin, {
+  LocationStatus,
+  LocationStatusName,
+  Location,
+  Error,
+} from '@situm/react-native';
 import styles from './styles/styles';
 import requestPermissions from './Utils/RequestPermissions';
 import {setBuildings} from '../../../src/wayfinding/store';
@@ -10,10 +15,8 @@ import {Button, Card, Divider, List} from 'react-native-paper';
 function PositioningScreen() {
   useEffect(() => {
     //Set remote config to false, so we actually use local request
-    SitumPlugin.setUseRemoteConfig('false', (response: any) => {
-      console.log(`Remote config disabled: ${JSON.stringify(response)}`);
-    });
-
+    const success: boolean = SitumPlugin.setUseRemoteConfig(false);
+    if (!success) console.log('Error setting remote config usage');
     return () => {
       //STOP POSITIONING ON CLOSE COMPONENT
       stopPositioning();
@@ -40,26 +43,52 @@ function PositioningScreen() {
     //Declare the locationOptions (empty = default parameters)
     const locationOptions = getDefaultLocationOptions();
 
-    //Start positioning
-    SitumPlugin.startPositioning(
-      (location: any) => {
-        //returns location object
-        console.log(JSON.stringify(location, null, 2));
-        setLocation(JSON.stringify(location, null, 2));
-      },
-      (status: any) => {
-        //returns positioning status
+    SitumPlugin.requestLocationUpdates({});
+
+    // //Start positioning
+    // SitumPlugin.startPositioning(
+    //   (location: any) => {
+    //     //returns location object
+    //     console.log(JSON.stringify(location, null, 2));
+    //     setLocation(JSON.stringify(location, null, 2));
+    //   },
+    //   (status: any) => {
+    //     //returns positioning status
+    //     console.log(JSON.stringify(status));
+    //     setStatus(JSON.stringify(status, null, 3));
+    //   },
+    //   (error: any) => {
+    //     // returns an error string
+    //     console.log(JSON.stringify(error));
+    //     setError(error);
+    //   },
+    //   locationOptions,
+    // );
+    registerCallbacks();
+  };
+
+  function registerCallbacks() {
+    SitumPlugin.onLocationUpdate((location: Location) => {
+      console.log(JSON.stringify(location, null, 2));
+      setLocation(JSON.stringify(location, null, 2));
+    });
+
+    SitumPlugin.onLocationStatus((status: LocationStatus) => {
+      if (status.statusName in LocationStatusName) {
         console.log(JSON.stringify(status));
         setStatus(JSON.stringify(status, null, 3));
-      },
-      (error: any) => {
-        // returns an error string
-        console.log(JSON.stringify(error));
-        setError(error);
-      },
-      locationOptions,
-    );
-  };
+      }
+    });
+
+    SitumPlugin.onLocationError((err: Error) => {
+      console.log(JSON.stringify(err));
+      setError(err.message);
+    });
+
+    SitumPlugin.onLocationStopped(() => {
+      console.log('Situm > hook > Stopped positioning');
+    });
+  }
 
   //We will call this method from a <Button /> later
   const stopPositioning = async () => {
@@ -68,7 +97,7 @@ function PositioningScreen() {
     setStatus('');
     setError('');
     setBuildings(null);
-    SitumPlugin.stopPositioning((_success: any) => {});
+    SitumPlugin.removeUpdates();
   };
 
   return (

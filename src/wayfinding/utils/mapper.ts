@@ -3,7 +3,7 @@ import type {
   DirectionPoint,
   Directions,
   Location,
-  SDKNavigation,
+  NavigationProgress,
 } from "../../sdk/types";
 import type { Destination, NavigateToPoiType, Navigation } from "../types";
 
@@ -108,7 +108,7 @@ const Mapper = {
     } as Navigation;
   },
 
-  navigationToResult: (navigation: SDKNavigation): Navigation => {
+  navigationToResult: (navigation: NavigationProgress): Navigation => {
     return {
       status: navigation?.type,
     };

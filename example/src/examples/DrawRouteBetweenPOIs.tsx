@@ -6,47 +6,58 @@ import MapView, {
   Polyline,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
-import SitumPlugin from '@situm/react-native';
+import SitumPlugin, {
+  Building,
+  DirectionPoint,
+  DirectionsOptions,
+  Poi,
+} from '@situm/react-native';
 import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
 import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
 import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
 
-const fetchPOIsFromBuilding = (building: any) => {
-  return new Promise((resolve, reject) => {
-    SitumPlugin.fetchIndoorPOIsFromBuilding(
-      building,
-      (indoorPOIs: any) => {
-        console.log(indoorPOIs);
-        resolve(indoorPOIs);
-      },
-      (error: any) => {
-        reject(error);
-      },
-    );
-  });
+const fetchPOIsFromBuilding = async (building: any) => {
+  try {
+    const indoorPOIs = await SitumPlugin.fetchIndoorPOIsFromBuilding(building);
+    return indoorPOIs;
+  } catch (error) {
+    throw error;
+  }
 };
 
-const requestDirections = (building: any, pois: any) => {
-  return new Promise((resolve, reject) => {
-    SitumPlugin.requestDirections(
-      [building, pois[0], pois[1], null],
-      (route: any) => {
-        let latlngs = [];
-        for (let segment of route.segments) {
-          for (let point of segment.points) {
-            latlngs.push({
-              latitude: point.coordinate.latitude,
-              longitude: point.coordinate.longitude,
-            });
-          }
-        }
-        resolve(latlngs);
-      },
-      (error: any) => {
-        reject(error);
-      },
+const requestDirections = async (building: Building, pois: Poi[]) => {
+  try {
+    const directionsOptions: DirectionsOptions = {
+      minimizeFloorChanges: true,
+      accessibilityMode: 'ONLY_ACCESSIBLE',
+      startingAngle: 0,
+    };
+
+    const route = await SitumPlugin.requestDirections(
+      building,
+      pois[0],
+      pois[1],
+      directionsOptions,
     );
-  });
+
+    if (route) {
+      let latlngs = [];
+      for (let segment of route.segments) {
+        for (let point of segment.points) {
+          latlngs.push({
+            latitude: point.coordinate.latitude,
+            longitude: point.coordinate.longitude,
+          });
+        }
+      }
+      return latlngs;
+    }
+
+    return [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 };
 
 export const DrawRouteBetweenPOIs = () => {

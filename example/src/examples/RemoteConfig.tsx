@@ -1,7 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Text, SafeAreaView, ScrollView} from 'react-native';
 
-import SitumPlugin from '@situm/react-native';
+import SitumPlugin, {
+  Location,
+  Error,
+  LocationStatus,
+  LocationStatusName,
+} from '@situm/react-native';
 
 import styles from './styles/styles';
 import requestPermissions from './Utils/RequestPermissions';
@@ -16,35 +21,43 @@ export const RemoteConfig = () => {
   //We will call this method from a <Button /> later
   const stopPositioning = async () => {
     console.log('Stopping positioning');
-    SitumPlugin.stopPositioning((_success: any) => {});
+    SitumPlugin.removeUpdates();
   };
 
   const startPositioning = () => {
     requestPermissions();
+    registerCallbacks();
 
     console.log('Starting positioning');
     setLocation('');
     setStatus('');
     setError('');
     //Start positioning
-    SitumPlugin.startPositioning(
-      (newLocation: any) => {
-        console.log(JSON.stringify(newLocation, null, 3));
-        setLocation(JSON.stringify(newLocation, null, 3));
-      },
-      (newStatus: any) => {
-        //returns positioning status
-        console.log(JSON.stringify(newStatus));
-        setStatus(JSON.stringify(newStatus, null, 3));
-      },
-      (newError: string) => {
-        // returns an error string
-        console.log(JSON.stringify(newError));
-        setError(newError);
-        stopPositioning();
-      },
-      null,
-    );
+    SitumPlugin.requestLocationUpdates();
+  };
+
+  function registerCallbacks() {
+    console.log('Registering callbacks');
+    SitumPlugin.onLocationUpdate((location: Location) => {
+      //console.log(JSON.stringify(location, null, 2));
+      setLocation(JSON.stringify(location, null, 2));
+    });
+
+    SitumPlugin.onLocationStatus((status: LocationStatus) => {
+      if (status.statusName in LocationStatusName) {
+        console.log(JSON.stringify(status));
+        setStatus(JSON.stringify(status, null, 3));
+      }
+    });
+
+    SitumPlugin.onLocationError((err: Error) => {
+      console.log(JSON.stringify(err));
+      setError(err.message);
+    });
+
+    SitumPlugin.onLocationStopped(() => {
+      console.log('Situm > hook > Stopped positioning');
+    });
 
     SitumPlugin.onEnterGeofences((items: any) => {
       console.log('Detected Entered geofences: ' + JSON.stringify(items));
@@ -55,13 +68,16 @@ export const RemoteConfig = () => {
       console.log('Detected Exited geofences: ' + JSON.stringify(items));
       setGeofences('Outside ' + JSON.stringify(items));
     });
-  };
+  }
 
   useEffect(() => {
-    // Set useRemoteConfig to true in order to be able to
-    SitumPlugin.setUseRemoteConfig('true', (response: any) => {
-      console.log(`Remote config enabled: ${JSON.stringify(response)}`);
-    });
+    const enableRemoteConfig = async () => {
+      const success: boolean = await SitumPlugin.setUseRemoteConfig(true);
+      if (success) console.log('Remote config enabled');
+      else console.log('Unable to set remote config');
+    };
+
+    enableRemoteConfig();
 
     return () => {
       //STOP POSITIONING ON CLOSE COMPONENT

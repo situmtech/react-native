@@ -1,30 +1,25 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Image, View} from 'react-native';
 import MapView, {Marker, Overlay, PROVIDER_GOOGLE} from 'react-native-maps';
-import SitumPlugin from '@situm/react-native';
+import SitumPlugin, {PoiIcon} from '@situm/react-native';
 
 import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
 import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
 import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
 
-const getIconForPOI = (
-  poi: any,
-): Promise<{
-  poi: any;
-  icon: string;
-}> => {
-  return new Promise((resolve, reject) => {
-    SitumPlugin.fetchPoiCategoryIconNormal(
+const getIconForPOI = async (poi: any): Promise<{poi: any; icon: string}> => {
+  try {
+    const icon: PoiIcon = await SitumPlugin.fetchPoiCategoryIconNormal(
       poi.category,
-      (icon: any) => {
-        const result = {poi: poi, icon: 'data:image/png;base64,' + icon.data};
-        resolve(result);
-      },
-      (error: any) => {
-        reject(error);
-      },
     );
-  });
+
+    return {
+      poi: poi,
+      icon: 'data:image/png;base64,' + icon.data,
+    };
+  } catch (error) {
+    throw error;
+  }
 };
 
 const getPoisInfo = async (buildingInfo: any) => {
@@ -58,11 +53,6 @@ export const GetPoisIcons = () => {
     if (pois.length) {
       markers = pois
         .filter((poiAndIcon: any) => {
-          console.log(
-            poiAndIcon.poi.floorIdentifier,
-            '-',
-            currentFloor.identifier,
-          );
           return poiAndIcon.poi.floorIdentifier === currentFloor.identifier;
         })
         .map((poiAndIcon: any) => {

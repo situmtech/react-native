@@ -1100,9 +1100,12 @@ class SitumMapper {
         DirectionsRequest.AccessibilityMode accessibilityMode = DirectionsRequest.AccessibilityMode.CHOOSE_SHORTEST;
         Boolean minimizeFloorChanges = false;
         double startingAngle = 0.0;
-
+        
         if (joOptions != null) {
+        
+        
             if (joOptions.has(SitumMapper.ACCESSIBILITY_MODE)) {
+        
                 String mode = joOptions.getString(SitumMapper.ACCESSIBILITY_MODE);
                 if (mode.equals(DirectionsRequest.AccessibilityMode.ONLY_ACCESSIBLE.name())) {
                     accessibilityMode = DirectionsRequest.AccessibilityMode.ONLY_ACCESSIBLE;
@@ -1127,6 +1130,7 @@ class SitumMapper {
     }
 
     static ReadableArray mapList(List<? extends MapperInterface> modelObjects) {
+        
         WritableArray mappedList = new WritableNativeArray();
         for (MapperInterface modelObject : modelObjects) {
             ReadableMap modelMap = convertMapToReadableMap(modelObject.toMap());
@@ -1136,11 +1140,13 @@ class SitumMapper {
     }
 
     public static ReadableMap convertMapToReadableMap(Map<String, Object> map) {
+        Log.i(TAG, "HOHOHOHOH");
         WritableMap response = new WritableNativeMap();
         // Use a local stack to keep nested objects (avoids recursion).
         // First item in the stack: the given object.
         Stack<Map<String, Object>> sourcesStack = new Stack();
         Stack<WritableMap> responseStack = new Stack<>();
+        Log.i(TAG, map.toString());
         sourcesStack.push(map);
         responseStack.push(response);
 
@@ -1150,6 +1156,8 @@ class SitumMapper {
             for (Map.Entry<String, Object> entry : currentSource.entrySet()) {
                 String key = entry.getKey();
                 Object value = entry.getValue();
+                Log.i(TAG, key);
+                Log.i(TAG, value.toString());
                 if (value instanceof String) {
                     currentTarget.putString(key, (String) value);
                 } else if (value instanceof Integer) {

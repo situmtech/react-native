@@ -8,6 +8,7 @@ public interface SitumPlugin {
     String EVENT_LOCATION_CHANGED = "locationChanged";
     String EVENT_LOCATION_ERROR = "locationError";
     String EVENT_LOCATION_STATUS_CHANGED = "statusChanged";
+    String EVENT_LOCATION_STOPPED = "locationStopped";
 
     String EVENT_NAVIGATION_UPDATE = "navigationUpdated";
     String EVENT_NAVIGATION_ERROR = "navigationError";
