@@ -9,6 +9,12 @@ export interface MapViewError {
 export interface MapViewRef {
   selectPoi: (poiId: number) => void;
   navigateToPoi: ({ poi, poiId }: { poi?: Poi; poiId?: number }) => void;
+  navigateToLocation: ({
+    lat,
+    lng,
+    floorIdentifier,
+    navigationName,
+  }: NavigateToLocationType) => void;
   cancelNavigation: () => void;
 }
 
@@ -60,4 +66,11 @@ export interface OnNavigationResult {
 export type NavigateToPoiType = {
   navigationTo: number;
   type?: string;
+};
+
+export type NavigateToLocationType = {
+  lat: number;
+  lng: number;
+  floorIdentifier: string;
+  navigationName?: string;
 };

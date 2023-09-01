@@ -18,6 +18,7 @@ import useSitum, { useCallbackRef } from "../hooks";
 import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
 import {
+  type NavigateToLocationType,
   type MapViewError,
   type MapViewRef,
   type NavigateToPoiType,
@@ -169,6 +170,29 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       [pois]
     );
 
+    const navigateToLocationRef = useCallbackRef(
+      ({
+        lat,
+        lng,
+        floorIdentifier,
+        navigationName,
+      }: NavigateToLocationType) => {
+        if (!webViewRef.current || (!lat && !lng && !floorIdentifier)) return;
+
+        sendMessageToViewer(
+          webViewRef.current,
+          Mapper.navigateToLocation({
+            // @ts-ignore
+            lat: lat,
+            lng: lng,
+            floorIdentifier: floorIdentifier,
+            navigationName: navigationName,
+          } as NavigateToLocationType)
+        );
+      },
+      [pois]
+    );
+
     const selectPoiRef = useCallbackRef(
       (poiId: number) => {
         if (!webViewRef.current) {
@@ -212,6 +236,19 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           navigateToPoi({ poi, poiId }: { poi?: Poi; poiId?: number }): void {
             navigateToPoiRef.current({ poi, poiId });
           },
+          navigateToLocation({
+            lat,
+            lng,
+            floorIdentifier,
+            navigationName,
+          }: NavigateToLocationType): void {
+            navigateToLocationRef.current({
+              lat,
+              lng,
+              floorIdentifier,
+              navigationName,
+            });
+          },
           cancelNavigation(): void {
             if (!webViewRef.current) return;
             stopNavigation();
@@ -219,7 +256,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           },
         };
       },
-      [stopNavigation, navigateToPoiRef, selectPoiRef]
+      [stopNavigation, navigateToPoiRef, selectPoiRef, navigateToLocationRef]
     );
 
     useEffect(() => {
