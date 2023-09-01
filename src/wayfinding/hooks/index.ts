@@ -46,6 +46,10 @@ import {
   UseSitumContext,
 } from "../store/index";
 import { useDispatch, useSelector } from "../store/utils";
+import {
+  CURRENT_USER_LOCATION_ID,
+  CUSTOM_DESTINATION_LOCATION_ID,
+} from "../types/constants";
 
 const defaultNavigationOptions = {
   distanceToGoalThreshold: 4,
@@ -309,15 +313,18 @@ export const useSitumInternal = () => {
       (p: Poi) => p.identifier === destinationId?.toString()
     );
 
-    if (!poiDestination || (!poiOrigin && originId !== -1) || lockDirections) {
+    if (
+      (!poiDestination && destinationId !== CUSTOM_DESTINATION_LOCATION_ID) ||
+      (!poiOrigin && originId !== CURRENT_USER_LOCATION_ID) ||
+      lockDirections
+    ) {
       console.debug(
         `Situm > hook > Could not compute route for origin: ${originId} or destination: ${destinationId} (lockDirections: ${lockDirections})`
       );
       return;
     }
-
     const from =
-      originId === -1 && location
+      originId === CURRENT_USER_LOCATION_ID && location
         ? location.position
         : {
             buildingIdentifier: poiOrigin.buildingIdentifier,
@@ -326,12 +333,20 @@ export const useSitumInternal = () => {
             coordinate: poiOrigin.coordinate,
           };
 
-    const to = {
-      buildingIdentifier: poiDestination.buildingIdentifier,
-      floorIdentifier: poiDestination.floorIdentifier,
-      cartesianCoordinate: poiDestination.cartesianCoordinate,
-      coordinate: poiDestination.coordinate,
-    };
+    const to =
+      destinationId === CUSTOM_DESTINATION_LOCATION_ID
+        ? {
+            buildingIdentifier: directionsOptions.to.buildingIdentifier,
+            floorIdentifier: directionsOptions.to.floorIdentifier,
+            cartesianCoordinate: directionsOptions.to.cartesianCoordinate,
+            coordinate: directionsOptions.to.coordinate,
+          }
+        : {
+            buildingIdentifier: poiDestination.buildingIdentifier,
+            floorIdentifier: poiDestination.floorIdentifier,
+            cartesianCoordinate: poiDestination.cartesianCoordinate,
+            coordinate: poiDestination.coordinate,
+          };
 
     // iOS workaround -> does not allow for several direction petitions
     setLockDirections(true);
@@ -344,7 +359,7 @@ export const useSitumInternal = () => {
           type: directionsOptions?.accessibilityMode,
         };
         updateRoute && dispatch(setDirections(extendedRoute));
-        return directions;
+        return extendedRoute; // directions
       })
       .catch((e: string) => {
         dispatch(setDirections({ error: JSON.stringify(e) }));
@@ -360,6 +375,7 @@ export const useSitumInternal = () => {
     directionsOptions,
     navigationOptions,
     originId,
+    to,
   }: {
     callback?: (status: string, navigation?: SDKNavigation) => void;
     destinationId: number;
@@ -367,6 +383,7 @@ export const useSitumInternal = () => {
     navigationOptions?: any;
     originId: number;
     updateRoute?: boolean;
+    to: any;
   }) => {
     stopNavigation();
     calculateRoute({
@@ -375,7 +392,7 @@ export const useSitumInternal = () => {
       directionsOptions,
       updateRoute: false,
     }).then((r) => {
-      if (originId !== -1 || !location || !r) {
+      if (originId !== CURRENT_USER_LOCATION_ID || !location || !r) {
         callback && callback("error");
         return;
       }
