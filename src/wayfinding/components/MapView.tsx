@@ -18,7 +18,7 @@ import useSitum, { useCallbackRef } from "../hooks";
 import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
 import {
-  type NavigateToLocationType,
+  type NavigateToPointType,
   type MapViewError,
   type MapViewRef,
   type NavigateToPoiType,
@@ -170,24 +170,19 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       [pois]
     );
 
-    const navigateToLocationRef = useCallbackRef(
-      ({
-        lat,
-        lng,
-        floorIdentifier,
-        navigationName,
-      }: NavigateToLocationType) => {
+    const navigateToPointRef = useCallbackRef(
+      ({ lat, lng, floorIdentifier, navigationName }: NavigateToPointType) => {
         if (!webViewRef.current || (!lat && !lng && !floorIdentifier)) return;
 
         sendMessageToViewer(
           webViewRef.current,
-          Mapper.navigateToLocation({
+          Mapper.navigateToPoint({
             // @ts-ignore
             lat: lat,
             lng: lng,
             floorIdentifier: floorIdentifier,
             navigationName: navigationName,
-          } as NavigateToLocationType)
+          } as NavigateToPointType)
         );
       },
       [pois]
@@ -236,13 +231,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           navigateToPoi({ poi, poiId }: { poi?: Poi; poiId?: number }): void {
             navigateToPoiRef.current({ poi, poiId });
           },
-          navigateToLocation({
+          navigateToPoint({
             lat,
             lng,
             floorIdentifier,
             navigationName,
-          }: NavigateToLocationType): void {
-            navigateToLocationRef.current({
+          }: NavigateToPointType): void {
+            navigateToPointRef.current({
               lat,
               lng,
               floorIdentifier,
@@ -256,7 +251,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           },
         };
       },
-      [stopNavigation, navigateToPoiRef, selectPoiRef, navigateToLocationRef]
+      [stopNavigation, navigateToPoiRef, selectPoiRef, navigateToPointRef]
     );
 
     useEffect(() => {
