@@ -375,7 +375,6 @@ export const useSitumInternal = () => {
     directionsOptions,
     navigationOptions,
     originId,
-    to,
   }: {
     callback?: (status: string, navigation?: SDKNavigation) => void;
     destinationId: number;
@@ -383,7 +382,6 @@ export const useSitumInternal = () => {
     navigationOptions?: any;
     originId: number;
     updateRoute?: boolean;
-    to: any;
   }) => {
     stopNavigation();
     calculateRoute({

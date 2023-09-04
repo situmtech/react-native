@@ -7,7 +7,7 @@ import type {
 } from "../../sdk/types";
 import type {
   Destination,
-  NavigateToLocationType,
+  NavigateToPointType,
   NavigateToPoiType,
   Navigation,
 } from "../types";
@@ -45,8 +45,8 @@ const Mapper = {
   navigateToPoi: (navigate: NavigateToPoiType) =>
     mapperWrapper(`navigation.start`, { navigationTo: navigate?.navigationTo }),
 
-  navigateToLocation: (navigate: NavigateToLocationType) =>
-    mapperWrapper(`navigation.to_location`, navigate),
+  navigateToPoint: (navigate: NavigateToPointType) =>
+    mapperWrapper(`navigation.start`, navigate),
 
   cancelNavigation: () => mapperWrapper(`navigation.cancel`, {}),
 
