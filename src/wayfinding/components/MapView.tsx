@@ -18,6 +18,7 @@ import useSitum, { useCallbackRef } from "../hooks";
 import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
 import {
+  type NavigateToPointType,
   type MapViewError,
   type MapViewRef,
   type NavigateToPoiType,
@@ -169,6 +170,24 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       [pois]
     );
 
+    const navigateToPointRef = useCallbackRef(
+      ({ lat, lng, floorIdentifier, navigationName }: NavigateToPointType) => {
+        if (!webViewRef.current || (!lat && !lng && !floorIdentifier)) return;
+
+        sendMessageToViewer(
+          webViewRef.current,
+          Mapper.navigateToPoint({
+            // @ts-ignore
+            lat: lat,
+            lng: lng,
+            floorIdentifier: floorIdentifier,
+            navigationName: navigationName,
+          } as NavigateToPointType)
+        );
+      },
+      [pois]
+    );
+
     const selectPoiRef = useCallbackRef(
       (poiId: number) => {
         if (!webViewRef.current) {
@@ -212,6 +231,19 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           navigateToPoi({ poi, poiId }: { poi?: Poi; poiId?: number }): void {
             navigateToPoiRef.current({ poi, poiId });
           },
+          navigateToPoint({
+            lat,
+            lng,
+            floorIdentifier,
+            navigationName,
+          }: NavigateToPointType): void {
+            navigateToPointRef.current({
+              lat,
+              lng,
+              floorIdentifier,
+              navigationName,
+            });
+          },
           cancelNavigation(): void {
             if (!webViewRef.current) return;
             stopNavigation();
@@ -219,7 +251,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           },
         };
       },
-      [stopNavigation, navigateToPoiRef, selectPoiRef]
+      [stopNavigation, navigateToPoiRef, selectPoiRef, navigateToPointRef]
     );
 
     useEffect(() => {

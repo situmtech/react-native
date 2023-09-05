@@ -5,7 +5,12 @@ import type {
   Location,
   SDKNavigation,
 } from "../../sdk/types";
-import type { Destination, NavigateToPoiType, Navigation } from "../types";
+import type {
+  Destination,
+  NavigateToPointType,
+  NavigateToPoiType,
+  Navigation,
+} from "../types";
 
 const mapperWrapper = (type: string, payload: unknown) =>
   JSON.stringify({ type, payload });
@@ -39,6 +44,9 @@ const Mapper = {
 
   navigateToPoi: (navigate: NavigateToPoiType) =>
     mapperWrapper(`navigation.start`, { navigationTo: navigate?.navigationTo }),
+
+  navigateToPoint: (navigate: NavigateToPointType) =>
+    mapperWrapper(`navigation.start`, navigate),
 
   cancelNavigation: () => mapperWrapper(`navigation.cancel`, {}),
 
