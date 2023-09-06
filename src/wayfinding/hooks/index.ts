@@ -344,7 +344,7 @@ export const useSitumInternal = () => {
           type: directionsOptions?.accessibilityMode,
         };
         updateRoute && dispatch(setDirections(extendedRoute));
-        return directions;
+        return extendedRoute;
       })
       .catch((e: string) => {
         dispatch(setDirections({ error: JSON.stringify(e) }));
@@ -368,7 +368,7 @@ export const useSitumInternal = () => {
     originId: number;
     updateRoute?: boolean;
   }) => {
-    stopNavigation();
+    navigation?.status !== NavigationStatus.STOP && stopNavigation();
     calculateRoute({
       originId,
       destinationId,
