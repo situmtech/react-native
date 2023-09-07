@@ -14,6 +14,7 @@ export interface MapViewRef {
     lng,
     floorIdentifier,
     navigationName,
+    type,
   }: NavigateToPointType) => void;
   cancelNavigation: () => void;
 }
