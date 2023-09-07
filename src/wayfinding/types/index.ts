@@ -68,10 +68,15 @@ export type NavigateToPoiType = {
   type?: string;
 };
 
+export type NavigationAccessibilityTypes =
+  | "CHOOSE_SHORTEST"
+  | "ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES"
+  | "ONLY_ACCESSIBLE";
+
 export type NavigateToPointType = {
   lat: number;
   lng: number;
   floorIdentifier: string;
   navigationName?: string;
-  type?: string;
+  type?: NavigationAccessibilityTypes;
 };
