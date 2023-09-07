@@ -171,7 +171,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     );
 
     const navigateToPointRef = useCallbackRef(
-      ({ lat, lng, floorIdentifier, navigationName }: NavigateToPointType) => {
+      ({
+        lat,
+        lng,
+        floorIdentifier,
+        navigationName,
+        type,
+      }: NavigateToPointType) => {
         if (!webViewRef.current || (!lat && !lng && !floorIdentifier)) return;
 
         sendMessageToViewer(
@@ -182,6 +188,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
             lng: lng,
             floorIdentifier: floorIdentifier,
             navigationName: navigationName,
+            type: type,
           } as NavigateToPointType)
         );
       },
@@ -236,12 +243,14 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
             lng,
             floorIdentifier,
             navigationName,
+            type,
           }: NavigateToPointType): void {
             navigateToPointRef.current({
               lat,
               lng,
               floorIdentifier,
               navigationName,
+              type,
             });
           },
           cancelNavigation(): void {

@@ -73,4 +73,5 @@ export type NavigateToPointType = {
   lng: number;
   floorIdentifier: string;
   navigationName?: string;
+  type?: string;
 };
