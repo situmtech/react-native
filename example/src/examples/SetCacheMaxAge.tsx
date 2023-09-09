@@ -4,6 +4,7 @@ import SitumPlugin from '@situm/react-native';
 import styles from './styles/styles';
 import {Button, Card} from 'react-native-paper';
 
+//You may use a few seconds in development and at least 30 minutes in production
 const NUMBER_OF_SECONDS = 60;
 
 export const SetCacheMaxAge = () => {
