@@ -78,7 +78,7 @@ const checkAndroidPermissions = async () => {
 };
 
 export const requestPermission = async () => {
-  console.log(
+  console.debug(
     "Situm > permissions > Retrieving permissions for platform " + Platform.OS
   );
 

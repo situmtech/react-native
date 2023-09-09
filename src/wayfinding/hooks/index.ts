@@ -5,14 +5,14 @@ import SitumPlugin from "../../sdk";
 import {
   type Building,
   type DirectionPoint,
-  type LocationRequest,
-  type LocationStatus,
-  type Poi,
-  type Position,
+  type Directions,
   type Error,
   type Location,
-  type Directions,
+  type LocationRequest,
+  type LocationStatus,
   type NavigationProgress,
+  type Poi,
+  type Position,
 } from "../../sdk/types";
 import {
   LocationStatusName,
@@ -111,32 +111,29 @@ export const useSitumInternal = () => {
         apiKey = user.apiKey;
       }
 
-      const success: boolean = await SitumPlugin.setApiKey(email, apiKey);
+      try {
+        SitumPlugin.setApiKey(apiKey);
+        useRemoteConfig && SitumPlugin.setUseRemoteConfig(useRemoteConfig);
+        startPositions &&
+          (await requestPermission()
+            .then(() => {
+              startPositioning();
+            })
+            .catch((e: string) => {
+              console.error(e);
+              reject(e);
+            }));
 
-      if (success) {
-        console.debug("Situm > hook > Successful authentication.");
-      } else {
-        reject("Situm > hook > Failure while authenticating.");
-      }
-
-      useRemoteConfig && SitumPlugin.setUseRemoteConfig(useRemoteConfig);
-      startPositions &&
-        (await requestPermission()
-          .then(() => {
-            startPositioning();
-          })
-          .catch((e: string) => {
+        fetchCartography &&
+          (await initializeBuildings().catch((e: string) => {
             console.error(e);
             reject(e);
           }));
 
-      fetchCartography &&
-        (await initializeBuildings().catch((e: string) => {
-          console.error(e);
-          reject(e);
-        }));
-
-      resolve();
+        resolve();
+      } catch (err: any) {
+        console.log("Situm > hook > error: ", err);
+      }
     });
 
   // Cartography
@@ -145,14 +142,14 @@ export const useSitumInternal = () => {
 
     try {
       const buildingArray: Building[] = await SitumPlugin.fetchBuildings();
-      console.log("Fetched buildings:", buildingArray);
+
       dispatch(setBuildings(buildingArray));
       console.debug("Situm > hook > Successfully retrieved buildings.");
       return buildingArray;
-    } catch (error) {
-      console.error(`Situm > hook > Could not retrieve buildings: ${error}`);
+    } catch (err) {
+      console.error(`Situm > hook > Could not retrieve buildings: ${err}`);
       dispatch(setError({ message: error, code: 3011 } as Error));
-      throw new Error(`Situm > hook> Could not retrieve buildings: ${error}`);
+      throw new Error(`Situm > hook> Could not retrieve buildings: ${err}`);
     }
   };
 
@@ -197,10 +194,7 @@ export const useSitumInternal = () => {
   const startPositioning = () => {
     console.debug("Situm > hook > Starting positioning...");
 
-    if (location.status !== LocationStatusName.STOPPED) {
-      console.debug("Situm > hook > Positioning has already started");
-      return;
-    }
+    if (SitumPlugin.positioningIsRunning()) return;
 
     // Declare the locationOptions (empty = default parameters)
     const locationOptions = {
@@ -214,10 +208,10 @@ export const useSitumInternal = () => {
   };
 
   function registerCallbacks() {
-    SitumPlugin.onLocationUpdate((location: Location) => {
+    SitumPlugin.onLocationUpdate((loc: Location) => {
       dispatch(
         setLocation({
-          ...location,
+          ...loc,
         })
       );
     });
@@ -242,28 +236,42 @@ export const useSitumInternal = () => {
       dispatch(resetLocation());
     });
     SitumPlugin.onNavigationProgress((progress: NavigationProgress) => {
-      console.log(
-        "Situm > hook > NavigationProgress: ",
-        JSON.stringify(progress, null, 2)
-      );
-      const newNavType =
-        (progress.type &&
-          progress.type in NavigationUpdateType &&
-          NavigationUpdateType[
-            progress.type as unknown as keyof typeof NavigationUpdateType
-          ]) ||
-        NavigationUpdateType.progress;
+      console.log("Situm > hook > NavigationProgress");
+
       dispatch(
         setNavigation({
           currentIndication: progress?.currentIndication,
           routeStep: progress?.routeStep,
           distanceToGoal: progress?.distanceToGoal,
           points: progress?.points,
-          type: newNavType,
+          type: NavigationUpdateType.PROGRESS,
           segments: progress?.segments,
           status: NavigationStatus.UPDATE,
         })
       );
+    });
+
+    SitumPlugin.onNavigationOutOfRoute(() => {
+      dispatch(
+        setNavigation({
+          ...navigation, //TODO: Is this needed?
+          type: NavigationUpdateType.OUT_OF_ROUTE,
+          status: NavigationStatus.UPDATE,
+        })
+      );
+
+      console.log("Situm > hook > NavigationOutOfRoute");
+    });
+
+    SitumPlugin.onNavigationFinished(() => {
+      dispatch(
+        setNavigation({
+          ...navigation, //TODO: Is this needed?
+          type: NavigationUpdateType.FINISHED,
+          status: NavigationStatus.UPDATE,
+        })
+      );
+      console.log("Situm > hook > NavigationFinished");
     });
 
     SitumPlugin.onNavigationError((progress: NavigationProgress) => {
@@ -275,18 +283,11 @@ export const useSitumInternal = () => {
     console.debug(`Situm > hook > Stopping positioning…`);
 
     try {
-      const success: boolean = await SitumPlugin.removeUpdates();
-
-      if (success) {
-        dispatch(resetLocation());
-        console.debug("Situm > hook > Successfully stopped positioning");
-      } else {
-        console.error("Situm > hook > Could not stop positioning");
-      }
-    } catch (error) {
-      console.error(
-        `Situm > hook > Error while stopping positioning: ${error}`
-      );
+      await SitumPlugin.removeLocationUpdates();
+      dispatch(resetLocation());
+      console.debug("Situm > hook > Successfully stopped positioning");
+    } catch (err) {
+      console.error(`Situm > hook > Error while stopping positioning: ${err}`);
     }
   };
 
@@ -381,8 +382,8 @@ export const useSitumInternal = () => {
         updateRoute && dispatch(setDirections(extendedRoute));
         return directions;
       })
-      .catch((e: string) => {
-        dispatch(setDirections({ error: JSON.stringify(e) }));
+      .catch((err: string) => {
+        dispatch(setDirections({ error: JSON.stringify(err) }));
       })
       .finally(() => setLockDirections(false));
   };
@@ -411,8 +412,10 @@ export const useSitumInternal = () => {
     navigationOptions;
     originId;
     updateRoute;
+    console.debug("Situm > hook > requesting to start navigation");
 
-    stopNavigation();
+    if (SitumPlugin.navigationIsRunning()) await stopNavigation();
+
     const r = await calculateRoute({
       originId,
       destinationId,
@@ -423,18 +426,21 @@ export const useSitumInternal = () => {
       callback && callback("error");
       return;
     }
+
     dispatch(
       setNavigation({
         status: NavigationStatus.START,
+        type: NavigationUpdateType.PROGRESS,
         ...r,
       })
     );
     callback && callback("success", r);
-    const update: boolean = await SitumPlugin.requestNavigationUpdates({
-      ...defaultNavigationOptions,
-      ...navigationOptions,
-    });
-    if (!update) {
+    try {
+      SitumPlugin.requestNavigationUpdates({
+        ...defaultNavigationOptions,
+        ...navigationOptions,
+      });
+    } catch (err: any) {
       console.error(`Situm > hook >Could not update navigation`);
       callback && callback("error");
       dispatch(setError({ message: "error", code: 3051 } as Error));
@@ -442,53 +448,19 @@ export const useSitumInternal = () => {
     }
   };
 
-  const stopNavigation = (): void => {
+  const stopNavigation = async (): Promise<void> => {
     console.debug("Situm > hook > Stopping navigation");
 
-    if (!navigation || navigation.status === NavigationStatus.STOP) {
-      return;
+    try {
+      await SitumPlugin.removeNavigationUpdates();
+      console.debug("Situm > hook > Successfully removed navigation updates");
+      dispatch(setNavigation({ status: NavigationStatus.STOP }));
+      dispatch(setDestinationPoiID(undefined));
+    } catch (err: any) {
+      console.debug("Situm > hook > Could not remove navigation updates");
     }
-    SitumPlugin.removeNavigationUpdates((response: any) => {
-      if (response && response.success) {
-        console.debug("Situm > hook > Successfully removed navigation updates");
-      } else {
-        console.error("Situm > hook > Could not remove navigation updates");
-      }
-    });
-    dispatch(setNavigation({ status: NavigationStatus.STOP }));
-    dispatch(setDestinationPoiID(undefined));
   };
   const stopNavigationRef = useCallbackRef(stopNavigation, [navigation]);
-
-  useEffect(() => {
-    if (
-      !navigation ||
-      navigation.status === NavigationStatus.STOP ||
-      !location
-    ) {
-      return;
-    }
-
-    const updateNavigation = async () => {
-      try {
-        const success = await SitumPlugin.updateNavigationWithLocation(
-          location
-        );
-
-        if (success) {
-          console.debug("Successfully updated navigation with location.");
-        } else {
-          console.debug("Navigation update with location was not successful.");
-        }
-      } catch (e) {
-        console.error(`Situm > hook > Error on navigation update ${e}`);
-      }
-    };
-
-    updateNavigation();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
 
   return {
     // States

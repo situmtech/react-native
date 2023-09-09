@@ -10,7 +10,7 @@ import type {
   OnPoiSelectedResult,
   MapViewRef,
 } from '@situm/react-native';
-import {SITUM_EMAIL, SITUM_API_KEY, SITUM_BUILDING_ID} from '../situm';
+import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../situm';
 
 const styles = StyleSheet.create({
   container: {
@@ -87,7 +87,12 @@ const Screen: React.FC = () => {
         JSON.stringify(event),
     );
   };
-
+  const onNavigationOutOfRoute = (event: OnNavigationResult) => {
+    console.log(
+      'Situm > example > on navigation out-of-route detected: ' +
+        JSON.stringify(event),
+    );
+  };
   const onNavigationError = (event: OnNavigationResult) => {
     console.log(
       'Situm > example > on navigation error detected: ' +
@@ -115,6 +120,7 @@ const Screen: React.FC = () => {
       onPoiDeselected={onPoiDeselected}
       onNavigationRequested={onNavigationRequested}
       onNavigationStarted={onNavigationStarted}
+      onNavigationOutOfRoute={onNavigationOutOfRoute}
       onNavigationError={onNavigationError}
       onNavigationFinished={onNavigationFinished}
     />
@@ -128,7 +134,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <SitumProvider email={SITUM_EMAIL} apiKey={SITUM_API_KEY}>
+    <SitumProvider apiKey={SITUM_API_KEY}>
       <SafeAreaView style={{...styles.container, ...backgroundStyle}}>
         <Screen />
       </SafeAreaView>

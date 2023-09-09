@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { LocationStatusName, NavigationUpdateType } from "src/sdk";
+import type { LocationStatusName, SdkNavigationUpdateType } from "src/sdk";
 
 /**
  * @name Building
@@ -349,7 +349,7 @@ export type NavigationProgress = {
   routeStep: RouteStep;
   points: Point[];
   segments: RouteSegment[];
-  type: NavigationUpdateType;
+  type: SdkNavigationUpdateType;
 };
 
 /**
@@ -512,6 +512,11 @@ export type SdkVersion = {
   react_native: string;
   ios?: string;
   android?: string;
+};
+
+export type ConfigurationOptions = {
+  useRemoteConfig?: boolean;
+  cacheMaxAge?: number;
 };
 
 export interface Location {
