@@ -88,7 +88,7 @@ export default {
   setApiKey: function (apiKey: string): Promise<void> {
     return new Promise((resolve, reject) => {
       RNCSitumPlugin.setApiKey(
-        "email",
+        "email@email.com",
         apiKey,
         (response: { success: boolean }) => {
           if (response.success) {
@@ -479,7 +479,9 @@ export default {
     return new Promise((resolve, reject) => {
       if (!this.positioningIsRunning()) {
         RNCSitumPlugin.startPositioning(locationRequest || {});
+
         positioningIsRunning = true;
+
         this.onLocationUpdate((loc: Location) => {
           if (!this.navigationIsRunning()) return;
 
@@ -495,6 +497,7 @@ export default {
           updateNavigation();
         });
       } else {
+        console.log("3");
         reject();
       }
     });
@@ -688,10 +691,10 @@ export default {
    *
    * @param callback the function called when the user enters a geofence
    */
-  onEnterGeofences: function (callback: (event: any) => void) {
+  onEnterGeofences: function (callback: (event: Geofence) => void) {
     RNCSitumPlugin.onEnterGeofences();
     // Adopts SDK behavior (setter):
-    SitumPluginEventEmitter.removeAllListeners("onEnterGeofences");
+
     SitumPluginEventEmitter.addListener("onEnterGeofences", callback);
   },
 
@@ -705,9 +708,9 @@ export default {
    *
    * @param callback the function called when the user exits a geofence
    */
-  onExitGeofences: function (callback: (event: any) => void) {
+  onExitGeofences: function (callback: (event: Geofence) => void) {
     RNCSitumPlugin.onExitGeofences();
-    SitumPluginEventEmitter.removeAllListeners("onExitGeofences");
+
     SitumPluginEventEmitter.addListener("onExitGeofences", callback);
   },
   onLocationUpdate: function (callback: (location: Location) => void) {

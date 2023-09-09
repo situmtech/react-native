@@ -94,13 +94,13 @@ function PositioningScreen() {
     // Handle geofence enter event
     SitumPlugin.onEnterGeofences((items: any) => {
       console.log('Detected Entered geofences: ' + JSON.stringify(items));
-      setGeofences('Inside ' + JSON.stringify(items));
+      setGeofences('Inside ' + JSON.stringify(items, null, 2));
     });
 
     // Handle geofence exit event
     SitumPlugin.onExitGeofences((items: any) => {
       console.log('Detected Exited geofences: ' + JSON.stringify(items));
-      setGeofences('Outside ' + JSON.stringify(items));
+      setGeofences('Outside ' + JSON.stringify(items, null, 2));
     });
   }
 

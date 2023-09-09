@@ -25,15 +25,22 @@ export const BuildingFullInfo = () => {
     }
   };
 
-  const populatePOIsFromBuilding = async (b: Building) => {
+  const populateIndoorPOIsFromBuilding = async (b: Building) => {
     try {
       const indoorPOIs = await SitumPlugin.fetchIndoorPOIsFromBuilding(b);
       setIndoorPOIs(JSON.stringify(indoorPOIs, null, 2));
+    } catch (error) {
+      console.debug(`Failed to fetch POIs: ${error}`);
+      // Handle the error as needed
+    }
+  };
 
+  const populateOutdoorPOIsFromBuilding = async (b: Building) => {
+    try {
       const outdoorPOIs = await SitumPlugin.fetchOutdoorPOIsFromBuilding(b);
       setOutdoorPOIs(JSON.stringify(outdoorPOIs, null, 2));
     } catch (error) {
-      console.error(`Failed to fetch POIs: ${error}`);
+      console.debug(`Failed to fetch outdoor POIs: ${error}`);
       // Handle the error as needed
     }
   };
@@ -44,7 +51,8 @@ export const BuildingFullInfo = () => {
 
   useEffect(() => {
     building && populateFloorsFromBuilding(building);
-    building && populatePOIsFromBuilding(building);
+    building && populateIndoorPOIsFromBuilding(building);
+    building && populateOutdoorPOIsFromBuilding(building);
   }, [building]);
 
   return (
