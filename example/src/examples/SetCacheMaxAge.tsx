@@ -1,85 +1,90 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
-import {SITUM_BUILDING_ID} from '../situm';
-import {fetchBuilding} from './Utils/CommonFetchs';
+import {Text, ScrollView} from 'react-native';
 import SitumPlugin from '@situm/react-native';
 import styles from './styles/styles';
 import {Button, Card} from 'react-native-paper';
 
-const NUMBER_OF_SECONDS = 30 * 60;
+const NUMBER_OF_SECONDS = 60;
 
 export const SetCacheMaxAge = () => {
-  const [_building, setBuilding] = useState<any>();
   const [status, setStatus] = useState('');
+  const [buildings, setBuildings] = useState('');
 
+  // Set the cache when the component mounts
   useEffect(() => {
-    const initialize = async () => {
-      try {
-        const success: boolean = await SitumPlugin.setCacheMaxAge(
-          NUMBER_OF_SECONDS,
-        );
-        if (success) {
-          console.log('Cache Age Set:', success);
-          setStatus(
-            'cache max age set to ' +
-              NUMBER_OF_SECONDS +
-              ' seconds: ' +
-              JSON.stringify(success),
-          );
-        }
-        const buildingData = await fetchBuilding(SITUM_BUILDING_ID);
-        setBuilding(buildingData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    initialize();
+    setCache(NUMBER_OF_SECONDS);
   }, []);
 
+  // Invalidate the current cache
   const invalidateCache = async () => {
-    //invalidates current cache
-    const success: boolean = await SitumPlugin.invalidateCache();
-    if (success) setStatus('Cache invalidated');
-    else setStatus('Cache not invalidated');
+    try {
+      await SitumPlugin.invalidateCache();
+      setStatus('Cache invalidated');
+    } catch (err) {
+      console.error('Failed to invalidate cache:', err);
+      setStatus('Cache not invalidated');
+    }
   };
 
-  const setCacheMaxAge = async () => {
-    //it can be set again after certain actions
+  // Set the cache duration
+  const setCache = async (numSeconds: number) => {
+    try {
+      await SitumPlugin.setConfiguration({
+        cacheMaxAge: numSeconds,
+      });
+      console.log('Cache Age Set:', numSeconds);
+      setStatus(`Cache max age set to ${numSeconds} seconds`);
+    } catch (err) {
+      console.error('Failed to set cache max age:', err);
+    }
+  };
 
-    const success = await SitumPlugin.setCacheMaxAge(NUMBER_OF_SECONDS);
-    if (success) {
-      console.log('Cache Age Set: ' + success);
-      setStatus(
-        'cache max age set to ' +
-          NUMBER_OF_SECONDS +
-          ' seconds: ' +
-          JSON.stringify(success),
-      );
+  // Fetch and display buildings
+  const showBuildings = async () => {
+    try {
+      const fetchedBuildings = await SitumPlugin.fetchBuildings();
+      setBuildings(JSON.stringify(fetchedBuildings, null, 2));
+    } catch (err) {
+      console.error('Failed to fetch Buildings:', err);
+      setStatus('Failed to fetch Buildings');
     }
   };
 
   return (
-    <View style={{...styles.screenWrapper}}>
+    <ScrollView style={styles.screenWrapper}>
+      <Text style={styles.text}>
+        This example demonstrates how to set cache duration and invalidate cache
+        using SitumSDK. You can also modify buildings in Situm Dashboard and
+        display them here to see how caching works.
+      </Text>
+      <Button onPress={showBuildings} mode="contained" style={styles.margin}>
+        Show Buildings
+      </Button>
       <Button
-        onPress={setCacheMaxAge}
+        onPress={() => setCache(NUMBER_OF_SECONDS)}
         mode="contained"
-        style={{marginVertical: 5}}>
-        set max cache age to {NUMBER_OF_SECONDS} seconds
+        style={styles.margin}>
+        Set max cache age to {NUMBER_OF_SECONDS} seconds
       </Button>
       <Button
         onPress={invalidateCache}
         buttonColor="#B22222"
         mode="contained"
-        style={{marginVertical: 5}}>
-        invalidate cache
+        style={styles.margin}>
+        Invalidate cache
       </Button>
-      <Card mode="contained" style={{marginVertical: 5}}>
-        <Card.Title titleVariant="headlineSmall" title={'Status'} />
+      <Card mode="contained" style={styles.margin}>
+        <Card.Title titleVariant="headlineSmall" title="Cache Status" />
         <Card.Content>
           <Text style={styles.text}>{status}</Text>
         </Card.Content>
       </Card>
-    </View>
+      <Card mode="contained" style={styles.margin}>
+        <Card.Title titleVariant="headlineSmall" title="Show Buildings" />
+        <Card.Content>
+          <Text style={styles.text}>{buildings}</Text>
+        </Card.Content>
+      </Card>
+    </ScrollView>
   );
 };

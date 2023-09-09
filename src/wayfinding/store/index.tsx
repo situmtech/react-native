@@ -4,10 +4,10 @@ import React, { createContext, type MutableRefObject, useReducer } from "react";
 import {
   type Building,
   type Directions,
-  type Location,
-  type Poi,
   type Error,
+  type Location,
   type NavigationProgress,
+  type Poi,
 } from "../../sdk/types";
 import { LocationStatusName } from "../../sdk/types/constants";
 import { useSitumInternal } from "../hooks";

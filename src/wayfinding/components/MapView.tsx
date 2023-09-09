@@ -8,12 +8,7 @@ import type {
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
-import {
-  ErrorName,
-  NavigationStatus,
-  NavigationUpdateType,
-  type Poi,
-} from "../../";
+import { ErrorName, NavigationStatus, type Poi } from "../../";
 import useSitum, { useCallbackRef } from "../hooks";
 import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
@@ -67,6 +62,7 @@ export interface MapViewProps {
   onPoiDeselected?: (event: OnPoiDeselectedResult) => void;
   onNavigationRequested?: (event: OnNavigationResult) => void;
   onNavigationStarted?: (event: OnNavigationResult) => void;
+  onNavigationOutOfRoute?: (event: OnNavigationResult) => void;
   onNavigationError?: (event: OnNavigationResult) => void;
   onNavigationFinished?: (event: OnNavigationResult) => void;
   style?: any;
@@ -94,6 +90,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onPoiDeselected = () => {},
       onNavigationRequested = () => {},
       onNavigationStarted = () => {},
+      onNavigationOutOfRoute = () => {},
       onNavigationError = () => {},
       onNavigationFinished = () => {},
       style,
@@ -257,11 +254,18 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           navigation: Mapper.routeToResult(navigation),
         } as OnNavigationResult);
       }
-      if (navigation?.type === NavigationUpdateType.destinationReached) {
+      if (navigation?.status === NavigationStatus.STOP) {
         onNavigationFinished({
           navigation: Mapper.navigationToResult(navigation),
         } as OnNavigationResult);
       }
+
+      if (navigation?.status === NavigationStatus.OUT_OF_ROUTE) {
+        onNavigationOutOfRoute({
+          navigation: Mapper.navigationToResult(navigation),
+        } as OnNavigationResult);
+      }
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigation]);
 

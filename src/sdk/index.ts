@@ -1,32 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
+
 import invariant from "invariant";
 import { NativeEventEmitter, NativeModules, Platform } from "react-native";
-
-export type * from "./types";
-export * from "./types/constants";
 
 import packageJson from "../../package.json";
 import { logError } from "../utils/logError";
 import type {
   Building,
   BuildingInfo,
+  ConfigurationOptions,
   DirectionPoint,
   Directions,
   DirectionsOptions,
+  Error,
   Floor,
   Geofence,
   Location,
+  LocationRequest,
   LocationStatus,
+  NavigationProgress,
   NavigationRequest,
   Poi,
   PoiCategory,
   PoiIcon,
-  Error,
   SdkVersion,
-  LocationRequest,
-  NavigationProgress,
 } from "./types";
+import { SdkNavigationUpdateType } from "./types/constants";
+
+export type * from "./types";
+export * from "./types/constants";
 
 const LINKING_ERROR =
   `The package 'situm-react-native-plugin' doesn't seem to be linked. Make sure: \n\n` +
@@ -47,8 +50,8 @@ const RNCSitumPlugin = NativeModules.RNCSitumPlugin
 
 const SitumPluginEventEmitter = new NativeEventEmitter(RNCSitumPlugin);
 
-let isNavigating = false;
-
+let positioningIsRunning = false;
+let navigationIsRunning = false;
 let realtimeSubscriptions = [];
 
 export default {
@@ -59,8 +62,18 @@ export default {
    * This method can be safely called many times as it will only initialise the SDK
    * if it is not already initialised.
    */
-  init: function (): void {
-    RNCSitumPlugin.initSitumSDK();
+  init: function (): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        RNCSitumPlugin.initSitumSDK();
+        resolve();
+      } catch (error) {
+        reject({
+          code: error.code || -1,
+          message: error.message || "Unknown error during initialization.",
+        } as Error);
+      }
+    });
   },
 
   /**
@@ -72,17 +85,23 @@ export default {
    * @param email user's email.
    * @param apiKey user's apikey.
    */
-  setApiKey: function (email: string, apiKey: string): Promise<boolean> {
-    return new Promise((resolve, _reject) => {
+  setApiKey: function (apiKey: string): Promise<void> {
+    return new Promise((resolve, reject) => {
       RNCSitumPlugin.setApiKey(
-        email,
+        "email",
         apiKey,
         (response: { success: boolean }) => {
-          resolve(response.success);
+          if (response.success) {
+            resolve();
+          } else {
+            reject({
+              code: -1,
+              message: "Failed to set API key.",
+            } as Error);
+          }
         }
       );
     });
-    //RNCSitumPlugin.setApiKey(email, apiKey, onSuccess);
   },
 
   /**
@@ -95,22 +114,36 @@ export default {
    * @param password user's password.
    * @param onSuccess callback to use when the function returns successfully
    */
-  setUserPass: function (email: string, password: string): Promise<boolean> {
-    return new Promise((resolve, _reject) => {
+  setUserPass: function (email: string, password: string): Promise<void> {
+    return new Promise((resolve, reject) => {
       RNCSitumPlugin.setUserPass(
         email,
         password,
         (response: { success: boolean }) => {
-          resolve(response.success);
+          if (response.success) {
+            resolve();
+          } else {
+            reject({
+              code: -1,
+              message: "Failed to set user credentials.",
+            } as Error);
+          }
         }
       );
     });
   },
 
-  setDashboardURL: function (url: string): Promise<boolean> {
-    return new Promise((resolve, _reject) => {
+  setDashboardURL: function (url: string): Promise<void> {
+    return new Promise((resolve, reject) => {
       RNCSitumPlugin.setDashboardURL(url, (response: { success: boolean }) => {
-        resolve(response.success);
+        if (response.success) {
+          resolve();
+        } else {
+          reject({
+            code: -1,
+            message: "Failed to set dashboard URL.",
+          } as Error);
+        }
       });
     });
   },
@@ -122,36 +155,84 @@ export default {
    *
    * @param useRemoteConfig boolean
    */
-  setUseRemoteConfig(useRemoteConfig: boolean): Promise<boolean> {
-    return new Promise((resolve, _reject) => {
+  setUseRemoteConfig(useRemoteConfig: boolean): Promise<void> {
+    return new Promise((resolve, reject) => {
       RNCSitumPlugin.setUseRemoteConfig(
         useRemoteConfig ? "true" : "false",
-        (response) => resolve(response)
+        (response) => {
+          if (response && response.success) {
+            resolve();
+          } else {
+            reject(new Error("Failed to set remote config"));
+          }
+        }
       );
     });
   },
 
-  /**
-   * Sets the maximum age of a cached response. If the cache response's age exceeds
-   * maxAge, it will not be used and a network request will be made.
-   *
-   * @param cacheAge Number of seconds after which the cache will expire
-   */
-  setCacheMaxAge: function (cacheAge: number): Promise<boolean> {
-    return new Promise((resolve, _reject) => {
-      RNCSitumPlugin.setCacheMaxAge(cacheAge, (response) =>
-        resolve(response.success)
-      );
+  setConfiguration: function (options: ConfigurationOptions): Promise<void> {
+    // Inline function to set remote config and return a promise
+    const setRemoteConfig = (useRemote: boolean): Promise<void> => {
+      return new Promise((configResolve, configReject) => {
+        RNCSitumPlugin.setUseRemoteConfig(
+          useRemote ? "true" : "false",
+          (response) => {
+            if (response && response.success) {
+              configResolve();
+            } else {
+              configReject(new Error("Failed to set remote config"));
+            }
+          }
+        );
+      });
+    };
+
+    // Inline function to set cache max age and return a promise
+    const setCacheMaxAge = (cacheAge: number): Promise<void> => {
+      return new Promise((cacheResolve, cacheReject) => {
+        RNCSitumPlugin.setCacheMaxAge(cacheAge, (response) => {
+          if (response && response.success) {
+            cacheResolve();
+          } else {
+            cacheReject(new Error("Failed to set cache max age"));
+          }
+        });
+      });
+    };
+
+    return new Promise((resolve, reject) => {
+      // Use an IIFE (Immediately Invoked Function Expression) to handle async operations
+      (async () => {
+        try {
+          if (options.useRemoteConfig !== undefined) {
+            await setRemoteConfig(options.useRemoteConfig);
+          }
+
+          if (options.cacheMaxAge !== undefined) {
+            await setCacheMaxAge(options.cacheMaxAge);
+          }
+
+          // Handle other configuration options here as needed
+
+          resolve();
+        } catch (err: any) {
+          reject(new Error("Failed to set configuration: " + err.message));
+        }
+      })();
     });
   },
 
   /**
    * Invalidate all the resources in the cache
    */
-  invalidateCache: function (): Promise<boolean> {
-    return new Promise((resolve, _reject) => {
-      RNCSitumPlugin.invalidateCache();
-      resolve(true);
+  invalidateCache: function (): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        RNCSitumPlugin.invalidateCache();
+        resolve();
+      } catch (error) {
+        reject(new Error("Failed to invalidate cache: " + error.message));
+      }
     });
   },
 
@@ -392,16 +473,51 @@ export default {
    * Starts positioning.
    * @param locationRequest Positioning options to configure how positioning will behave.
    */
-  requestLocationUpdates: function (locationRequest?: LocationRequest) {
-    RNCSitumPlugin.startPositioning(locationRequest || {});
+  requestLocationUpdates: function (
+    locationRequest?: LocationRequest
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.positioningIsRunning()) {
+        RNCSitumPlugin.startPositioning(locationRequest || {});
+        positioningIsRunning = true;
+        this.onLocationUpdate((loc: Location) => {
+          if (!this.navigationIsRunning()) return;
+
+          const updateNavigation = async () => {
+            try {
+              await this.updateNavigationWithLocation(loc);
+              resolve();
+            } catch (e) {
+              console.error(`Situm > hook > Error on navigation update ${e}`);
+              reject(e);
+            }
+          };
+          updateNavigation();
+        });
+      } else {
+        reject();
+      }
+    });
   },
 
   /**
    * Stops positioning, removing all location updates
    */
-  removeUpdates: function (): Promise<boolean> {
-    return new Promise((resolve, _reject) => {
-      RNCSitumPlugin.stopPositioning((response) => resolve(response.success));
+  removeLocationUpdates: function (): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (this.positioningIsRunning()) {
+        RNCSitumPlugin.stopPositioning((response) => {
+          console.log(response);
+          if (response.success) {
+            positioningIsRunning = false;
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      } else {
+        reject();
+      }
     });
   },
 
@@ -437,22 +553,34 @@ export default {
     });
   },
 
+  positioningIsRunning: function (): boolean {
+    return positioningIsRunning;
+  },
+
+  navigationIsRunning: function (): boolean {
+    return navigationIsRunning;
+  },
+
   /**
    * Set the navigation params, and the listener that receives the updated
    * navigation progress.
    *
    * Can only exist one navigation with one listener at a time. If this method was
-   * previously invoked, but removeUpdates() wasn't, removeUpdates() is called internally.
+   * previously invoked, but removeLocationUpdates() wasn't, removeLocationUpdates() is called internally.
    *
    * @param options
    */
   requestNavigationUpdates: function (
     options?: NavigationRequest
-  ): Promise<boolean> {
-    return new Promise((resolve, _reject) => {
-      RNCSitumPlugin.requestNavigationUpdates(options || {});
-      isNavigating = true;
-      resolve(true);
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        RNCSitumPlugin.requestNavigationUpdates(options || {});
+        navigationIsRunning = true;
+        resolve();
+      } catch (err) {
+        reject(err);
+      }
     });
   },
 
@@ -463,9 +591,9 @@ export default {
    * @param success callback to use when the navigation updates
    * @param error callback to use when an error on navigation udpates raises
    */
-  updateNavigationWithLocation: function (location): Promise<boolean> {
+  updateNavigationWithLocation: function (location): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (isNavigating === false) {
+      if (this.navigationIsRunning() === false) {
         reject("No active navigation!!");
         return;
       }
@@ -473,7 +601,7 @@ export default {
       RNCSitumPlugin.updateNavigationWithLocation(
         location,
         // (response) => resolve(response),
-        () => resolve(true),
+        () => resolve(),
         (error) => {
           logError(error);
           reject(error);
@@ -489,9 +617,23 @@ export default {
    *
    * @param callback
    */
-  removeNavigationUpdates: function (callback?: Function) {
-    isNavigating = false;
-    RNCSitumPlugin.removeNavigationUpdates(callback || logError);
+  removeNavigationUpdates: function (): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (this.navigationIsRunning() === true) {
+        navigationIsRunning = false;
+        RNCSitumPlugin.removeNavigationUpdates(
+          (() => {
+            resolve();
+          }) ||
+            ((error) => {
+              logError(error);
+              reject(error);
+            })
+        );
+      } else {
+        reject("Navigation updates were not active.");
+      }
+    });
   },
 
   requestRealTimeUpdates: function (
@@ -587,8 +729,32 @@ export default {
   onNavigationProgress: function (
     callback: (progress: NavigationProgress) => void
   ) {
-    SitumPluginEventEmitter.addListener("navigationUpdated", callback);
+    const myCb = (progress: NavigationProgress) => {
+      if (progress.type === SdkNavigationUpdateType.PROGRESS) {
+        callback(progress);
+      }
+    };
+    SitumPluginEventEmitter.addListener("navigationUpdated", myCb);
   },
+
+  onNavigationOutOfRoute: function (callback: () => void) {
+    const myCb = (progress: NavigationProgress) => {
+      if (progress.type === SdkNavigationUpdateType.OUT_OF_ROUTE) {
+        callback();
+      }
+    };
+    SitumPluginEventEmitter.addListener("navigationUpdated", myCb);
+  },
+
+  onNavigationFinished: function (callback: () => void) {
+    const myCb = (progress: NavigationProgress) => {
+      if (progress.type === SdkNavigationUpdateType.FINISHED) {
+        callback();
+      }
+    };
+    SitumPluginEventEmitter.addListener("navigationUpdated", myCb);
+  },
+
   onNavigationError: function (callback: (error: any) => void) {
     SitumPluginEventEmitter.addListener("navigationError", callback);
   },
