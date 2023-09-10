@@ -48,36 +48,10 @@ const Mapper = {
   followUser: (follow: boolean) => mapperWrapper("camera.follow_user", follow),
   setLanguage: (lang: string) => mapperWrapper("ui.set_language", lang),
 
-  initialConfiguration: (
-    style: any,
-    enablePoiClustering: any,
-    showPoiNames: any,
-    minZoom: any,
-    maxZoom: any,
-    initialZoom: any,
-    useDashboardTheme: any
-  ) =>
+  initialConfiguration: (style: any) =>
     mapperWrapper("ui.initial_configuration", {
       ...(style && {
         style: style,
-      }),
-      ...(enablePoiClustering && {
-        enablePoiClustering: enablePoiClustering,
-      }),
-      ...(showPoiNames && {
-        showPoiNames: showPoiNames,
-      }),
-      ...(minZoom && {
-        minZoom: minZoom,
-      }),
-      ...(maxZoom && {
-        maxZoom: maxZoom,
-      }),
-      ...(initialZoom && {
-        initialZoom: initialZoom,
-      }),
-      ...(useDashboardTheme && {
-        useDashboardTheme: useDashboardTheme,
       }),
     }),
 
