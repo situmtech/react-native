@@ -2,10 +2,12 @@ import React, {useEffect, useState, useRef} from 'react';
 import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import {MapView, SitumProvider, useSitum} from '@situm/react-native';
+import SitumPlugin, {
+  MapView,
+  SitumProvider,
+  requestPermission,
+} from '@situm/react-native';
 import type {
-  OnFloorChangedResult,
-  OnNavigationResult,
   OnPoiDeselectedResult,
   OnPoiSelectedResult,
   MapViewRef,
@@ -27,20 +29,24 @@ const styles = StyleSheet.create({
 });
 
 const Screen: React.FC = () => {
-  const {initSitumSdk} = useSitum();
   const mapViewRef = useRef<MapViewRef>(null);
   const [_controller, setController] = useState<MapViewRef | null>();
 
   // Initialize SDK when mounting map
   useEffect(() => {
-    initSitumSdk({})
-      .then(() => {
-        console.debug('Situm > example > SDK initialized successfully');
-      })
-      .catch((e: string) => {
-        console.error(`Situm > example > Error on SDK initialization: ${e}`);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const initializeSitum = async () => {
+      await SitumPlugin.setConfiguration({useRemoteConfig: true});
+
+      requestPermission()
+        .then(async () => {
+          await SitumPlugin.requestLocationUpdates();
+        })
+        .catch((e: string) => {
+          console.error(e);
+        });
+    };
+
+    initializeSitum();
   }, []);
 
   // Initialize controller
@@ -52,14 +58,8 @@ const Screen: React.FC = () => {
     setController(mapViewRef.current);
   }, [mapViewRef]);
 
-  const onLoad = (event: any) => {
-    console.log('Situm > example > Map is ready now' + JSON.stringify(event));
-  };
-
-  const onFloorChanged = (event: OnFloorChangedResult) => {
-    console.log(
-      'Situm > example > on floor change detected: ' + JSON.stringify(event),
-    );
+  const onLoad = (a: any) => {
+    console.log('Situm > example > Map is ready', a);
   };
 
   const onPoiSelected = (event: OnPoiSelectedResult) => {
@@ -74,55 +74,20 @@ const Screen: React.FC = () => {
     );
   };
 
-  const onNavigationRequested = (event: OnNavigationResult) => {
-    console.log(
-      'Situm > example > on navigation requested detected: ' +
-        JSON.stringify(event),
-    );
-  };
-
-  const onNavigationStarted = (event: OnNavigationResult) => {
-    console.log(
-      'Situm > example > on navigation started detected: ' +
-        JSON.stringify(event),
-    );
-  };
-  const onNavigationOutOfRoute = (event: OnNavigationResult) => {
-    console.log(
-      'Situm > example > on navigation out-of-route detected: ' +
-        JSON.stringify(event),
-    );
-  };
-  const onNavigationError = (event: OnNavigationResult) => {
-    console.log(
-      'Situm > example > on navigation error detected: ' +
-        JSON.stringify(event),
-    );
-  };
-
-  const onNavigationFinished = (event: OnNavigationResult) => {
-    console.log(
-      'Situm > example > on navigation finished detected: ' +
-        JSON.stringify(event),
-    );
-  };
-
   return (
     <MapView
       ref={mapViewRef}
-      style={styles.mapview}
+      //style={styles.mapview}
       configuration={{
         buildingIdentifier: SITUM_BUILDING_ID,
+        situmApiKey: SITUM_API_KEY,
+        //  style: styles.mapview,
       }}
-      onLoad={onLoad}
-      onFloorChanged={onFloorChanged}
-      onPoiSelected={onPoiSelected}
-      onPoiDeselected={onPoiDeselected}
-      onNavigationRequested={onNavigationRequested}
-      onNavigationStarted={onNavigationStarted}
-      onNavigationOutOfRoute={onNavigationOutOfRoute}
-      onNavigationError={onNavigationError}
-      onNavigationFinished={onNavigationFinished}
+      callbacks={{
+        onLoad: onLoad,
+        onPoiSelected: onPoiSelected,
+        onPoiDeselected: onPoiDeselected,
+      }}
     />
   );
 };

@@ -17,8 +17,8 @@ export const BuildingFullInfo = () => {
 
   const populateFloorsFromBuilding = async (b: any) => {
     try {
-      const floors = await SitumPlugin.fetchFloorsFromBuilding(b);
-      setFloors(JSON.stringify(floors, null, 2));
+      const _floors = await SitumPlugin.fetchFloorsFromBuilding(b);
+      setFloors(JSON.stringify(_floors, null, 2));
     } catch (error) {
       console.error(`Failed to fetch floors: ${error}`);
       // Handle the error as needed
@@ -27,8 +27,8 @@ export const BuildingFullInfo = () => {
 
   const populateIndoorPOIsFromBuilding = async (b: Building) => {
     try {
-      const indoorPOIs = await SitumPlugin.fetchIndoorPOIsFromBuilding(b);
-      setIndoorPOIs(JSON.stringify(indoorPOIs, null, 2));
+      const _indoorPOIs = await SitumPlugin.fetchIndoorPOIsFromBuilding(b);
+      setIndoorPOIs(JSON.stringify(_indoorPOIs, null, 2));
     } catch (error) {
       console.debug(`Failed to fetch POIs: ${error}`);
       // Handle the error as needed
@@ -37,8 +37,8 @@ export const BuildingFullInfo = () => {
 
   const populateOutdoorPOIsFromBuilding = async (b: Building) => {
     try {
-      const outdoorPOIs = await SitumPlugin.fetchOutdoorPOIsFromBuilding(b);
-      setOutdoorPOIs(JSON.stringify(outdoorPOIs, null, 2));
+      const _outdoorPOIs = await SitumPlugin.fetchOutdoorPOIsFromBuilding(b);
+      setOutdoorPOIs(JSON.stringify(_outdoorPOIs, null, 2));
     } catch (error) {
       console.debug(`Failed to fetch outdoor POIs: ${error}`);
       // Handle the error as needed

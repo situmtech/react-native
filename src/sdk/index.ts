@@ -497,7 +497,6 @@ export default {
           updateNavigation();
         });
       } else {
-        console.log("3");
         reject();
       }
     });

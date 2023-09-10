@@ -18,23 +18,6 @@ interface User {
   apiKey?: string;
 }
 
-// interface SDKNavigation {
-//   //closestPositionInRoute: any;
-//   currentIndication?: any;
-//   //currentStepIndex:number;
-//   //distanceToEndStep: number;
-//   distanceToGoal?: number;
-//   //nextIndication: any;
-//   points?: any;
-//   routeStep?: any;
-//   segments?: any;
-//   route?: Directions;
-//   //timeToEndStep: number;
-//   //timeToGoal: number;
-//   type?: NavigationUpdateType;
-//   status: NavigationStatus;
-// }
-
 export interface State {
   webViewRef: MutableRefObject<undefined>;
   sdkInitialized: boolean;
@@ -47,6 +30,7 @@ export interface State {
   navigation?: NavigationProgress;
   destinationPoiID?: number;
   error?: Error;
+  buildingIdentifier: string;
 }
 
 export const initialState: State = {
@@ -61,6 +45,7 @@ export const initialState: State = {
   navigation: undefined,
   destinationPoiID: undefined,
   error: undefined,
+  buildingIdentifier: "-1",
 };
 
 export const SitumContext = createContext<
@@ -111,6 +96,12 @@ const store = createStore<State>({
     },
     setError: (state: State, payload: State["error"]) => {
       return { ...state, error: payload };
+    },
+    setBuildingIdentifier: (
+      state: State,
+      payload: State["buildingIdentifier"]
+    ) => {
+      return { ...state, buildingIdentifier: payload };
     },
   },
 });
@@ -163,6 +154,10 @@ export const selectError = (state: State) => {
   return state.error;
 };
 
+export const selectBuildingIdentifier = (state: State) => {
+  return state.buildingIdentifier;
+};
+
 export const {
   setWebViewRef,
   setSdkInitialized,
@@ -177,6 +172,7 @@ export const {
   setNavigation,
   setDestinationPoiID,
   setError,
+  setBuildingIdentifier,
 } = store.actions;
 
 /**
