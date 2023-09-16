@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { Platform, StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 import type {
@@ -8,8 +14,8 @@ import type {
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
-import { ErrorName, NavigationStatus, type Poi } from "../../";
-import useSitum, { useCallbackRef } from "../hooks";
+import SitumPlugin, { ErrorName, type Poi } from "../../";
+import useSitum from "../hooks";
 import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
 import {
@@ -51,20 +57,19 @@ const viewerStyles = StyleSheet.create({
   },
 });
 
-export interface MapViewCallbacks {
+export interface MapViewProps {
+  configuration: MapViewConfiguration;
   onPoiSelected: (event: OnPoiSelectedResult) => void;
   onPoiDeselected: (event: OnPoiDeselectedResult) => void;
   onLoad?: (event: any) => void;
   onLoadError?: (event: MapViewError) => void;
 }
 
-export interface MapViewProps {
-  configuration: MapViewConfiguration;
-  callbacks: MapViewCallbacks;
-}
-
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
-  ({ configuration, callbacks }, ref) => {
+  (
+    { configuration, onPoiSelected, onPoiDeselected, onLoad, onLoadError },
+    ref
+  ) => {
     const dispatch = useDispatch();
     const webViewRef = useRef(null);
 
@@ -76,7 +81,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     const {
       init,
-      pois,
       location,
       directions,
       navigation,
@@ -112,50 +116,67 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
      *    }}
      *    onLoad={onLoad} />
      */
-    const navigateToPoiRef = useCallbackRef(
+    const _navigateToPoi = useCallback(
       ({ poi, poiId }: { poi?: Poi; poiId?: number }) => {
         if (!webViewRef.current || (!poi && !poiId)) return;
-        const validPoi = pois?.find(
-          (p) =>
-            p?.identifier === poiId?.toString() ||
-            // @ts-ignore
-            p?.identifier === poi?.id?.toString()
-        );
-        if (!validPoi) {
-          console.error("Situm > hook > Invalid value as poi or poiId");
-          return;
-        }
 
-        sendMessageToViewer(
-          webViewRef.current,
-          Mapper.navigateToPoi({
-            // @ts-ignore
-            navigationTo: poi?.id || poiId,
-          } as NavigateToPoiType)
-        );
+        // TODO: this should not be here
+        SitumPlugin.fetchBuildings().then((buildings) => {
+          const building = buildings.find(
+            (b) => b.buildingIdentifier === buildingIdentifier
+          );
+          SitumPlugin.fetchIndoorPOIsFromBuilding(building).then((_pois) => {
+            const validPoi = _pois?.find(
+              (p) =>
+                p?.identifier === poiId?.toString() ||
+                // @ts-ignore
+                p?.identifier === poi?.id?.toString()
+            );
+            if (!validPoi) {
+              console.error("Situm > hook > Invalid value as poi or poiId");
+              return;
+            }
+
+            sendMessageToViewer(
+              webViewRef.current,
+              Mapper.navigateToPoi({
+                // @ts-ignore
+                navigationTo: poi?.id || poiId,
+              } as NavigateToPoiType)
+            );
+          });
+        });
       },
-      [pois]
+      [buildingIdentifier]
     );
 
-    const selectPoiRef = useCallbackRef(
+    const _selectPoi = useCallback(
       (poiId: number) => {
         if (!webViewRef.current) {
           return;
         }
-        const poi = pois?.find((p) => p?.identifier === poiId?.toString());
-        if (!poi) {
-          console.error("Situm > hook > Invalid value as poiId");
-          return;
-        }
-        if (navigation.status !== NavigationStatus.STOP) {
+        if (SitumPlugin.navigationIsRunning()) {
           console.error(
             "Situm > hook > Navigation on course, poi selection is unavailable"
           );
           return;
         }
-        sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
+        // TODO: this should not be here
+        SitumPlugin.fetchBuildings().then((buildings) => {
+          const building = buildings.find(
+            (b) => b.buildingIdentifier === buildingIdentifier
+          );
+          SitumPlugin.fetchIndoorPOIsFromBuilding(building).then((_pois) => {
+            const poi = _pois?.find((p) => p?.identifier === poiId?.toString());
+            if (!poi) {
+              console.error("Situm > hook > Invalid value as poiId");
+              return;
+            }
+            sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
+          });
+        });
       },
-      [pois, navigation?.status]
+      [buildingIdentifier]
     );
 
     useImperativeHandle(
@@ -171,14 +192,14 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
               sendMessageToViewer(webViewRef.current, Mapper.followUser(false));
           },
           selectPoi(poiId: number) {
-            selectPoiRef.current(poiId);
+            _selectPoi(poiId);
           },
           deselectPoi() {
             webViewRef.current &&
               sendMessageToViewer(webViewRef.current, Mapper.selectPoi(null));
           },
           navigateToPoi({ poi, poiId }: { poi?: Poi; poiId?: number }): void {
-            navigateToPoiRef.current({ poi, poiId });
+            _navigateToPoi({ poi, poiId });
           },
           cancelNavigation(): void {
             if (!webViewRef.current) return;
@@ -187,7 +208,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           },
         };
       },
-      [stopNavigation, navigateToPoiRef, selectPoiRef]
+      [stopNavigation, _navigateToPoi, _selectPoi]
     );
 
     // useEffect(() => {
@@ -257,7 +278,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       switch (eventParsed.type) {
         case "app.map_is_ready":
           init();
-          callbacks.onLoad("");
+          onLoad("");
           setMapLoaded(true);
           break;
         case "directions.requested":
@@ -286,11 +307,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           stopNavigation();
           break;
         case "cartography.poi_selected":
-          callbacks.onPoiSelected(eventParsed?.payload);
+          onPoiSelected(eventParsed?.payload);
 
           break;
         case "cartography.poi_deselected":
-          callbacks.onPoiDeselected(eventParsed?.payload);
+          onPoiDeselected(eventParsed?.payload);
           break;
         case "cartography.floor_changed":
           break;
@@ -345,13 +366,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           const { nativeEvent } = evt;
           // TODO: on render error should probably still try to render an html
           if (nativeEvent.code === NETWORK_ERROR_CODE[Platform.OS]) {
-            callbacks.onLoadError({
+            onLoadError({
               name: ErrorName.ERR_INTERNET_DISCONNECTED,
               description: nativeEvent.description,
             });
           } else {
             // TODO: handle more errors
-            callbacks.onLoadError({
+            onLoadError({
               name: ErrorName.ERR_INTERNAL_SERVER_ERROR,
               description: nativeEvent.description,
             });
