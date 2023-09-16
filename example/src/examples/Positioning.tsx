@@ -20,16 +20,17 @@ function PositioningScreen() {
   const [geofences, setGeofences] = useState<String>('ready to be used');
 
   // Configure Situm SDK
-  async function configureSitum() {
-    try {
-      await SitumPlugin.setConfiguration({
-        useRemoteConfig: false,
+  const configureSitum = async () => {
+    await SitumPlugin.setConfiguration({
+      useRemoteConfig: false,
+    })
+      .then(() => {
+        console.log('Configuration set successfully');
+      })
+      .catch(err => {
+        console.debug('Failed to set configuration:', err);
       });
-      console.log('Configuration set successfully');
-    } catch (err) {
-      console.log('Failed to set configuration:', err);
-    }
-  }
+  };
 
   useEffect(() => {
     // Initial configuration and callback registration
@@ -66,7 +67,7 @@ function PositioningScreen() {
   };
 
   // Register callbacks to handle Situm SDK events
-  function registerCallbacks() {
+  const registerCallbacks = () => {
     // Handle location updates
     SitumPlugin.onLocationUpdate((loc: Location) => {
       setLocation(JSON.stringify(loc, null, 2));
@@ -102,7 +103,7 @@ function PositioningScreen() {
       console.log('Detected Exited geofences: ' + JSON.stringify(items));
       setGeofences('Outside ' + JSON.stringify(items, null, 2));
     });
-  }
+  };
 
   // Stop positioning using Situm SDK
   const stopPositioning = async () => {
