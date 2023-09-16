@@ -76,11 +76,7 @@ export const GetPoisIcons = () => {
   }, [pois, currentFloor]);
 
   useEffect(() => {
-    fetchBuilding(SITUM_BUILDING_ID)
-      .then(data => {
-        setBuilding(data);
-      })
-      .catch(console.log);
+    fetchBuilding(SITUM_BUILDING_ID).then(setBuilding).catch(console.debug);
   }, []);
 
   useEffect(() => {
@@ -107,7 +103,7 @@ export const GetPoisIcons = () => {
 
         getPoisInfo(data).then((res: any) => setPois(res));
       })
-      .catch(console.log);
+      .catch(console.debug);
   }, [building]);
 
   return (

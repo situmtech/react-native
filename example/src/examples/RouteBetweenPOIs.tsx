@@ -14,15 +14,18 @@ export const RouteBetweenPOIs = () => {
   const [error, setError] = useState('');
 
   const populatePOIsFromBuilding = async () => {
-    try {
-      const indoorPOIs = await SitumPlugin.fetchIndoorPOIsFromBuilding(
-        building,
-      );
-      console.log(indoorPOIs);
-      setIndoorPOIs(indoorPOIs);
-    } catch (error) {
-      console.log(error);
+    if (!building) {
+      return;
     }
+
+    await SitumPlugin.fetchIndoorPOIsFromBuilding(building)
+      .then(_indoorPois => {
+        console.log(JSON.stringify(indoorPOIs, null, 2));
+        setIndoorPOIs(indoorPOIs);
+      })
+      .catch(error => {
+        console.debug(`Could not fetch indoor POIs ${error}`);
+      });
   };
 
   const requestDirections = async () => {
@@ -31,18 +34,15 @@ export const RouteBetweenPOIs = () => {
       console.error('Your building has less than two POIs');
       return;
     }
-    try {
-      const route = await SitumPlugin.requestDirections(
-        building,
-        indoorPOIs[0],
-        indoorPOIs[1],
-      );
-      console.log(route);
-      setRoute(JSON.stringify(route));
-    } catch (error) {
-      setError(error);
-      console.log(error);
-    }
+    await SitumPlugin.requestDirections(building, indoorPOIs[0], indoorPOIs[1])
+      .then(_route => {
+        console.log(JSON.stringify(_route, null, 2));
+        setRoute(_route);
+      })
+      .catch(e => {
+        console.debug(`Could not compute route ${e}`);
+        setError(e);
+      });
   };
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export const RouteBetweenPOIs = () => {
               {indoorPOIs[1].poiName}'
             </Text>
           )}
-          <Text style={styles.text}>{route || error}</Text>
+          <Text style={styles.text}>{JSON.stringify(route) || error}</Text>
         </Card.Content>
       </Card>
     </ScrollView>

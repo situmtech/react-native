@@ -16,51 +16,48 @@ export const TiledBuilding = () => {
   const mapRef = React.createRef<MapView>();
 
   const getBuildingInfo = async () => {
-    try {
-      const buildings = await SitumPlugin.fetchBuildings();
-
-      if (!buildings || buildings.length === 0) {
-        console.error(
-          'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
-        );
-        return;
-      }
-
-      for (const [key, b] of buildings.entries()) {
-        //console.log(key + JSON.stringify(b));
-        if (b.buildingIdentifier === SITUM_BUILDING_ID) {
-          console.log(
-            'Found required building, going to download entire building',
+    SitumPlugin.fetchBuildings()
+      .then(buildings => {
+        if (!buildings || buildings.length === 0) {
+          console.error(
+            'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
           );
-
-          const buildingInfo = await SitumPlugin.fetchBuildingInfo(b);
-          console.log('FetchBuildingInfo ' + JSON.stringify(buildingInfo));
-
-          mapRef.current?.animateToRegion({
-            latitude: buildingInfo.building.center.latitude,
-            longitude: buildingInfo.building.center.longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
-          });
-
-          getOfflineTiles(b);
+          return;
         }
-      }
-    } catch (error) {
-      console.log('Error: ' + error);
-    }
+
+        for (const [_, b] of buildings.entries()) {
+          //console.log(key + JSON.stringify(b));
+          if (b.buildingIdentifier === SITUM_BUILDING_ID) {
+            console.log(
+              'Found required building, going to download entire building',
+            );
+
+            SitumPlugin.fetchBuildingInfo(b).then(buildingInfo => {
+              mapRef.current?.animateToRegion({
+                latitude: buildingInfo.building.center.latitude,
+                longitude: buildingInfo.building.center.longitude,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              });
+              getOfflineTiles(b);
+            });
+          }
+        }
+      })
+      .catch(e => console.debug(`Could not fetch tiles: ${e}`));
   };
 
   const getOfflineTiles = async (building: Building) => {
-    try {
-      const result = await SitumPlugin.fetchTilesFromBuilding(building);
-      console.log('result is' + JSON.stringify(result));
+    SitumPlugin.fetchTilesFromBuilding(building)
+      .then(response => {
+        console.log('response is' + JSON.stringify(response));
 
-      setOfflineTilePath(result.results);
-      setIsLoading(false);
-    } catch (error) {
-      console.log('Fetch tiles from building error: ' + error);
-    }
+        setOfflineTilePath(response?.results);
+        setIsLoading(false);
+      })
+      .catch(e => {
+        console.log('Fetch tiles from building error: ' + e);
+      });
   };
 
   useEffect(() => {

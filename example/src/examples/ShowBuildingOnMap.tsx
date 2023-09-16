@@ -4,20 +4,17 @@ import MapView, {Overlay, PROVIDER_GOOGLE} from 'react-native-maps';
 import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
 import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
 import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
+import {Building} from '@situm/react-native';
 
 export const ShowBuildingOnMap = () => {
-  const [building, setBuilding] = useState<any>();
+  const [building, setBuilding] = useState<Building>();
   const [mapImage, setMapImage] = useState<any>();
   const [bounds, setBounds] = useState<any>();
   const [bearing, setBearing] = useState<any>(0);
   const [mapRegion, setMapRegion] = useState<any>();
 
   useEffect(() => {
-    fetchBuilding(SITUM_BUILDING_ID)
-      .then(data => {
-        setBuilding(data);
-      })
-      .catch(console.log);
+    fetchBuilding(SITUM_BUILDING_ID).then(setBuilding).catch(console.debug);
   }, []);
 
   useEffect(() => {
@@ -41,7 +38,7 @@ export const ShowBuildingOnMap = () => {
         )[0];
         setMapImage(selectedFloor.mapUrl);
       })
-      .catch(console.log);
+      .catch(console.debug);
   }, [building]);
 
   return (

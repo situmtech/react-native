@@ -258,7 +258,7 @@ export default class SitumPlugin {
    * @returns
    */
   static fetchTilesFromBuilding = (building: Building) => {
-    return promiseWrapper<string>(({ onSuccess, onError }) => {
+    return promiseWrapper<any>(({ onSuccess, onError }) => {
       RNCSitumPlugin.fetchTilesFromBuilding(building, onSuccess, onError);
     });
   };
