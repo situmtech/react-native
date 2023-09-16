@@ -13,62 +13,26 @@ import {Button, Card, Divider, List} from 'react-native-paper';
 
 export const RemoteConfig = () => {
   // State variables to store location, status, error, and geofences data
-  const [location, setLocation] = useState<String>('ready to be used');
-  const [status, setStatus] = useState<String>('ready to be used');
-  const [error, setError] = useState<String>('ready to be used');
-  const [geofences, setGeofences] = useState<String>('ready to be used');
+  const [location, setLocation] = useState<string>('ready to be used');
+  const [status, setStatus] = useState<string>('ready to be used');
+  const [error, setError] = useState<string>('ready to be used');
+  const [geofences, setGeofences] = useState<string>('ready to be used');
 
   // Configure Situm SDK
-  async function configureSitum() {
-    try {
-      await SitumPlugin.setConfiguration({
-        useRemoteConfig: true,
+  const configureSitum = async () => {
+    await SitumPlugin.setConfiguration({
+      useRemoteConfig: true,
+    })
+      .then(() => {
+        console.log('Configuration set successfully');
+      })
+      .catch(e => {
+        console.debug('Failed to set configuration:', e);
       });
-      console.log('Configuration set successfully');
-    } catch (err) {
-      console.log('Failed to set configuration:', err);
-    }
-  }
-
-  useEffect(() => {
-    // Initial configuration and callback registration
-    configureSitum();
-    registerCallbacks();
-
-    return () => {
-      // Cleanup: stop positioning when component is unmounted
-      stopPositioning();
-    };
-  }, []);
-
-  // Request permissions required by Situm SDK
-  const requestLocationPermissions = async () => {
-    requestPermissions();
-  };
-
-  // Start positioning using Situm SDK
-  const startPositioning = async () => {
-    requestPermissions();
-
-    console.log('Starting positioning');
-    setLocation('');
-    setStatus('');
-    setError('');
-
-    //You may overwrite some remote configuration options if you want
-    const locationOptions = {
-      useBle: true,
-    };
-
-    try {
-      SitumPlugin.requestLocationUpdates(locationOptions);
-    } catch (err: any) {
-      console.debug(err);
-    }
   };
 
   // Register callbacks to handle Situm SDK events
-  function registerCallbacks() {
+  const registerCallbacks = () => {
     // Handle location updates
     SitumPlugin.onLocationUpdate((loc: Location) => {
       setLocation(JSON.stringify(loc, null, 2));
@@ -104,7 +68,28 @@ export const RemoteConfig = () => {
       console.log('Detected Exited geofences: ' + JSON.stringify(items));
       setGeofences('Outside ' + JSON.stringify(items));
     });
-  }
+  };
+
+  // Start positioning using Situm SDK
+  const startPositioning = async () => {
+    requestPermissions();
+
+    console.log('Starting positioning');
+    setLocation('');
+    setStatus('');
+    setError('');
+
+    //You may overwrite some remote configuration options if you want
+    const locationOptions = {
+      useBle: true,
+    };
+
+    try {
+      SitumPlugin.requestLocationUpdates(locationOptions);
+    } catch (err: any) {
+      console.debug(err);
+    }
+  };
 
   // Stop positioning using Situm SDK
   const stopPositioning = async () => {
@@ -120,11 +105,22 @@ export const RemoteConfig = () => {
     }
   };
 
+  useEffect(() => {
+    // Initial configuration and callback registration
+    configureSitum();
+    registerCallbacks();
+
+    return () => {
+      // Cleanup: stop positioning when component is unmounted
+      stopPositioning();
+    };
+  }, []);
+
   // Render the UI
   return (
     <ScrollView style={{...styles.screenWrapper}}>
       <List.Section>
-        <Button onPress={requestLocationPermissions} mode="contained">
+        <Button onPress={requestPermissions} mode="contained">
           Request permissions
         </Button>
         <Divider style={styles.margin} />

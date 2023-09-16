@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Text, ScrollView} from 'react-native';
-import SitumPlugin from '@situm/react-native';
+import SitumPlugin, {Building} from '@situm/react-native';
 import styles from './styles/styles';
 import {Button, Card} from 'react-native-paper';
 
@@ -9,7 +9,7 @@ const NUMBER_OF_SECONDS = 60;
 
 export const SetCacheMaxAge = () => {
   const [status, setStatus] = useState('');
-  const [buildings, setBuildings] = useState('');
+  const [buildings, setBuildings] = useState<Building[]>();
 
   // Set the cache when the component mounts
   useEffect(() => {
@@ -18,37 +18,38 @@ export const SetCacheMaxAge = () => {
 
   // Invalidate the current cache
   const invalidateCache = async () => {
-    try {
-      await SitumPlugin.invalidateCache();
-      setStatus('Cache invalidated');
-    } catch (err) {
-      console.error('Failed to invalidate cache:', err);
-      setStatus('Cache not invalidated');
-    }
+    SitumPlugin.invalidateCache()
+      .then(() => {
+        setStatus('Cache invalidated');
+      })
+      .catch(error => {
+        console.debug(`Failed to invalidate cache: ${error}`);
+        setStatus('Cache not invalidated');
+      });
   };
 
   // Set the cache duration
   const setCache = async (numSeconds: number) => {
-    try {
-      await SitumPlugin.setConfiguration({
-        cacheMaxAge: numSeconds,
+    SitumPlugin.setConfiguration({
+      cacheMaxAge: numSeconds,
+    })
+      .then(() => {
+        console.log('Cache Age Set:', numSeconds);
+        setStatus(`Cache max age set to ${numSeconds} seconds`);
+      })
+      .catch(error => {
+        console.debug(`Failed to set cache max age: ${error}`);
       });
-      console.log('Cache Age Set:', numSeconds);
-      setStatus(`Cache max age set to ${numSeconds} seconds`);
-    } catch (err) {
-      console.error('Failed to set cache max age:', err);
-    }
   };
 
   // Fetch and display buildings
   const showBuildings = async () => {
-    try {
-      const fetchedBuildings = await SitumPlugin.fetchBuildings();
-      setBuildings(JSON.stringify(fetchedBuildings, null, 2));
-    } catch (err) {
-      console.error('Failed to fetch Buildings:', err);
-      setStatus('Failed to fetch Buildings');
-    }
+    SitumPlugin.fetchBuildings()
+      .then(setBuildings)
+      .catch(error => {
+        console.debug(`Failed to fetch Buildings: ${error}`);
+        setStatus('Failed to fetch Buildings');
+      });
   };
 
   return (
@@ -83,7 +84,7 @@ export const SetCacheMaxAge = () => {
       <Card mode="contained" style={styles.margin}>
         <Card.Title titleVariant="headlineSmall" title="Show Buildings" />
         <Card.Content>
-          <Text style={styles.text}>{buildings}</Text>
+          <Text style={styles.text}>{JSON.stringify(buildings, null, 2)}</Text>
         </Card.Content>
       </Card>
     </ScrollView>

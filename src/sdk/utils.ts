@@ -1,6 +1,9 @@
 import { logError } from "..";
 import type { Error } from "./types";
 
+type PromiseResolve<T> = (response: T) => void;
+type PromiseReject = (error?: Error) => void;
+
 /**
  * Handles callbacks coming from SDKs
  *
@@ -12,58 +15,62 @@ import type { Error } from "./types";
 
 export const handleCallback = (
   response: { success: boolean },
+  resolve: PromiseResolve<void>,
+  reject: PromiseReject,
   errorMessage: string
 ) => {
   if (response?.success) {
-    Promise.resolve();
+    resolve();
   } else {
-    Promise.reject({
+    reject({
       code: -1,
       message: errorMessage || "Unknown error.",
     });
   }
 };
 
-export const onSuccess = <T>(response: T) => {
-  return Promise.resolve(response);
-};
-
-export const onError = (error: Error) => {
-  logError(error);
-  Promise.reject(error);
-};
-
 /**
- * Helper for the exceptionMiddleware. Allows to maintain the original function typings.
+ * Wraps all promises with general code.
  *
  * @param fn
  * @returns
  */
+export const promiseWrapper = <T>(
+  fn: ({
+    resolve,
+    reject,
+    onCallback,
+    onSuccess,
+    onError,
+  }: {
+    resolve: PromiseResolve<T>;
+    reject: PromiseReject;
+    onCallback: (r: { success: boolean }, errorMessage: string) => void;
+    onSuccess: PromiseResolve<T>;
+    onError: PromiseReject;
+  }) => void
+) => {
+  return new Promise<T>((resolve, reject) => {
+    const onCallback = (r: { success: boolean }, errorMessage: string) =>
+      handleCallback(r, resolve as () => void, reject, errorMessage);
 
-export const exceptionMiddlewareWrap = <T, Args extends any[]>(
-  fn: (...args: Args) => Promise<T>
-): ((...args: Args) => Promise<T>) => {
-  return (...args) => {
     try {
-      return fn(...args);
+      return fn({
+        resolve,
+        reject,
+        onCallback,
+        onSuccess: (response) => resolve(response),
+        onError: (error) => {
+          logError(error);
+          return reject(error);
+        },
+      });
     } catch (error) {
-      return Promise.reject({
-        code: error.code || -1,
-        message: error.message || "Unknown error.",
+      logError(error);
+      reject({
+        code: error?.code || -1,
+        message: error?.message || "Unknown error.",
       });
     }
-  };
-};
-
-/**
- * Wraps promises on try catch to handle errors more easily.
- *
- * @param fn
- * @returns
- */
-
-export const exceptionMiddleware = () => {
-  return <Args extends any[], T>(fn: (...args: Args) => Promise<T>) => {
-    return exceptionMiddlewareWrap<T, Args>(fn);
-  };
+  });
 };
