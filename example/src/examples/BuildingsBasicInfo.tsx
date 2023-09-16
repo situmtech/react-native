@@ -6,29 +6,25 @@ import styles from './styles/styles';
 import {Card} from 'react-native-paper';
 
 export const BuildingsBasicInfo = () => {
-  const [buildings, setBuildings] = useState<any>();
-  const [error, setError] = useState<String>();
-
-  const getBuildings = async () => {
-    try {
-      const buildings: Building[] = await SitumPlugin.fetchBuildings();
-
-      if (!buildings || buildings.length === 0) {
-        setError(
-          'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
-        );
-      } else {
-        console.log(JSON.stringify(buildings));
-        setBuildings(JSON.stringify(buildings, null, 2));
-      }
-    } catch (error: any) {
-      console.log(error);
-      setError(error);
-    }
-  };
+  const [buildings, setBuildings] = useState<Building[]>();
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
-    getBuildings();
+    SitumPlugin.fetchBuildings()
+      .then(_buildings => {
+        if (!_buildings || _buildings.length === 0) {
+          setError(
+            'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
+          );
+        } else {
+          console.log(JSON.stringify(_buildings));
+          setBuildings(_buildings);
+        }
+      })
+      .catch(e => {
+        console.error(e);
+        setError(e);
+      });
   }, []);
 
   return (
@@ -47,7 +43,9 @@ export const BuildingsBasicInfo = () => {
             title={'Buildings information'}
           />
           <Card.Content>
-            <Text style={styles.text}>{buildings}</Text>
+            <Text style={styles.text}>
+              {JSON.stringify(buildings, null, 2)}
+            </Text>
           </Card.Content>
         </Card>
       )}

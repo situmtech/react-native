@@ -27,12 +27,7 @@ import type {
   SdkVersion,
 } from "./types";
 import { SdkNavigationUpdateType } from "./types/constants";
-import {
-  exceptionMiddleware,
-  handleCallback,
-  onError,
-  onSuccess,
-} from "./utils";
+import { promiseWrapper } from "./utils";
 
 export type * from "./types";
 export * from "./types/constants";
@@ -76,12 +71,12 @@ export default class SitumPlugin {
    * This method can be safely called many times as it will only initialise the SDK
    * if it is not already initialised.
    */
-  static init = exceptionMiddleware()(() => {
-    return new Promise<void>((resolve) => {
+  static init = () => {
+    return promiseWrapper<void>(({ resolve }) => {
       RNCSitumPlugin.initSitumSDK();
       resolve();
     });
-  });
+  };
 
   /**
    * Provides your API key to the Situm SDK.
@@ -91,13 +86,13 @@ export default class SitumPlugin {
    *
    * @param apiKey user's apikey.
    */
-  static setApiKey = exceptionMiddleware()((apiKey: string) => {
-    return new Promise<void>(() => {
+  static setApiKey = (apiKey: string) => {
+    return promiseWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setApiKey("email@email.com", apiKey, (response) => {
-        handleCallback(response, "Failed to set API key.");
+        onCallback(response, "Failed to set API key.");
       });
     });
-  });
+  };
 
   /**
    * Provides user's email and password. This credentials will be used to obtain a
@@ -108,15 +103,13 @@ export default class SitumPlugin {
    * @param email user's email.
    * @param password user's password.
    */
-  static setUserPass = exceptionMiddleware()(
-    (email: string, password: string) => {
-      return new Promise<void>(() => {
-        RNCSitumPlugin.setUserPass(email, password, (response) => {
-          handleCallback(response, "Failed to set user credentials.");
-        });
+  static setUserPass = (email: string, password: string) => {
+    return promiseWrapper<void>(({ onCallback }) => {
+      RNCSitumPlugin.setUserPass(email, password, (response) => {
+        onCallback(response, "Failed to set user credentials.");
       });
-    }
-  );
+    });
+  };
 
   /**
    * Sets the API's base URL to retrieve the data.
@@ -124,13 +117,13 @@ export default class SitumPlugin {
    * @param url user's email.
    */
 
-  static setDashboardURL = exceptionMiddleware()((url: string) => {
-    return new Promise<void>(() => {
+  static setDashboardURL = (url: string) => {
+    return promiseWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setDashboardURL(url, (response: { success: boolean }) => {
-        handleCallback(response, "Failed to set dashboard URL.");
+        onCallback(response, "Failed to set dashboard URL.");
       });
     });
-  });
+  };
 
   /**
    * Set to true if you want the SDK to download the configuration from the Situm API
@@ -139,52 +132,51 @@ export default class SitumPlugin {
    *
    * @param useRemoteConfig
    */
-  static setUseRemoteConfig = exceptionMiddleware()(
-    (useRemoteConfig: boolean) => {
-      return new Promise<void>(() => {
-        RNCSitumPlugin.setUseRemoteConfig(
-          useRemoteConfig ? "true" : "false",
-          (response: { success: boolean }) => {
-            handleCallback(response, "Failed to set remote config");
-          }
-        );
-      });
-    }
-  );
-
-  private static _setMaxCacheAge = exceptionMiddleware()((cacheAge: number) => {
-    return new Promise<void>(() => {
-      RNCSitumPlugin.setCacheMaxAge(
-        cacheAge,
-        (response: { success: boolean }) => {
-          handleCallback(response, "Failed to set cache max age");
+  static setUseRemoteConfig = (useRemoteConfig: boolean) => {
+    return promiseWrapper<void>(({ onCallback }) => {
+      RNCSitumPlugin.setUseRemoteConfig(
+        useRemoteConfig ? "true" : "false",
+        (response) => {
+          onCallback(response, "Failed to set remote config");
         }
       );
     });
-  });
+  };
+
+  private static _setMaxCacheAge = (cacheAge: number) => {
+    return promiseWrapper<void>(({ onCallback }) => {
+      RNCSitumPlugin.setCacheMaxAge(cacheAge, (response) => {
+        onCallback(response, "Failed to set cache max age");
+      });
+    });
+  };
 
   /**
    * Asynchronous helper functions that sets all the configuration options.
    *
    * @param options {@link ConfigurationOptions}
    */
-  private static _setConfiguration = async (options: ConfigurationOptions) => {
+  private static _setConfiguration = async (
+    options: ConfigurationOptions,
+    resolve: () => void,
+    reject: (error: Error) => void
+  ) => {
     if (options.useRemoteConfig !== undefined) {
       await SitumPlugin.setUseRemoteConfig(options.useRemoteConfig).catch(
         (r) => {
-          Promise.reject(r);
+          reject(r);
           return;
         }
       );
     }
     if (options.cacheMaxAge !== undefined) {
       await SitumPlugin._setMaxCacheAge(options.cacheMaxAge).catch((r) => {
-        Promise.reject(r);
+        reject(r);
         return;
       });
     }
     // Handle other configuration options here as needed
-    Promise.resolve();
+    resolve();
   };
 
   /**
@@ -192,23 +184,21 @@ export default class SitumPlugin {
    *
    * @param options {@link ConfigurationOptions}
    */
-  static setConfiguration = exceptionMiddleware()(
-    (options: ConfigurationOptions) => {
-      return new Promise<void>(() => {
-        SitumPlugin._setConfiguration(options);
-      });
-    }
-  );
+  static setConfiguration = (options: ConfigurationOptions) => {
+    return promiseWrapper<void>(({ onSuccess, onError }) => {
+      SitumPlugin._setConfiguration(options, onSuccess, onError);
+    });
+  };
 
   /**
    * Invalidate all the resources in the cache
    */
-  static invalidateCache = exceptionMiddleware()(() => {
-    return new Promise<void>((resolve) => {
+  static invalidateCache = () => {
+    return promiseWrapper<void>(({ resolve }) => {
       RNCSitumPlugin.invalidateCache();
       resolve();
     });
-  });
+  };
 
   /**
    * Gets the list of versions for the current plugin and environment
@@ -232,20 +222,20 @@ export default class SitumPlugin {
    * Returns the device identifier that has generated the location
    *
    */
-  static getDeviceId = exceptionMiddleware()(() => {
-    return new Promise<string>(() => {
+  static getDeviceId = () => {
+    return promiseWrapper<string>(({ onSuccess }) => {
       RNCSitumPlugin.getDeviceId(onSuccess);
     });
-  });
+  };
 
   /**
    * Downloads all the {@link Building}s for the current user.
    */
-  static fetchBuildings = exceptionMiddleware()(() => {
-    return new Promise<Building[]>(() => {
+  static fetchBuildings = () => {
+    return promiseWrapper<Building[]>(({ onSuccess, onError }) => {
       RNCSitumPlugin.fetchBuildings(onSuccess, onError);
     });
-  });
+  };
 
   /**
    * Downloads all the building data for the selected building. This info includes
@@ -254,11 +244,11 @@ export default class SitumPlugin {
    *
    * @param building {@link Building}
    */
-  static fetchBuildingInfo = exceptionMiddleware()((building: Building) => {
-    return new Promise<BuildingInfo>(() => {
+  static fetchBuildingInfo = (building: Building) => {
+    return promiseWrapper<BuildingInfo>(({ onSuccess, onError }) => {
       RNCSitumPlugin.fetchBuildingInfo(building, onSuccess, onError);
     });
-  });
+  };
 
   /**
    * (Experimental) Downloads the tiled-map of a certain building
@@ -267,161 +257,131 @@ export default class SitumPlugin {
    *
    * @returns
    */
-  static fetchTilesFromBuilding = exceptionMiddleware()(
-    (building: Building) => {
-      // TODO: return type is string?
-      return new Promise<string>(() => {
-        RNCSitumPlugin.fetchTilesFromBuilding(building, onSuccess, onError);
-      });
-    }
-  );
+  static fetchTilesFromBuilding = (building: Building) => {
+    return promiseWrapper<string>(({ onSuccess, onError }) => {
+      RNCSitumPlugin.fetchTilesFromBuilding(building, onSuccess, onError);
+    });
+  };
 
   /**
    * Downloads all the floors of a building
    *
    * @param building {@link Building}
    */
-  static fetchFloorsFromBuilding = exceptionMiddleware()(
-    (building: Building) => {
-      return new Promise<Floor[]>(() => {
-        RNCSitumPlugin.fetchFloorsFromBuilding(building, onSuccess, onError);
-      });
-    }
-  );
+  static fetchFloorsFromBuilding = (building: Building) => {
+    return promiseWrapper<Floor[]>(({ onSuccess, onError }) => {
+      RNCSitumPlugin.fetchFloorsFromBuilding(building, onSuccess, onError);
+    });
+  };
 
   /**
    * Downloads the map image of a {@link Floor}
    *
    * @param floor {@link Floor}
    */
-  static fetchMapFromFloor = exceptionMiddleware()((floor: Floor) => {
-    // TODO: return type is string?
-    return new Promise<string>(() => {
+  static fetchMapFromFloor = (floor: Floor) => {
+    return promiseWrapper<string>(({ onSuccess, onError }) => {
       RNCSitumPlugin.fetchMapFromFloor(floor, onSuccess, onError);
     });
-  });
+  };
 
   /**
    * Get the geofences of a {@link Building}
    *
    * @param building {@link Building}
    */
-  static fetchGeofencesFromBuilding = exceptionMiddleware()(
-    (building: Building) => {
-      return new Promise<Geofence[]>(() => {
-        RNCSitumPlugin.fetchGeofencesFromBuilding(building, onSuccess, onError);
-      });
-    }
-  );
+  static fetchGeofencesFromBuilding = (building: Building) => {
+    return promiseWrapper<Geofence[]>(({ onSuccess, onError }) => {
+      RNCSitumPlugin.fetchGeofencesFromBuilding(building, onSuccess, onError);
+    });
+  };
 
   /**
    * Get all {@link PoiCategory}, download and cache their icons asynchronously.
    */
-  static fetchPoiCategories = exceptionMiddleware()(() => {
-    return new Promise<PoiCategory[]>(() => {
+  static fetchPoiCategories = () => {
+    return promiseWrapper<PoiCategory[]>(({ onSuccess, onError }) => {
       RNCSitumPlugin.fetchPoiCategories(onSuccess, onError);
     });
-  });
+  };
 
   /**
    * Get the normal {@link PoiIcon} for a category
    *
    * @param category {@link PoiCategory}. Not null.
    */
-  static fetchPoiCategoryIconNormal = exceptionMiddleware()(
-    (category: PoiCategory) => {
-      return new Promise<PoiIcon>(() => {
-        RNCSitumPlugin.fetchPoiCategoryIconNormal(category, onSuccess, onError);
-      });
-    }
-  );
+  static fetchPoiCategoryIconNormal = (category: PoiCategory) => {
+    return promiseWrapper<PoiIcon>(({ onSuccess, onError }) => {
+      RNCSitumPlugin.fetchPoiCategoryIconNormal(category, onSuccess, onError);
+    });
+  };
 
   /**
    * Get the selected {@link PoiIcon} for a {@link PoiCategory}
    *
    * @param category {@link PoiCategory}. Not null.
    */
-  static fetchPoiCategoryIconSelected = exceptionMiddleware()(
-    (category: PoiCategory) => {
-      return new Promise<PoiIcon>(() => {
-        RNCSitumPlugin.fetchPoiCategoryIconSelected(
-          category,
-          onSuccess,
-          onError
-        );
-      });
-    }
-  );
+  static fetchPoiCategoryIconSelected = (category: PoiCategory) => {
+    return promiseWrapper<PoiIcon>(({ onSuccess, onError }) => {
+      RNCSitumPlugin.fetchPoiCategoryIconSelected(category, onSuccess, onError);
+    });
+  };
 
   /**
    * Download the indoor {@link Poi}s of a {@link Building}
    *
    * @param building {@link Building}
    */
-  static fetchIndoorPOIsFromBuilding = exceptionMiddleware()(
-    (building: Building) => {
-      return new Promise<Poi[]>(() => {
-        RNCSitumPlugin.fetchIndoorPOIsFromBuilding(
-          building,
-          onSuccess,
-          onError
-        );
-      });
-    }
-  );
+  static fetchIndoorPOIsFromBuilding = (building: Building) => {
+    return promiseWrapper<Poi[]>(({ onSuccess, onError }) => {
+      RNCSitumPlugin.fetchIndoorPOIsFromBuilding(building, onSuccess, onError);
+    });
+  };
 
   /**
    * Download the outdoor {@link Poi}s of a {@link Building}
    *
    * @param building {@link Building}
    */
-  static fetchOutdoorPOIsFromBuilding = exceptionMiddleware()(
-    (building: Building) => {
-      return new Promise<Poi[]>(() => {
-        RNCSitumPlugin.fetchOutdoorPOIsFromBuilding(
-          building,
-          onSuccess,
-          onError
-        );
-      });
-    }
-  );
+  static fetchOutdoorPOIsFromBuilding = (building: Building) => {
+    return promiseWrapper<Poi[]>(({ onSuccess, onError }) => {
+      RNCSitumPlugin.fetchOutdoorPOIsFromBuilding(building, onSuccess, onError);
+    });
+  };
 
   /**
    * Starts positioning.
    *
    * @param locationRequest Positioning options to configure how positioning will behave
    */
-  static requestLocationUpdates = exceptionMiddleware()(
-    (locationRequest?: LocationRequest) => {
-      return new Promise<void>((resolve, reject) => {
-        if (!SitumPlugin.positioningIsRunning()) {
-          RNCSitumPlugin.startPositioning(locationRequest || {});
+  static requestLocationUpdates = (locationRequest?: LocationRequest) => {
+    return promiseWrapper<void>(({ resolve, reject }) => {
+      if (!SitumPlugin.positioningIsRunning()) {
+        RNCSitumPlugin.startPositioning(locationRequest || {});
 
-          SitumPlugin.positioningRunning = true;
+        SitumPlugin.positioningRunning = true;
 
-          SitumPlugin.onLocationUpdate(async (loc: Location) => {
-            if (!SitumPlugin.navigationIsRunning()) return;
+        SitumPlugin.onLocationUpdate(async (loc: Location) => {
+          if (!SitumPlugin.navigationIsRunning()) return;
 
-            SitumPlugin.updateNavigationWithLocation(loc)
-              .then(resolve)
-              .catch((e) => {
-                console.error(`Situm > hook > Error on navigation update ${e}`);
-                reject(e);
-              });
-          });
-        } else {
-          reject();
-        }
-      });
-    }
-  );
+          SitumPlugin.updateNavigationWithLocation(loc)
+            .then(resolve)
+            .catch((e) => {
+              console.error(`Situm > hook > Error on navigation update ${e}`);
+              reject(e);
+            });
+        });
+      } else {
+        reject();
+      }
+    });
+  };
 
   /**
    * Stops positioning, removing all location updates
    */
-  static removeLocationUpdates = exceptionMiddleware()(() => {
-    return new Promise<void>((resolve, reject) => {
+  static removeLocationUpdates = () => {
+    return promiseWrapper<void>(({ resolve, reject }) => {
       if (SitumPlugin.positioningIsRunning()) {
         RNCSitumPlugin.stopPositioning((response) => {
           if (response.success) {
@@ -436,7 +396,7 @@ export default class SitumPlugin {
         reject();
       }
     });
-  });
+  };
 
   /**
    * Calculates a route between two points. The result is provided
@@ -447,26 +407,18 @@ export default class SitumPlugin {
    * @param to {@link DirectionPoint} route destination
    * @param directionOptions {@link DirectionsOptions}
    */
-  static requestDirections = exceptionMiddleware()(
-    (
-      building: Building,
-      from: DirectionPoint,
-      to: DirectionPoint,
-      directionOptions?: DirectionsOptions
-    ) => {
-      return new Promise<Directions>(() => {
-        const params = [
-          building,
-          from,
-          to,
-          // TODO: check if directionOptions undefined array should have 3 elements
-          directionOptions,
-        ];
+  static requestDirections = (
+    building: Building,
+    from: DirectionPoint,
+    to: DirectionPoint,
+    directionOptions?: DirectionsOptions
+  ) => {
+    return promiseWrapper<Directions>(({ onSuccess, onError }) => {
+      const params = [building, from, to, directionOptions || {}];
 
-        RNCSitumPlugin.requestDirections(params, onSuccess, onError);
-      });
-    }
-  );
+      RNCSitumPlugin.requestDirections(params, onSuccess, onError);
+    });
+  };
 
   /**
    * Set the navigation params, and the listener that receives the updated
@@ -477,40 +429,30 @@ export default class SitumPlugin {
    *
    * @param options {@link NavigationRequest}
    */
-  static requestNavigationUpdates = exceptionMiddleware()(
-    (options?: NavigationRequest) => {
-      return new Promise<void>((resolve) => {
-        RNCSitumPlugin.requestNavigationUpdates(options || {});
-        SitumPlugin.navigationRunning = true;
-        resolve();
-      });
-    }
-  );
+  static requestNavigationUpdates = (options?: NavigationRequest) => {
+    return promiseWrapper<void>(({ resolve }) => {
+      RNCSitumPlugin.requestNavigationUpdates(options || {});
+      SitumPlugin.navigationRunning = true;
+      resolve();
+    });
+  };
 
   /**
    * Informs NavigationManager object the change of the user's location
    *
    * @param location new {@link Location} of the user. If null, nothing is done
    */
-  static updateNavigationWithLocation = exceptionMiddleware()(
-    (location: Location) => {
-      return new Promise<void>((resolve, reject) => {
-        if (SitumPlugin.navigationIsRunning() === false) {
-          // TODO: should be of error type?
-          reject("No active navigation!!");
-          return;
-        }
+  static updateNavigationWithLocation = (location: Location) => {
+    return promiseWrapper<void>(({ reject, onSuccess, onError }) => {
+      if (SitumPlugin.navigationIsRunning() === false) {
+        // TODO: should be of error type?
+        reject({ message: "No active navigation!!" });
+        return;
+      }
 
-        RNCSitumPlugin.updateNavigationWithLocation(
-          location,
-          // TODO: review maybe this causes oor fails
-          // (response) => resolve(response),
-          () => resolve(),
-          onError
-        );
-      });
-    }
-  );
+      RNCSitumPlugin.updateNavigationWithLocation(location, onSuccess, onError);
+    });
+  };
 
   /**
    * Removes all location updates. This removes the internal state of the manager,
@@ -518,19 +460,19 @@ export default class SitumPlugin {
    * NavigationListener), so it won't receive more progress updates.
    *
    */
-  static removeNavigationUpdates = exceptionMiddleware()(() => {
-    return new Promise<void>((_, reject) => {
+  static removeNavigationUpdates = () => {
+    return promiseWrapper<void>(({ onCallback, reject }) => {
       if (SitumPlugin.navigationIsRunning() === true) {
         SitumPlugin.navigationRunning = false;
         RNCSitumPlugin.removeNavigationUpdates((reponse) => {
-          handleCallback(reponse, "Failed to remove navigation updates");
+          onCallback(reponse, "Failed to remove navigation updates");
         });
       } else {
         // TODO: should probably be error
-        reject("Navigation updates were not active.");
+        reject({ message: "Navigation updates were not active." });
       }
     });
-  });
+  };
 
   /**
    * Requests a real time devices positions
@@ -540,45 +482,38 @@ export default class SitumPlugin {
    * @param options Represents the configuration for getting realtime devices positions in
    */
 
-  static requestRealTimeUpdates = exceptionMiddleware()(
-    (
-      realtimeUpdates: (event: any) => void,
-      error?: (event: any) => void,
-      options?: any
-    ) => {
-      return new Promise<void>((resolve) => {
-        RNCSitumPlugin.requestRealTimeUpdates(options || {});
-        SitumPlugin.realtimeSubscriptions.push([
-          SitumPluginEventEmitter.addListener(
-            "realtimeUpdated",
-            realtimeUpdates
-          ),
-          error
-            ? SitumPluginEventEmitter.addListener(
-                "realtimeError",
-                error || logError
-              )
-            : null,
-        ]);
-        resolve();
-      });
-    }
-  );
+  static requestRealTimeUpdates = (
+    realtimeUpdates: (event: any) => void,
+    error?: (event: any) => void,
+    options?: any
+  ) => {
+    return promiseWrapper<void>(({ resolve }) => {
+      RNCSitumPlugin.requestRealTimeUpdates(options || {});
+      SitumPlugin.realtimeSubscriptions.push([
+        SitumPluginEventEmitter.addListener("realtimeUpdated", realtimeUpdates),
+        error
+          ? SitumPluginEventEmitter.addListener(
+              "realtimeError",
+              error || logError
+            )
+          : null,
+      ]);
+      resolve();
+    });
+  };
 
   /**
    * Removes all real time updates listners.
    *
    * @param _callback
    */
-  static removeRealTimeUpdates = exceptionMiddleware()(
-    (_callback?: Function) => {
-      return new Promise<void>((resolve) => {
-        SitumPlugin.realtimeSubscriptions = [];
-        RNCSitumPlugin.removeRealTimeUpdates();
-        resolve();
-      });
-    }
-  );
+  static removeRealTimeUpdates = (_callback?: Function) => {
+    return promiseWrapper<void>(({ resolve }) => {
+      SitumPlugin.realtimeSubscriptions = [];
+      RNCSitumPlugin.removeRealTimeUpdates();
+      resolve();
+    });
+  };
 
   /**
    * Checks if a point is inside a {@link Geofence}

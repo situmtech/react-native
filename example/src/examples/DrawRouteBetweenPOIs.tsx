@@ -8,7 +8,6 @@ import MapView, {
 } from 'react-native-maps';
 import SitumPlugin, {
   Building,
-  DirectionPoint,
   DirectionsOptions,
   Poi,
 } from '@situm/react-native';
@@ -26,55 +25,44 @@ const fetchPOIsFromBuilding = async (building: any) => {
 };
 
 const requestDirections = async (building: Building, pois: Poi[]) => {
-  try {
-    const directionsOptions: DirectionsOptions = {
-      minimizeFloorChanges: true,
-      accessibilityMode: 'ONLY_ACCESSIBLE',
-      startingAngle: 0,
-    };
+  const directionsOptions: DirectionsOptions = {
+    minimizeFloorChanges: true,
+    accessibilityMode: 'ONLY_ACCESSIBLE',
+    startingAngle: 0,
+  };
 
-    const route = await SitumPlugin.requestDirections(
-      building,
-      pois[0],
-      pois[1],
-      directionsOptions,
-    );
-
-    if (route) {
-      let latlngs = [];
-      for (let segment of route.segments) {
-        for (let point of segment.points) {
-          latlngs.push({
-            latitude: point.coordinate.latitude,
-            longitude: point.coordinate.longitude,
-          });
-        }
+  return await SitumPlugin.requestDirections(
+    building,
+    pois[0],
+    pois[1],
+    directionsOptions,
+  ).then(route => {
+    let latlngs = [];
+    for (let segment of route.segments) {
+      for (let point of segment.points) {
+        latlngs.push({
+          latitude: point.coordinate.latitude,
+          longitude: point.coordinate.longitude,
+        });
       }
-      return latlngs;
     }
-
-    return [];
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
+    return latlngs;
+  });
 };
 
 export const DrawRouteBetweenPOIs = () => {
-  const [building, setBuilding] = useState<any>();
+  const [building, setBuilding] = useState<Building>();
   const [mapImage, setMapImage] = useState<any>();
   const [bounds, setBounds] = useState<any>();
   const [bearing, setBearing] = useState<any>(0);
   const [mapRegion, setMapRegion] = useState<any>();
-  const [pois, setPois] = useState<any>();
+  const [pois, setPois] = useState<Poi[]>();
   const [polylineLatlng, setPolylineLatlng] = useState<any>([]);
 
   // useEffects to get data
   useEffect(() => {
     fetchBuilding(SITUM_BUILDING_ID)
-      .then(data => {
-        setBuilding(data);
-      })
+      .then(setBuilding)
       .catch(_err => console.log);
   }, []);
 
@@ -83,9 +71,7 @@ export const DrawRouteBetweenPOIs = () => {
       return;
     }
     fetchPOIsFromBuilding(building)
-      .then(data => {
-        setPois(data);
-      })
+      .then(setPois)
       .catch(_err => console.log);
   }, [building]);
 
@@ -109,7 +95,7 @@ export const DrawRouteBetweenPOIs = () => {
         )[0];
         setMapImage(selectedFloor.mapUrl);
       })
-      .catch(_err => console.log);
+      .catch(error => console.debug(error));
   }, [building]);
 
   //ask for directions once we know the building and the 2 POIS we use as origin and destination
@@ -117,7 +103,11 @@ export const DrawRouteBetweenPOIs = () => {
     if (!building || !pois) {
       return;
     }
-    requestDirections(building, pois).then(res => setPolylineLatlng(res));
+    requestDirections(building, pois)
+      .then(_route => {
+        _route && setPolylineLatlng(_route);
+      })
+      .catch(error => console.debug(error));
   }, [building, pois]);
 
   return (
