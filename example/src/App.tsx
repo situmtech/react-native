@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import {View, useColorScheme, StyleSheet, ScrollView, Text} from 'react-native';
 import {Card, List, PaperProvider, TouchableRipple} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
 });
 
 const HomeScreen = ({navigation}) => {
-  React.useEffect(() => {
+  useEffect(() => {
     initSitumSdk();
   }, []);
 
