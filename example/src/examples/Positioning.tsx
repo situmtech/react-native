@@ -59,11 +59,7 @@ function PositioningScreen() {
 
     const locationOptions = getDefaultLocationOptions();
 
-    try {
-      SitumPlugin.requestLocationUpdates(locationOptions);
-    } catch (err: any) {
-      console.debug(err);
-    }
+    SitumPlugin.requestLocationUpdates(locationOptions).catch(console.debug);
   };
 
   // Register callbacks to handle Situm SDK events
