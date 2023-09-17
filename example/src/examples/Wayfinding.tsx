@@ -34,19 +34,22 @@ const Screen: React.FC = () => {
 
   // Initialize SDK when mounting map
   useEffect(() => {
+    const stopPositioning = () => {
+      SitumPlugin.removeLocationUpdates().catch(console.debug);
+    };
+
     const initializeSitum = async () => {
       await SitumPlugin.setConfiguration({useRemoteConfig: true});
-
       requestPermission()
-        .then(async () => {
-          await SitumPlugin.requestLocationUpdates();
+        .then(() => {
+          SitumPlugin.requestLocationUpdates().catch(console.debug);
         })
-        .catch((e: string) => {
-          console.error(e);
-        });
+        .catch(console.debug);
     };
 
     initializeSitum();
+
+    return () => stopPositioning();
   }, []);
 
   // Initialize controller
@@ -58,8 +61,8 @@ const Screen: React.FC = () => {
     setController(mapViewRef.current);
   }, [mapViewRef]);
 
-  const onLoad = (a: any) => {
-    console.log('Situm > example > Map is ready', a);
+  const onLoad = (event: any) => {
+    console.log('Situm > example > Map is ready', event);
   };
 
   const onPoiSelected = (event: OnPoiSelectedResult) => {
@@ -83,11 +86,9 @@ const Screen: React.FC = () => {
         situmApiKey: SITUM_API_KEY,
         //  style: styles.mapview,
       }}
-      callbacks={{
-        onLoad: onLoad,
-        onPoiSelected: onPoiSelected,
-        onPoiDeselected: onPoiDeselected,
-      }}
+      onLoad={onLoad}
+      onPoiSelected={onPoiSelected}
+      onPoiDeselected={onPoiDeselected}
     />
   );
 };

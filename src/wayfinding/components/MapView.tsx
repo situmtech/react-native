@@ -14,7 +14,7 @@ import type {
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
-import SitumPlugin, { ErrorName, type Poi } from "../../";
+import SitumPlugin, { type Poi } from "../../sdk";
 import useSitum from "../hooks";
 import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
@@ -25,9 +25,9 @@ import {
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
 } from "../types";
+import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
 import Mapper from "../utils/mapper";
-
 const SITUM_BASE_DOMAIN = "https://map-viewer.situm.com";
 
 const NETWORK_ERROR_CODE = {
@@ -84,13 +84,32 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       location,
       directions,
       navigation,
-      currentBuilding,
 
       calculateRoute,
       startNavigation,
       stopNavigation,
       error,
     } = useSitum();
+
+    // TODO: this check should not be here
+    const isPoiValid = useCallback(
+      async (poiId: number) => {
+        return await SitumPlugin.fetchBuildings().then(async (buildings) => {
+          const building = buildings.find(
+            (b) => b.buildingIdentifier === buildingIdentifier
+          );
+          return await SitumPlugin.fetchIndoorPOIsFromBuilding(building).then(
+            (_pois) => {
+              const validPoi = _pois?.find(
+                (p) => p?.identifier === poiId?.toString()
+              );
+              return validPoi;
+            }
+          );
+        });
+      },
+      [buildingIdentifier]
+    );
 
     const sendFollowUser = () => {
       if (
@@ -117,41 +136,29 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
      *    onLoad={onLoad} />
      */
     const _navigateToPoi = useCallback(
-      ({ poi, poiId }: { poi?: Poi; poiId?: number }) => {
+      async ({ poi, poiId }: { poi?: Poi; poiId?: number }) => {
         if (!webViewRef.current || (!poi && !poiId)) return;
 
-        // TODO: this should not be here
-        SitumPlugin.fetchBuildings().then((buildings) => {
-          const building = buildings.find(
-            (b) => b.buildingIdentifier === buildingIdentifier
+        const isValid =
+          //@ts-ignore
+          (poi?.id && (await isPoiValid(poi?.id))) || (await isPoiValid(poiId));
+        if (isValid) {
+          sendMessageToViewer(
+            webViewRef.current,
+            Mapper.navigateToPoi({
+              // @ts-ignore
+              navigationTo: poi?.id || poiId,
+            } as NavigateToPoiType)
           );
-          SitumPlugin.fetchIndoorPOIsFromBuilding(building).then((_pois) => {
-            const validPoi = _pois?.find(
-              (p) =>
-                p?.identifier === poiId?.toString() ||
-                // @ts-ignore
-                p?.identifier === poi?.id?.toString()
-            );
-            if (!validPoi) {
-              console.error("Situm > hook > Invalid value as poi or poiId");
-              return;
-            }
-
-            sendMessageToViewer(
-              webViewRef.current,
-              Mapper.navigateToPoi({
-                // @ts-ignore
-                navigationTo: poi?.id || poiId,
-              } as NavigateToPoiType)
-            );
-          });
-        });
+        } else {
+          console.error("Situm > hook > Invalid value as poi");
+        }
       },
-      [buildingIdentifier]
+      [isPoiValid]
     );
 
     const _selectPoi = useCallback(
-      (poiId: number) => {
+      async (poiId: number) => {
         if (!webViewRef.current) {
           return;
         }
@@ -161,22 +168,15 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           );
           return;
         }
-        // TODO: this should not be here
-        SitumPlugin.fetchBuildings().then((buildings) => {
-          const building = buildings.find(
-            (b) => b.buildingIdentifier === buildingIdentifier
-          );
-          SitumPlugin.fetchIndoorPOIsFromBuilding(building).then((_pois) => {
-            const poi = _pois?.find((p) => p?.identifier === poiId?.toString());
-            if (!poi) {
-              console.error("Situm > hook > Invalid value as poiId");
-              return;
-            }
-            sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
-          });
-        });
+        //@ts-ignore
+        const isValid = await isPoiValid(poiId);
+        if (isValid) {
+          sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
+        } else {
+          console.error("Situm > hook > Invalid value as poiId");
+        }
       },
-      [buildingIdentifier]
+      [isPoiValid]
     );
 
     useImperativeHandle(
@@ -319,15 +319,12 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           console.log("Building Selected");
           if (
             !eventParsed.payload.identifier ||
-            (currentBuilding &&
-              eventParsed.payload.identifier.toString() ===
-                currentBuilding.buildingIdentifier)
+            eventParsed.payload.identifier.toString() === buildingIdentifier
           ) {
             return;
           } else {
             setBuildingIdentifier(eventParsed.payload.identifier.toString());
           }
-
           break;
         default:
           break;
