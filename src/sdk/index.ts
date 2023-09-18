@@ -27,7 +27,7 @@ import type {
   SdkVersion,
 } from "./types";
 import { SdkNavigationUpdateType } from "./types/constants";
-import { promiseWrapper } from "./utils";
+import { exceptionWrapper, promiseWrapper } from "./utils";
 
 export type * from "./types";
 export * from "./types/constants";
@@ -72,9 +72,8 @@ export default class SitumPlugin {
    * if it is not already initialised.
    */
   static init = () => {
-    return promiseWrapper<void>(({ resolve }) => {
+    return exceptionWrapper<void>(() => {
       RNCSitumPlugin.initSitumSDK();
-      resolve();
     });
   };
 
@@ -87,7 +86,7 @@ export default class SitumPlugin {
    * @param apiKey user's apikey.
    */
   static setApiKey = (apiKey: string) => {
-    return promiseWrapper<void>(({ onCallback }) => {
+    return exceptionWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setApiKey("email@email.com", apiKey, (response) => {
         onCallback(response, "Failed to set API key.");
       });
@@ -104,7 +103,7 @@ export default class SitumPlugin {
    * @param password user's password.
    */
   static setUserPass = (email: string, password: string) => {
-    return promiseWrapper<void>(({ onCallback }) => {
+    return exceptionWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setUserPass(email, password, (response) => {
         onCallback(response, "Failed to set user credentials.");
       });
@@ -118,7 +117,7 @@ export default class SitumPlugin {
    */
 
   static setDashboardURL = (url: string) => {
-    return promiseWrapper<void>(({ onCallback }) => {
+    return exceptionWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setDashboardURL(url, (response: { success: boolean }) => {
         onCallback(response, "Failed to set dashboard URL.");
       });
@@ -133,7 +132,7 @@ export default class SitumPlugin {
    * @param useRemoteConfig
    */
   static setUseRemoteConfig = (useRemoteConfig: boolean) => {
-    return promiseWrapper<void>(({ onCallback }) => {
+    return exceptionWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setUseRemoteConfig(
         useRemoteConfig ? "true" : "false",
         (response) => {
@@ -144,39 +143,11 @@ export default class SitumPlugin {
   };
 
   private static setMaxCacheAge = (cacheAge: number) => {
-    return promiseWrapper<void>(({ onCallback }) => {
+    return exceptionWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setCacheMaxAge(cacheAge, (response) => {
         onCallback(response, "Failed to set cache max age");
       });
     });
-  };
-
-  /**
-   * Asynchronous helper functions that sets all the configuration options.
-   *
-   * @param options {@link ConfigurationOptions}
-   */
-  private static _setConfiguration = async (
-    options: ConfigurationOptions,
-    resolve: () => void,
-    reject: (error: Error) => void
-  ) => {
-    if (options.useRemoteConfig !== undefined) {
-      await SitumPlugin.setUseRemoteConfig(options.useRemoteConfig).catch(
-        (r) => {
-          reject(r);
-          return;
-        }
-      );
-    }
-    if (options.cacheMaxAge !== undefined) {
-      await SitumPlugin.setMaxCacheAge(options.cacheMaxAge).catch((r) => {
-        reject(r);
-        return;
-      });
-    }
-    // Handle other configuration options here as needed
-    resolve();
   };
 
   /**
@@ -185,8 +156,15 @@ export default class SitumPlugin {
    * @param options {@link ConfigurationOptions}
    */
   static setConfiguration = (options: ConfigurationOptions) => {
-    return promiseWrapper<void>(({ resolve, reject }) => {
-      SitumPlugin._setConfiguration(options, resolve, reject);
+    return exceptionWrapper<void>(() => {
+      if (options.useRemoteConfig !== undefined) {
+        SitumPlugin.setUseRemoteConfig(options.useRemoteConfig);
+      }
+      if (options.cacheMaxAge !== undefined) {
+        SitumPlugin.setMaxCacheAge(options.cacheMaxAge);
+      }
+
+      // Handle rest of configuration options
     });
   };
 
@@ -194,9 +172,8 @@ export default class SitumPlugin {
    * Invalidate all the resources in the cache
    */
   static invalidateCache = () => {
-    return promiseWrapper<void>(({ resolve }) => {
+    return exceptionWrapper<void>(() => {
       RNCSitumPlugin.invalidateCache();
-      resolve();
     });
   };
 
@@ -204,18 +181,21 @@ export default class SitumPlugin {
    * Gets the list of versions for the current plugin and environment
    *
    */
-  static sdkVersion = (): SdkVersion => {
-    const versions: { react_native: string; ios?: string; android?: string } = {
-      react_native: packageJson.version,
-    };
+  static sdkVersion = () => {
+    return exceptionWrapper<SdkVersion>(() => {
+      const versions: { react_native: string; ios?: string; android?: string } =
+        {
+          react_native: packageJson.version,
+        };
 
-    if (Platform.OS === "ios") {
-      versions.ios = packageJson.sdkVersions.ios;
-    } else {
-      versions.android = packageJson.sdkVersions.android;
-    }
+      if (Platform.OS === "ios") {
+        versions.ios = packageJson.sdkVersions.ios;
+      } else {
+        versions.android = packageJson.sdkVersions.android;
+      }
 
-    return versions;
+      return versions;
+    });
   };
 
   /**
@@ -223,7 +203,7 @@ export default class SitumPlugin {
    *
    */
   static getDeviceId = () => {
-    return promiseWrapper<string>(({ onSuccess }) => {
+    return exceptionWrapper<string>(({ onSuccess }) => {
       RNCSitumPlugin.getDeviceId(onSuccess);
     });
   };
@@ -355,7 +335,7 @@ export default class SitumPlugin {
    * @param locationRequest Positioning options to configure how positioning will behave
    */
   static requestLocationUpdates = (locationRequest?: LocationRequest) => {
-    return promiseWrapper<void>(({ resolve, reject }) => {
+    return exceptionWrapper<void>(() => {
       if (!SitumPlugin.positioningIsRunning()) {
         RNCSitumPlugin.startPositioning(locationRequest || {});
 
@@ -364,15 +344,8 @@ export default class SitumPlugin {
         SitumPlugin.onLocationUpdate((loc: Location) => {
           if (!SitumPlugin.navigationIsRunning()) return;
 
-          SitumPlugin.updateNavigationWithLocation(loc)
-            .then(resolve)
-            .catch((e) => {
-              console.error(`Situm > hook > Error on navigation update ${e}`);
-              reject(e);
-            });
+          SitumPlugin.updateNavigationWithLocation(loc);
         });
-      } else {
-        reject({ message: "Positioning is already running" });
       }
     });
   };
@@ -381,19 +354,15 @@ export default class SitumPlugin {
    * Stops positioning, removing all location updates
    */
   static removeLocationUpdates = () => {
-    return promiseWrapper<void>(({ resolve, reject }) => {
+    return exceptionWrapper<void>(() => {
       if (SitumPlugin.positioningIsRunning()) {
         RNCSitumPlugin.stopPositioning((response) => {
           if (response.success) {
             SitumPlugin.positioningRunning = false;
-            resolve();
           } else {
-            reject();
+            throw "Situm > hook > Could not stop positioning";
           }
         });
-      } else {
-        // TODO: should add error
-        reject();
       }
     });
   };
@@ -415,7 +384,6 @@ export default class SitumPlugin {
   ) => {
     return promiseWrapper<Directions>(({ onSuccess, onError }) => {
       const params = [building, from, to, directionOptions || {}];
-
       RNCSitumPlugin.requestDirections(params, onSuccess, onError);
     });
   };
@@ -425,15 +393,15 @@ export default class SitumPlugin {
    * navigation progress.
    *
    * Can only exist one navigation with one listener at a time. If this method was
-   * previously invoked, but removeLocationUpdates() wasn't, removeLocationUpdates() is called internally.
+   * previously invoked, but removeLocationUpdates() wasn't, removeLocationUpdates()
+   * is called internally.
    *
    * @param options {@link NavigationRequest}
    */
   static requestNavigationUpdates = (options?: NavigationRequest) => {
-    return promiseWrapper<void>(({ resolve }) => {
+    return exceptionWrapper<void>(() => {
       RNCSitumPlugin.requestNavigationUpdates(options || {});
       SitumPlugin.navigationRunning = true;
-      resolve();
     });
   };
 
@@ -443,13 +411,10 @@ export default class SitumPlugin {
    * @param location new {@link Location} of the user. If null, nothing is done
    */
   static updateNavigationWithLocation = (location: Location) => {
-    return promiseWrapper<void>(({ reject, onSuccess, onError }) => {
+    return exceptionWrapper<void>(({ onSuccess, onError }) => {
       if (SitumPlugin.navigationIsRunning() === false) {
-        // TODO: should be of error type?
-        reject({ message: "No active navigation!!" });
-        return;
+        throw "Situm > hook > No active navigation";
       }
-
       RNCSitumPlugin.updateNavigationWithLocation(location, onSuccess, onError);
     });
   };
@@ -461,15 +426,14 @@ export default class SitumPlugin {
    *
    */
   static removeNavigationUpdates = () => {
-    return promiseWrapper<void>(({ onCallback, reject }) => {
-      if (SitumPlugin.navigationIsRunning() === true) {
+    return exceptionWrapper<void>(({ onCallback }) => {
+      if (SitumPlugin.navigationIsRunning()) {
         SitumPlugin.navigationRunning = false;
         RNCSitumPlugin.removeNavigationUpdates((reponse) => {
           onCallback(reponse, "Failed to remove navigation updates");
         });
       } else {
-        // TODO: should probably be error
-        reject({ message: "Navigation updates were not active." });
+        throw "Situm > hook > Navigation updates were not active.";
       }
     });
   };
@@ -487,7 +451,7 @@ export default class SitumPlugin {
     error?: (event: any) => void,
     options?: any
   ) => {
-    return promiseWrapper<void>(({ resolve }) => {
+    return exceptionWrapper<void>(() => {
       RNCSitumPlugin.requestRealTimeUpdates(options || {});
       SitumPlugin.realtimeSubscriptions.push([
         SitumPluginEventEmitter.addListener("realtimeUpdated", realtimeUpdates),
@@ -498,7 +462,6 @@ export default class SitumPlugin {
             )
           : null,
       ]);
-      resolve();
     });
   };
 
@@ -508,10 +471,9 @@ export default class SitumPlugin {
    * @param _callback
    */
   static removeRealTimeUpdates = (_callback?: Function) => {
-    return promiseWrapper<void>(({ resolve }) => {
+    return exceptionWrapper<void>(() => {
       SitumPlugin.realtimeSubscriptions = [];
       RNCSitumPlugin.removeRealTimeUpdates();
-      resolve();
     });
   };
 

@@ -19,22 +19,11 @@ function PositioningScreen() {
   const [error, setError] = useState<String>('ready to be used');
   const [geofences, setGeofences] = useState<String>('ready to be used');
 
-  // Configure Situm SDK
-  const configureSitum = async () => {
-    await SitumPlugin.setConfiguration({
-      useRemoteConfig: false,
-    })
-      .then(() => {
-        console.log('Configuration set successfully');
-      })
-      .catch(err => {
-        console.debug('Failed to set configuration:', err);
-      });
-  };
-
   useEffect(() => {
     // Initial configuration and callback registration
-    configureSitum();
+    SitumPlugin.setConfiguration({
+      useRemoteConfig: false,
+    });
     registerCallbacks();
 
     return () => {
@@ -50,7 +39,7 @@ function PositioningScreen() {
 
   // Start positioning using Situm SDK
   const startPositioning = async () => {
-    requestPermissions();
+    await requestPermissions();
 
     console.log('Starting positioning');
     setLocation('');
@@ -58,8 +47,11 @@ function PositioningScreen() {
     setError('');
 
     const locationOptions = getDefaultLocationOptions();
-
-    SitumPlugin.requestLocationUpdates(locationOptions).catch(console.debug);
+    try {
+      SitumPlugin.requestLocationUpdates(locationOptions);
+    } catch (e) {
+      console.log(`Situm > example > Could not start positioning ${e}`);
+    }
   };
 
   // Register callbacks to handle Situm SDK events
@@ -102,16 +94,16 @@ function PositioningScreen() {
   };
 
   // Stop positioning using Situm SDK
-  const stopPositioning = async () => {
+  const stopPositioning = () => {
     console.log('Situm > example > Stopping positioning');
     setLocation('');
     setStatus('');
     setError('');
     setBuildings(null);
     try {
-      await SitumPlugin.removeLocationUpdates();
-    } catch (err: any) {
-      console.log('Situm > example > Could not stop positioning');
+      SitumPlugin.removeLocationUpdates();
+    } catch (e) {
+      console.log(`Situm > example > Could not stop positioning ${e}`);
     }
   };
 
