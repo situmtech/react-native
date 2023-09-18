@@ -89,9 +89,6 @@ const Screen: React.FC = () => {
             buildingIdentifier: SITUM_BUILDING_ID,
             situmApiKey: SITUM_API_KEY,
           }}
-          onPoiSelected={evt => {
-            setSelectedPoiIdentifier(evt?.identifier?.toString());
-          }}
         />
       </SafeAreaView>
       <SafeAreaView style={styles.input_container}>
@@ -103,16 +100,10 @@ const Screen: React.FC = () => {
         />
         <Button
           mode="outlined"
-          disabled={
-            !SitumPlugin.positioningIsRunning() ||
-            SitumPlugin.navigationIsRunning()
-          }
           onPress={() => {
-            _controller?.navigateToPoi({
-              identifier: Number(selectedPoiIdentifier),
-            });
+            _controller?.selectPoi(Number(selectedPoiIdentifier));
           }}>
-          Navigate to POI
+          Select POI
         </Button>
       </SafeAreaView>
     </>

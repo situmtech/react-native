@@ -57,8 +57,8 @@ const viewerStyles = StyleSheet.create({
 
 export interface MapViewProps {
   configuration: MapViewConfiguration;
-  onPoiSelected: (event: OnPoiSelectedResult) => void;
-  onPoiDeselected: (event: OnPoiDeselectedResult) => void;
+  onPoiSelected?: (event: OnPoiSelectedResult) => void;
+  onPoiDeselected?: (event: OnPoiDeselectedResult) => void;
   onLoad?: (event: any) => void;
   onLoadError?: (event: MapViewError) => void;
 }
