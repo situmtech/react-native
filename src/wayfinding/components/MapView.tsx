@@ -25,7 +25,7 @@ import {
 } from "../types";
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
-import Mapper from "../utils/mapper";
+import ViewerMapper from "../utils/mapper";
 const SITUM_BASE_DOMAIN = "https://map-viewer.situm.com";
 
 const NETWORK_ERROR_CODE = {
@@ -95,7 +95,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         location?.position?.buildingIdentifier ===
           configuration.buildingIdentifier
       ) {
-        sendMessageToViewer(webViewRef.current, Mapper.followUser(true));
+        sendMessageToViewer(webViewRef.current, ViewerMapper.followUser(true));
       }
     };
 
@@ -103,7 +103,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const _navigateToPoi = useCallback((payload: NavigateToPoiPayload) => {
       if (!webViewRef.current || !payload || !payload.identifier) return;
 
-      sendMessageToViewer(webViewRef.current, Mapper.navigateToPoi(payload));
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.navigateToPoi(payload)
+      );
     }, []);
 
     const _navigateToPoint = useCallback((payload: NavigateToPointPayload) => {
@@ -113,7 +116,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       )
         return;
 
-      sendMessageToViewer(webViewRef.current, Mapper.navigateToPoint(payload));
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.navigateToPoint(payload)
+      );
     }, []);
 
     // Cartography
@@ -127,7 +133,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         );
         return;
       }
-      sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
+      sendMessageToViewer(webViewRef.current, ViewerMapper.selectPoi(poiId));
     }, []);
 
     /**
@@ -150,18 +156,27 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         return {
           followUser() {
             webViewRef.current &&
-              sendMessageToViewer(webViewRef.current, Mapper.followUser(true));
+              sendMessageToViewer(
+                webViewRef.current,
+                ViewerMapper.followUser(true)
+              );
           },
           unFollowUser() {
             webViewRef.current &&
-              sendMessageToViewer(webViewRef.current, Mapper.followUser(false));
+              sendMessageToViewer(
+                webViewRef.current,
+                ViewerMapper.followUser(false)
+              );
           },
           selectPoi(poiId: number) {
             _selectPoi(poiId);
           },
           deselectPoi() {
             webViewRef.current &&
-              sendMessageToViewer(webViewRef.current, Mapper.selectPoi(null));
+              sendMessageToViewer(
+                webViewRef.current,
+                ViewerMapper.selectPoi(null)
+              );
           },
           navigateToPoi(payload): void {
             _navigateToPoi(payload);
@@ -172,7 +187,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           cancelNavigation(): void {
             if (!webViewRef.current) return;
             stopNavigation();
-            sendMessageToViewer(webViewRef.current, Mapper.cancelNavigation());
+            sendMessageToViewer(
+              webViewRef.current,
+              ViewerMapper.cancelNavigation()
+            );
           },
         };
       },
@@ -193,21 +211,24 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     useEffect(() => {
       if (!webViewRef.current || !location) return;
 
-      sendMessageToViewer(webViewRef.current, Mapper.location(location));
+      sendMessageToViewer(webViewRef.current, ViewerMapper.location(location));
     }, [location]);
 
     // Updated SDK navigation
     useEffect(() => {
       if (!webViewRef.current || !navigation) return;
 
-      sendMessageToViewer(webViewRef.current, Mapper.navigation(navigation));
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.navigation(navigation)
+      );
     }, [navigation]);
 
     // Updated SDK route
     useEffect(() => {
       if (!webViewRef.current || !directions) return;
 
-      sendMessageToViewer(webViewRef.current, Mapper.route(directions));
+      sendMessageToViewer(webViewRef.current, ViewerMapper.route(directions));
     }, [directions]);
 
     // Update language
@@ -216,7 +237,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       sendMessageToViewer(
         webViewRef.current,
-        Mapper.setLanguage(configuration.language)
+        ViewerMapper.setLanguage(configuration.language)
       );
     }, [configuration.language, mapLoaded]);
 
@@ -225,7 +246,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (webViewRef.current && mapLoaded) {
         sendMessageToViewer(
           webViewRef.current,
-          Mapper.initialConfiguration(configuration.style)
+          ViewerMapper.initialConfiguration(configuration.style)
         );
       }
     }, [webViewRef, mapLoaded, configuration.style]);

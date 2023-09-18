@@ -19,7 +19,8 @@ import {RemoteConfig} from './examples/RemoteConfig';
 import {GetPoisIcons} from './examples/GetPoisIcons';
 import {SetCacheMaxAge} from './examples/SetCacheMaxAge';
 import {TiledBuilding} from './examples/TiledBuilding';
-import Wayfinding from './examples/Wayfinding';
+import Wayfinding from './examples/wayfinding/Wayfinding';
+import NavigateToPoi from './examples/wayfinding/NavigateToPoi';
 
 async function initSitumSdk() {
   try {
@@ -66,6 +67,12 @@ const HomeScreen = ({navigation}) => {
           subtitle:
             'An integrated wayfinding experience powered by Situm, designed for ease of integration.',
           key: 'Wayfinding',
+        },
+        {
+          title: 'Navigate to POI',
+          subtitle:
+            'Shows how to trigger the navigation to a concrete POI programmatically that, once computed, will be displayed on the map.',
+          key: 'NavigateToPoi',
         },
       ],
     },
@@ -259,6 +266,11 @@ function App() {
             name="Wayfinding"
             component={Wayfinding}
             options={{title: 'Full Wayfinding'}}
+          />
+          <Stack.Screen
+            name="NavigateToPoi"
+            component={NavigateToPoi}
+            options={{title: 'Navigate To Poi'}}
           />
         </Stack.Navigator>
       </NavigationContainer>

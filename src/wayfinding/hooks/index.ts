@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 
 import SitumPlugin from "../../sdk";
 import {
@@ -34,25 +34,15 @@ import {
   UseSitumContext,
 } from "../store/index";
 import { useDispatch, useSelector } from "../store/utils";
-import { destinationToPoint, locationToPoint, poiToPoint } from "./mapper";
+import {
+  destinationToPoint,
+  locationToPoint,
+  poiToPoint,
+} from "../utils/mapper";
 
 const defaultNavigationOptions = {
   distanceToGoalThreshold: 4,
   outsideRouteThreshold: 5,
-};
-
-// Hook to define references that point to functions
-// used on listeners. These references are updated whenever
-// one of the dependencies on the array change
-export const useCallbackRef = <T>(fn: T, deps: any[]) => {
-  const fnRef = useRef(fn);
-
-  useEffect(() => {
-    fnRef.current = fn;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
-
-  return fnRef;
 };
 
 export const useSitumInternal = () => {

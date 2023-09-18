@@ -1,22 +1,49 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
-  DirectionPoint,
   Directions,
   Location,
   NavigationProgress,
+  Poi,
+  Point,
 } from "../../sdk/types";
 import type {
-  Destination,
   NavigateToPointPayload,
   NavigateToPoiPayload,
   Navigation,
 } from "../types";
 
+export const poiToPoint = (poi: Poi): Point => {
+  return {
+    floorIdentifier: poi.floorIdentifier,
+    buildingIdentifier: poi.buildingIdentifier,
+    cartesianCoordinate: poi.cartesianCoordinate,
+    coordinate: poi.coordinate,
+  };
+};
+
+export const locationToPoint = (location: Location): Point => {
+  return {
+    floorIdentifier: location.position.floorIdentifier,
+    buildingIdentifier: location.position.buildingIdentifier,
+    cartesianCoordinate: location.position.cartesianCoordinate,
+    coordinate: location.position.coordinate,
+  };
+};
+
+export const destinationToPoint = (destination: Point): Point => {
+  return {
+    buildingIdentifier: destination.buildingIdentifier,
+    floorIdentifier: destination.floorIdentifier,
+    cartesianCoordinate: destination.cartesianCoordinate,
+    coordinate: destination.coordinate,
+  };
+};
+
 const mapperWrapper = (type: string, payload: unknown) => {
   return JSON.stringify({ type, payload });
 };
 
-const Mapper = {
+const ViewerMapper = {
   // Configuration
   followUser: (follow: boolean) => {
     return mapperWrapper("camera.follow_user", follow);
@@ -68,23 +95,11 @@ const Mapper = {
         category: navigation?.destinationId ? "POI" : "COORDINATE",
         identifier: navigation?.destinationId,
         //name:, //TODO
-        point: {
-          buildingIdentifier:
-            navigation.to.buildingIdentifier ||
-            navigation.TO.buildingIdentifier,
-          floorIdentifier:
-            navigation.to.floorIdentifier || navigation.TO.floorIdentifier,
-          coordinate: {
-            latitude:
-              navigation.to.coordinate.latitude ||
-              navigation.TO.coordinate.latitude,
-            longitude:
-              navigation.to.coordinate.longitude ||
-              navigation.TO.coordinate.longitude,
-          },
-        } as DirectionPoint,
-      } as Destination,
-    } as Navigation;
+        point: navigation.to
+          ? destinationToPoint(navigation.to)
+          : destinationToPoint(navigation.TO),
+      },
+    };
   },
   // Navigation
   navigation: (navigation: Navigation) => {
@@ -121,4 +136,4 @@ const Mapper = {
   },
 };
 
-export default Mapper;
+export default ViewerMapper;
