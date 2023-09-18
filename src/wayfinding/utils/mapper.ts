@@ -5,14 +5,39 @@ import type {
   Location,
   NavigationProgress,
 } from "../../sdk/types";
-import type { Destination, NavigateToPoiType, Navigation } from "../types";
+import type {
+  Destination,
+  NavigateToPointPayload,
+  NavigateToPoiPayload,
+  Navigation,
+} from "../types";
 
-const mapperWrapper = (type: string, payload: unknown) =>
-  JSON.stringify({ type, payload });
+const mapperWrapper = (type: string, payload: unknown) => {
+  return JSON.stringify({ type, payload });
+};
 
 const Mapper = {
-  location: (location: Location) =>
-    mapperWrapper("location.update", {
+  // Configuration
+  followUser: (follow: boolean) => {
+    return mapperWrapper("camera.follow_user", follow);
+  },
+  setLanguage: (lang: string) => {
+    return mapperWrapper("ui.set_language", lang);
+  },
+  initialConfiguration: (style: any) => {
+    return mapperWrapper("ui.initial_configuration", {
+      ...(style && {
+        style: style,
+      }),
+    });
+  },
+  // Cartography
+  selectPoi: (poiId: number | null) => {
+    return mapperWrapper(`cartography.select_poi`, { identifier: poiId });
+  },
+  // Location
+  location: (location: Location) => {
+    return mapperWrapper("location.update", {
       ...(location.position && {
         latitude: location.position.coordinate.latitude,
         longitude: location.position.coordinate.longitude,
@@ -27,36 +52,16 @@ const Mapper = {
         hasBearing: location.hasBearing,
       }),
       status: location.status,
-    }),
-  locationStatus: (locationStatus: Location["status"]) =>
-    mapperWrapper("location_status.update", locationStatus),
-
-  route: (directions: Directions) =>
-    mapperWrapper("directions.update", directions),
-
-  navigation: (navigation: Navigation) =>
-    mapperWrapper(`navigation.${navigation.status}`, navigation),
-
-  navigateToPoi: (navigate: NavigateToPoiType) =>
-    mapperWrapper(`navigation.start`, { navigationTo: navigate?.navigationTo }),
-
-  cancelNavigation: () => mapperWrapper(`navigation.cancel`, {}),
-
-  selectPoi: (poiId: number | null) =>
-    mapperWrapper(`cartography.select_poi`, { identifier: poiId }),
-
-  followUser: (follow: boolean) => mapperWrapper("camera.follow_user", follow),
-  setLanguage: (lang: string) => mapperWrapper("ui.set_language", lang),
-
-  initialConfiguration: (style: any) =>
-    mapperWrapper("ui.initial_configuration", {
-      ...(style && {
-        style: style,
-      }),
-    }),
-
+    });
+  },
+  locationStatus: (locationStatus: Location["status"]) => {
+    return mapperWrapper("location_status.update", locationStatus);
+  },
+  // Directions
+  route: (directions: Directions) => {
+    return mapperWrapper("directions.update", directions);
+  },
   routeToResult: (navigation: any): Navigation => {
-    //console.log('navigation/route to be mapped:', navigation);
     return {
       status: navigation.status,
       destination: {
@@ -81,25 +86,38 @@ const Mapper = {
       } as Destination,
     } as Navigation;
   },
-
+  // Navigation
+  navigation: (navigation: Navigation) => {
+    return mapperWrapper(`navigation.${navigation.status}`, navigation);
+  },
+  navigateToPoi: (navigate: NavigateToPoiPayload) => {
+    return mapperWrapper(`navigation.start`, {
+      navigationTo: navigate?.identifier,
+      type: navigate.accessibilityMode,
+    });
+  },
+  navigateToPoint: ({
+    lat,
+    lng,
+    floorIdentifier,
+    navigationName,
+    accessibilityMode,
+  }: NavigateToPointPayload) => {
+    return mapperWrapper(`navigation.start`, {
+      lat,
+      lng,
+      floorIdentifier,
+      navigationName,
+      type: accessibilityMode,
+    });
+  },
+  cancelNavigation: () => {
+    return mapperWrapper(`navigation.cancel`, {});
+  },
   navigationToResult: (navigation: NavigationProgress): Navigation => {
     return {
       status: navigation?.type,
     };
-    // return {
-    //   status: navigation.status,
-    //   destination: {
-    //     category: navigation.routeStep.TO.destinationId ? 'POI' : 'COORDINATE',
-    //     identifier: navigation.routeStep.TO.destinationId,
-    //     //name:, //TODO
-    //     point: {
-    //       buildingId: navigation.routeStep.TO.buildingIdentifier,
-    //       floorId: navigation.routeStep.TO.floorIdentifier,
-    //       latitude: navigation.routeStep.TO.coordinate.latitude,
-    //       longitude: navigation.routeStep.TO.coordinate.longitude,
-    //     } as Point,
-    //   } as Destination,
-    // } as Navigation;
   },
 };
 

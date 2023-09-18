@@ -231,10 +231,12 @@ export type Point = {
   isIndoor: boolean;
   isOutdoor: boolean;
 };
+
 export type DirectionPoint = {
   floorIdentifier: Floor["floorIdentifier"];
   buildingIdentifier: Building["buildingIdentifier"];
   coordinate: Coordinate;
+  cartesianCoordinate?: CartesianCoordinate;
 };
 
 /**
@@ -459,6 +461,8 @@ export type DirectionsRequest = {
  * @property {number} startingAngle - Current user's orientation in degrees.
  */
 export type DirectionsOptions = {
+  from?: DirectionPoint;
+  to?: DirectionPoint;
   minimizeFloorChanges?: boolean;
   accessibilityMode?: AccessibilityMode;
   startingAngle?: number;
