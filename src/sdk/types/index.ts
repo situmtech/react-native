@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { LocationStatusName, SdkNavigationUpdateType } from "src/sdk";
+import type {
+  AccessibilityMode,
+  LocationStatusName,
+  SdkNavigationUpdateType,
+} from "src/sdk";
 
 /**
  * @name Building
@@ -456,7 +460,7 @@ export type DirectionsRequest = {
  */
 export type DirectionsOptions = {
   minimizeFloorChanges?: boolean;
-  accessibilityMode?: "ONLY_ACCESSIBLE" | "ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES";
+  accessibilityMode?: AccessibilityMode;
   startingAngle?: number;
 };
 

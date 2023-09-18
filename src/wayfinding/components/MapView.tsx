@@ -14,7 +14,7 @@ import type {
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
-import SitumPlugin, { type Poi } from "../../sdk";
+import SitumPlugin, { AccessibilityMode } from "../../sdk";
 import useSitum from "../hooks";
 import { setWebViewRef } from "../store";
 import { useDispatch } from "../store/utils";
@@ -91,26 +91,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       error,
     } = useSitum();
 
-    // TODO: this check should not be here
-    const isPoiValid = useCallback(
-      async (poiId: number) => {
-        return await SitumPlugin.fetchBuildings().then(async (buildings) => {
-          const building = buildings.find(
-            (b) => b.buildingIdentifier === buildingIdentifier
-          );
-          return await SitumPlugin.fetchIndoorPOIsFromBuilding(building).then(
-            (_pois) => {
-              const validPoi = _pois?.find(
-                (p) => p?.identifier === poiId?.toString()
-              );
-              return validPoi;
-            }
-          );
-        });
-      },
-      [buildingIdentifier]
-    );
-
     const sendFollowUser = () => {
       if (
         webViewRef.current &&
@@ -136,48 +116,40 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
      *    onLoad={onLoad} />
      */
     const _navigateToPoi = useCallback(
-      async ({ poi, poiId }: { poi?: Poi; poiId?: number }) => {
-        if (!webViewRef.current || (!poi && !poiId)) return;
+      ({
+        identifier,
+        accessibilityMode,
+      }: {
+        identifier: number;
+        accessibilityMode?: AccessibilityMode;
+      }) => {
+        if (!webViewRef.current || !identifier) return;
 
-        const isValid =
-          //@ts-ignore
-          (poi?.id && (await isPoiValid(poi?.id))) || (await isPoiValid(poiId));
-        if (isValid) {
-          sendMessageToViewer(
-            webViewRef.current,
-            Mapper.navigateToPoi({
-              // @ts-ignore
-              navigationTo: poi?.id || poiId,
-            } as NavigateToPoiType)
-          );
-        } else {
-          console.error("Situm > hook > Invalid value as poi");
-        }
+        sendMessageToViewer(
+          webViewRef.current,
+          Mapper.navigateToPoi({
+            navigationTo: identifier,
+            type:
+              (accessibilityMode && AccessibilityMode[accessibilityMode]) ||
+              undefined,
+          } as NavigateToPoiType)
+        );
       },
-      [isPoiValid]
+      []
     );
 
-    const _selectPoi = useCallback(
-      async (poiId: number) => {
-        if (!webViewRef.current) {
-          return;
-        }
-        if (SitumPlugin.navigationIsRunning()) {
-          console.error(
-            "Situm > hook > Navigation on course, poi selection is unavailable"
-          );
-          return;
-        }
-        //@ts-ignore
-        const isValid = await isPoiValid(poiId);
-        if (isValid) {
-          sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
-        } else {
-          console.error("Situm > hook > Invalid value as poiId");
-        }
-      },
-      [isPoiValid]
-    );
+    const _selectPoi = useCallback((poiId: number) => {
+      if (!webViewRef.current) {
+        return;
+      }
+      if (SitumPlugin.navigationIsRunning()) {
+        console.error(
+          "Situm > hook > Navigation on course, poi selection is unavailable"
+        );
+        return;
+      }
+      sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
+    }, []);
 
     useImperativeHandle(
       ref,
@@ -198,8 +170,14 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
             webViewRef.current &&
               sendMessageToViewer(webViewRef.current, Mapper.selectPoi(null));
           },
-          navigateToPoi({ poi, poiId }: { poi?: Poi; poiId?: number }): void {
-            _navigateToPoi({ poi, poiId });
+          navigateToPoi({
+            identifier,
+            accessibilityMode,
+          }: {
+            identifier: number;
+            accessibilityMode?: AccessibilityMode;
+          }): void {
+            _navigateToPoi({ identifier, accessibilityMode });
           },
           cancelNavigation(): void {
             if (!webViewRef.current) return;
