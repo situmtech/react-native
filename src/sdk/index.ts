@@ -143,7 +143,7 @@ export default class SitumPlugin {
     });
   };
 
-  private static _setMaxCacheAge = (cacheAge: number) => {
+  private static setMaxCacheAge = (cacheAge: number) => {
     return promiseWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setCacheMaxAge(cacheAge, (response) => {
         onCallback(response, "Failed to set cache max age");
@@ -170,7 +170,7 @@ export default class SitumPlugin {
       );
     }
     if (options.cacheMaxAge !== undefined) {
-      await SitumPlugin._setMaxCacheAge(options.cacheMaxAge).catch((r) => {
+      await SitumPlugin.setMaxCacheAge(options.cacheMaxAge).catch((r) => {
         reject(r);
         return;
       });
@@ -185,8 +185,8 @@ export default class SitumPlugin {
    * @param options {@link ConfigurationOptions}
    */
   static setConfiguration = (options: ConfigurationOptions) => {
-    return promiseWrapper<void>(({ onSuccess, onError }) => {
-      SitumPlugin._setConfiguration(options, onSuccess, onError);
+    return promiseWrapper<void>(({ resolve, reject }) => {
+      SitumPlugin._setConfiguration(options, resolve, reject);
     });
   };
 
@@ -361,7 +361,7 @@ export default class SitumPlugin {
 
         SitumPlugin.positioningRunning = true;
 
-        SitumPlugin.onLocationUpdate(async (loc: Location) => {
+        SitumPlugin.onLocationUpdate((loc: Location) => {
           if (!SitumPlugin.navigationIsRunning()) return;
 
           SitumPlugin.updateNavigationWithLocation(loc)
@@ -372,7 +372,7 @@ export default class SitumPlugin {
             });
         });
       } else {
-        reject();
+        reject({ message: "Positioning is already running" });
       }
     });
   };

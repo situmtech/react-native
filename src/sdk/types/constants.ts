@@ -26,3 +26,17 @@ export enum LocationStatusName {
   USER_NOT_IN_BUILDING = "USER_NOT_IN_BUILDING",
   STOPPED = "STOPPED",
 }
+
+/**
+ * Available accessibility modes used in the {@link DirectionsRequest}.
+ *
+ * @property CHOOSE_SHORTEST The route should choose the best route, without taking into account if it is accessible or not
+ * This option is the default so you don't have to do anything in order to use it
+ * @property ONLY_ACCESSIBLE The route should always use accessible nodes.
+ * @property ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES The route should never use accessible floor changes (use this to force routes not to use lifts).
+ */
+export enum AccessibilityMode {
+  CHOOSE_SHORTEST = "CHOOSE_SHORTEST",
+  ONLY_ACCESSIBLE = "ONLY_ACCESSIBLE",
+  ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES = "ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES",
+}

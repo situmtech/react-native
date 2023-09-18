@@ -1,4 +1,6 @@
-import type { DirectionPoint, Poi } from "../../sdk/types";
+import type { AccessibilityMode } from "src/sdk";
+
+import type { DirectionPoint } from "../../sdk/types";
 import { ErrorName } from "./constants";
 
 export interface MapViewError {
@@ -8,7 +10,13 @@ export interface MapViewError {
 
 export interface MapViewRef {
   selectPoi: (poiId: number) => void;
-  navigateToPoi: ({ poi, poiId }: { poi?: Poi; poiId?: number }) => void;
+  navigateToPoi: ({
+    identifier,
+    accessibilityMode,
+  }: {
+    identifier: number;
+    accessibilityMode?: AccessibilityMode;
+  }) => void;
   cancelNavigation: () => void;
 }
 
