@@ -157,6 +157,7 @@ export const useSitumInternal = () => {
     directionsOptions?: DirectionsOptions;
     updateRoute?: boolean;
   }) => {
+    // TODO: remove all this, use information from payload (to, from, etc)
     console.log("Situm > hook > calculating route");
     const _buildings = await SitumPlugin.fetchBuildings();
     const _building = _buildings.find(
@@ -267,30 +268,29 @@ export const useSitumInternal = () => {
       );
     });
 
-    SitumPlugin.requestNavigationUpdates({
-      ...defaultNavigationOptions,
-      ...navigationOptions,
-    }).catch((e) => {
+    try {
+      SitumPlugin.requestNavigationUpdates({
+        ...defaultNavigationOptions,
+        ...navigationOptions,
+      });
+    } catch (e) {
       console.error(`Situm > hook >Could not update navigation ${e}`);
       dispatch(setError({ message: "error", code: 3051 } as Error));
       stopNavigation();
-    });
+    }
   };
 
   const stopNavigation = async (): Promise<void> => {
     console.debug("Situm > hook > Stopping navigation");
 
-    SitumPlugin.removeNavigationUpdates()
-      .then(() => {
-        console.debug("Situm > hook > Successfully removed navigation updates");
-        dispatch(setNavigation({ status: NavigationStatus.STOP }));
-        dispatch(setDestinationPoiID(undefined));
-      })
-      .catch((e) => {
-        console.debug(
-          `Situm > hook > Could not remove navigation updates ${e}`
-        );
-      });
+    try {
+      SitumPlugin.removeNavigationUpdates();
+      console.debug("Situm > hook > Successfully removed navigation updates");
+      dispatch(setNavigation({ status: NavigationStatus.STOP }));
+      dispatch(setDestinationPoiID(undefined));
+    } catch (e) {
+      console.debug(`Situm > hook > Could not remove navigation updates ${e}`);
+    }
   };
 
   return {
