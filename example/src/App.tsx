@@ -21,6 +21,7 @@ import {SetCacheMaxAge} from './examples/SetCacheMaxAge';
 import {TiledBuilding} from './examples/TiledBuilding';
 import Wayfinding from './examples/wayfinding/Wayfinding';
 import NavigateToPoi from './examples/wayfinding/NavigateToPoi';
+import SelectPoi from './examples/wayfinding/SelectPoi';
 
 async function initSitumSdk() {
   try {
@@ -73,6 +74,12 @@ const HomeScreen = ({navigation}) => {
           subtitle:
             'Shows how to trigger the navigation to a concrete POI programmatically that, once computed, will be displayed on the map.',
           key: 'NavigateToPoi',
+        },
+        {
+          title: 'Select POI',
+          subtitle:
+            'Shows how to select a POI programmatically, which is then displayed as selected on the map',
+          key: 'SelectPoi',
         },
       ],
     },
@@ -271,6 +278,11 @@ function App() {
             name="NavigateToPoi"
             component={NavigateToPoi}
             options={{title: 'Navigate To Poi'}}
+          />
+          <Stack.Screen
+            name="SelectPoi"
+            component={SelectPoi}
+            options={{title: 'Select Poi'}}
           />
         </Stack.Navigator>
       </NavigationContainer>
