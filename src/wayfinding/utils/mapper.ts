@@ -1,42 +1,73 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { AccessibilityMode } from "../../sdk";
 import type {
   Directions,
+  DirectionsRequest,
   Location,
   NavigationProgress,
-  Poi,
+  NavigationRequest,
   Point,
 } from "../../sdk/types";
 import type {
+  DirectionsMessage,
   NavigateToPointPayload,
   NavigateToPoiPayload,
   Navigation,
 } from "../types";
 
-export const poiToPoint = (poi: Poi): Point => {
+export const createPoint = (payload: any): Point => {
   return {
-    floorIdentifier: poi.floorIdentifier,
-    buildingIdentifier: poi.buildingIdentifier,
-    cartesianCoordinate: poi.cartesianCoordinate,
-    coordinate: poi.coordinate,
+    buildingIdentifier: payload.buildingIdentifier,
+    floorIdentifier: payload.floorIdentifier,
+    cartesianCoordinate: payload.cartesianCoordinate,
+    coordinate: payload.coordinate,
   };
 };
 
-export const locationToPoint = (location: Location): Point => {
+export const createDirectionsMessage = (payload: any): DirectionsMessage => {
   return {
-    floorIdentifier: location.position.floorIdentifier,
-    buildingIdentifier: location.position.buildingIdentifier,
-    cartesianCoordinate: location.position.cartesianCoordinate,
-    coordinate: location.position.coordinate,
+    buildingIdentifier: payload.buildingIdentifier,
+    originIdentifier: (payload.originIdentifier || -1).toString(),
+    originCategory: payload.originCategory,
+    destinationIdentifier: (payload.destinationIdentifier || -1).toString(),
+    destinationCategory: payload.destinationCategory,
+    identifier: (payload.identifier || "").toString(),
   };
 };
 
-export const destinationToPoint = (destination: Point): Point => {
+export const createDirectionsRequest = (payload: any): DirectionsRequest => {
   return {
-    buildingIdentifier: destination.buildingIdentifier,
-    floorIdentifier: destination.floorIdentifier,
-    cartesianCoordinate: destination.cartesianCoordinate,
-    coordinate: destination.coordinate,
+    buildingIdentifier: payload.from.buildingIdentifier,
+    to: createPoint(payload.to),
+    from: createPoint(payload.from),
+    bearingFrom: payload.bearingFrom || 0,
+    accessibilityMode:
+      payload.accessibilityMode || AccessibilityMode.CHOOSE_SHORTEST,
+    minimizeFloorChanges: payload.minimizeFloorChanges || false,
   };
+};
+
+export const createNavigationRequest = (payload: any): NavigationRequest => {
+  const navigationRequest = {
+    distanceToGoalThreshold: payload.distanceToGoalThreshold,
+    outsideRouteThreshold: payload.outsideRouteThreshold,
+    distanceToIgnoreFirstIndication: payload.distanceToIgnoreFirstIndication,
+    distanceToFloorChangeThreshold: payload.distanceToFloorChangeThreshold,
+    distanceToChangeIndicationThreshold:
+      payload.distanceToChangeIndicationThreshold,
+    indicationsInterval: payload.indicationsInterval,
+    timeToFirstIndication: payload.timeToFirstIndication,
+    roundIndicationsStep: payload.roundIndicationsStep,
+    timeToIgnoreUnexpectedFloorChanges:
+      payload.timeToIgnoreUnexpectedFloorChanges,
+    ignoreLowQualityLocations: payload.ignoreLowQualityLocations,
+  };
+
+  return Object.fromEntries(
+    Object.entries(navigationRequest || {}).filter(
+      ([_, value]) => value !== undefined
+    )
+  );
 };
 
 const mapperWrapper = (type: string, payload: unknown) => {
@@ -96,8 +127,8 @@ const ViewerMapper = {
         identifier: navigation?.destinationId,
         //name:, //TODO
         point: navigation.to
-          ? destinationToPoint(navigation.to)
-          : destinationToPoint(navigation.TO),
+          ? createPoint(navigation.to)
+          : createPoint(navigation.TO),
       },
     };
   },

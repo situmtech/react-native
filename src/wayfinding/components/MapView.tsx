@@ -266,26 +266,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           setMapLoaded(true);
           break;
         case "directions.requested":
-          calculateRoute({
-            buildingId: buildingIdentifier,
-            originId: JSON.parse(event.nativeEvent.data).payload
-              .originIdentifier,
-            destinationId: JSON.parse(event.nativeEvent.data).payload
-              .destinationIdentifier,
-            directionsOptions: JSON.parse(event.nativeEvent.data).payload
-              .directionsOptions,
-          });
+          calculateRoute(eventParsed.payload);
           break;
         case "navigation.requested":
-          startNavigation({
-            buildingId: buildingIdentifier,
-            originId: JSON.parse(event.nativeEvent.data).payload
-              .originIdentifier,
-            destinationId: JSON.parse(event.nativeEvent.data).payload
-              .destinationIdentifier,
-            directionsOptions: JSON.parse(event.nativeEvent.data).payload
-              .directionsOptions,
-          });
+          startNavigation(eventParsed.payload);
           break;
         case "navigation.stopped":
           stopNavigation();
