@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React, {
   useCallback,
   useEffect,
@@ -14,14 +13,13 @@ import type {
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
-import SitumPlugin, { AccessibilityMode } from "../../sdk";
+import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
-import { setWebViewRef } from "../store";
-import { useDispatch } from "../store/utils";
 import {
   type MapViewError,
   type MapViewRef,
-  type NavigateToPoiType,
+  type NavigateToPointPayload,
+  type NavigateToPoiPayload,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
 } from "../types";
@@ -70,8 +68,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     { configuration, onPoiSelected, onPoiDeselected, onLoad, onLoadError },
     ref
   ) => {
-    const dispatch = useDispatch();
-    const webViewRef = useRef(null);
+    const webViewRef = useRef<WebView>();
 
     // Local states
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
@@ -102,6 +99,37 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
     };
 
+    // Navigation
+    const _navigateToPoi = useCallback((payload: NavigateToPoiPayload) => {
+      if (!webViewRef.current || !payload || !payload.identifier) return;
+
+      sendMessageToViewer(webViewRef.current, Mapper.navigateToPoi(payload));
+    }, []);
+
+    const _navigateToPoint = useCallback((payload: NavigateToPointPayload) => {
+      if (
+        !webViewRef.current ||
+        (!payload?.lat && !payload?.lng && !payload?.floorIdentifier)
+      )
+        return;
+
+      sendMessageToViewer(webViewRef.current, Mapper.navigateToPoint(payload));
+    }, []);
+
+    // Cartography
+    const _selectPoi = useCallback((poiId: number) => {
+      if (!webViewRef.current) {
+        return;
+      }
+      if (SitumPlugin.navigationIsRunning()) {
+        console.error(
+          "Situm > hook > Navigation on course, poi selection is unavailable"
+        );
+        return;
+      }
+      sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
+    }, []);
+
     /**
      * API exported to the outside world from the MapViewer
      *
@@ -115,41 +143,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
      *    }}
      *    onLoad={onLoad} />
      */
-    const _navigateToPoi = useCallback(
-      ({
-        identifier,
-        accessibilityMode,
-      }: {
-        identifier: number;
-        accessibilityMode?: AccessibilityMode;
-      }) => {
-        if (!webViewRef.current || !identifier) return;
-
-        sendMessageToViewer(
-          webViewRef.current,
-          Mapper.navigateToPoi({
-            navigationTo: identifier,
-            type:
-              (accessibilityMode && AccessibilityMode[accessibilityMode]) ||
-              undefined,
-          } as NavigateToPoiType)
-        );
-      },
-      []
-    );
-
-    const _selectPoi = useCallback((poiId: number) => {
-      if (!webViewRef.current) {
-        return;
-      }
-      if (SitumPlugin.navigationIsRunning()) {
-        console.error(
-          "Situm > hook > Navigation on course, poi selection is unavailable"
-        );
-        return;
-      }
-      sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
-    }, []);
 
     useImperativeHandle(
       ref,
@@ -170,14 +163,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
             webViewRef.current &&
               sendMessageToViewer(webViewRef.current, Mapper.selectPoi(null));
           },
-          navigateToPoi({
-            identifier,
-            accessibilityMode,
-          }: {
-            identifier: number;
-            accessibilityMode?: AccessibilityMode;
-          }): void {
-            _navigateToPoi({ identifier, accessibilityMode });
+          navigateToPoi(payload): void {
+            _navigateToPoi(payload);
+          },
+          navigateToPoint(payload: NavigateToPointPayload): void {
+            _navigateToPoint(payload);
           },
           cancelNavigation(): void {
             if (!webViewRef.current) return;
@@ -186,14 +176,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           },
         };
       },
-      [stopNavigation, _navigateToPoi, _selectPoi]
+      [stopNavigation, _navigateToPoi, _navigateToPoint, _selectPoi]
     );
-
-    // useEffect(() => {
-    //   configuration.buildingIdentifier &&
-    //     initializeBuildingById(configuration.buildingIdentifier);
-    //   // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [configuration.buildingIdentifier]);
 
     useEffect(() => {
       if (error) {
@@ -217,8 +201,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (!webViewRef.current || !navigation) return;
 
       sendMessageToViewer(webViewRef.current, Mapper.navigation(navigation));
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigation]);
 
     // Updated SDK route
@@ -228,6 +210,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       sendMessageToViewer(webViewRef.current, Mapper.route(directions));
     }, [directions]);
 
+    // Update language
     useEffect(() => {
       if (!webViewRef.current || !configuration.language || !mapLoaded) return;
 
@@ -237,6 +220,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, [configuration.language, mapLoaded]);
 
+    // Update SDK configuration
     useEffect(() => {
       if (webViewRef.current && mapLoaded) {
         sendMessageToViewer(
@@ -246,6 +230,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
     }, [webViewRef, mapLoaded, configuration.style]);
 
+    // Update follow user
     useEffect(() => {
       mapLoaded && sendFollowUser();
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -332,11 +317,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         startInLoadingState={true}
         cacheEnabled
         onMessage={handleRequestFromViewer}
-        // This is called on a lot of interactions with the map because of url change probably
-        onLoadEnd={() => {
-          if (!webViewRef.current) return;
-          dispatch(setWebViewRef(webViewRef));
-        }}
         onError={(evt: WebViewErrorEvent) => {
           const { nativeEvent } = evt;
           // TODO: on render error should probably still try to render an html

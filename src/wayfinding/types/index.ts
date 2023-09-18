@@ -1,4 +1,4 @@
-import type { AccessibilityMode } from "src/sdk";
+import { AccessibilityMode } from "src/sdk";
 
 import type { DirectionPoint } from "../../sdk/types";
 import { ErrorName } from "./constants";
@@ -12,9 +12,22 @@ export interface MapViewRef {
   selectPoi: (poiId: number) => void;
   navigateToPoi: ({
     identifier,
-    accessibilityMode,
+    accessibilityMode = AccessibilityMode.CHOOSE_SHORTEST,
   }: {
     identifier: number;
+    accessibilityMode?: AccessibilityMode;
+  }) => void;
+  navigateToPoint: ({
+    lat,
+    lng,
+    floorIdentifier,
+    navigationName,
+    accessibilityMode = AccessibilityMode.CHOOSE_SHORTEST,
+  }: {
+    lat: number;
+    lng: number;
+    floorIdentifier: string;
+    navigationName?: string;
     accessibilityMode?: AccessibilityMode;
   }) => void;
   cancelNavigation: () => void;
@@ -65,7 +78,15 @@ export interface OnNavigationResult {
   error?: Error;
 }
 
-export type NavigateToPoiType = {
-  navigationTo: number;
-  type?: string;
+export type NavigateToPoiPayload = {
+  identifier: number;
+  accessibilityMode?: AccessibilityMode;
+};
+
+export type NavigateToPointPayload = {
+  lat: number;
+  lng: number;
+  floorIdentifier: string;
+  navigationName?: string;
+  accessibilityMode?: AccessibilityMode;
 };

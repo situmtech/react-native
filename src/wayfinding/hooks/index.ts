@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import SitumPlugin from "../../sdk";
 import {
   type Building,
-  type DirectionPoint,
+  type DirectionsOptions,
   type Error,
   type Location,
   type LocationStatus,
@@ -12,6 +12,8 @@ import {
   type Poi,
 } from "../../sdk/types";
 import {
+  CURRENT_USER_LOCATION_ID,
+  CUSTOM_DESTINATION_LOCATION_ID,
   LocationStatusName,
   NavigationStatus,
   NavigationUpdateType,
@@ -32,6 +34,7 @@ import {
   UseSitumContext,
 } from "../store/index";
 import { useDispatch, useSelector } from "../store/utils";
+import { destinationToPoint, locationToPoint, poiToPoint } from "./mapper";
 
 const defaultNavigationOptions = {
   distanceToGoalThreshold: 4,
@@ -151,7 +154,7 @@ export const useSitumInternal = () => {
     buildingId: string;
     originId: number;
     destinationId: number;
-    directionsOptions?: any;
+    directionsOptions?: DirectionsOptions;
     updateRoute?: boolean;
   }) => {
     console.log("Situm > hook > calculating route");
@@ -167,33 +170,30 @@ export const useSitumInternal = () => {
       (p: Poi) => p.identifier === destinationId?.toString()
     );
 
-    if (!poiDestination || (!poiOrigin && originId !== -1) || lockDirections) {
+    if (
+      (!poiDestination && destinationId !== CUSTOM_DESTINATION_LOCATION_ID) ||
+      (!poiOrigin && originId !== CURRENT_USER_LOCATION_ID) ||
+      lockDirections
+    ) {
       console.debug(
         `Situm > hook > Could not compute route for origin: ${originId} or destination: ${destinationId} (lockDirections: ${lockDirections})`
       );
       return;
     }
 
+    const shouldBeLocation = location && originId === CURRENT_USER_LOCATION_ID;
+    const shouldBeCustomDestination =
+      location && destinationId === CUSTOM_DESTINATION_LOCATION_ID;
+
+    const fromPoint = shouldBeLocation
+      ? locationToPoint(location)
+      : poiToPoint(poiOrigin);
+    const toPoint = shouldBeCustomDestination
+      ? destinationToPoint(directionsOptions.to)
+      : poiToPoint(poiDestination);
+
     // iOS workaround -> does not allow for several direction petitions
     setLockDirections(true);
-    const shouldBeLocation: boolean = originId === -1 && location;
-    const fromPoint = {
-      floorIdentifier: shouldBeLocation
-        ? location.position.floorIdentifier
-        : poiOrigin.floorIdentifier,
-      buildingIdentifier: shouldBeLocation
-        ? location.position.buildingIdentifier
-        : poiOrigin.buildingIdentifier,
-      coordinate: shouldBeLocation
-        ? location.position.coordinate
-        : poiOrigin.coordinate,
-    } as DirectionPoint;
-    const toPoint = {
-      floorIdentifier: poiDestination.floorIdentifier,
-      buildingIdentifier: poiDestination.buildingIdentifier,
-      coordinate: poiDestination.coordinate,
-    } as DirectionPoint;
-
     return await SitumPlugin.requestDirections(
       _building,
       fromPoint,
@@ -201,16 +201,16 @@ export const useSitumInternal = () => {
       directionsOptions
     )
       .then((_directions) => {
-        updateRoute &&
-          dispatch(
-            setDirections({
-              ..._directions,
-              originId,
-              destinationId,
-              type: directionsOptions?.accessibilityMode,
-            })
-          );
-        return directions;
+        const newRoute = {
+          ..._directions,
+          originId,
+          destinationId,
+          type: directionsOptions?.accessibilityMode,
+        };
+        if (updateRoute) {
+          dispatch(setDirections(newRoute));
+        }
+        return newRoute;
       })
       .catch((e) => {
         dispatch(setDirections({ error: JSON.stringify(e) }));
@@ -233,7 +233,7 @@ export const useSitumInternal = () => {
   }: {
     buildingId: string;
     destinationId: number;
-    directionsOptions?: any;
+    directionsOptions?: DirectionsOptions;
     navigationOptions?: any;
     originId: number;
     updateRoute?: boolean;
@@ -254,7 +254,7 @@ export const useSitumInternal = () => {
       directionsOptions,
       updateRoute: false,
     }).then((r) => {
-      if (originId !== -1 || !location || !r) {
+      if (!r) {
         return;
       }
 
