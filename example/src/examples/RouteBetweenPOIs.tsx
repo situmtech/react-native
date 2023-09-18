@@ -9,7 +9,7 @@ import {Card} from 'react-native-paper';
 
 export const RouteBetweenPOIs = () => {
   const [building, setBuilding] = useState<Building>();
-  const [indoorPOIs, setIndoorPOIs] = useState<Poi[]>(undefined);
+  const [indoorPOIs, setIndoorPOIs] = useState<Poi[]>();
   const [route, setRoute] = useState<any>();
   const [error, setError] = useState('');
 
@@ -23,8 +23,8 @@ export const RouteBetweenPOIs = () => {
         console.log(JSON.stringify(indoorPOIs, null, 2));
         setIndoorPOIs(indoorPOIs);
       })
-      .catch(error => {
-        console.debug(`Could not fetch indoor POIs ${error}`);
+      .catch(e => {
+        console.debug(`Situm > example > Could not fetch indoor POIs ${e}`);
       });
   };
 
@@ -34,7 +34,11 @@ export const RouteBetweenPOIs = () => {
       console.error('Your building has less than two POIs');
       return;
     }
-    await SitumPlugin.requestDirections(building, indoorPOIs[0], indoorPOIs[1])
+    await SitumPlugin.requestDirections(
+      building,
+      indoorPOIs![0],
+      indoorPOIs![1],
+    )
       .then(_route => {
         console.log(JSON.stringify(_route, null, 2));
         setRoute(_route);

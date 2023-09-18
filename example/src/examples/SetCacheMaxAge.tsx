@@ -17,29 +17,23 @@ export const SetCacheMaxAge = () => {
   }, []);
 
   // Invalidate the current cache
-  const invalidateCache = async () => {
-    SitumPlugin.invalidateCache()
-      .then(() => {
-        setStatus('Cache invalidated');
-      })
-      .catch(error => {
-        console.debug(`Failed to invalidate cache: ${error}`);
-        setStatus('Cache not invalidated');
-      });
+  const invalidateCache = () => {
+    try {
+      SitumPlugin.invalidateCache();
+    } catch (e) {
+      console.log(`Situm > example > Could not invalidate cache ${e}`);
+    }
   };
 
   // Set the cache duration
-  const setCache = async (numSeconds: number) => {
-    SitumPlugin.setConfiguration({
-      cacheMaxAge: numSeconds,
-    })
-      .then(() => {
-        console.log('Cache Age Set:', numSeconds);
-        setStatus(`Cache max age set to ${numSeconds} seconds`);
-      })
-      .catch(error => {
-        console.debug(`Failed to set cache max age: ${error}`);
+  const setCache = (numSeconds: number) => {
+    try {
+      SitumPlugin.setConfiguration({
+        cacheMaxAge: numSeconds,
       });
+    } catch (e) {
+      console.log(`Situm > example > Could not set max cache age ${e}`);
+    }
   };
 
   // Fetch and display buildings

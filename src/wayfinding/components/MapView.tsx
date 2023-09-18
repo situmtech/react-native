@@ -241,7 +241,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       switch (eventParsed.type) {
         case "app.map_is_ready":
           init();
-          onLoad("");
+          onLoad && onLoad("");
           setMapLoaded(true);
           break;
         case "directions.requested":
@@ -270,11 +270,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           stopNavigation();
           break;
         case "cartography.poi_selected":
-          onPoiSelected(eventParsed?.payload);
-
+          onPoiSelected && onPoiSelected(eventParsed?.payload);
           break;
         case "cartography.poi_deselected":
-          onPoiDeselected(eventParsed?.payload);
+          onPoiDeselected && onPoiDeselected(eventParsed?.payload);
           break;
         case "cartography.floor_changed":
           break;
@@ -318,6 +317,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         cacheEnabled
         onMessage={handleRequestFromViewer}
         onError={(evt: WebViewErrorEvent) => {
+          if (!onLoadError) return;
           const { nativeEvent } = evt;
           // TODO: on render error should probably still try to render an html
           if (nativeEvent.code === NETWORK_ERROR_CODE[Platform.OS]) {

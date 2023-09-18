@@ -18,19 +18,6 @@ export const RemoteConfig = () => {
   const [error, setError] = useState<string>('ready to be used');
   const [geofences, setGeofences] = useState<string>('ready to be used');
 
-  // Configure Situm SDK
-  const configureSitum = async () => {
-    await SitumPlugin.setConfiguration({
-      useRemoteConfig: true,
-    })
-      .then(() => {
-        console.log('Configuration set successfully');
-      })
-      .catch(e => {
-        console.debug('Failed to set configuration:', e);
-      });
-  };
-
   // Register callbacks to handle Situm SDK events
   const registerCallbacks = () => {
     // Handle location updates
@@ -72,7 +59,7 @@ export const RemoteConfig = () => {
 
   // Start positioning using Situm SDK
   const startPositioning = async () => {
-    requestPermissions();
+    await requestPermissions();
 
     console.log('Starting positioning');
     setLocation('');
@@ -86,28 +73,30 @@ export const RemoteConfig = () => {
 
     try {
       SitumPlugin.requestLocationUpdates(locationOptions);
-    } catch (err: any) {
-      console.debug(err);
+    } catch (e) {
+      console.log(`Situm > example > Could not start positioning ${e}`);
     }
   };
 
   // Stop positioning using Situm SDK
-  const stopPositioning = async () => {
+  const stopPositioning = () => {
     console.log('Situm > example > Stopping positioning');
     setLocation('');
     setStatus('');
     setError('');
     setBuildings(null);
     try {
-      await SitumPlugin.removeLocationUpdates();
-    } catch (err: any) {
-      console.log('Situm > example > Could not stop positioning');
+      SitumPlugin.removeLocationUpdates();
+    } catch (e) {
+      console.log(`Situm > example > Could not stop positioning ${e}`);
     }
   };
 
   useEffect(() => {
     // Initial configuration and callback registration
-    configureSitum();
+    SitumPlugin.setConfiguration({
+      useRemoteConfig: true,
+    });
     registerCallbacks();
 
     return () => {
