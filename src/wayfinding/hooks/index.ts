@@ -4,16 +4,12 @@ import { useContext, useState } from "react";
 import SitumPlugin from "../../sdk";
 import {
   type Building,
-  type DirectionsOptions,
   type Error,
   type Location,
   type LocationStatus,
   type NavigationProgress,
-  type Poi,
 } from "../../sdk/types";
 import {
-  CURRENT_USER_LOCATION_ID,
-  CUSTOM_DESTINATION_LOCATION_ID,
   LocationStatusName,
   NavigationStatus,
   NavigationUpdateType,
@@ -35,12 +31,12 @@ import {
 } from "../store/index";
 import { useDispatch, useSelector } from "../store/utils";
 import {
-  destinationToPoint,
-  locationToPoint,
-  poiToPoint,
+  createDirectionsMessage,
+  createDirectionsRequest,
+  createNavigationRequest,
 } from "../utils/mapper";
 
-const defaultNavigationOptions = {
+const defaultNavigationRequest = {
   distanceToGoalThreshold: 4,
   outsideRouteThreshold: 5,
 };
@@ -90,6 +86,7 @@ export const useSitumInternal = () => {
       console.log("Situm > hook > Stopped positioning");
       dispatch(resetLocation());
     });
+
     SitumPlugin.onNavigationProgress((progress: NavigationProgress) => {
       console.log("Situm > hook > NavigationProgress");
 
@@ -134,69 +131,39 @@ export const useSitumInternal = () => {
     });
   }
 
-  const calculateRoute = async ({
-    buildingId,
-    originId,
-    destinationId,
-    directionsOptions,
-    updateRoute = true,
-  }: {
-    buildingId: string;
-    originId: number;
-    destinationId: number;
-    directionsOptions?: DirectionsOptions;
-    updateRoute?: boolean;
-  }) => {
-    // TODO: remove all this, use information from payload (to, from, etc)
+  const calculateRoute = async (payload: any, updateRoute = true) => {
     console.log("Situm > hook > calculating route");
+
+    const { to, from, minimizeFloorChanges, accessibilityMode, bearingFrom } =
+      createDirectionsRequest(payload.directionsRequest);
+    const { originIdentifier, destinationIdentifier, buildingIdentifier } =
+      createDirectionsMessage(payload);
+
     const _buildings = await SitumPlugin.fetchBuildings();
     const _building = _buildings.find(
-      (b: Building) => b.buildingIdentifier === buildingId
-    );
-    const _pois = await SitumPlugin.fetchIndoorPOIsFromBuilding(_building);
-    const poiOrigin = _pois.find(
-      (p: Poi) => p.identifier === originId?.toString()
-    );
-    const poiDestination = _pois.find(
-      (p: Poi) => p.identifier === destinationId?.toString()
+      (b: Building) => b.buildingIdentifier === buildingIdentifier
     );
 
-    if (
-      (!poiDestination && destinationId !== CUSTOM_DESTINATION_LOCATION_ID) ||
-      (!poiOrigin && originId !== CURRENT_USER_LOCATION_ID) ||
-      lockDirections
-    ) {
+    if (!to || !from || lockDirections) {
       console.debug(
-        `Situm > hook > Could not compute route for origin: ${originId} or destination: ${destinationId} (lockDirections: ${lockDirections})`
+        `Situm > hook > Could not compute route (lockDirections: ${lockDirections})`
       );
       return;
     }
 
-    const shouldBeLocation = location && originId === CURRENT_USER_LOCATION_ID;
-    const shouldBeCustomDestination =
-      location && destinationId === CUSTOM_DESTINATION_LOCATION_ID;
-
-    const fromPoint = shouldBeLocation
-      ? locationToPoint(location)
-      : poiToPoint(poiOrigin);
-    const toPoint = shouldBeCustomDestination
-      ? destinationToPoint(directionsOptions.to)
-      : poiToPoint(poiDestination);
-
     // iOS workaround -> does not allow for several direction petitions
     setLockDirections(true);
-    return await SitumPlugin.requestDirections(
-      _building,
-      fromPoint,
-      toPoint,
-      directionsOptions
-    )
+    return await SitumPlugin.requestDirections(_building, from, to, {
+      minimizeFloorChanges,
+      accessibilityMode,
+      bearingFrom,
+    })
       .then((_directions) => {
         const newRoute = {
           ..._directions,
-          originId,
-          destinationId,
-          type: directionsOptions?.accessibilityMode,
+          originIdentifier,
+          destinationIdentifier,
+          type: accessibilityMode,
         };
         if (updateRoute) {
           dispatch(setDirections(newRoute));
@@ -212,39 +179,11 @@ export const useSitumInternal = () => {
   };
 
   // Navigation
-  // TODO: this function is async and we use a callback, why not use a promise?
-  // Navigation
-  const startNavigation = async ({
-    buildingId,
-    destinationId,
-    directionsOptions,
-    navigationOptions,
-    originId,
-    updateRoute,
-  }: {
-    buildingId: string;
-    destinationId: number;
-    directionsOptions?: DirectionsOptions;
-    navigationOptions?: any;
-    originId: number;
-    updateRoute?: boolean;
-  }) => {
-    destinationId;
-    directionsOptions;
-    navigationOptions;
-    originId;
-    updateRoute;
+  const startNavigation = async (payload: any) => {
     console.debug("Situm > hook > requesting to start navigation");
-
     if (SitumPlugin.navigationIsRunning()) await stopNavigation();
 
-    await calculateRoute({
-      buildingId,
-      originId,
-      destinationId,
-      directionsOptions,
-      updateRoute: false,
-    }).then((r) => {
+    await calculateRoute(payload).then((r) => {
       if (!r) {
         return;
       }
@@ -259,9 +198,12 @@ export const useSitumInternal = () => {
     });
 
     try {
+      const navigationRequest = createNavigationRequest(
+        payload.navigationRequest
+      );
       SitumPlugin.requestNavigationUpdates({
-        ...defaultNavigationOptions,
-        ...navigationOptions,
+        ...defaultNavigationRequest,
+        ...navigationRequest,
       });
     } catch (e) {
       console.error(`Situm > hook >Could not update navigation ${e}`);

@@ -377,8 +377,8 @@ export default class SitumPlugin {
    */
   static requestDirections = (
     building: Building,
-    from: Point,
-    to: Point,
+    from: Point | Location,
+    to: Point | Poi,
     directionOptions?: DirectionsOptions
   ) => {
     return promiseWrapper<Directions>(({ onSuccess, onError }) => {

@@ -403,30 +403,32 @@ export type LocationRequest = {
 
 /**
  * @name NavigationRequest
- * @description A data object that contains parameters for the navigation service, NavigationManager.
+ * @description A data object that contains the request for navigation.
  *
- * @property {number} distanceToChangeIndicationThreshold - Distance threshold from when the next indication is considered reached.
- * @property {number} distanceToFloorChangeThreshold - Distance threshold from when a floor change is considered reached.
- * @property {number} distanceToGoalThreshold - Distance threshold from when the goal is considered reached.
- * @property {number} distanceToIgnoreFirstIndication - Maximum distance to ignore the first indication when navigating a route (Only available for Android).
- * @property {number} ignoreLowQualityLocations - Set if low quality locations should be ignored. (Only available for Android).
- * @property {number} indicationsInterval - Time to wait between indications.
- * @property {number} outsideRouteThreshold - Set the distance to consider the use is outside of the route. A type=userOutsideRoute will be sent trough the NavigationListener .
- * @property {number} roundIndicationsStep - Step that will be used to round indications distance.
- * @property {number} timeToFirstIndication - Time to wait until the first indication is returned.
- * @property {number} timeToIgnoreUnexpectedFloorChanges - Time (in millis) to ignore the locations received during navigation, when the next indication is a floor change, if the locations are in a wrong floor (not in origin or destination floors).
+ * @property {number} distanceToGoalThreshold - Distance threshold to consider reaching the goal (meters).
+ * @property {number} outsideRouteThreshold - Distance threshold to consider being outside the route (meters).
+ * @property {number} distanceToIgnoreFirstIndication - Maximum distance to ignore the first indication when navigating (meters).
+ * @property {number} distanceToFloorChangeThreshold - Distance threshold from when a floor change is considered reached (meters).
+ * @property {number} distanceToChangeIndicationThreshold - Distance threshold to change the indication (meters).
+ * @property {number} indicationsInterval - Interval between indications (milliseconds).
+ * @property {number} timeToFirstIndication - Time to wait until the first indication is returned (milliseconds).
+ * @property {number} roundIndicationsStep - Step to round indications (meters).
+ * @property {number} timeToIgnoreUnexpectedFloorChanges - Time to ignore the locations received during navigation, when the next indication is a floor change,
+ *                                                         if the locations are on a wrong floor (not in origin or destination floors) (milliseconds).
+ * @property {boolean} ignoreLowQualityLocations - Ignore low-quality locations.
+ *
  */
 export type NavigationRequest = {
-  distanceToIgnoreFirstIndication?: number;
-  ignoreLowQualityLocations?: number;
   distanceToGoalThreshold?: number;
   outsideRouteThreshold?: number;
+  distanceToIgnoreFirstIndication?: number;
   distanceToFloorChangeThreshold?: number;
   distanceToChangeIndicationThreshold?: number;
   indicationsInterval?: number;
   timeToFirstIndication?: number;
   roundIndicationsStep?: number;
   timeToIgnoreUnexpectedFloorChanges?: number;
+  ignoreLowQualityLocations?: boolean;
 };
 
 /**
@@ -439,11 +441,10 @@ export type NavigationRequest = {
  * @property {DirectionsOptions} options - Options that can be added to the request.
  */
 export type DirectionsRequest = {
-  positioningBuilding: Building;
+  buildingIdentifier: string;
   from: Point | Location;
   to: Point | Poi;
-  options: DirectionsOptions;
-};
+} & DirectionsOptions;
 
 /**
  * @name DirectionsOptions
@@ -454,11 +455,11 @@ export type DirectionsRequest = {
  * @property {number} startingAngle - Current user's orientation in degrees.
  */
 export type DirectionsOptions = {
-  from?: Point;
-  to?: Point;
   minimizeFloorChanges?: boolean;
   accessibilityMode?: AccessibilityMode;
+  // startingAngle = bearingFrom
   startingAngle?: number;
+  bearingFrom?: number;
 };
 
 /**

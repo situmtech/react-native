@@ -98,7 +98,11 @@ interface NavigationAPI {
 
 interface DirectionsAPI {
   requestDirections: (
-    directionsParameters: (Building | Point | DirectionsOptions)[],
+    directionsParameters: (
+      | Building
+      | (Point | Location | Poi)
+      | DirectionsOptions
+    )[],
     onSuccess: (response: Directions) => void,
     onError: (error: Error) => void
   ) => void;

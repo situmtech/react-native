@@ -90,3 +90,12 @@ export type NavigateToPointPayload = {
   navigationName?: string;
   accessibilityMode?: AccessibilityMode;
 };
+
+export type DirectionsMessage = {
+  buildingIdentifier: string;
+  originIdentifier: string;
+  originCategory: string;
+  destinationIdentifier: string;
+  destinationCategory: string;
+  identifier: string;
+};
