@@ -7,7 +7,6 @@ import {
 import type {
   Building,
   BuildingInfo,
-  DirectionPoint,
   Directions,
   DirectionsOptions,
   Error,
@@ -19,6 +18,7 @@ import type {
   Poi,
   PoiCategory,
   PoiIcon,
+  Point,
 } from "./types";
 
 interface CartographyAPI {
@@ -98,7 +98,7 @@ interface NavigationAPI {
 
 interface DirectionsAPI {
   requestDirections: (
-    directionsParameters: (Building | DirectionPoint | DirectionsOptions)[],
+    directionsParameters: (Building | Point | DirectionsOptions)[],
     onSuccess: (response: Directions) => void,
     onError: (error: Error) => void
   ) => void;

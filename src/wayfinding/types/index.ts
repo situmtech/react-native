@@ -1,6 +1,6 @@
 import { AccessibilityMode } from "src/sdk";
 
-import type { DirectionPoint } from "../../sdk/types";
+import type { Point } from "../../sdk/types";
 import { ErrorName } from "./constants";
 
 export interface MapViewError {
@@ -65,7 +65,7 @@ export interface Destination {
   category: string;
   identifier?: string;
   name?: string;
-  point: DirectionPoint;
+  point: Point;
 }
 
 export interface Navigation {

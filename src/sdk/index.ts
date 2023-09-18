@@ -10,7 +10,6 @@ import type {
   Building,
   BuildingInfo,
   ConfigurationOptions,
-  DirectionPoint,
   Directions,
   DirectionsOptions,
   Error,
@@ -24,6 +23,7 @@ import type {
   Poi,
   PoiCategory,
   PoiIcon,
+  Point,
   SdkVersion,
 } from "./types";
 import { SdkNavigationUpdateType } from "./types/constants";
@@ -182,7 +182,7 @@ export default class SitumPlugin {
    *
    */
   static sdkVersion = () => {
-    return exceptionWrapper<SdkVersion>(() => {
+    return exceptionWrapper<SdkVersion>(({ onSuccess }) => {
       const versions: { react_native: string; ios?: string; android?: string } =
         {
           react_native: packageJson.version,
@@ -193,8 +193,7 @@ export default class SitumPlugin {
       } else {
         versions.android = packageJson.sdkVersions.android;
       }
-
-      return versions;
+      onSuccess(versions);
     });
   };
 
@@ -372,14 +371,14 @@ export default class SitumPlugin {
    * asynchronously using the callback.
    *
    * @param building {@link Building}
-   * @param from {@link DirectionPoint} route origin
-   * @param to {@link DirectionPoint} route destination
+   * @param from {@link Point} route origin
+   * @param to {@link Point} route destination
    * @param directionOptions {@link DirectionsOptions}
    */
   static requestDirections = (
     building: Building,
-    from: DirectionPoint,
-    to: DirectionPoint,
+    from: Point,
+    to: Point,
     directionOptions?: DirectionsOptions
   ) => {
     return promiseWrapper<Directions>(({ onSuccess, onError }) => {

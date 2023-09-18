@@ -20,6 +20,7 @@ export const SetCacheMaxAge = () => {
   const invalidateCache = () => {
     try {
       SitumPlugin.invalidateCache();
+      setStatus('Cache invalidated');
     } catch (e) {
       console.log(`Situm > example > Could not invalidate cache ${e}`);
     }
@@ -31,6 +32,7 @@ export const SetCacheMaxAge = () => {
       SitumPlugin.setConfiguration({
         cacheMaxAge: numSeconds,
       });
+      setStatus(`Cache age set to ${numSeconds} seconds`);
     } catch (e) {
       console.log(`Situm > example > Could not set max cache age ${e}`);
     }

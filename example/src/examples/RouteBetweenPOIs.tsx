@@ -20,8 +20,8 @@ export const RouteBetweenPOIs = () => {
 
     await SitumPlugin.fetchIndoorPOIsFromBuilding(building)
       .then(_indoorPois => {
-        console.log(JSON.stringify(indoorPOIs, null, 2));
-        setIndoorPOIs(indoorPOIs);
+        console.log(JSON.stringify(_indoorPois, null, 2));
+        setIndoorPOIs(_indoorPois);
       })
       .catch(e => {
         console.debug(`Situm > example > Could not fetch indoor POIs ${e}`);
