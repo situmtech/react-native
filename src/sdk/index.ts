@@ -52,6 +52,7 @@ const RNCSitumPlugin =
 const SitumPluginEventEmitter = new NativeEventEmitter(RNCSitumPlugin);
 
 export default class SitumPlugin {
+  // TODO: these do not act as state, not reliable
   private static positioningRunning = false;
   private static navigationRunning = false;
   private static realtimeSubscriptions = [];

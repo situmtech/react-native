@@ -17,12 +17,11 @@ export const BuildingsBasicInfo = () => {
             'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
           );
         } else {
-          console.log(JSON.stringify(_buildings));
           setBuildings(_buildings);
         }
       })
       .catch(e => {
-        console.error(e);
+        console.error(`Situm > example > Could not fetch buildings ${e}`);
         setError(e);
       });
   }, []);

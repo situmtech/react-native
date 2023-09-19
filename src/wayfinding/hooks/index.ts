@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import SitumPlugin from "../../sdk";
 import {
   type Building,
+  type Directions,
   type Error,
   type Location,
   type LocationStatus,
@@ -143,7 +144,7 @@ export const useSitumInternal = () => {
 
     if (!to || !from || lockDirections) {
       console.debug(
-        `Situm > hook > Could not compute route (lockDirections: ${lockDirections})`
+        `Situm > hook > Could not compute route (to: ${to}, from: ${from}, lockDirections: ${lockDirections})`
       );
       return;
     }
@@ -168,6 +169,7 @@ export const useSitumInternal = () => {
         return newRoute;
       })
       .catch((e) => {
+        console.error(`Situm > hook > Could not compute route: ${e}`);
         dispatch(setDirections({ error: JSON.stringify(e) }));
       })
       .finally(() => {
@@ -176,37 +178,44 @@ export const useSitumInternal = () => {
   };
 
   // Navigation
-  const startNavigation = async (payload: any) => {
-    console.debug("Situm > hook > requesting to start navigation");
-    if (SitumPlugin.navigationIsRunning()) stopNavigation();
+  const startNavigation = (payload: any) => {
+    return new Promise<Directions>((resolve, reject) => {
+      console.debug("Situm > hook > request to start navigation");
+      if (SitumPlugin.navigationIsRunning()) stopNavigation();
 
-    await calculateRoute(payload, false).then((r) => {
-      if (!r) {
-        return;
-      }
-
-      dispatch(
-        setNavigation({
-          status: NavigationStatus.START,
-          type: NavigationUpdateType.PROGRESS,
-          ...r,
+      calculateRoute(payload, false)
+        .then((r) => {
+          if (!r) {
+            reject();
+            return;
+          }
+          dispatch(
+            setNavigation({
+              status: NavigationStatus.START,
+              type: NavigationUpdateType.PROGRESS,
+              ...r,
+            })
+          );
+          try {
+            const navigationRequest = createNavigationRequest(
+              payload.navigationRequest
+            );
+            SitumPlugin.requestNavigationUpdates({
+              ...defaultNavigationRequest,
+              ...navigationRequest,
+            });
+            resolve(r);
+          } catch (e) {
+            reject(e);
+            console.error(`Situm > hook > Could not update navigation ${e}`);
+            dispatch(setError({ message: "error", code: 3051 } as Error));
+            stopNavigation();
+          }
         })
-      );
+        .catch((e) => {
+          reject(e);
+        });
     });
-
-    try {
-      const navigationRequest = createNavigationRequest(
-        payload.navigationRequest
-      );
-      SitumPlugin.requestNavigationUpdates({
-        ...defaultNavigationRequest,
-        ...navigationRequest,
-      });
-    } catch (e) {
-      console.error(`Situm > hook >Could not update navigation ${e}`);
-      dispatch(setError({ message: "error", code: 3051 } as Error));
-      stopNavigation();
-    }
   };
 
   const stopNavigation = () => {
@@ -217,7 +226,7 @@ export const useSitumInternal = () => {
       console.debug("Situm > hook > Successfully removed navigation updates");
       dispatch(setNavigation({ status: NavigationStatus.STOP }));
     } catch (e) {
-      console.debug(`Situm > hook > Could not remove navigation updates ${e}`);
+      console.error(`Situm > hook > Could not remove navigation updates ${e}`);
     }
   };
 

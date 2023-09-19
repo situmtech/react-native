@@ -18,7 +18,7 @@ export const BuildingFullInfo = () => {
     SitumPlugin.fetchFloorsFromBuilding(b)
       .then(setFloors)
       .catch(error => {
-        console.debug(`Failed to fetch floors: ${error}`);
+        console.error(`Situm > example > Failed to fetch floors: ${error}`);
       });
   };
 
@@ -26,7 +26,7 @@ export const BuildingFullInfo = () => {
     SitumPlugin.fetchIndoorPOIsFromBuilding(b)
       .then(setIndoorPOIs)
       .catch(error => {
-        console.debug(`Failed to fetch POIs: ${error}`);
+        console.error(`Situm > example > Failed to fetch POIs: ${error}`);
       });
   };
 
@@ -34,7 +34,9 @@ export const BuildingFullInfo = () => {
     SitumPlugin.fetchOutdoorPOIsFromBuilding(b)
       .then(setOutdoorPOIs)
       .catch(error => {
-        console.debug(`Failed to fetch outdoor POIs: ${error}`);
+        console.error(
+          `Situm > example > Failed to fetch outdoor POIs: ${error}`,
+        );
       });
   };
 
@@ -42,7 +44,7 @@ export const BuildingFullInfo = () => {
     fetchBuilding(SITUM_BUILDING_ID)
       .then(setBuilding)
       .catch(error => {
-        console.debug(`Failed to fetch building: ${error}`);
+        console.error(`Situm > example > Failed to fetch building: ${error}`);
       });
   }, []);
 

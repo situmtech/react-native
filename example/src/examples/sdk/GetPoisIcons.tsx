@@ -78,7 +78,11 @@ export const GetPoisIcons = () => {
   }, [pois, currentFloor]);
 
   useEffect(() => {
-    fetchBuilding(SITUM_BUILDING_ID).then(setBuilding).catch(console.debug);
+    fetchBuilding(SITUM_BUILDING_ID)
+      .then(setBuilding)
+      .catch(e => {
+        console.error(`Situm > example > Could not fetch building: ${e}`);
+      });
   }, []);
 
   useEffect(() => {
@@ -107,7 +111,11 @@ export const GetPoisIcons = () => {
 
         getPoisInfo(data).then((res: any) => setPois(res));
       })
-      .catch(console.debug);
+      .catch(e => {
+        console.error(
+          `Situm > example > Could not fetch building's full information: ${e}`,
+        );
+      });
   }, [building]);
 
   return (

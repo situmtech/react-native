@@ -64,7 +64,9 @@ export const DrawRouteBetweenPOIs = () => {
   useEffect(() => {
     fetchBuilding(SITUM_BUILDING_ID)
       .then(setBuilding)
-      .catch(_err => console.log);
+      .catch(e => {
+        console.error(`Situm > example > Could not fetch building: ${e}`);
+      });
   }, []);
 
   useEffect(() => {
@@ -73,7 +75,9 @@ export const DrawRouteBetweenPOIs = () => {
     }
     fetchPOIsFromBuilding(building)
       .then(setPois)
-      .catch(_err => console.log);
+      .catch(e => {
+        console.error(`Situm > example > Could not fetch POIs: ${e}`);
+      });
   }, [building]);
 
   useEffect(() => {
@@ -98,7 +102,11 @@ export const DrawRouteBetweenPOIs = () => {
         )[0];
         setMapImage(selectedFloor.mapUrl);
       })
-      .catch(error => console.debug(error));
+      .catch(e => {
+        console.error(
+          `Situm > example > Could not fetch building's full information: ${e}`,
+        );
+      });
   }, [building]);
 
   //ask for directions once we know the building and the 2 POIS we use as origin and destination
@@ -110,7 +118,9 @@ export const DrawRouteBetweenPOIs = () => {
       .then(_route => {
         _route && setPolylineLatlng(_route);
       })
-      .catch(error => console.debug(error));
+      .catch(e => {
+        console.error(`Situm > example > Could not compute route: ${e}`);
+      });
   }, [building, pois]);
 
   return (

@@ -23,12 +23,12 @@ import Wayfinding from './examples/wayfinding/Wayfinding';
 import NavigateToPoi from './examples/wayfinding/NavigateToPoi';
 import SelectPoi from './examples/wayfinding/SelectPoi';
 
-async function initSitumSdk() {
+function initSitumSdk() {
   try {
-    await SitumPlugin.init();
-    await SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL);
-    await SitumPlugin.setApiKey(SITUM_API_KEY);
-    await SitumPlugin.sdkVersion();
+    SitumPlugin.init();
+    SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL);
+    SitumPlugin.setApiKey(SITUM_API_KEY);
+    SitumPlugin.sdkVersion();
   } catch (err: unknown) {
     console.log('Situm SDK error: ', err);
   }
