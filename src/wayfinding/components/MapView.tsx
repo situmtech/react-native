@@ -14,7 +14,7 @@ import type {
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
-import SitumPlugin, { NavigationStatus, NavigationUpdateType } from "../../sdk";
+import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
 import {
   type MapViewError,
@@ -77,13 +77,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       configuration,
       onLoad = () => {},
       onLoadError = () => {},
-      onFloorChanged = () => {},
       onPoiSelected = () => {},
       onPoiDeselected = () => {},
-      onNavigationRequested = () => {},
-      onNavigationStarted = () => {},
-      onNavigationError = () => {},
-      onNavigationFinished = () => {},
     },
     ref
   ) => {
@@ -237,13 +232,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     useEffect(() => {
       if (!webViewRef.current || !navigation) return;
 
-      if (navigation.status === NavigationStatus.START) {
-        onNavigationStarted(ViewerMapper.routeToResult(navigation));
-      }
-      if (navigation?.type === NavigationUpdateType.FINISHED) {
-        onNavigationFinished(ViewerMapper.navigationToResult(navigation));
-      }
-
       sendMessageToViewer(
         webViewRef.current,
         ViewerMapper.navigation(navigation)
@@ -296,9 +284,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           calculateRoute(eventParsed.payload);
           break;
         case "navigation.requested":
-          startNavigation(eventParsed.payload)
-            .then((r) => onNavigationRequested(ViewerMapper.routeToResult(r)))
-            .catch(onNavigationError);
+          startNavigation(eventParsed.payload);
           break;
         case "navigation.stopped":
           stopNavigation();
@@ -310,7 +296,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           onPoiDeselected(eventParsed?.payload);
           break;
         case "cartography.floor_changed":
-          onFloorChanged(eventParsed?.payload);
           break;
         case "cartography.building_selected":
           console.log("Building Selected");

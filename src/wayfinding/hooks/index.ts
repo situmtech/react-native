@@ -179,43 +179,41 @@ export const useSitumInternal = () => {
 
   // Navigation
   const startNavigation = (payload: any) => {
-    return new Promise<Directions>((resolve, reject) => {
-      console.debug("Situm > hook > request to start navigation");
-      if (SitumPlugin.navigationIsRunning()) stopNavigation();
+    console.debug("Situm > hook > request to start navigation");
+    if (SitumPlugin.navigationIsRunning()) stopNavigation();
 
-      calculateRoute(payload, false)
-        .then((r) => {
-          if (!r) {
-            reject();
-            return;
-          }
-          dispatch(
-            setNavigation({
-              status: NavigationStatus.START,
-              type: NavigationUpdateType.PROGRESS,
-              ...r,
-            })
+    calculateRoute(payload, false)
+      .then((r) => {
+        if (!r) {
+          console.debug(`Situm > hook > No route was computed`);
+          return;
+        }
+        dispatch(
+          setNavigation({
+            status: NavigationStatus.START,
+            type: NavigationUpdateType.PROGRESS,
+            ...r,
+          })
+        );
+        try {
+          const navigationRequest = createNavigationRequest(
+            payload.navigationRequest
           );
-          try {
-            const navigationRequest = createNavigationRequest(
-              payload.navigationRequest
-            );
-            SitumPlugin.requestNavigationUpdates({
-              ...defaultNavigationRequest,
-              ...navigationRequest,
-            });
-            resolve(r);
-          } catch (e) {
-            reject(e);
-            console.error(`Situm > hook > Could not update navigation ${e}`);
-            dispatch(setError({ message: "error", code: 3051 } as Error));
-            stopNavigation();
-          }
-        })
-        .catch((e) => {
-          reject(e);
-        });
-    });
+          SitumPlugin.requestNavigationUpdates({
+            ...defaultNavigationRequest,
+            ...navigationRequest,
+          });
+        } catch (e) {
+          console.error(`Situm > hook > Could not update navigation ${e}`);
+          dispatch(setError({ message: "error", code: 3051 } as Error));
+          stopNavigation();
+        }
+      })
+      .catch((e) => {
+        console.error(
+          `Situm > hook > Could not compute route for navigation ${e}`
+        );
+      });
   };
 
   const stopNavigation = () => {
