@@ -68,7 +68,7 @@ export const RouteBetweenPOIs = () => {
 
   return (
     <ScrollView style={{...styles.screenWrapper}}>
-      <Card mode="contained" style={{marginVertical: 5}}>
+      <Card mode="contained" style={styles.margin}>
         <Card.Title title="Route" />
         <Card.Content>
           {indoorPOIs && indoorPOIs.length > 0 && (

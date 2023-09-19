@@ -57,19 +57,19 @@ export const BuildingFullInfo = () => {
       {!SITUM_BUILDING_ID && (
         <Text>No building id provided, please edit your situm.tsx file</Text>
       )}
-      <Card mode="contained" style={{marginVertical: 5}}>
+      <Card mode="contained" style={styles.margin}>
         <Card.Title titleVariant="headlineSmall" title={'Floors'} />
         <Card.Content>
           <Text variant="bodyMedium">{JSON.stringify(floors, null, 2)}</Text>
         </Card.Content>
       </Card>
-      <Card mode="contained" style={{marginVertical: 5}}>
+      <Card mode="contained" style={styles.margin}>
         <Card.Title titleVariant="headlineSmall" title={'POIs'} />
         <Card.Content>
           <Text>{JSON.stringify(indoorPOIs, null, 2)}</Text>
         </Card.Content>
       </Card>
-      <Card mode="contained" style={{marginVertical: 5}}>
+      <Card mode="contained" style={styles.margin}>
         <Card.Title titleVariant="headlineSmall" title={'Outdoor POIs'} />
         <Card.Content>
           <Text>{JSON.stringify(outdoorPOIs, null, 2)}</Text>
