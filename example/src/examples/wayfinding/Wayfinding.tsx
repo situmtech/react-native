@@ -40,6 +40,7 @@ const Screen: React.FC = () => {
     // Request necessary permissions to start positioning
     requestPermission()
       .then(() => {
+        console.log('Situm > example > Starting positioning');
         SitumPlugin.requestLocationUpdates();
       })
       .catch(e => {
