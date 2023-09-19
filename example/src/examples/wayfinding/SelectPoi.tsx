@@ -25,6 +25,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 5,
   },
+  text_input: {
+    width: 180,
+  },
 });
 
 const Screen: React.FC = () => {
@@ -96,7 +99,7 @@ const Screen: React.FC = () => {
           placeholder={'POI identifier'}
           value={selectedPoiIdentifier}
           onChangeText={setSelectedPoiIdentifier}
-          style={{width: 180}}
+          style={styles.text_input}
         />
         <Button
           mode="outlined"
