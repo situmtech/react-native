@@ -42,7 +42,9 @@ const Screen: React.FC = () => {
       .then(() => {
         SitumPlugin.requestLocationUpdates();
       })
-      .catch(console.debug);
+      .catch(e => {
+        console.log(`Situm > example > Permissions rejected: ${e}`);
+      });
 
     // When unmounting make sure to stop positioning
     return () => SitumPlugin.removeLocationUpdates();

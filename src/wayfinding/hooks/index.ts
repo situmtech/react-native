@@ -21,7 +21,6 @@ import {
   selectLocation,
   selectLocationStatus,
   selectNavigation,
-  setDestinationPoiID,
   setDirections,
   setError,
   setLocation,
@@ -106,7 +105,6 @@ export const useSitumInternal = () => {
     SitumPlugin.onNavigationOutOfRoute(() => {
       dispatch(
         setNavigation({
-          ...navigation, //TODO: Is this needed?
           type: NavigationUpdateType.OUT_OF_ROUTE,
           status: NavigationStatus.UPDATE,
         })
@@ -118,7 +116,6 @@ export const useSitumInternal = () => {
     SitumPlugin.onNavigationFinished(() => {
       dispatch(
         setNavigation({
-          ...navigation, //TODO: Is this needed?
           type: NavigationUpdateType.FINISHED,
           status: NavigationStatus.UPDATE,
         })
@@ -183,7 +180,7 @@ export const useSitumInternal = () => {
     console.debug("Situm > hook > requesting to start navigation");
     if (SitumPlugin.navigationIsRunning()) stopNavigation();
 
-    await calculateRoute(payload).then((r) => {
+    await calculateRoute(payload, false).then((r) => {
       if (!r) {
         return;
       }
@@ -219,7 +216,6 @@ export const useSitumInternal = () => {
       SitumPlugin.removeNavigationUpdates();
       console.debug("Situm > hook > Successfully removed navigation updates");
       dispatch(setNavigation({ status: NavigationStatus.STOP }));
-      dispatch(setDestinationPoiID(undefined));
     } catch (e) {
       console.debug(`Situm > hook > Could not remove navigation updates ${e}`);
     }
