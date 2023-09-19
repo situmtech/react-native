@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
-import {getDefaultLocationOptions} from '../settings';
+import {getDefaultLocationOptions} from '../../settings';
 import SitumPlugin, {
   LocationStatus,
   LocationStatusName,
   Location,
   Error,
 } from '@situm/react-native';
-import styles from './styles/styles';
-import requestPermissions from './Utils/RequestPermissions';
-import {setBuildings} from '../../../src/wayfinding/store';
+import styles from '../styles/styles';
+import requestPermissions from '../Utils/RequestPermissions';
 import {Button, Card, Divider, List} from 'react-native-paper';
 
 function PositioningScreen() {
@@ -99,7 +98,6 @@ function PositioningScreen() {
     setLocation('');
     setStatus('');
     setError('');
-    setBuildings(null);
     try {
       SitumPlugin.removeLocationUpdates();
     } catch (e) {

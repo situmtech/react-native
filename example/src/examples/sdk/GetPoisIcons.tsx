@@ -3,9 +3,9 @@ import {Image, View} from 'react-native';
 import MapView, {Marker, Overlay, PROVIDER_GOOGLE} from 'react-native-maps';
 import SitumPlugin, {PoiIcon} from '@situm/react-native';
 
-import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
-import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
-import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
+import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../../situm';
+import {calculateBuildingLocation} from '../Utils/CalculateBuildingLocation';
+import {fetchBuilding, fetchBuildingInfo} from '../Utils/CommonFetchs';
 
 const getIconForPOI = async (poi: any): Promise<{poi: any; icon: string}> => {
   try {

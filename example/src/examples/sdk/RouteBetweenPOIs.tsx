@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
 import SitumPlugin, {Building, Poi} from '@situm/react-native';
 
-import {SITUM_BUILDING_ID} from '../situm';
-import styles from './styles/styles';
-import {fetchBuilding} from './Utils/CommonFetchs';
+import {SITUM_BUILDING_ID} from '../../situm';
+import styles from '../styles/styles';
+import {fetchBuilding} from '../Utils/CommonFetchs';
 import {Card} from 'react-native-paper';
 
 export const RouteBetweenPOIs = () => {

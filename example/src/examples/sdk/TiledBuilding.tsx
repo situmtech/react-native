@@ -3,7 +3,7 @@ import {View, ActivityIndicator} from 'react-native';
 
 import SitumPlugin, {Building} from '@situm/react-native';
 import MapView, {MapLocalTile} from 'react-native-maps';
-import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
+import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../../situm';
 
 //This example shows how to display a tiled floorplan hosted in Situm Platform.
 //Floorplans are not stored in tiles by default, but Situm Support Team can tile your floorplans & upload them to Situm Platform (ask us: support@situm.com)
