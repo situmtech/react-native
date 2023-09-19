@@ -15,7 +15,11 @@ export const ShowBuildingOnMap = () => {
   const [mapRegion, setMapRegion] = useState<any>();
 
   useEffect(() => {
-    fetchBuilding(SITUM_BUILDING_ID).then(setBuilding).catch(console.debug);
+    fetchBuilding(SITUM_BUILDING_ID)
+      .then(setBuilding)
+      .catch(e => {
+        console.error(`Situm > example > Could not fetch building: ${e}`);
+      });
   }, []);
 
   useEffect(() => {

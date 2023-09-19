@@ -16,13 +16,19 @@ export const InfoFromBuilding = () => {
         console.log('buildingInfo:', _buildingInfo);
         setBuildingInfo(_buildingInfo);
       })
-      .catch(error => console.debug(error));
+      .catch(e => {
+        console.error(
+          `Situm > example > Could not fetch building's full information: ${e}`,
+        );
+      });
   };
 
   useEffect(() => {
-    fetchBuilding(SITUM_BUILDING_ID).then(myBuilding =>
-      getInfoFromBuilding(myBuilding),
-    );
+    fetchBuilding(SITUM_BUILDING_ID)
+      .then(myBuilding => getInfoFromBuilding(myBuilding))
+      .catch(e => {
+        console.error(`Situm > example > Could not fetch building: ${e}`);
+      });
   }, []);
 
   return (

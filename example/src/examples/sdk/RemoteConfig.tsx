@@ -27,14 +27,20 @@ export const RemoteConfig = () => {
     // Handle location status updates
     SitumPlugin.onLocationStatus((st: LocationStatus) => {
       if (st.statusName in LocationStatusName) {
-        console.log(JSON.stringify(st));
+        console.log(
+          'Situm > example > New location status: ',
+          JSON.stringify(st),
+        );
         setStatus(JSON.stringify(st, null, 3));
       }
     });
 
     // Handle location errors
     SitumPlugin.onLocationError((err: Error) => {
-      console.log(JSON.stringify(err));
+      console.error(
+        'Situm > example > Error while positioning: ',
+        JSON.stringify(err),
+      );
       setError(err.message);
     });
 
@@ -45,13 +51,18 @@ export const RemoteConfig = () => {
 
     // Handle geofence enter event
     SitumPlugin.onEnterGeofences((items: any) => {
-      console.log('Detected Entered geofences: ' + JSON.stringify(items));
+      console.log(
+        'Situm > example > Detected Entered geofences: ' +
+          JSON.stringify(items),
+      );
       setGeofences('Inside ' + JSON.stringify(items));
     });
 
     // Handle geofence exit event
     SitumPlugin.onExitGeofences((items: any) => {
-      console.log('Detected Exited geofences: ' + JSON.stringify(items));
+      console.log(
+        'Situm > example > Detected Exited geofences: ' + JSON.stringify(items),
+      );
       setGeofences('Outside ' + JSON.stringify(items));
     });
   };
@@ -60,7 +71,7 @@ export const RemoteConfig = () => {
   const startPositioning = async () => {
     await requestPermissions();
 
-    console.log('Starting positioning');
+    console.log('Situm > example > Starting positioning');
     setLocation('');
     setStatus('');
     setError('');

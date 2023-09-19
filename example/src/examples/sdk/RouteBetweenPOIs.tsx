@@ -24,14 +24,14 @@ export const RouteBetweenPOIs = () => {
         setIndoorPOIs(_indoorPois);
       })
       .catch(e => {
-        console.debug(`Situm > example > Could not fetch indoor POIs ${e}`);
+        console.error(`Situm > example > Could not fetch indoor POIs ${e}`);
       });
   };
 
   const requestDirections = async () => {
     //check if we have 2 pois at least
     if ((indoorPOIs && indoorPOIs.length < 2) || !building) {
-      console.error('Your building has less than two POIs');
+      console.error('Situm > example > Your building has less than two POIs');
       return;
     }
     await SitumPlugin.requestDirections(
@@ -44,14 +44,18 @@ export const RouteBetweenPOIs = () => {
         setRoute(_route);
       })
       .catch(e => {
-        console.debug(`Could not compute route ${e}`);
+        console.error(`Situm > example > Could not compute route ${e}`);
         setError(e);
       });
   };
 
   useEffect(() => {
     // first load the building
-    fetchBuilding(SITUM_BUILDING_ID).then(setBuilding);
+    fetchBuilding(SITUM_BUILDING_ID)
+      .then(setBuilding)
+      .catch(e => {
+        console.error(`Situm > example > Coult not fetch building ${e}`);
+      });
   }, []);
 
   useEffect(() => {

@@ -63,14 +63,20 @@ function PositioningScreen() {
     // Handle location status updates
     SitumPlugin.onLocationStatus((st: LocationStatus) => {
       if (st.statusName in LocationStatusName) {
-        console.log(JSON.stringify(st));
+        console.log(
+          'Situm > example > New location status: ',
+          JSON.stringify(st),
+        );
         setStatus(JSON.stringify(st, null, 3));
       }
     });
 
     // Handle location errors
     SitumPlugin.onLocationError((err: Error) => {
-      console.log(JSON.stringify(err));
+      console.error(
+        'Situm > example > Error while positioning: ',
+        JSON.stringify(err),
+      );
       setError(err.message);
     });
 
@@ -81,14 +87,19 @@ function PositioningScreen() {
 
     // Handle geofence enter event
     SitumPlugin.onEnterGeofences((items: any) => {
-      console.log('Detected Entered geofences: ' + JSON.stringify(items));
-      setGeofences('Inside ' + JSON.stringify(items, null, 2));
+      console.log(
+        'Situm > example > Detected Entered geofences: ' +
+          JSON.stringify(items),
+      );
+      setGeofences('Inside ' + JSON.stringify(items));
     });
 
     // Handle geofence exit event
     SitumPlugin.onExitGeofences((items: any) => {
-      console.log('Detected Exited geofences: ' + JSON.stringify(items));
-      setGeofences('Outside ' + JSON.stringify(items, null, 2));
+      console.log(
+        'Situm > example > Detected Exited geofences: ' + JSON.stringify(items),
+      );
+      setGeofences('Outside ' + JSON.stringify(items));
     });
   };
 

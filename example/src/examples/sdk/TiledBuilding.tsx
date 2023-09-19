@@ -21,7 +21,7 @@ export const TiledBuilding = () => {
       .then(buildings => {
         if (!buildings || buildings.length === 0) {
           console.error(
-            'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
+            'Situm > example > No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
           );
           return;
         }
@@ -30,34 +30,40 @@ export const TiledBuilding = () => {
           //console.log(key + JSON.stringify(b));
           if (b.buildingIdentifier === SITUM_BUILDING_ID) {
             console.log(
-              'Found required building, going to download entire building',
+              'Situm > example > Found required building, going to download entire building',
             );
 
-            SitumPlugin.fetchBuildingInfo(b).then(buildingInfo => {
-              mapRef.current?.animateToRegion({
-                latitude: buildingInfo.building.center.latitude,
-                longitude: buildingInfo.building.center.longitude,
-                latitudeDelta: 0.005,
-                longitudeDelta: 0.005,
+            SitumPlugin.fetchBuildingInfo(b)
+              .then(buildingInfo => {
+                mapRef.current?.animateToRegion({
+                  latitude: buildingInfo.building.center.latitude,
+                  longitude: buildingInfo.building.center.longitude,
+                  latitudeDelta: 0.005,
+                  longitudeDelta: 0.005,
+                });
+                getOfflineTiles(b);
+              })
+              .catch(e => {
+                console.error(
+                  `Situm > example > Could not fetch building's information: ${e}`,
+                );
               });
-              getOfflineTiles(b);
-            });
           }
         }
       })
-      .catch(e => console.debug(`Could not fetch tiles: ${e}`));
+      .catch(e =>
+        console.debug(`Situm > example > Could not fetch buildings: ${e}`),
+      );
   };
 
   const getOfflineTiles = async (building: Building) => {
     SitumPlugin.fetchTilesFromBuilding(building)
       .then(response => {
-        console.log('response is' + JSON.stringify(response));
-
         setOfflineTilePath(response?.results);
         setIsLoading(false);
       })
       .catch(e => {
-        console.log('Fetch tiles from building error: ' + e);
+        console.error(`Situm > example > Could not fetch tiles ${e}`);
       });
   };
 

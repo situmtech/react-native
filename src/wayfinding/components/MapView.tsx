@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {
   useCallback,
@@ -13,13 +14,15 @@ import type {
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
-import SitumPlugin from "../../sdk";
+import SitumPlugin, { NavigationStatus, NavigationUpdateType } from "../../sdk";
 import useSitum from "../hooks";
 import {
   type MapViewError,
   type MapViewRef,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
+  type OnFloorChangedResult,
+  type OnNavigationResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
 } from "../types";
@@ -61,11 +64,27 @@ export interface MapViewProps {
   onPoiDeselected?: (event: OnPoiDeselectedResult) => void;
   onLoad?: (event: any) => void;
   onLoadError?: (event: MapViewError) => void;
+  onFloorChanged?: (event: OnFloorChangedResult) => void;
+  onNavigationRequested?: (event: OnNavigationResult) => void;
+  onNavigationStarted?: (event: OnNavigationResult) => void;
+  onNavigationError?: (event: OnNavigationResult) => void;
+  onNavigationFinished?: (event: OnNavigationResult) => void;
 }
 
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
   (
-    { configuration, onPoiSelected, onPoiDeselected, onLoad, onLoadError },
+    {
+      configuration,
+      onLoad = () => {},
+      onLoadError = () => {},
+      onFloorChanged = () => {},
+      onPoiSelected = () => {},
+      onPoiDeselected = () => {},
+      onNavigationRequested = () => {},
+      onNavigationStarted = () => {},
+      onNavigationError = () => {},
+      onNavigationFinished = () => {},
+    },
     ref
   ) => {
     const webViewRef = useRef<WebView>();
@@ -218,10 +237,18 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     useEffect(() => {
       if (!webViewRef.current || !navigation) return;
 
+      if (navigation.status === NavigationStatus.START) {
+        onNavigationStarted(ViewerMapper.routeToResult(navigation));
+      }
+      if (navigation?.type === NavigationUpdateType.FINISHED) {
+        onNavigationFinished(ViewerMapper.navigationToResult(navigation));
+      }
+
       sendMessageToViewer(
         webViewRef.current,
         ViewerMapper.navigation(navigation)
       );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigation]);
 
     // Updated SDK route
@@ -269,18 +296,21 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           calculateRoute(eventParsed.payload);
           break;
         case "navigation.requested":
-          startNavigation(eventParsed.payload);
+          startNavigation(eventParsed.payload)
+            .then((r) => onNavigationRequested(ViewerMapper.routeToResult(r)))
+            .catch(onNavigationError);
           break;
         case "navigation.stopped":
           stopNavigation();
           break;
         case "cartography.poi_selected":
-          onPoiSelected && onPoiSelected(eventParsed?.payload);
+          onPoiSelected(eventParsed?.payload);
           break;
         case "cartography.poi_deselected":
-          onPoiDeselected && onPoiDeselected(eventParsed?.payload);
+          onPoiDeselected(eventParsed?.payload);
           break;
         case "cartography.floor_changed":
+          onFloorChanged(eventParsed?.payload);
           break;
         case "cartography.building_selected":
           console.log("Building Selected");

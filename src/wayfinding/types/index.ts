@@ -70,7 +70,7 @@ export interface Navigation {
 }
 
 export interface OnNavigationResult {
-  navigation: Navigation;
+  navigation?: Navigation;
   error?: Error;
 }
 

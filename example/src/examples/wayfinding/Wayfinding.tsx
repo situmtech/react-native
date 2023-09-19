@@ -11,6 +11,8 @@ import type {
   OnPoiDeselectedResult,
   OnPoiSelectedResult,
   MapViewRef,
+  OnNavigationResult,
+  OnFloorChangedResult,
 } from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
 
@@ -76,6 +78,40 @@ const Screen: React.FC = () => {
     );
   };
 
+  const onFloorChanged = (event: OnFloorChangedResult) => {
+    console.log(
+      'Situm > example > on floor change detected: ' + JSON.stringify(event),
+    );
+  };
+
+  const onNavigationRequested = (event: OnNavigationResult) => {
+    console.log(
+      'Situm > example > on navigation requested detected: ' +
+        JSON.stringify(event),
+    );
+  };
+
+  const onNavigationStarted = (event: OnNavigationResult) => {
+    console.log(
+      'Situm > example > on navigation started detected: ' +
+        JSON.stringify(event),
+    );
+  };
+
+  const onNavigationError = (event: OnNavigationResult) => {
+    console.log(
+      'Situm > example > on navigation error detected: ' +
+        JSON.stringify(event),
+    );
+  };
+
+  const onNavigationFinished = (event: OnNavigationResult) => {
+    console.log(
+      'Situm > example > on navigation finished detected: ' +
+        JSON.stringify(event),
+    );
+  };
+
   return (
     <MapView
       ref={mapViewRef}
@@ -86,6 +122,11 @@ const Screen: React.FC = () => {
       onLoad={onLoad}
       onPoiSelected={onPoiSelected}
       onPoiDeselected={onPoiDeselected}
+      onFloorChanged={onFloorChanged}
+      onNavigationRequested={onNavigationRequested}
+      onNavigationStarted={onNavigationStarted}
+      onNavigationError={onNavigationError}
+      onNavigationFinished={onNavigationFinished}
     />
   );
 };

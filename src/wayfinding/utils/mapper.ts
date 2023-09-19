@@ -13,6 +13,7 @@ import type {
   NavigateToPointPayload,
   NavigateToPoiPayload,
   Navigation,
+  OnNavigationResult,
 } from "../types";
 
 export const createPoint = (payload: any): Point => {
@@ -119,16 +120,16 @@ const ViewerMapper = {
   route: (directions: Directions) => {
     return mapperWrapper("directions.update", directions);
   },
-  routeToResult: (navigation: any): Navigation => {
+  routeToResult: (route: any): OnNavigationResult => {
     return {
-      status: navigation.status,
-      destination: {
-        category: navigation?.destinationId ? "POI" : "COORDINATE",
-        identifier: navigation?.destinationId,
-        //name:, //TODO
-        point: navigation.to
-          ? createPoint(navigation.to)
-          : createPoint(navigation.TO),
+      navigation: {
+        status: route.status,
+        destination: {
+          category: route?.destinationId ? "POI" : "COORDINATE",
+          identifier: route?.destinationId,
+          //name:, //TODO
+          point: route.to ? createPoint(route.to) : createPoint(route.TO),
+        },
       },
     };
   },
@@ -160,9 +161,11 @@ const ViewerMapper = {
   cancelNavigation: () => {
     return mapperWrapper(`navigation.cancel`, {});
   },
-  navigationToResult: (navigation: NavigationProgress): Navigation => {
+  navigationToResult: (navigation: NavigationProgress): OnNavigationResult => {
     return {
-      status: navigation?.type,
+      navigation: {
+        status: navigation?.type,
+      },
     };
   },
 };

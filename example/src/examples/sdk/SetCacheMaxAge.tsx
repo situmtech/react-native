@@ -22,7 +22,7 @@ export const SetCacheMaxAge = () => {
       SitumPlugin.invalidateCache();
       setStatus('Cache invalidated');
     } catch (e) {
-      console.log(`Situm > example > Could not invalidate cache ${e}`);
+      console.error(`Situm > example > Could not invalidate cache ${e}`);
     }
   };
 
@@ -34,7 +34,7 @@ export const SetCacheMaxAge = () => {
       });
       setStatus(`Cache age set to ${numSeconds} seconds`);
     } catch (e) {
-      console.log(`Situm > example > Could not set max cache age ${e}`);
+      console.error(`Situm > example > Could not set max cache age ${e}`);
     }
   };
 
@@ -43,7 +43,7 @@ export const SetCacheMaxAge = () => {
     SitumPlugin.fetchBuildings()
       .then(setBuildings)
       .catch(error => {
-        console.debug(`Failed to fetch Buildings: ${error}`);
+        console.error(`Situm > example > Failed to fetch Buildings: ${error}`);
         setStatus('Failed to fetch Buildings');
       });
   };
