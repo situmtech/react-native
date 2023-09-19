@@ -7,12 +7,12 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
-import com.facebook.react.bridge.WritableNativeMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Stack;
 
 import es.situm.sdk.directions.DirectionsRequest;
 import es.situm.sdk.location.LocationRequest;
@@ -1136,37 +1135,25 @@ class SitumMapper {
     }
 
     public static ReadableMap convertMapToReadableMap(Map<String, Object> map) {
-        WritableMap response = new WritableNativeMap();
-        // Use a local stack to keep nested objects (avoids recursion).
-        // First item in the stack: the given object.
-        Stack<Map<String, Object>> sourcesStack = new Stack();
-        Stack<WritableMap> responseStack = new Stack<>();
-        sourcesStack.push(map);
-        responseStack.push(response);
-
-        while (!sourcesStack.isEmpty()) {
-            Map<String, Object> currentSource = sourcesStack.pop();
-            WritableMap currentTarget = responseStack.pop();
-            for (Map.Entry<String, Object> entry : currentSource.entrySet()) {
-                String key = entry.getKey();
-                Object value = entry.getValue();
-                if (value instanceof String) {
-                    currentTarget.putString(key, (String) value);
-                } else if (value instanceof Integer) {
-                    currentTarget.putInt(key, (Integer) value);
-                } else if (value instanceof Double) {
-                    currentTarget.putDouble(key, (Double) value);
-                } else if (value instanceof Boolean) {
-                    currentTarget.putBoolean(key, (Boolean) value);
-                } else if (value instanceof List) {
-                    // Warning: #convertMapToReadableMap maybe called here:
-                    currentTarget.putArray(key, convertListToReadableArray((List<Object>) value));
-                } else if (value instanceof Map) {
-                    sourcesStack.push((Map) value);
-                    WritableMap nextMap = new WritableNativeMap();
-                    responseStack.push(nextMap);
-                    currentTarget.putMap(key, nextMap);
-                }
+        WritableMap response = Arguments.createMap();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof String) {
+                response.putString(key, (String) value);
+            } else if (value instanceof Integer) {
+                response.putInt(key, (Integer) value);
+            } else if (value instanceof Double) {
+                response.putDouble(key, (Double) value);
+            } else if (value instanceof Boolean) {
+                response.putBoolean(key, (Boolean) value);
+            } else if (value instanceof List) {
+                // Warning: #convertMapToReadableMap maybe called here:
+                response.putArray(key, convertListToReadableArray((List<Object>) value));
+            } else if (value instanceof Map) {
+                // TODO: avoid recursive calls using a stack throws ObjectAlreadyConsumedException while
+                //  processing nested WritableMaps. Is there a way to avoid recursion?
+                response.putMap(key, convertMapToReadableMap((Map) value));
             }
         }
         return response;
@@ -1174,31 +1161,19 @@ class SitumMapper {
 
     public static ReadableArray convertListToReadableArray(List<Object> list) {
         WritableArray response = new WritableNativeArray();
-        Stack<List<Object>> sourcesStack = new Stack();
-        Stack<WritableArray> responseStack = new Stack<>();
-        sourcesStack.push(list);
-        responseStack.push(response);
-
-        while (!sourcesStack.isEmpty()) {
-            List<Object> currentSource = sourcesStack.pop();
-            WritableArray currentTarget = responseStack.pop();
-            for (Object value : currentSource) {
-                if (value instanceof String) {
-                    currentTarget.pushString((String) value);
-                } else if (value instanceof Integer) {
-                    currentTarget.pushInt((Integer) value);
-                } else if (value instanceof Double) {
-                    currentTarget.pushDouble((Double) value);
-                } else if (value instanceof Boolean) {
-                    currentTarget.pushBoolean((Boolean) value);
-                } else if (value instanceof Map) {
-                    currentTarget.pushMap(convertMapToReadableMap((Map) value));
-                } else if (value instanceof List) {
-                    sourcesStack.push((List) value);
-                    WritableArray nextList = new WritableNativeArray();
-                    responseStack.push(nextList);
-                    currentTarget.pushArray(nextList);
-                }
+        for (Object value : list) {
+            if (value instanceof String) {
+                response.pushString((String) value);
+            } else if (value instanceof Integer) {
+                response.pushInt((Integer) value);
+            } else if (value instanceof Double) {
+                response.pushDouble((Double) value);
+            } else if (value instanceof Boolean) {
+                response.pushBoolean((Boolean) value);
+            } else if (value instanceof Map) {
+                response.pushMap(convertMapToReadableMap((Map) value));
+            } else if (value instanceof List) {
+                response.pushArray(convertListToReadableArray((List) value));
             }
         }
         return response;
