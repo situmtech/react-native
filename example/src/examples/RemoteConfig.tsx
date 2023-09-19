@@ -29,7 +29,7 @@ export const RemoteConfig = () => {
     //Start positioning
     SitumPlugin.startPositioning(
       (newLocation: any) => {
-        console.log(JSON.stringify(newLocation, null, 3));
+        // console.log(JSON.stringify(newLocation, null, 3));
         setLocation(JSON.stringify(newLocation, null, 3));
       },
       (newStatus: any) => {
@@ -45,7 +45,15 @@ export const RemoteConfig = () => {
       },
       null,
     );
+  };
 
+  useEffect(() => {
+    // Set useRemoteConfig to true in order to be able to
+    SitumPlugin.setUseRemoteConfig('true', (response: any) => {
+      console.log(`Remote config enabled: ${JSON.stringify(response)}`);
+    });
+
+    // Listen to enter/exit geofences events.
     SitumPlugin.onEnterGeofences((items: any) => {
       console.log('Detected Entered geofences: ' + JSON.stringify(items));
       setGeofences('Inside ' + JSON.stringify(items));
@@ -54,13 +62,6 @@ export const RemoteConfig = () => {
     SitumPlugin.onExitGeofences((items: any) => {
       console.log('Detected Exited geofences: ' + JSON.stringify(items));
       setGeofences('Outside ' + JSON.stringify(items));
-    });
-  };
-
-  useEffect(() => {
-    // Set useRemoteConfig to true in order to be able to
-    SitumPlugin.setUseRemoteConfig('true', (response: any) => {
-      console.log(`Remote config enabled: ${JSON.stringify(response)}`);
     });
 
     return () => {
