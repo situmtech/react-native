@@ -11,9 +11,9 @@ import SitumPlugin, {
   DirectionsOptions,
   Poi,
 } from '@situm/react-native';
-import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
-import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
-import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
+import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../../situm';
+import {calculateBuildingLocation} from '../Utils/CalculateBuildingLocation';
+import {fetchBuilding, fetchBuildingInfo} from '../Utils/CommonFetchs';
 
 const fetchPOIsFromBuilding = async (building: any) => {
   try {

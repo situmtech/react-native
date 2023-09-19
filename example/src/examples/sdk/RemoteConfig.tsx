@@ -6,9 +6,8 @@ import SitumPlugin, {
   Location,
   Error,
 } from '@situm/react-native';
-import styles from './styles/styles';
-import requestPermissions from './Utils/RequestPermissions';
-import {setBuildings} from '../../../src/wayfinding/store';
+import styles from '../styles/styles';
+import requestPermissions from '../Utils/RequestPermissions';
 import {Button, Card, Divider, List} from 'react-native-paper';
 
 export const RemoteConfig = () => {
@@ -84,7 +83,6 @@ export const RemoteConfig = () => {
     setLocation('');
     setStatus('');
     setError('');
-    setBuildings(null);
     try {
       SitumPlugin.removeLocationUpdates();
     } catch (e) {

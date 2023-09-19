@@ -2,7 +2,7 @@ import React from 'react';
 import {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
 import SitumPlugin, {Building} from '@situm/react-native';
-import styles from './styles/styles';
+import styles from '../styles/styles';
 import {Card} from 'react-native-paper';
 
 export const BuildingsBasicInfo = () => {

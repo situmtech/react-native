@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import MapView, {Overlay, PROVIDER_GOOGLE} from 'react-native-maps';
-import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
-import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
-import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
+import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../../situm';
+import {calculateBuildingLocation} from '../Utils/CalculateBuildingLocation';
+import {fetchBuilding, fetchBuildingInfo} from '../Utils/CommonFetchs';
 import {Building} from '@situm/react-native';
 
 export const ShowBuildingOnMap = () => {
