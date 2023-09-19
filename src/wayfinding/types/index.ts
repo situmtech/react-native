@@ -39,17 +39,13 @@ export interface WayfindingResult {
 }
 
 export interface OnPoiSelectedResult {
-  buildingId: string;
-  buildingName: string;
-  floorId: string;
-  floorName: string;
-  poiId: string;
-  poiName: string;
+  identifier: string;
+  buildingIdentifier: string;
 }
 
 export interface OnPoiDeselectedResult {
-  buildingId: string;
-  buildingName: string;
+  identifier: string;
+  buildingIdentifier: string;
 }
 
 export interface OnFloorChangedResult {

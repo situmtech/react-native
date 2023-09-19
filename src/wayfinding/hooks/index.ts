@@ -181,7 +181,7 @@ export const useSitumInternal = () => {
   // Navigation
   const startNavigation = async (payload: any) => {
     console.debug("Situm > hook > requesting to start navigation");
-    if (SitumPlugin.navigationIsRunning()) await stopNavigation();
+    if (SitumPlugin.navigationIsRunning()) stopNavigation();
 
     await calculateRoute(payload).then((r) => {
       if (!r) {
@@ -212,7 +212,7 @@ export const useSitumInternal = () => {
     }
   };
 
-  const stopNavigation = async (): Promise<void> => {
+  const stopNavigation = () => {
     console.debug("Situm > hook > Stopping navigation");
 
     try {
