@@ -27,7 +27,7 @@ export const InfoFromBuilding = () => {
 
   return (
     <ScrollView style={{...styles.screenWrapper}}>
-      <Card mode="contained" style={{marginVertical: 5}}>
+      <Card mode="contained" style={styles.margin}>
         <Card.Title
           titleVariant="headlineSmall"
           title={'Buildings information'}

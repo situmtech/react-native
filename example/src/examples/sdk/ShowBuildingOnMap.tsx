@@ -5,6 +5,7 @@ import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../../situm';
 import {calculateBuildingLocation} from '../Utils/CalculateBuildingLocation';
 import {fetchBuilding, fetchBuildingInfo} from '../Utils/CommonFetchs';
 import {Building} from '@situm/react-native';
+import styles from '../styles/styles';
 
 export const ShowBuildingOnMap = () => {
   const [building, setBuilding] = useState<Building>();
@@ -24,12 +25,14 @@ export const ShowBuildingOnMap = () => {
 
     fetchBuildingInfo(building)
       .then(data => {
-        const {bearing, bounds, map_region} = calculateBuildingLocation(
-          data.building,
-        );
-        setBearing(bearing);
-        setBounds(bounds);
-        setMapRegion(map_region);
+        const {
+          bearing: _bearing,
+          bounds: _bounds,
+          map_region: _mapRegion,
+        } = calculateBuildingLocation(data.building);
+        setBearing(_bearing);
+        setBounds(_bounds);
+        setMapRegion(_mapRegion);
         if (data?.floors.length === 0) {
           return;
         }
@@ -44,7 +47,7 @@ export const ShowBuildingOnMap = () => {
   return (
     <View>
       <MapView
-        style={{width: '100%', height: '100%'}}
+        style={styles.container}
         region={mapRegion}
         showsIndoorLevelPicker={false}
         showsIndoors={false}

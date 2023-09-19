@@ -14,6 +14,7 @@ import SitumPlugin, {
 import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../../situm';
 import {calculateBuildingLocation} from '../Utils/CalculateBuildingLocation';
 import {fetchBuilding, fetchBuildingInfo} from '../Utils/CommonFetchs';
+import styles from '../styles/styles';
 
 const fetchPOIsFromBuilding = async (building: any) => {
   try {
@@ -81,12 +82,14 @@ export const DrawRouteBetweenPOIs = () => {
     }
     fetchBuildingInfo(building)
       .then(data => {
-        const {bearing, bounds, map_region} = calculateBuildingLocation(
-          data.building,
-        );
-        setBearing(bearing);
-        setBounds(bounds);
-        setMapRegion(map_region);
+        const {
+          bearing: _bearing,
+          bounds: _bounds,
+          map_region: _mapRegion,
+        } = calculateBuildingLocation(data.building);
+        setBearing(_bearing);
+        setBounds(_bounds);
+        setMapRegion(_mapRegion);
         if (data?.floors.length === 0) {
           return;
         }
@@ -113,7 +116,7 @@ export const DrawRouteBetweenPOIs = () => {
   return (
     <View>
       <MapView
-        style={{width: '100%', height: '100%'}}
+        style={styles.container}
         region={mapRegion}
         provider={PROVIDER_GOOGLE}>
         {mapImage && bounds && (

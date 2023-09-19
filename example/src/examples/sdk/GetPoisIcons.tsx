@@ -6,6 +6,7 @@ import SitumPlugin, {PoiIcon} from '@situm/react-native';
 import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../../situm';
 import {calculateBuildingLocation} from '../Utils/CalculateBuildingLocation';
 import {fetchBuilding, fetchBuildingInfo} from '../Utils/CommonFetchs';
+import styles from '../styles/styles';
 
 const getIconForPOI = async (poi: any): Promise<{poi: any; icon: string}> => {
   try {
@@ -65,6 +66,7 @@ export const GetPoisIcons = () => {
               flat={false}>
               <Image
                 source={{uri: poiAndIcon.icon}}
+                // eslint-disable-next-line react-native/no-inline-styles
                 style={{width: 40, height: 40}}
                 fadeDuration={0}
               />
@@ -86,13 +88,15 @@ export const GetPoisIcons = () => {
 
     fetchBuildingInfo(building)
       .then(data => {
-        const {bearing, bounds, map_region} = calculateBuildingLocation(
-          data.building,
-        );
-        setBearing(bearing);
-        setBounds(bounds);
-        setMapRegion(map_region);
-        if (data?.floors.length == 0) {
+        const {
+          bearing: _bearing,
+          bounds: _bounds,
+          map_region: _mapRegion,
+        } = calculateBuildingLocation(data.building);
+        setBearing(_bearing);
+        setBounds(_bounds);
+        setMapRegion(_mapRegion);
+        if (data?.floors.length === 0) {
           return;
         }
         var selectedFloor = data.floors.filter(
@@ -109,7 +113,7 @@ export const GetPoisIcons = () => {
   return (
     <View>
       <MapView
-        style={{width: '100%', height: '100%'}}
+        style={styles.container}
         region={mapRegion}
         provider={PROVIDER_GOOGLE}>
         {mapImage && bounds && (

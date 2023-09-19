@@ -4,6 +4,7 @@ import {View, ActivityIndicator} from 'react-native';
 import SitumPlugin, {Building} from '@situm/react-native';
 import MapView, {MapLocalTile} from 'react-native-maps';
 import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../../situm';
+import styles from '../styles/styles';
 
 //This example shows how to display a tiled floorplan hosted in Situm Platform.
 //Floorplans are not stored in tiles by default, but Situm Support Team can tile your floorplans & upload them to Situm Platform (ask us: support@situm.com)
@@ -69,7 +70,7 @@ export const TiledBuilding = () => {
     <View>
       <MapView
         ref={mapRef}
-        style={{width: '100%', height: '100%'}}
+        style={styles.container}
         maxZoomLevel={MAX_ZOOM_LEVEL}>
         <MapLocalTile
           pathTemplate={
@@ -80,7 +81,7 @@ export const TiledBuilding = () => {
       </MapView>
 
       {isLoading && (
-        <View style={{position: 'absolute'}}>
+        <View style={styles.indicator}>
           <ActivityIndicator size="large" color="#000000" />
         </View>
       )}

@@ -30,14 +30,14 @@ export const BuildingsBasicInfo = () => {
   return (
     <ScrollView style={{...styles.screenWrapper}}>
       {error ? (
-        <Card mode="contained" style={{marginVertical: 5}}>
+        <Card mode="contained" style={styles.margin}>
           <Card.Title title={'Error'} />
           <Card.Content>
             <Text style={styles.text}>{error}</Text>
           </Card.Content>
         </Card>
       ) : (
-        <Card mode="contained" style={{marginVertical: 5}}>
+        <Card mode="contained" style={styles.margin}>
           <Card.Title
             titleVariant="headlineSmall"
             title={'Buildings information'}
