@@ -91,11 +91,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const [buildingIdentifier, setBuildingIdentifier] = useState<string>(
       configuration.buildingIdentifier
     );
-    const mergedStyles = StyleSheet.flatten([
-      viewerStyles,
-      style,
-    ]) as StyleProp<ViewStyle>;
-
     const {
       init,
       location,
@@ -336,7 +331,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
               : ""
           }&show=rts`,
         }}
-        style={mergedStyles}
+        style={StyleSheet.flatten([viewerStyles.webview, style])}
         limitsNavigationsToAppBoundDomains={true}
         javaScriptEnabled={true}
         domStorageEnabled={true}
