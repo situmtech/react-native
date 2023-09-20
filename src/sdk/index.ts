@@ -51,18 +51,18 @@ const RNCSitumPlugin =
 
 const SitumPluginEventEmitter = new NativeEventEmitter(RNCSitumPlugin);
 
-export default class SitumPlugin {
-  // TODO: these do not act as state, not reliable
-  private static positioningRunning = false;
-  private static navigationRunning = false;
-  private static realtimeSubscriptions = [];
+// TODO: these do not act as state, not reliable
+let positioningRunning = false;
+let navigationRunning = false;
+let realtimeSubscriptions = [];
 
+export default class SitumPlugin {
   static positioningIsRunning = function (): boolean {
-    return SitumPlugin.positioningRunning;
+    return positioningRunning;
   };
 
   static navigationIsRunning = function (): boolean {
-    return SitumPlugin.navigationRunning;
+    return navigationRunning;
   };
 
   /**
@@ -339,7 +339,7 @@ export default class SitumPlugin {
       if (!SitumPlugin.positioningIsRunning()) {
         RNCSitumPlugin.startPositioning(locationRequest || {});
 
-        SitumPlugin.positioningRunning = true;
+        positioningRunning = true;
 
         SitumPlugin.onLocationUpdate((loc: Location) => {
           if (!SitumPlugin.navigationIsRunning()) return;
@@ -358,7 +358,7 @@ export default class SitumPlugin {
       if (SitumPlugin.positioningIsRunning()) {
         RNCSitumPlugin.stopPositioning((response) => {
           if (response.success) {
-            SitumPlugin.positioningRunning = false;
+            positioningRunning = false;
           } else {
             throw "Situm > hook > Could not stop positioning";
           }
@@ -401,7 +401,7 @@ export default class SitumPlugin {
   static requestNavigationUpdates = (options?: NavigationRequest) => {
     return exceptionWrapper<void>(() => {
       RNCSitumPlugin.requestNavigationUpdates(options || {});
-      SitumPlugin.navigationRunning = true;
+      navigationRunning = true;
     });
   };
 
@@ -428,7 +428,7 @@ export default class SitumPlugin {
   static removeNavigationUpdates = () => {
     return exceptionWrapper<void>(({ onCallback }) => {
       if (SitumPlugin.navigationIsRunning()) {
-        SitumPlugin.navigationRunning = false;
+        navigationRunning = false;
         RNCSitumPlugin.removeNavigationUpdates((reponse) => {
           onCallback(reponse, "Failed to remove navigation updates");
         });
@@ -453,7 +453,7 @@ export default class SitumPlugin {
   ) => {
     return exceptionWrapper<void>(() => {
       RNCSitumPlugin.requestRealTimeUpdates(options || {});
-      SitumPlugin.realtimeSubscriptions.push([
+      realtimeSubscriptions.push([
         SitumPluginEventEmitter.addListener("realtimeUpdated", realtimeUpdates),
         error
           ? SitumPluginEventEmitter.addListener(
@@ -472,7 +472,7 @@ export default class SitumPlugin {
    */
   static removeRealTimeUpdates = (_callback?: Function) => {
     return exceptionWrapper<void>(() => {
-      SitumPlugin.realtimeSubscriptions = [];
+      realtimeSubscriptions = [];
       RNCSitumPlugin.removeRealTimeUpdates();
     });
   };
