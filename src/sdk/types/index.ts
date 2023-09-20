@@ -388,18 +388,6 @@ export type LocationRequest = {
   useWifi?: boolean;
 };
 
-// /**
-//  * @name LocationRequest
-//  * @description A data object that contains parameters for the location service, LocationManager.
-//  *
-//  * @property {Building} building 0 - Building on which the positioning will be started
-//  * @property {LocationOptions} locationOptions 1 - Location options.
-//  */
-// export type LocationRequest = {
-//   building: Building;
-//   locationOptions: LocationRequestOptions;
-// };
-
 /**
  * @name NavigationRequest
  * @description A data object that contains the request for navigation.
