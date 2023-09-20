@@ -11,8 +11,6 @@ import type {
   OnPoiDeselectedResult,
   OnPoiSelectedResult,
   MapViewRef,
-  OnNavigationResult,
-  OnFloorChangedResult,
 } from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
 
