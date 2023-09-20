@@ -57,13 +57,17 @@ let navigationRunning = false;
 let realtimeSubscriptions = [];
 
 export default class SitumPlugin {
-  static positioningIsRunning = function (): boolean {
-    return positioningRunning;
-  };
+  /**
+   * Whether the positioning is currently in execution.
+   * @returns boolean
+   */
+  static positioningIsRunning: () => boolean = () => positioningRunning;
 
-  static navigationIsRunning = function (): boolean {
-    return navigationRunning;
-  };
+  /**
+   * Whether the navigation is currently in execution.
+   * @returns boolean
+   */
+  static navigationIsRunning: () => boolean = () => navigationRunning;
 
   /**
    * Initializes {@link SitumPlugin}.
@@ -71,6 +75,9 @@ export default class SitumPlugin {
    * This method must be called before invoking any other methods.
    * This method can be safely called many times as it will only initialise the SDK
    * if it is not already initialised.
+   *
+   * @returns void
+   * @throw Exception
    */
   static init = () => {
     return exceptionWrapper<void>(() => {
@@ -85,6 +92,9 @@ export default class SitumPlugin {
    * Old credentials will be removed.
    *
    * @param apiKey user's apikey.
+   *
+   * @returns void
+   * @throw Exception
    */
   static setApiKey = (apiKey: string) => {
     return exceptionWrapper<void>(({ onCallback }) => {
@@ -102,6 +112,9 @@ export default class SitumPlugin {
    *
    * @param email user's email.
    * @param password user's password.
+   *
+   * @returns void
+   * @throw Exception
    */
   static setUserPass = (email: string, password: string) => {
     return exceptionWrapper<void>(({ onCallback }) => {
@@ -115,6 +128,9 @@ export default class SitumPlugin {
    * Sets the API's base URL to retrieve the data.
    *
    * @param url user's email.
+   *
+   * @returns void
+   * @throw Exception
    */
 
   static setDashboardURL = (url: string) => {
@@ -131,6 +147,9 @@ export default class SitumPlugin {
    * Default value is true from SDK version 2.83.5
    *
    * @param useRemoteConfig
+   *
+   * @returns void
+   * @throw Exception
    */
   static setUseRemoteConfig = (useRemoteConfig: boolean) => {
     return exceptionWrapper<void>(({ onCallback }) => {
@@ -143,6 +162,12 @@ export default class SitumPlugin {
     });
   };
 
+  /**
+   * Sets the max seconds the cache is valid
+   *
+   * @returns void
+   * @throw Exception
+   */
   private static setMaxCacheAge = (cacheAge: number) => {
     return exceptionWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setCacheMaxAge(cacheAge, (response) => {
@@ -155,6 +180,9 @@ export default class SitumPlugin {
    * Sets the SDK {@link ConfigurationOptions}.
    *
    * @param options {@link ConfigurationOptions}
+   *
+   * @returns void
+   * @throw Exception
    */
   static setConfiguration = (options: ConfigurationOptions) => {
     return exceptionWrapper<void>(() => {
@@ -171,6 +199,9 @@ export default class SitumPlugin {
 
   /**
    * Invalidate all the resources in the cache
+   *
+   * @returns void
+   * @throw Exception
    */
   static invalidateCache = () => {
     return exceptionWrapper<void>(() => {
@@ -181,6 +212,8 @@ export default class SitumPlugin {
   /**
    * Gets the list of versions for the current plugin and environment
    *
+   * @returns void
+   * @throw Exception
    */
   static sdkVersion = () => {
     return exceptionWrapper<SdkVersion>(({ onSuccess }) => {
@@ -201,6 +234,8 @@ export default class SitumPlugin {
   /**
    * Returns the device identifier that has generated the location
    *
+   * @returns void
+   * @throw Exception
    */
   static getDeviceId = () => {
     return exceptionWrapper<string>(({ onSuccess }) => {
@@ -234,8 +269,6 @@ export default class SitumPlugin {
    * (Experimental) Downloads the tiled-map of a certain building
    *
    * @param building {@link Building} whose tiles will be downloaded
-   *
-   * @returns
    */
   static fetchTilesFromBuilding = (building: Building) => {
     return promiseWrapper<any>(({ onSuccess, onError }) => {
@@ -332,21 +365,21 @@ export default class SitumPlugin {
   /**
    * Starts positioning.
    *
-   * @param locationRequest Positioning options to configure how positioning will behave
+   * @param {LocationRequest} locationRequest Positioning options to configure how positioning will behave
    */
   static requestLocationUpdates = (locationRequest?: LocationRequest) => {
     return exceptionWrapper<void>(() => {
-      if (!SitumPlugin.positioningIsRunning()) {
-        RNCSitumPlugin.startPositioning(locationRequest || {});
+      if (SitumPlugin.positioningIsRunning()) return;
 
-        positioningRunning = true;
+      RNCSitumPlugin.startPositioning(locationRequest || {});
 
-        SitumPlugin.onLocationUpdate((loc: Location) => {
-          if (!SitumPlugin.navigationIsRunning()) return;
+      positioningRunning = true;
 
-          SitumPlugin.updateNavigationWithLocation(loc);
-        });
-      }
+      SitumPlugin.onLocationUpdate((loc: Location) => {
+        if (!SitumPlugin.navigationIsRunning()) return;
+
+        SitumPlugin.updateNavigationWithLocation(loc);
+      });
     });
   };
 
@@ -355,15 +388,15 @@ export default class SitumPlugin {
    */
   static removeLocationUpdates = () => {
     return exceptionWrapper<void>(() => {
-      if (SitumPlugin.positioningIsRunning()) {
-        RNCSitumPlugin.stopPositioning((response) => {
-          if (response.success) {
-            positioningRunning = false;
-          } else {
-            throw "Situm > hook > Could not stop positioning";
-          }
-        });
-      }
+      if (!SitumPlugin.positioningIsRunning()) return;
+
+      RNCSitumPlugin.stopPositioning((response) => {
+        if (response.success) {
+          positioningRunning = false;
+        } else {
+          throw "Situm > hook > Could not stop positioning";
+        }
+      });
     });
   };
 
@@ -412,9 +445,10 @@ export default class SitumPlugin {
    */
   static updateNavigationWithLocation = (location: Location) => {
     return exceptionWrapper<void>(({ onSuccess, onError }) => {
-      if (SitumPlugin.navigationIsRunning() === false) {
+      if (!SitumPlugin.navigationIsRunning()) {
         throw "Situm > hook > No active navigation";
       }
+
       RNCSitumPlugin.updateNavigationWithLocation(location, onSuccess, onError);
     });
   };
@@ -427,14 +461,14 @@ export default class SitumPlugin {
    */
   static removeNavigationUpdates = () => {
     return exceptionWrapper<void>(({ onCallback }) => {
-      if (SitumPlugin.navigationIsRunning()) {
-        navigationRunning = false;
-        RNCSitumPlugin.removeNavigationUpdates((reponse) => {
-          onCallback(reponse, "Failed to remove navigation updates");
-        });
-      } else {
+      if (!SitumPlugin.navigationIsRunning()) {
         throw "Situm > hook > Navigation updates were not active.";
       }
+
+      navigationRunning = false;
+      RNCSitumPlugin.removeNavigationUpdates((reponse) => {
+        onCallback(reponse, "Failed to remove navigation updates");
+      });
     });
   };
 

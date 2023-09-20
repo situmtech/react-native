@@ -219,13 +219,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     );
 
     useEffect(() => {
-      if (error) {
-        console.error(
-          "Error code:",
-          error.code ? error.code : " no code provided"
-        );
-        console.error("Error detected:", error.message);
-      }
+      if (!error) return;
+
+      console.error(
+        "Error code:",
+        error.code ? error.code : " no code provided"
+      );
+      console.error("Error detected:", error.message);
     }, [error]);
 
     // Updated SDK location
@@ -243,7 +243,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         webViewRef.current,
         ViewerMapper.navigation(navigation)
       );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigation]);
 
     // Updated SDK route
