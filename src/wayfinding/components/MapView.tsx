@@ -212,13 +212,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     );
 
     useEffect(() => {
-      if (error) {
-        console.error(
-          "Error code:",
-          error.code ? error.code : " no code provided"
-        );
-        console.error("Error detected:", error.message);
-      }
+      if (!error) return;
+
+      console.error(
+        "Error code:",
+        error.code ? error.code : " no code provided"
+      );
+      console.error("Error detected:", error.message);
     }, [error]);
 
     // Updated SDK location
