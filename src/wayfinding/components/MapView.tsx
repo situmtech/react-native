@@ -7,7 +7,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Platform, StyleSheet } from "react-native";
+import {
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  type ViewStyle,
+} from "react-native";
 import WebView from "react-native-webview";
 import type {
   WebViewErrorEvent,
@@ -22,7 +27,6 @@ import {
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
   type OnFloorChangedResult,
-  type OnNavigationResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
 } from "../types";
@@ -47,7 +51,6 @@ export type MapViewConfiguration = {
   remoteIdentifier?: string;
   buildingIdentifier: string;
   directionality?: string;
-  style?: string;
   language?: string;
 };
 
@@ -60,25 +63,24 @@ const viewerStyles = StyleSheet.create({
 
 export interface MapViewProps {
   configuration: MapViewConfiguration;
+  style?: StyleProp<ViewStyle>;
   onPoiSelected?: (event: OnPoiSelectedResult) => void;
   onPoiDeselected?: (event: OnPoiDeselectedResult) => void;
   onLoad?: (event: any) => void;
   onLoadError?: (event: MapViewError) => void;
   onFloorChanged?: (event: OnFloorChangedResult) => void;
-  onNavigationRequested?: (event: OnNavigationResult) => void;
-  onNavigationStarted?: (event: OnNavigationResult) => void;
-  onNavigationError?: (event: OnNavigationResult) => void;
-  onNavigationFinished?: (event: OnNavigationResult) => void;
 }
 
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
   (
     {
       configuration,
+      style,
       onLoad = () => {},
       onLoadError = () => {},
       onPoiSelected = () => {},
       onPoiDeselected = () => {},
+      onFloorChanged = () => {},
     },
     ref
   ) => {
@@ -89,6 +91,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const [buildingIdentifier, setBuildingIdentifier] = useState<string>(
       configuration.buildingIdentifier
     );
+    const mergedStyles = StyleSheet.flatten([
+      viewerStyles,
+      style,
+    ]) as StyleProp<ViewStyle>;
 
     const {
       init,
@@ -113,6 +119,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
     };
 
+    // Helper functions used on imperative handler
     // Navigation
     const _navigateToPoi = useCallback((payload: NavigateToPoiPayload) => {
       if (!webViewRef.current || !payload || !payload.identifier) return;
@@ -261,10 +268,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (webViewRef.current && mapLoaded) {
         sendMessageToViewer(
           webViewRef.current,
-          ViewerMapper.initialConfiguration(configuration.style)
+          ViewerMapper.initialConfiguration(style)
         );
       }
-    }, [webViewRef, mapLoaded, configuration.style]);
+    }, [webViewRef, mapLoaded, style]);
 
     // Update follow user
     useEffect(() => {
@@ -296,6 +303,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           onPoiDeselected(eventParsed?.payload);
           break;
         case "cartography.floor_changed":
+          onFloorChanged(eventParsed?.payload);
           break;
         case "cartography.building_selected":
           console.log("Building Selected");
@@ -329,7 +337,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
               : ""
           }&show=rts`,
         }}
-        style={viewerStyles.webview}
+        style={mergedStyles}
         limitsNavigationsToAppBoundDomains={true}
         javaScriptEnabled={true}
         domStorageEnabled={true}
