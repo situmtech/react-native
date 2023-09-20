@@ -9,7 +9,6 @@ import SitumPlugin, {
 } from '@situm/react-native';
 import type {MapViewRef} from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
-import {getDefaultLocationOptions} from '../../settings';
 import {Button, TextInput} from 'react-native-paper';
 
 const styles = StyleSheet.create({
@@ -45,11 +44,11 @@ const Screen: React.FC = () => {
   const initializeSitum = async () => {
     try {
       // Define your own configuration if needed
-      SitumPlugin.setConfiguration({useRemoteConfig: false});
+      SitumPlugin.setConfiguration({useRemoteConfig: true});
       // Request permissions and start positioning
       await requestPermission()
         .then(() => {
-          SitumPlugin.requestLocationUpdates(getDefaultLocationOptions());
+          SitumPlugin.requestLocationUpdates();
         })
         .catch(console.debug);
     } catch (e) {
@@ -93,7 +92,7 @@ const Screen: React.FC = () => {
             situmApiKey: SITUM_API_KEY,
           }}
           onPoiSelected={evt => {
-            setSelectedPoiIdentifier(evt?.identifier);
+            setSelectedPoiIdentifier(evt?.identifier.toString());
           }}
         />
       </SafeAreaView>
@@ -106,10 +105,6 @@ const Screen: React.FC = () => {
         />
         <Button
           mode="outlined"
-          disabled={
-            !SitumPlugin.positioningIsRunning() ||
-            SitumPlugin.navigationIsRunning()
-          }
           onPress={() => {
             _controller?.navigateToPoi({
               identifier: Number(selectedPoiIdentifier),

@@ -4,7 +4,6 @@ import { useContext, useState } from "react";
 import SitumPlugin from "../../sdk";
 import {
   type Building,
-  type Directions,
   type Error,
   type Location,
   type LocationStatus,
