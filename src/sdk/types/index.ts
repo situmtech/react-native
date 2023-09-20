@@ -305,17 +305,17 @@ export type RouteSegment = {
  * @property {string} orientationType - The Indication.Orientation of the instruction as String
  * @property {number} stepIdxDestination - The index of the indication's step of destination.
  * @property {number} stepIdxOrigin - The index of the indication's step of origin
- * @property {boolean} neededLevelChange - If the user should change the level in order to arrive to destination
+ * @property {boolean} neededLevelChange - If the user should change the level in order to arrive at the destination.
  */
 export type Indication = {
   distance: number;
   distanceToNextLevel: number;
   indicationType: string;
+  neededLevelChange: boolean;
   orientation: number;
   orientationType: string;
   stepIdxDestination: number;
   stepIdxOrigin: number;
-  neededLevelChange: boolean;
 };
 
 /**
@@ -337,17 +337,17 @@ export type Indication = {
  */
 export type NavigationProgress = {
   closestLocationInRoute: Location;
-  distanceToClosestPointInRoute: number;
   currentIndication: number;
-  nextIndication: Indication;
   currentStepIndex: number;
-  distanceToGoal: number;
+  distanceToClosestPointInRoute: number;
   distanceToEndStep: number;
+  distanceToGoal: number;
+  nextIndication: Indication;
+  points: Point[];
+  routeStep: RouteStep;
+  segments: RouteSegment[];
   timeToEndStep: number;
   timeToGoal: number;
-  routeStep: RouteStep;
-  points: Point[];
-  segments: RouteSegment[];
   type: SdkNavigationUpdateType;
 };
 
@@ -360,33 +360,32 @@ export type NavigationProgress = {
  * @property {string} indoorProvider - Default indoor provider. Possible values are INPHONE and SUPPORT
  * @property {boolean} useBle - Defines whether or not to use BLE for positioning
  * @property {boolean} useWifi - Defines whether or not to use Wi-Fi for positioning
- * @property {boolean} useGps - Defines whether or not to use the GPS for indoor positioning
- * @property {boolean} useBarometer - Defines whether or not to use barometer for indoor positioning
- * @property {string} motionMode - Default motion mode. Possible values are BY_CAR, BY_FOOT and RADIOMAX
+ * @property {boolean} useGps - Defines whether or not to use GPS for indoor positioning
+ * @property {boolean} useBarometer - Defines whether or not to use the barometer for indoor positioning
+ * @property {string} motionMode - Default motion mode. Possible values are BY_CAR, BY_FOOT, and RADIOMAX
  * @property {boolean} useForegroundService - Defines whether or not to activate the {@link http://developers.situm.es/pages/android/using_situm_sdk_background.html foreground service}
- * @property {boolean} useDeadReckoning - Defines whether ot not to use dead reckoning to get fast position updates using only the inertial sensors, between the server position updates.
+ * @property {boolean} useDeadReckoning - Defines whether or not to use dead reckoning to get fast position updates using only the inertial sensors, between the server position updates.
  * @property {OutdoorLocationOptions} outdoorLocationOptions - Outdoor location options. Only used in an indoor/outdoor request
  * @property {BeaconFilter[]} beaconFilters - Deprecated - Beacon filters to be handled during scan time, otherwise only Situm beacons will be scanned. Can be invoked multiple times to add as much beacon filters as you want. The SitumSDK now does it automatically
- * @property {number} smallestDisplacement - Default smallest displacement to nofiy location updates
- * @property {string} realtimeUpdateInterval - Default interval to send locations to the Realtime. Possible values are REALTIME, FAST, NORMAL, SLOW and BATTERY_SAVER
- * @property {boolean} autoEnableBleDuringPositioning - Set if the BLE should be re-enabled during positioning if the ble is used. Android only
+ * @property {number} smallestDisplacement - Default smallest displacement to notify location updates
+ * @property {string} realtimeUpdateInterval - Default interval to send locations to the Realtime. Possible values are REALTIME, FAST, NORMAL, SLOW, and BATTERY_SAVER
  */
 export type LocationRequest = {
-  buildingIdentifier?: number;
-  interval?: number;
-  indoorProvider?: string;
-  useBle?: boolean;
-  useWifi?: boolean;
-  useGps?: boolean;
-  useBarometer?: boolean;
-  motionMode?: string;
-  useForegroundService?: boolean;
-  useDeadReckoning?: boolean;
-  outdoorLocationOptions?: OutdoorLocationOptions;
-  beaconFilters?: BeaconFilter[];
-  smallestDisplacement?: number;
-  realtimeUpdateInterval?: string;
   autoEnableBleDuringPositioning?: boolean;
+  beaconFilters?: BeaconFilter[];
+  buildingIdentifier?: number;
+  indoorProvider?: string;
+  interval?: number;
+  motionMode?: string;
+  outdoorLocationOptions?: OutdoorLocationOptions;
+  realtimeUpdateInterval?: string;
+  smallestDisplacement?: number;
+  useBarometer?: boolean;
+  useBle?: boolean;
+  useDeadReckoning?: boolean;
+  useForegroundService?: boolean;
+  useGps?: boolean;
+  useWifi?: boolean;
 };
 
 // /**
@@ -406,29 +405,28 @@ export type LocationRequest = {
  * @description A data object that contains the request for navigation.
  *
  * @property {number} distanceToGoalThreshold - Distance threshold to consider reaching the goal (meters).
- * @property {number} outsideRouteThreshold - Distance threshold to consider being outside the route (meters).
  * @property {number} distanceToIgnoreFirstIndication - Maximum distance to ignore the first indication when navigating (meters).
  * @property {number} distanceToFloorChangeThreshold - Distance threshold from when a floor change is considered reached (meters).
  * @property {number} distanceToChangeIndicationThreshold - Distance threshold to change the indication (meters).
+ * @property {boolean} ignoreLowQualityLocations - Ignore low-quality locations.
  * @property {number} indicationsInterval - Interval between indications (milliseconds).
- * @property {number} timeToFirstIndication - Time to wait until the first indication is returned (milliseconds).
+ * @property {number} outsideRouteThreshold - Distance threshold to consider being outside the route (meters).
  * @property {number} roundIndicationsStep - Step to round indications (meters).
+ * @property {number} timeToFirstIndication - Time to wait until the first indication is returned (milliseconds).
  * @property {number} timeToIgnoreUnexpectedFloorChanges - Time to ignore the locations received during navigation, when the next indication is a floor change,
  *                                                         if the locations are on a wrong floor (not in origin or destination floors) (milliseconds).
- * @property {boolean} ignoreLowQualityLocations - Ignore low-quality locations.
- *
  */
 export type NavigationRequest = {
-  distanceToGoalThreshold?: number;
-  outsideRouteThreshold?: number;
-  distanceToIgnoreFirstIndication?: number;
-  distanceToFloorChangeThreshold?: number;
   distanceToChangeIndicationThreshold?: number;
-  indicationsInterval?: number;
-  timeToFirstIndication?: number;
-  roundIndicationsStep?: number;
-  timeToIgnoreUnexpectedFloorChanges?: number;
+  distanceToFloorChangeThreshold?: number;
+  distanceToGoalThreshold?: number;
+  distanceToIgnoreFirstIndication?: number;
   ignoreLowQualityLocations?: boolean;
+  indicationsInterval?: number;
+  outsideRouteThreshold?: number;
+  roundIndicationsStep?: number;
+  timeToFirstIndication?: number;
+  timeToIgnoreUnexpectedFloorChanges?: number;
 };
 
 /**
