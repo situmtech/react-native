@@ -13,7 +13,6 @@ export const InfoFromBuilding = () => {
   const getInfoFromBuilding = async (building: any) => {
     SitumPlugin.fetchBuildingInfo(building)
       .then(_buildingInfo => {
-        console.log('buildingInfo:', _buildingInfo);
         setBuildingInfo(_buildingInfo);
       })
       .catch(e => {
