@@ -236,7 +236,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         webViewRef.current,
         ViewerMapper.navigation(navigation)
       );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigation]);
 
     // Updated SDK route
