@@ -300,7 +300,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           onFloorChanged(eventParsed?.payload);
           break;
         case "cartography.building_selected":
-          console.log("Building Selected");
           if (
             !eventParsed.payload.identifier ||
             eventParsed.payload.identifier.toString() === buildingIdentifier
