@@ -82,12 +82,12 @@ export const useSitumInternal = () => {
     });
 
     SitumPlugin.onLocationStopped(() => {
-      console.log("Situm > hook > Stopped positioning");
+      console.debug("Situm > hook > Stopped positioning");
       dispatch(resetLocation());
     });
 
     SitumPlugin.onNavigationProgress((progress: NavigationProgress) => {
-      console.log("Situm > hook > NavigationProgress");
+      console.debug("Situm > hook > NavigationProgress");
 
       dispatch(
         setNavigation({
@@ -110,7 +110,7 @@ export const useSitumInternal = () => {
         })
       );
 
-      console.log("Situm > hook > NavigationOutOfRoute");
+      console.debug("Situm > hook > NavigationOutOfRoute");
     });
 
     SitumPlugin.onNavigationFinished(() => {
@@ -120,16 +120,16 @@ export const useSitumInternal = () => {
           status: NavigationStatus.UPDATE,
         })
       );
-      console.log("Situm > hook > NavigationFinished");
+      console.debug("Situm > hook > NavigationFinished");
     });
 
     SitumPlugin.onNavigationError((progress: NavigationProgress) => {
-      console.log("Situm > hook > NavigationProgress: ", progress);
+      console.debug("Situm > hook > NavigationProgress: ", progress);
     });
   }
 
   const calculateRoute = async (payload: any, updateRoute = true) => {
-    console.log("Situm > hook > calculating route");
+    console.debug("Situm > hook > calculating route");
 
     const { to, from, minimizeFloorChanges, accessibilityMode, bearingFrom } =
       createDirectionsRequest(payload.directionsRequest);
@@ -179,7 +179,10 @@ export const useSitumInternal = () => {
   // Navigation
   const startNavigation = (payload: any) => {
     console.debug("Situm > hook > request to start navigation");
-    if (SitumPlugin.navigationIsRunning()) stopNavigation();
+    // TODO: we should delegate this to the sdk plugin
+    if (!navigation || navigation?.status !== NavigationStatus.STOP) {
+      stopNavigation();
+    }
 
     calculateRoute(payload, false)
       .then((r) => {
@@ -217,6 +220,10 @@ export const useSitumInternal = () => {
 
   const stopNavigation = () => {
     console.debug("Situm > hook > Stopping navigation");
+    // TODO: we should delegate this to the sdk plugin
+    if (!navigation || navigation?.status === NavigationStatus.STOP) {
+      return;
+    }
 
     try {
       SitumPlugin.removeNavigationUpdates();

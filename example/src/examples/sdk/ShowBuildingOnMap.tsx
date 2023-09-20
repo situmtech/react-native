@@ -40,10 +40,10 @@ export const ShowBuildingOnMap = () => {
         if (data?.floors.length === 0) {
           return;
         }
-        var selectedFloor = data.floors.filter(
+        var selectedFloor = data.floors.find(
           (f: any) => f.identifier === SITUM_FLOOR_ID,
-        )[0];
-        setMapImage(selectedFloor.mapUrl);
+        );
+        setMapImage(selectedFloor?.mapUrl);
       })
       .catch(console.debug);
   }, [building]);

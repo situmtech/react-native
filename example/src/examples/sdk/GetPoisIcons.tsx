@@ -103,11 +103,11 @@ export const GetPoisIcons = () => {
         if (data?.floors.length === 0) {
           return;
         }
-        var selectedFloor = data.floors.filter(
+        var selectedFloor = data.floors.find(
           (f: any) => f.identifier === SITUM_FLOOR_ID,
-        )[0];
+        );
         setCurrentFloor(selectedFloor);
-        setMapImage(selectedFloor.mapUrl);
+        setMapImage(selectedFloor?.mapUrl);
 
         getPoisInfo(data).then((res: any) => setPois(res));
       })

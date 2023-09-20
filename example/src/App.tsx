@@ -23,17 +23,6 @@ import Wayfinding from './examples/wayfinding/Wayfinding';
 import NavigateToPoi from './examples/wayfinding/NavigateToPoi';
 import SelectPoi from './examples/wayfinding/SelectPoi';
 
-function initSitumSdk() {
-  try {
-    SitumPlugin.init();
-    SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL);
-    SitumPlugin.setApiKey(SITUM_API_KEY);
-    SitumPlugin.sdkVersion();
-  } catch (err: unknown) {
-    console.log('Situm SDK error: ', err);
-  }
-}
-
 const styles = StyleSheet.create({
   container: {
     marginVertical: 8,
@@ -56,7 +45,13 @@ const styles = StyleSheet.create({
 
 const HomeScreen = ({navigation}) => {
   useEffect(() => {
-    initSitumSdk();
+    try {
+      SitumPlugin.init();
+      SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL);
+      SitumPlugin.setApiKey(SITUM_API_KEY);
+    } catch (e) {
+      console.error(`Situm > example > Could not initialize SDK ${e}`);
+    }
   }, []);
 
   const screensAndSections = [
