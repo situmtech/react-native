@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {View, ActivityIndicator} from 'react-native';
 
-import SitumPlugin from '@situm/react-native';
+import SitumPlugin, {Building} from '@situm/react-native';
 import MapView, {MapLocalTile} from 'react-native-maps';
-import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
+import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../../situm';
+import styles from '../styles/styles';
 
 //This example shows how to display a tiled floorplan hosted in Situm Platform.
 //Floorplans are not stored in tiles by default, but Situm Support Team can tile your floorplans & upload them to Situm Platform (ask us: support@situm.com)
@@ -15,65 +16,55 @@ export const TiledBuilding = () => {
   const [offlineTilePath, setOfflineTilePath] = useState<String>();
   const mapRef = React.createRef<MapView>();
 
-  const getBuildingInfo = () => {
-    SitumPlugin.fetchBuildings(
-      (buildings: any) => {
-        // returns list of buildings
+  const getBuildingInfo = async () => {
+    SitumPlugin.fetchBuildings()
+      .then(buildings => {
         if (!buildings || buildings.length === 0) {
           console.error(
-            'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
+            'Situm > example > No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
           );
+          return;
         }
 
-        for (const [key, b] of buildings.entries()) {
-          console.log(key + JSON.stringify(b));
+        for (const [_, b] of buildings.entries()) {
+          //console.log(key + JSON.stringify(b));
           if (b.buildingIdentifier === SITUM_BUILDING_ID) {
             console.log(
-              'Found required building, going to download entire building',
+              'Situm > example > Found required building, going to download entire building',
             );
-            SitumPlugin.fetchBuildingInfo(
-              b,
-              (buildingInfo: any) => {
-                console.log(
-                  'FetchBuildingInfo ' + JSON.stringify(buildingInfo),
-                );
 
+            SitumPlugin.fetchBuildingInfo(b)
+              .then(buildingInfo => {
                 mapRef.current?.animateToRegion({
                   latitude: buildingInfo.building.center.latitude,
                   longitude: buildingInfo.building.center.longitude,
                   latitudeDelta: 0.005,
                   longitudeDelta: 0.005,
                 });
-
                 getOfflineTiles(b);
-              },
-              (error: any) => {
-                console.log('FetchBuildingInfoError ' + error);
-              },
-            );
+              })
+              .catch(e => {
+                console.error(
+                  `Situm > example > Could not fetch building's information: ${e}`,
+                );
+              });
           }
         }
-      },
-      (error: any) => {
-        // returns an error string
-        console.log('Error: ' + error);
-      },
-    );
+      })
+      .catch(e =>
+        console.debug(`Situm > example > Could not fetch buildings: ${e}`),
+      );
   };
 
-  const getOfflineTiles = (building: any) => {
-    SitumPlugin.fetchTilesFromBuilding(
-      building,
-      (result: any) => {
-        console.log('result is' + JSON.stringify(result));
-
-        setOfflineTilePath(result.results);
+  const getOfflineTiles = async (building: Building) => {
+    SitumPlugin.fetchTilesFromBuilding(building)
+      .then(response => {
+        setOfflineTilePath(response?.results);
         setIsLoading(false);
-      },
-      (error: any) => {
-        console.log('Fetch tiles from building error' + error);
-      },
-    );
+      })
+      .catch(e => {
+        console.error(`Situm > example > Could not fetch tiles ${e}`);
+      });
   };
 
   useEffect(() => {
@@ -85,7 +76,7 @@ export const TiledBuilding = () => {
     <View>
       <MapView
         ref={mapRef}
-        style={{width: '100%', height: '100%'}}
+        style={styles.container}
         maxZoomLevel={MAX_ZOOM_LEVEL}>
         <MapLocalTile
           pathTemplate={
@@ -96,7 +87,7 @@ export const TiledBuilding = () => {
       </MapView>
 
       {isLoading && (
-        <View style={{position: 'absolute'}}>
+        <View style={styles.indicator}>
           <ActivityIndicator size="large" color="#000000" />
         </View>
       )}
