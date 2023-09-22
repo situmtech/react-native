@@ -84,7 +84,7 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"locationChanged", @"statusChanged", @"locationError", @"navigationUpdated", @"navigationError", @"realtimeUpdated", @"realtimeError", @"onEnterGeofences", @"onExitGeofences"];
+    return @[@"locationChanged", @"statusChanged", @"locationError", @"locationStopped", @"navigationUpdated", @"navigationError", @"realtimeUpdated", @"realtimeError", @"onEnterGeofences", @"onExitGeofences"];
 }
 
 @synthesize computedRoute = _computedRoute;
@@ -359,6 +359,11 @@ RCT_EXPORT_METHOD(stopPositioning:(RCTResponseSenderBlock)callback)
     _positioningUpdates = NO;
     [[SITLocationManager sharedInstance] removeUpdates];
     [[SITLocationManager sharedInstance] removeDelegate:self];
+
+    NSDictionary *response = @{@"success": @YES, @"message": @"Stopped Successfully"};
+    callback(@[response]);
+
+    [self sendEventWithName:@"locationStopped" body:@{}];
 }
 
 RCT_EXPORT_METHOD(requestDirections: (NSArray *)requestArray withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
@@ -897,13 +902,14 @@ destinationReachedOnRoute:(SITRoute *)route {
 
 
 - (void)didEnteredGeofences:(NSArray<SITGeofence *> *)geofences {    
+ 
     NSArray *geofencesJO = [SitumLocationWrapper.shared geofencesToJsonArray:geofences];
 
     [self sendEventWithName:@"onEnterGeofences" body:geofencesJO];
 }
 
 - (void)didExitedGeofences:(NSArray<SITGeofence *> *)geofences {
-
+ 
     NSArray *geofencesJO = [SitumLocationWrapper.shared geofencesToJsonArray:geofences];
 
     [self sendEventWithName:@"onExitGeofences" body:geofencesJO];

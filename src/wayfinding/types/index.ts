@@ -1,4 +1,6 @@
-import type { DirectionPoint, Poi } from "../../sdk/types";
+import { AccessibilityMode } from "src/sdk";
+
+import type { Point } from "../../sdk/types";
 import { ErrorName } from "./constants";
 
 export interface MapViewError {
@@ -8,7 +10,26 @@ export interface MapViewError {
 
 export interface MapViewRef {
   selectPoi: (poiId: number) => void;
-  navigateToPoi: ({ poi, poiId }: { poi?: Poi; poiId?: number }) => void;
+  navigateToPoi: ({
+    identifier,
+    accessibilityMode = AccessibilityMode.CHOOSE_SHORTEST,
+  }: {
+    identifier: number;
+    accessibilityMode?: AccessibilityMode;
+  }) => void;
+  navigateToPoint: ({
+    lat,
+    lng,
+    floorIdentifier,
+    navigationName,
+    accessibilityMode = AccessibilityMode.CHOOSE_SHORTEST,
+  }: {
+    lat: number;
+    lng: number;
+    floorIdentifier: string;
+    navigationName?: string;
+    accessibilityMode?: AccessibilityMode;
+  }) => void;
   cancelNavigation: () => void;
 }
 
@@ -18,17 +39,13 @@ export interface WayfindingResult {
 }
 
 export interface OnPoiSelectedResult {
-  buildingId: string;
-  buildingName: string;
-  floorId: string;
-  floorName: string;
-  poiId: string;
-  poiName: string;
+  identifier: string;
+  buildingIdentifier: string;
 }
 
 export interface OnPoiDeselectedResult {
-  buildingId: string;
-  buildingName: string;
+  identifier: string;
+  buildingIdentifier: string;
 }
 
 export interface OnFloorChangedResult {
@@ -44,7 +61,7 @@ export interface Destination {
   category: string;
   identifier?: string;
   name?: string;
-  point: DirectionPoint;
+  point: Point;
 }
 
 export interface Navigation {
@@ -53,11 +70,28 @@ export interface Navigation {
 }
 
 export interface OnNavigationResult {
-  navigation: Navigation;
+  navigation?: Navigation;
   error?: Error;
 }
 
-export type NavigateToPoiType = {
-  navigationTo: number;
-  type?: string;
+export type NavigateToPoiPayload = {
+  identifier: number;
+  accessibilityMode?: AccessibilityMode;
+};
+
+export type NavigateToPointPayload = {
+  lat: number;
+  lng: number;
+  floorIdentifier: string;
+  navigationName?: string;
+  accessibilityMode?: AccessibilityMode;
+};
+
+export type DirectionsMessage = {
+  buildingIdentifier: string;
+  originIdentifier: string;
+  originCategory: string;
+  destinationIdentifier: string;
+  destinationCategory: string;
+  identifier: string;
 };

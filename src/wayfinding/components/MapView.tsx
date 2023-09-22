@@ -1,35 +1,38 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Platform, StyleSheet } from "react-native";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import {
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  type ViewStyle,
+} from "react-native";
 import WebView from "react-native-webview";
 import type {
   WebViewErrorEvent,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
-import {
-  ErrorName,
-  NavigationStatus,
-  NavigationUpdateType,
-  type Poi,
-} from "../../";
-import useSitum, { useCallbackRef } from "../hooks";
-import { setWebViewRef } from "../store";
-import { useDispatch } from "../store/utils";
+import SitumPlugin from "../../sdk";
+import useSitum from "../hooks";
 import {
   type MapViewError,
   type MapViewRef,
-  type NavigateToPoiType,
+  type NavigateToPointPayload,
+  type NavigateToPoiPayload,
   type OnFloorChangedResult,
-  type OnNavigationResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
-  type WayfindingResult,
 } from "../types";
+import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
-import Mapper from "../utils/mapper";
-
+import ViewerMapper from "../utils/mapper";
 const SITUM_BASE_DOMAIN = "https://map-viewer.situm.com";
 
 const NETWORK_ERROR_CODE = {
@@ -41,37 +44,15 @@ const NETWORK_ERROR_CODE = {
   web: 0,
 };
 
-export interface MapViewProps {
-  domain?: string;
-  user?: string;
-  apikey?: string;
-  configuration?: {
-    situmUser?: string;
-    situmApiKey?: string;
-    remoteIdentifier?: string;
-    buildingIdentifier?: string;
-    enablePoiClustering?: boolean;
-    showPoiNames?: boolean;
-    useRemoteConfig?: boolean;
-    minZoom?: number;
-    maxZoom?: number;
-    initialZoom?: number;
-    useDashboardTheme?: boolean;
-    language?: string;
-  };
-  googleApikey?: string;
-  onLoadError?: (event: MapViewError) => void;
-  onLoad?: (event: WayfindingResult) => void;
-  onFloorChanged?: (event: OnFloorChangedResult) => void;
-  onPoiSelected?: (event: OnPoiSelectedResult) => void;
-  onPoiDeselected?: (event: OnPoiDeselectedResult) => void;
-  onNavigationRequested?: (event: OnNavigationResult) => void;
-  onNavigationStarted?: (event: OnNavigationResult) => void;
-  onNavigationError?: (event: OnNavigationResult) => void;
-  onNavigationFinished?: (event: OnNavigationResult) => void;
-  style?: any;
-  iOSMapViewIndex?: string;
-}
+export type MapViewConfiguration = {
+  apiDomain?: string;
+  viewerDomain?: string;
+  situmApiKey: string;
+  remoteIdentifier?: string;
+  buildingIdentifier: string;
+  directionality?: string;
+  language?: string;
+};
 
 const viewerStyles = StyleSheet.create({
   webview: {
@@ -80,40 +61,42 @@ const viewerStyles = StyleSheet.create({
   },
 });
 
+export interface MapViewProps {
+  configuration: MapViewConfiguration;
+  style?: StyleProp<ViewStyle>;
+  onPoiSelected?: (event: OnPoiSelectedResult) => void;
+  onPoiDeselected?: (event: OnPoiDeselectedResult) => void;
+  onLoad?: (event: any) => void;
+  onLoadError?: (event: MapViewError) => void;
+  onFloorChanged?: (event: OnFloorChangedResult) => void;
+}
+
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
   (
     {
-      domain,
-      // user,
-      // apikey,
       configuration,
+      style,
       onLoad = () => {},
       onLoadError = () => {},
-      onFloorChanged = () => {},
       onPoiSelected = () => {},
       onPoiDeselected = () => {},
-      onNavigationRequested = () => {},
-      onNavigationStarted = () => {},
-      onNavigationError = () => {},
-      onNavigationFinished = () => {},
-      style,
-      //iOSMapViewIndex,
+      onFloorChanged = () => {},
     },
     ref
   ) => {
-    const dispatch = useDispatch();
-    const webViewRef = useRef(null);
+    const webViewRef = useRef<WebView>();
+
     // Local states
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
-
+    const [buildingIdentifier, setBuildingIdentifier] = useState<string>(
+      configuration.buildingIdentifier
+    );
     const {
-      user: fullUser,
-      pois,
+      init,
       location,
       directions,
       navigation,
-      currentBuilding,
-      initializeBuildingById,
+
       calculateRoute,
       startNavigation,
       stopNavigation,
@@ -125,11 +108,49 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         webViewRef.current &&
         mapLoaded &&
         location?.position?.buildingIdentifier ===
-          configuration?.buildingIdentifier
+          configuration.buildingIdentifier
       ) {
-        sendMessageToViewer(webViewRef.current, Mapper.followUser(true));
+        sendMessageToViewer(webViewRef.current, ViewerMapper.followUser(true));
       }
     };
+
+    // Helper functions used on imperative handler
+    // Navigation
+    const _navigateToPoi = useCallback((payload: NavigateToPoiPayload) => {
+      if (!webViewRef.current || !payload || !payload.identifier) return;
+
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.navigateToPoi(payload)
+      );
+    }, []);
+
+    const _navigateToPoint = useCallback((payload: NavigateToPointPayload) => {
+      if (
+        !webViewRef.current ||
+        (!payload?.lat && !payload?.lng && !payload?.floorIdentifier)
+      )
+        return;
+
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.navigateToPoint(payload)
+      );
+    }, []);
+
+    // Cartography
+    const _selectPoi = useCallback((poiId: number) => {
+      if (!webViewRef.current) {
+        return;
+      }
+      if (SitumPlugin.navigationIsRunning()) {
+        console.error(
+          "Situm > hook > Navigation on course, poi selection is unavailable"
+        );
+        return;
+      }
+      sendMessageToViewer(webViewRef.current, ViewerMapper.selectPoi(poiId));
+    }, []);
 
     /**
      * API exported to the outside world from the MapViewer
@@ -144,51 +165,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
      *    }}
      *    onLoad={onLoad} />
      */
-    const navigateToPoiRef = useCallbackRef(
-      ({ poi, poiId }: { poi?: Poi; poiId?: number }) => {
-        if (!webViewRef.current || (!poi && !poiId)) return;
-        const validPoi = pois?.find(
-          (p) =>
-            p?.identifier === poiId?.toString() ||
-            // @ts-ignore
-            p?.identifier === poi?.id?.toString()
-        );
-        if (!validPoi) {
-          console.error("Situm > hook > Invalid value as poi or poiId");
-          return;
-        }
-
-        sendMessageToViewer(
-          webViewRef.current,
-          Mapper.navigateToPoi({
-            // @ts-ignore
-            navigationTo: poi?.id || poiId,
-          } as NavigateToPoiType)
-        );
-      },
-      [pois]
-    );
-
-    const selectPoiRef = useCallbackRef(
-      (poiId: number) => {
-        if (!webViewRef.current) {
-          return;
-        }
-        const poi = pois?.find((p) => p?.identifier === poiId?.toString());
-        if (!poi) {
-          console.error("Situm > hook > Invalid value as poiId");
-          return;
-        }
-        if (navigation.status !== NavigationStatus.STOP) {
-          console.error(
-            "Situm > hook > Navigation on course, poi selection is unavailable"
-          );
-          return;
-        }
-        sendMessageToViewer(webViewRef.current, Mapper.selectPoi(poiId));
-      },
-      [pois, navigation?.status]
-    );
 
     useImperativeHandle(
       ref,
@@ -196,118 +172,102 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         return {
           followUser() {
             webViewRef.current &&
-              sendMessageToViewer(webViewRef.current, Mapper.followUser(true));
+              sendMessageToViewer(
+                webViewRef.current,
+                ViewerMapper.followUser(true)
+              );
           },
           unFollowUser() {
             webViewRef.current &&
-              sendMessageToViewer(webViewRef.current, Mapper.followUser(false));
+              sendMessageToViewer(
+                webViewRef.current,
+                ViewerMapper.followUser(false)
+              );
           },
           selectPoi(poiId: number) {
-            selectPoiRef.current(poiId);
+            _selectPoi(poiId);
           },
           deselectPoi() {
             webViewRef.current &&
-              sendMessageToViewer(webViewRef.current, Mapper.selectPoi(null));
+              sendMessageToViewer(
+                webViewRef.current,
+                ViewerMapper.selectPoi(null)
+              );
           },
-          navigateToPoi({ poi, poiId }: { poi?: Poi; poiId?: number }): void {
-            navigateToPoiRef.current({ poi, poiId });
+          navigateToPoi(payload): void {
+            _navigateToPoi(payload);
+          },
+          navigateToPoint(payload: NavigateToPointPayload): void {
+            _navigateToPoint(payload);
           },
           cancelNavigation(): void {
             if (!webViewRef.current) return;
             stopNavigation();
-            sendMessageToViewer(webViewRef.current, Mapper.cancelNavigation());
+            sendMessageToViewer(
+              webViewRef.current,
+              ViewerMapper.cancelNavigation()
+            );
           },
         };
       },
-      [stopNavigation, navigateToPoiRef, selectPoiRef]
+      [stopNavigation, _navigateToPoi, _navigateToPoint, _selectPoi]
     );
 
     useEffect(() => {
-      configuration?.buildingIdentifier &&
-        initializeBuildingById(configuration.buildingIdentifier);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [configuration?.buildingIdentifier]);
+      if (!error) return;
 
-    useEffect(() => {
-      if (error) {
-        console.error(
-          "Error code:",
-          error.code ? error.code : " no code provided"
-        );
-        console.error("Error detected:", error.message);
-      }
+      console.error(
+        "Error code:",
+        error.code ? error.code : " no code provided"
+      );
+      console.error("Error detected:", error.message);
     }, [error]);
 
     // Updated SDK location
     useEffect(() => {
       if (!webViewRef.current || !location) return;
-      //console.debug('location', location);
 
-      sendMessageToViewer(webViewRef.current, Mapper.location(location));
+      sendMessageToViewer(webViewRef.current, ViewerMapper.location(location));
     }, [location]);
 
     // Updated SDK navigation
     useEffect(() => {
       if (!webViewRef.current || !navigation) return;
 
-      sendMessageToViewer(webViewRef.current, Mapper.navigation(navigation));
-
-      if (navigation.status === NavigationStatus.START) {
-        onNavigationStarted({
-          navigation: Mapper.routeToResult(navigation),
-        } as OnNavigationResult);
-      }
-      if (navigation?.type === NavigationUpdateType.destinationReached) {
-        onNavigationFinished({
-          navigation: Mapper.navigationToResult(navigation),
-        } as OnNavigationResult);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.navigation(navigation)
+      );
     }, [navigation]);
 
     // Updated SDK route
     useEffect(() => {
       if (!webViewRef.current || !directions) return;
 
-      sendMessageToViewer(webViewRef.current, Mapper.route(directions));
+      sendMessageToViewer(webViewRef.current, ViewerMapper.route(directions));
     }, [directions]);
 
+    // Update language
     useEffect(() => {
-      if (!webViewRef.current || !configuration?.language || !mapLoaded) return;
+      if (!webViewRef.current || !configuration.language || !mapLoaded) return;
 
       sendMessageToViewer(
         webViewRef.current,
-        Mapper.setLanguage(configuration.language)
+        ViewerMapper.setLanguage(configuration.language)
       );
-    }, [configuration?.language, mapLoaded]);
+    }, [configuration.language, mapLoaded]);
 
+    // Update SDK configuration
     useEffect(() => {
       if (webViewRef.current && mapLoaded) {
         sendMessageToViewer(
           webViewRef.current,
-          Mapper.initialConfiguration(
-            style,
-            configuration?.enablePoiClustering,
-            configuration?.showPoiNames,
-            configuration?.minZoom,
-            configuration?.maxZoom,
-            configuration?.initialZoom,
-            configuration?.useDashboardTheme
-          )
+          ViewerMapper.initialConfiguration(style)
         );
       }
-    }, [
-      webViewRef,
-      mapLoaded,
-      style,
-      configuration?.enablePoiClustering,
-      configuration?.showPoiNames,
-      configuration?.minZoom,
-      configuration?.maxZoom,
-      configuration?.initialZoom,
-      configuration?.useDashboardTheme,
-    ]);
+    }, [webViewRef, mapLoaded, style]);
 
+    // Update follow user
     useEffect(() => {
       mapLoaded && sendFollowUser();
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -317,39 +277,15 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       const eventParsed = JSON.parse(event.nativeEvent.data);
       switch (eventParsed.type) {
         case "app.map_is_ready":
-          onLoad({
-            status: "SUCCESS",
-            message: "Map is ready!",
-          } as WayfindingResult);
-
+          init();
+          onLoad && onLoad("");
           setMapLoaded(true);
           break;
         case "directions.requested":
-          calculateRoute({
-            originId: JSON.parse(event.nativeEvent.data).payload
-              .originIdentifier,
-            destinationId: JSON.parse(event.nativeEvent.data).payload
-              .destinationIdentifier,
-            directionsOptions: JSON.parse(event.nativeEvent.data).payload
-              .directionsOptions,
-          });
+          calculateRoute(eventParsed.payload);
           break;
         case "navigation.requested":
-          startNavigation({
-            originId: JSON.parse(event.nativeEvent.data).payload
-              .originIdentifier,
-            destinationId: JSON.parse(event.nativeEvent.data).payload
-              .destinationIdentifier,
-            directionsOptions: JSON.parse(event.nativeEvent.data).payload
-              .directionsOptions,
-            callback: (status, _navigation?) =>
-              status === "success" && navigation
-                ? onNavigationRequested({
-                    navigation: Mapper.routeToResult(_navigation),
-                  } as OnNavigationResult)
-                : status === "error" &&
-                  onNavigationError({} as OnNavigationResult),
-          });
+          startNavigation(eventParsed.payload);
           break;
         case "navigation.stopped":
           stopNavigation();
@@ -366,14 +302,12 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "cartography.building_selected":
           if (
             !eventParsed.payload.identifier ||
-            (currentBuilding &&
-              eventParsed.payload.identifier.toString() ===
-                currentBuilding.buildingIdentifier)
+            eventParsed.payload.identifier.toString() === buildingIdentifier
           ) {
             return;
+          } else {
+            setBuildingIdentifier(eventParsed.payload.identifier.toString());
           }
-
-          initializeBuildingById(eventParsed.payload.identifier.toString());
           break;
         default:
           break;
@@ -384,31 +318,27 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       <WebView
         ref={webViewRef}
         source={{
-          uri: `${domain || SITUM_BASE_DOMAIN}/${
-            configuration?.remoteIdentifier
+          uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${
+            configuration.remoteIdentifier
               ? `id/${configuration.remoteIdentifier}`
               : ""
-          }?email=${fullUser?.email}&apikey=${
-            fullUser?.apiKey
+          }?&apikey=${
+            configuration.situmApiKey
           }&wl=true&global=true&mode=embed${
-            configuration?.buildingIdentifier
+            configuration.buildingIdentifier
               ? `&buildingid=${configuration.buildingIdentifier}`
               : ""
           }&show=rts`,
         }}
-        style={viewerStyles.webview}
+        style={StyleSheet.flatten([viewerStyles.webview, style])}
         limitsNavigationsToAppBoundDomains={true}
         javaScriptEnabled={true}
         domStorageEnabled={true}
         startInLoadingState={true}
         cacheEnabled
         onMessage={handleRequestFromViewer}
-        // This is called on a lot of interactions with the map because of url change probably
-        onLoadEnd={() => {
-          if (!webViewRef.current) return;
-          dispatch(setWebViewRef(webViewRef));
-        }}
         onError={(evt: WebViewErrorEvent) => {
+          if (!onLoadError) return;
           const { nativeEvent } = evt;
           // TODO: on render error should probably still try to render an html
           if (nativeEvent.code === NETWORK_ERROR_CODE[Platform.OS]) {

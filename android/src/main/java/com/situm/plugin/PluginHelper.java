@@ -60,6 +60,7 @@ import es.situm.sdk.location.GeofenceListener;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_CHANGED;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_ERROR;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_STATUS_CHANGED;
+import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_STOPPED;
 import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_ERROR;
 import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_UPDATE;
 import static com.situm.plugin.SitumPlugin.EVENT_REALTIME_ERROR;
@@ -402,13 +403,14 @@ public class PluginHelper {
         }
     }
 
-    public void stopPositioning(Callback callback) {
+    public void stopPositioning(Callback callback, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
         try {
             SitumSdk.locationManager().removeUpdates();
             WritableMap map = Arguments.createMap();
             map.putBoolean("success", true);
             map.putString("message", "Stopped Successfully");
             invokeCallback(callback, map);
+            eventEmitter.emit(EVENT_LOCATION_STOPPED, null);
         } catch (Exception e) {
             invokeCallback(callback, e.getMessage());
         }
@@ -427,7 +429,6 @@ public class PluginHelper {
 
             DirectionsRequest directionRequest = SitumMapper.jsonObjectToDirectionsRequest(jsonBuilding, jsonFrom,
                     jsonTo, jsonOptions);
-
             SitumSdk.directionsManager().requestDirections(directionRequest, new Handler<Route>() {
                 @Override
                 public void onSuccess(Route route) {

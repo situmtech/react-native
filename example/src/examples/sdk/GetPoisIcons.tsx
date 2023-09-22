@@ -1,30 +1,26 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Image, View} from 'react-native';
 import MapView, {Marker, Overlay, PROVIDER_GOOGLE} from 'react-native-maps';
-import SitumPlugin from '@situm/react-native';
+import SitumPlugin, {PoiIcon} from '@situm/react-native';
 
-import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
-import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
-import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
+import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../../situm';
+import {calculateBuildingLocation} from '../Utils/CalculateBuildingLocation';
+import {fetchBuilding, fetchBuildingInfo} from '../Utils/CommonFetchs';
+import styles from '../styles/styles';
 
-const getIconForPOI = (
-  poi: any,
-): Promise<{
-  poi: any;
-  icon: string;
-}> => {
-  return new Promise((resolve, reject) => {
-    SitumPlugin.fetchPoiCategoryIconNormal(
+const getIconForPOI = async (poi: any): Promise<{poi: any; icon: string}> => {
+  try {
+    const icon: PoiIcon = await SitumPlugin.fetchPoiCategoryIconNormal(
       poi.category,
-      (icon: any) => {
-        const result = {poi: poi, icon: 'data:image/png;base64,' + icon.data};
-        resolve(result);
-      },
-      (error: any) => {
-        reject(error);
-      },
     );
-  });
+
+    return {
+      poi: poi,
+      icon: 'data:image/png;base64,' + icon.data,
+    };
+  } catch (error) {
+    throw error;
+  }
 };
 
 const getPoisInfo = async (buildingInfo: any) => {
@@ -58,11 +54,6 @@ export const GetPoisIcons = () => {
     if (pois.length) {
       markers = pois
         .filter((poiAndIcon: any) => {
-          console.log(
-            poiAndIcon.poi.floorIdentifier,
-            '-',
-            currentFloor.identifier,
-          );
           return poiAndIcon.poi.floorIdentifier === currentFloor.identifier;
         })
         .map((poiAndIcon: any) => {
@@ -75,6 +66,7 @@ export const GetPoisIcons = () => {
               flat={false}>
               <Image
                 source={{uri: poiAndIcon.icon}}
+                // eslint-disable-next-line react-native/no-inline-styles
                 style={{width: 40, height: 40}}
                 fadeDuration={0}
               />
@@ -87,10 +79,10 @@ export const GetPoisIcons = () => {
 
   useEffect(() => {
     fetchBuilding(SITUM_BUILDING_ID)
-      .then(data => {
-        setBuilding(data);
-      })
-      .catch(console.log);
+      .then(setBuilding)
+      .catch(e => {
+        console.error(`Situm > example > Could not fetch building: ${e}`);
+      });
   }, []);
 
   useEffect(() => {
@@ -100,30 +92,36 @@ export const GetPoisIcons = () => {
 
     fetchBuildingInfo(building)
       .then(data => {
-        const {bearing, bounds, map_region} = calculateBuildingLocation(
-          data.building,
-        );
-        setBearing(bearing);
-        setBounds(bounds);
-        setMapRegion(map_region);
-        if (data?.floors.length == 0) {
+        const {
+          bearing: _bearing,
+          bounds: _bounds,
+          map_region: _mapRegion,
+        } = calculateBuildingLocation(data.building);
+        setBearing(_bearing);
+        setBounds(_bounds);
+        setMapRegion(_mapRegion);
+        if (data?.floors.length === 0) {
           return;
         }
-        var selectedFloor = data.floors.filter(
+        var selectedFloor = data.floors.find(
           (f: any) => f.identifier === SITUM_FLOOR_ID,
-        )[0];
+        );
         setCurrentFloor(selectedFloor);
-        setMapImage(selectedFloor.mapUrl);
+        setMapImage(selectedFloor?.mapUrl);
 
         getPoisInfo(data).then((res: any) => setPois(res));
       })
-      .catch(console.log);
+      .catch(e => {
+        console.error(
+          `Situm > example > Could not fetch building's full information: ${e}`,
+        );
+      });
   }, [building]);
 
   return (
     <View>
       <MapView
-        style={{width: '100%', height: '100%'}}
+        style={styles.container}
         region={mapRegion}
         provider={PROVIDER_GOOGLE}>
         {mapImage && bounds && (
