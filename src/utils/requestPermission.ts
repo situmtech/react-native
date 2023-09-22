@@ -77,29 +77,24 @@ const checkAndroidPermissions = async () => {
   throw "Situm > permissions > ACCESS_FINE_LOCATION, BLUETOOTH_CONNECT or BLUETOOTH_SCAN permissions not granted";
 };
 
-export const requestPermission = () =>
-  // eslint-disable-next-line no-async-promise-executor
-  new Promise<void>(async (resolve, reject) => {
-    console.log(
-      "Situm > permissions > Retrieving permissions for platform " + Platform.OS
-    );
-    if (Platform.OS === "ios") {
-      await checkIOSPermissions()
-        .then(() => resolve())
-        .catch((e: string) => {
-          console.warn(e);
-          reject(e);
-        });
-    } else if (Platform.OS === "android") {
-      await checkAndroidPermissions()
-        .then(() => resolve())
-        .catch((e: string) => {
-          console.warn(e);
-          reject(e);
-        });
-    }
+export const requestPermission = async () => {
+  console.debug(
+    "Situm > permissions > Retrieving permissions for platform " + Platform.OS
+  );
 
-    reject(`Situm > permissions > Platform '${Platform.OS}' not supported`);
-  });
+  if (!["ios", "android"].includes(Platform.OS)) {
+    throw `Situm > permissions > Platform '${Platform.OS}' not supported`;
+  }
+
+  return await (Platform.OS === "ios"
+    ? checkIOSPermissions()
+    : checkAndroidPermissions()
+  )
+    .then(() => null)
+    .catch((e: string) => {
+      console.warn(e);
+      throw e;
+    });
+};
 
 export default requestPermission;

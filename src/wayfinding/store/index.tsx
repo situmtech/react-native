@@ -4,15 +4,12 @@ import React, { createContext, type MutableRefObject, useReducer } from "react";
 import {
   type Building,
   type Directions,
+  type Error,
   type Location,
+  type NavigationProgress,
   type Poi,
-  type SDKError,
-  type SDKNavigation,
 } from "../../sdk/types";
-import {
-  LocationStatusName,
-  NavigationStatus,
-} from "../../sdk/types/constants";
+import { LocationStatusName } from "../../sdk/types/constants";
 import { useSitumInternal } from "../hooks";
 import { createStore } from "./utils";
 
@@ -30,9 +27,10 @@ export interface State {
   currentBuilding: Building;
   pois: Poi[];
   directions?: Directions;
-  navigation?: SDKNavigation;
+  navigation?: NavigationProgress;
   destinationPoiID?: number;
-  error?: SDKError;
+  error?: Error;
+  buildingIdentifier: string;
 }
 
 export const initialState: State = {
@@ -44,9 +42,10 @@ export const initialState: State = {
   currentBuilding: undefined,
   pois: [],
   directions: undefined,
-  navigation: { status: NavigationStatus.STOP },
+  navigation: undefined,
   destinationPoiID: undefined,
   error: undefined,
+  buildingIdentifier: "-1",
 };
 
 export const SitumContext = createContext<
@@ -97,6 +96,12 @@ const store = createStore<State>({
     },
     setError: (state: State, payload: State["error"]) => {
       return { ...state, error: payload };
+    },
+    setBuildingIdentifier: (
+      state: State,
+      payload: State["buildingIdentifier"]
+    ) => {
+      return { ...state, buildingIdentifier: payload };
     },
   },
 });
@@ -149,6 +154,10 @@ export const selectError = (state: State) => {
   return state.error;
 };
 
+export const selectBuildingIdentifier = (state: State) => {
+  return state.buildingIdentifier;
+};
+
 export const {
   setWebViewRef,
   setSdkInitialized,
@@ -163,6 +172,7 @@ export const {
   setNavigation,
   setDestinationPoiID,
   setError,
+  setBuildingIdentifier,
 } = store.actions;
 
 /**

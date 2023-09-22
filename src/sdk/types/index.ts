@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type {
+  AccessibilityMode,
   LocationStatusName,
-  NavigationStatus,
-  NavigationUpdateType,
+  SdkNavigationUpdateType,
 } from "src/sdk";
 
 /**
@@ -38,6 +38,25 @@ export type Building = {
   rotation: number;
   userIdentifier: string;
   customFields: object;
+};
+
+/**
+ * @name BuildingInfo
+ * @description Full information of a building
+ *
+ * @property {Building} building - Building basic information
+ * @property {Floor[]} floors - Array with the information of each floor
+ * @property {Poi[]} indoorPOIs - Array with the information of each indoor POI
+ * @property {Poi[]} outdoorPOIs - Array with the information of each outdoor POI
+ * @property {Geofence} geofences - Array with the information of each geofence
+ */
+
+export type BuildingInfo = {
+  building: Building;
+  floors: Floor[];
+  indoorPOIs: Poi[];
+  outdoorPOIs: Poi[];
+  geofences: Geofence[];
 };
 
 /** @name Bounds
@@ -184,6 +203,16 @@ export type PoiCategory = {
 };
 
 /**
+ * @name PoiIcon
+ * @description Category of Point of Interest.
+ *
+ * @property {string} data - Base64 POI icon image
+ */
+export type PoiIcon = {
+  data: string;
+};
+
+/**
  * @name Point
  * @description Associate geographical coordinate (Location) with Building and Floor (Cartography) and cartesian coordinate relative to that building.
  *
@@ -199,13 +228,8 @@ export type Point = {
   cartesianCoordinate: CartesianCoordinate;
   coordinate: Coordinate;
   floorIdentifier: string;
-  isIndoor: boolean;
-  isOutdoor: boolean;
-};
-export type DirectionPoint = {
-  floorIdentifier: Floor["floorIdentifier"];
-  buildingIdentifier: Building["buildingIdentifier"];
-  coordinate: Coordinate;
+  isIndoor?: boolean;
+  isOutdoor?: boolean;
 };
 
 /**
@@ -281,24 +305,23 @@ export type RouteSegment = {
  * @property {string} orientationType - The Indication.Orientation of the instruction as String
  * @property {number} stepIdxDestination - The index of the indication's step of destination.
  * @property {number} stepIdxOrigin - The index of the indication's step of origin
- * @property {boolean} neededLevelChange - If the user should change the level in order to arrive to destination
+ * @property {boolean} neededLevelChange - If the user should change the level in order to arrive at the destination.
  */
 export type Indication = {
   distance: number;
   distanceToNextLevel: number;
   indicationType: string;
+  neededLevelChange: boolean;
   orientation: number;
   orientationType: string;
   stepIdxDestination: number;
   stepIdxOrigin: number;
-  neededLevelChange: boolean;
 };
 
 /**
  * @name NavigationProgress
  * @description Provides information of the progress of a user while following a route.
  *
- * @property {Point} closestPointInRoute - Closest point in the route from the user location provided . @deprecated Use closestLocationInRoute instead.
  * @property {Location} closestLocationInRoute - Closest location in the route from the user location provided .
  * @property {number} distanceToClosestPointInRoute - Distance between the real user location (provided to updateWithLocation(Location)) and the closest route location.
  * @property {Indication} currentIndication - The current indication.
@@ -313,85 +336,23 @@ export type Indication = {
  * @property {RouteSegment[]} segments - List of segments formed by consecutive points and a floor identifier
  */
 export type NavigationProgress = {
-  closestPointInRoute: Point;
   closestLocationInRoute: Location;
-  distanceToClosestPointInRoute: number;
   currentIndication: number;
-  nextIndication: Indication;
   currentStepIndex: number;
-  distanceToGoal: number;
+  distanceToClosestPointInRoute: number;
   distanceToEndStep: number;
+  distanceToGoal: number;
+  nextIndication: Indication;
+  points: Point[];
+  routeStep: RouteStep;
+  segments: RouteSegment[];
   timeToEndStep: number;
   timeToGoal: number;
-  routeStep: RouteStep;
-  points: Point[];
-  segments: RouteSegment[];
+  type: SdkNavigationUpdateType;
 };
 
 /**
- * @name SitumEvent
- * @description An event: POI with radius, conversion area and asociated statistics. It is intended for usage in marketing apps.
- *
- * @property {number} buildingIdentifier - The identifier of the building this floor belongs to. Deprecated, use trigger.center.buildingIdentifier instead
- * @property {number} identifier - Unique identifier of the SitumEvent.
- * @property {number} floorIdentifier - The identifier of the floor this event is located at. @deprecated, use trigger.center.floorIdentifier instead
- * @property {string} infoHtml - Information contained into the event, in HTML format.
- * @property {SitumConversionArea} conversionArea - Location where the event is located. @deprecated, use conversion instead
- * @property {Circle} conversion - Location where the event is located.
- * @property {Circle} trigger - Location where the event should be fired
- * @property {object} customFields - Key-value pairs that allow to extend and fully customize the information associated with the event.
- * @property {number} radius - Radius of the event associated area. @deprecated, use trigger.radius instead
- * @property {string} name - Name of the event
- * @property {number} x - Center of the event in the x-axis. @deprecated, use trigger.center.cartesianCoordinate.x instead
- * @property {number} y - Center of the event in the y-axis. @deprecated, use trigger.center.cartesianCoordinate.y instead
- */
-export type SitumEvent = {
-  buildingIdentifier: number;
-  identifier: number;
-  floorIdentifier: number;
-  infoHtml: string;
-  conversionArea: SitumConversionArea;
-  conversion: Circle;
-  trigget: Circle;
-  customFields: object;
-  radius: number;
-  name: string;
-  x: number;
-  y: number;
-};
-
-/**
- * @name SitumConversionArea
- * @description A rectangular area of a floor defining the conversion area of an event
- *
- * @property {number} floorIdentifier - The identifier of the floor the SitumConversionArea is located at.
- * @property {object} topLeft - Top-left corner
- * @property {object} topRight - Top-right corner
- * @property {object} bottomLeft - Bottom-left corner
- * @property {object} bottomRight - Bottom-right corner
- */
-export type SitumConversionArea = {
-  floorIdentifier: number;
-  topLeft: object;
-  topRight: object;
-  bottomLeft: object;
-  bottomRight: object;
-};
-
-/**
- * @name Circle
- * @description A circular area
- *
- * @property {Point} center - The center of the circle
- * @property {number} radius - The radius of the circle
- */
-export type Circle = {
-  center: Point;
-  radius: number;
-};
-
-/**
- * @name LocationOptions
+ * @name LocationRequest
  * @description A data object that contains parameters for the location service, LocationManager.
  *
  * @property {number} buildingIdentifier - Identifier of the building on which the positioning will be started
@@ -399,72 +360,60 @@ export type Circle = {
  * @property {string} indoorProvider - Default indoor provider. Possible values are INPHONE and SUPPORT
  * @property {boolean} useBle - Defines whether or not to use BLE for positioning
  * @property {boolean} useWifi - Defines whether or not to use Wi-Fi for positioning
- * @property {boolean} useGps - Defines whether or not to use the GPS for indoor positioning
- * @property {boolean} useBarometer - Defines whether or not to use barometer for indoor positioning
- * @property {string} motionMode - Default motion mode. Possible values are BY_CAR, BY_FOOT and RADIOMAX
+ * @property {boolean} useGps - Defines whether or not to use GPS for indoor positioning
+ * @property {boolean} useBarometer - Defines whether or not to use the barometer for indoor positioning
+ * @property {string} motionMode - Default motion mode. Possible values are BY_CAR, BY_FOOT, and RADIOMAX
  * @property {boolean} useForegroundService - Defines whether or not to activate the {@link http://developers.situm.es/pages/android/using_situm_sdk_background.html foreground service}
- * @property {boolean} useDeadReckoning - Defines whether ot not to use dead reckoning to get fast position updates using only the inertial sensors, between the server position updates.
+ * @property {boolean} useDeadReckoning - Defines whether or not to use dead reckoning to get fast position updates using only the inertial sensors, between the server position updates.
  * @property {OutdoorLocationOptions} outdoorLocationOptions - Outdoor location options. Only used in an indoor/outdoor request
  * @property {BeaconFilter[]} beaconFilters - Deprecated - Beacon filters to be handled during scan time, otherwise only Situm beacons will be scanned. Can be invoked multiple times to add as much beacon filters as you want. The SitumSDK now does it automatically
- * @property {number} smallestDisplacement - Default smallest displacement to nofiy location updates
- * @property {string} realtimeUpdateInterval - Default interval to send locations to the Realtime. Possible values are REALTIME, FAST, NORMAL, SLOW and BATTERY_SAVER
- * @property {boolean} autoEnableBleDuringPositioning - Set if the BLE should be re-enabled during positioning if the ble is used. Android only
- */
-export type LocationRequestOptions = {
-  buildingIdentifier?: number;
-  interval?: number;
-  indoorProvider?: string;
-  useBle?: boolean;
-  useWifi?: boolean;
-  useGps?: boolean;
-  useBarometer?: boolean;
-  motionMode?: string;
-  useForegroundService?: boolean;
-  useDeadReckoning?: boolean;
-  outdoorLocationOptions?: OutdoorLocationOptions;
-  beaconFilters?: BeaconFilter[];
-  smallestDisplacement?: number;
-  realtimeUpdateInterval?: string;
-  autoEnableBleDuringPositioning?: boolean;
-};
-
-/**
- * @name LocationRequest
- * @description A data object that contains parameters for the location service, LocationManager.
- *
- * @property {Building} building 0 - Building on which the positioning will be started
- * @property {LocationOptions} locationOptions 1 - Location options.
+ * @property {number} smallestDisplacement - Default smallest displacement to notify location updates
+ * @property {string} realtimeUpdateInterval - Default interval to send locations to the Realtime. Possible values are REALTIME, FAST, NORMAL, SLOW, and BATTERY_SAVER
  */
 export type LocationRequest = {
-  building: Building;
-  locationOptions: LocationRequestOptions;
+  autoEnableBleDuringPositioning?: boolean;
+  beaconFilters?: BeaconFilter[];
+  buildingIdentifier?: number;
+  indoorProvider?: string;
+  interval?: number;
+  motionMode?: string;
+  outdoorLocationOptions?: OutdoorLocationOptions;
+  realtimeUpdateInterval?: string;
+  smallestDisplacement?: number;
+  useBarometer?: boolean;
+  useBle?: boolean;
+  useDeadReckoning?: boolean;
+  useForegroundService?: boolean;
+  useGps?: boolean;
+  useWifi?: boolean;
 };
 
 /**
  * @name NavigationRequest
- * @description A data object that contains parameters for the navigation service, NavigationManager.
+ * @description A data object that contains the request for navigation.
  *
- * @property {number} distanceToChangeIndicationThreshold - Distance threshold from when the next indication is considered reached.
- * @property {number} distanceToFloorChangeThreshold - Distance threshold from when a floor change is considered reached.
- * @property {number} distanceToGoalThreshold - Distance threshold from when the goal is considered reached.
- * @property {number} distanceToIgnoreFirstIndication - Maximum distance to ignore the first indication when navigating a route (Only available for Android).
- * @property {number} ignoreLowQualityLocations - Set if low quality locations should be ignored. (Only available for Android).
- * @property {number} indicationsInterval - Time to wait between indications.
- * @property {number} outsideRouteThreshold - Set the distance to consider the use is outside of the route. A type=userOutsideRoute will be sent trough the NavigationListener .
- * @property {number} roundIndicationsStep - Step that will be used to round indications distance.
- * @property {number} timeToFirstIndication - Time to wait until the first indication is returned.
- * @property {number} timeToIgnoreUnexpectedFloorChanges - Time (in millis) to ignore the locations received during navigation, when the next indication is a floor change, if the locations are in a wrong floor (not in origin or destination floors).
+ * @property {number} distanceToGoalThreshold - Distance threshold to consider reaching the goal (meters).
+ * @property {number} distanceToIgnoreFirstIndication - Maximum distance to ignore the first indication when navigating (meters).
+ * @property {number} distanceToFloorChangeThreshold - Distance threshold from when a floor change is considered reached (meters).
+ * @property {number} distanceToChangeIndicationThreshold - Distance threshold to change the indication (meters).
+ * @property {boolean} ignoreLowQualityLocations - Ignore low-quality locations.
+ * @property {number} indicationsInterval - Interval between indications (milliseconds).
+ * @property {number} outsideRouteThreshold - Distance threshold to consider being outside the route (meters).
+ * @property {number} roundIndicationsStep - Step to round indications (meters).
+ * @property {number} timeToFirstIndication - Time to wait until the first indication is returned (milliseconds).
+ * @property {number} timeToIgnoreUnexpectedFloorChanges - Time to ignore the locations received during navigation, when the next indication is a floor change,
+ *                                                         if the locations are on a wrong floor (not in origin or destination floors) (milliseconds).
  */
 export type NavigationRequest = {
-  distanceToIgnoreFirstIndication?: number;
-  ignoreLowQualityLocations?: number;
-  distanceToGoalThreshold?: number;
-  outsideRouteThreshold?: number;
-  distanceToFloorChangeThreshold?: number;
   distanceToChangeIndicationThreshold?: number;
+  distanceToFloorChangeThreshold?: number;
+  distanceToGoalThreshold?: number;
+  distanceToIgnoreFirstIndication?: number;
+  ignoreLowQualityLocations?: boolean;
   indicationsInterval?: number;
-  timeToFirstIndication?: number;
+  outsideRouteThreshold?: number;
   roundIndicationsStep?: number;
+  timeToFirstIndication?: number;
   timeToIgnoreUnexpectedFloorChanges?: number;
 };
 
@@ -474,32 +423,29 @@ export type NavigationRequest = {
  *
  * @property {Building} positioningBuilding
  * @property {Point|Location} from - Current user's position as the starting point of the route.
- * @property {Point|POI} to - Point to, where the route should end.
+ * @property {Point|Poi} to - Point to, where the route should end.
  * @property {DirectionsOptions} options - Options that can be added to the request.
  */
 export type DirectionsRequest = {
-  positioningBuilding: Building;
+  buildingIdentifier: string;
   from: Point | Location;
   to: Point | Poi;
-  options: DirectionsOptions;
-};
+} & DirectionsOptions;
 
 /**
  * @name DirectionsOptions
  * @description A data object that contains the directions options.
  *
  * @property {boolean} minimizeFloorChanges - Defines wheter or not the route should be calculated minimizing the floor changes even if the result is longer.
- * @property {boolean} accessibleRoute - Deprecated, use accessibilityMode. Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false).
- * @property {boolean} accessible - Deprecated, use accessibilityMode. Defines wheter or not the route has to be suitable for wheel chairs (true) or not (false).
  * @property {string} accessibilityMode - Defines the accessibility mode of the route. Possible values are: CHOOSE_SHORTEST, ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES, ONLY_ACCESSIBLE
  * @property {number} startingAngle - Current user's orientation in degrees.
  */
 export type DirectionsOptions = {
-  minimizeFloorChanges: boolean;
-  accessibleRoute: boolean;
-  accessible: boolean;
-  assebilityMode: string;
-  startingAngle: number;
+  minimizeFloorChanges?: boolean;
+  accessibilityMode?: AccessibilityMode;
+  // startingAngle = bearingFrom
+  startingAngle?: number;
+  bearingFrom?: number;
 };
 
 /**
@@ -550,6 +496,17 @@ export type RealTimeData = {
   locations: Location[];
 };
 
+export type SdkVersion = {
+  react_native: string;
+  ios?: string;
+  android?: string;
+};
+
+export type ConfigurationOptions = {
+  useRemoteConfig?: boolean;
+  cacheMaxAge?: number;
+};
+
 export interface Location {
   position?: Position;
   accuracy?: number;
@@ -580,27 +537,10 @@ export interface LocationStatus {
   statusCode: number;
 }
 
-export interface SDKError {
+export interface Error {
   code?: number;
   message: string;
 }
 
 // TODO: add types
 export type Directions = any;
-
-export interface SDKNavigation {
-  //closestPositionInRoute: any;
-  currentIndication?: any;
-  //currentStepIndex:number;
-  //distanceToEndStep: number;
-  distanceToGoal?: number;
-  //nextIndication: any;
-  points?: any;
-  routeStep?: any;
-  segments?: any;
-  route?: Directions;
-  //timeToEndStep: number;
-  //timeToGoal: number;
-  type?: NavigationUpdateType;
-  status: NavigationStatus;
-}

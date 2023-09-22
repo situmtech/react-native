@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import MapView, {Overlay, PROVIDER_GOOGLE} from 'react-native-maps';
-import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../situm';
-import {calculateBuildingLocation} from './Utils/CalculateBuildingLocation';
-import {fetchBuilding, fetchBuildingInfo} from './Utils/CommonFetchs';
+import {SITUM_BUILDING_ID, SITUM_FLOOR_ID} from '../../situm';
+import {calculateBuildingLocation} from '../Utils/CalculateBuildingLocation';
+import {fetchBuilding, fetchBuildingInfo} from '../Utils/CommonFetchs';
+import {Building} from '@situm/react-native';
+import styles from '../styles/styles';
 
 export const ShowBuildingOnMap = () => {
-  const [building, setBuilding] = useState<any>();
+  const [building, setBuilding] = useState<Building>();
   const [mapImage, setMapImage] = useState<any>();
   const [bounds, setBounds] = useState<any>();
   const [bearing, setBearing] = useState<any>(0);
@@ -14,10 +16,10 @@ export const ShowBuildingOnMap = () => {
 
   useEffect(() => {
     fetchBuilding(SITUM_BUILDING_ID)
-      .then(data => {
-        setBuilding(data);
-      })
-      .catch(console.log);
+      .then(setBuilding)
+      .catch(e => {
+        console.error(`Situm > example > Could not fetch building: ${e}`);
+      });
   }, []);
 
   useEffect(() => {
@@ -27,27 +29,29 @@ export const ShowBuildingOnMap = () => {
 
     fetchBuildingInfo(building)
       .then(data => {
-        const {bearing, bounds, map_region} = calculateBuildingLocation(
-          data.building,
-        );
-        setBearing(bearing);
-        setBounds(bounds);
-        setMapRegion(map_region);
+        const {
+          bearing: _bearing,
+          bounds: _bounds,
+          map_region: _mapRegion,
+        } = calculateBuildingLocation(data.building);
+        setBearing(_bearing);
+        setBounds(_bounds);
+        setMapRegion(_mapRegion);
         if (data?.floors.length === 0) {
           return;
         }
-        var selectedFloor = data.floors.filter(
+        var selectedFloor = data.floors.find(
           (f: any) => f.identifier === SITUM_FLOOR_ID,
-        )[0];
-        setMapImage(selectedFloor.mapUrl);
+        );
+        setMapImage(selectedFloor?.mapUrl);
       })
-      .catch(console.log);
+      .catch(console.debug);
   }, [building]);
 
   return (
     <View>
       <MapView
-        style={{width: '100%', height: '100%'}}
+        style={styles.container}
         region={mapRegion}
         showsIndoorLevelPicker={false}
         showsIndoors={false}

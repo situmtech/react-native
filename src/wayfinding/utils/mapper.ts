@@ -1,18 +1,102 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { AccessibilityMode } from "../../sdk";
 import type {
-  DirectionPoint,
   Directions,
+  DirectionsRequest,
   Location,
-  SDKNavigation,
+  NavigationProgress,
+  NavigationRequest,
+  Point,
 } from "../../sdk/types";
-import type { Destination, NavigateToPoiType, Navigation } from "../types";
+import type {
+  DirectionsMessage,
+  NavigateToPointPayload,
+  NavigateToPoiPayload,
+  Navigation,
+  OnNavigationResult,
+} from "../types";
 
-const mapperWrapper = (type: string, payload: unknown) =>
-  JSON.stringify({ type, payload });
+export const createPoint = (payload: any): Point => {
+  return {
+    buildingIdentifier: payload.buildingIdentifier,
+    floorIdentifier: payload.floorIdentifier,
+    cartesianCoordinate: payload.cartesianCoordinate,
+    coordinate: payload.coordinate,
+  };
+};
 
-const Mapper = {
-  location: (location: Location) =>
-    mapperWrapper("location.update", {
+export const createDirectionsMessage = (payload: any): DirectionsMessage => {
+  return {
+    buildingIdentifier: payload.buildingIdentifier,
+    originIdentifier: (payload.originIdentifier || -1).toString(),
+    originCategory: payload.originCategory,
+    destinationIdentifier: (payload.destinationIdentifier || -1).toString(),
+    destinationCategory: payload.destinationCategory,
+    identifier: (payload.identifier || "").toString(),
+  };
+};
+
+export const createDirectionsRequest = (payload: any): DirectionsRequest => {
+  return {
+    buildingIdentifier: payload.from.buildingIdentifier,
+    to: createPoint(payload.to),
+    from: createPoint(payload.from),
+    bearingFrom: payload.bearingFrom || 0,
+    accessibilityMode:
+      payload.accessibilityMode || AccessibilityMode.CHOOSE_SHORTEST,
+    minimizeFloorChanges: payload.minimizeFloorChanges || false,
+  };
+};
+
+export const createNavigationRequest = (payload: any): NavigationRequest => {
+  const navigationRequest = {
+    distanceToGoalThreshold: payload.distanceToGoalThreshold,
+    outsideRouteThreshold: payload.outsideRouteThreshold,
+    distanceToIgnoreFirstIndication: payload.distanceToIgnoreFirstIndication,
+    distanceToFloorChangeThreshold: payload.distanceToFloorChangeThreshold,
+    distanceToChangeIndicationThreshold:
+      payload.distanceToChangeIndicationThreshold,
+    indicationsInterval: payload.indicationsInterval,
+    timeToFirstIndication: payload.timeToFirstIndication,
+    roundIndicationsStep: payload.roundIndicationsStep,
+    timeToIgnoreUnexpectedFloorChanges:
+      payload.timeToIgnoreUnexpectedFloorChanges,
+    ignoreLowQualityLocations: payload.ignoreLowQualityLocations,
+  };
+
+  return Object.fromEntries(
+    Object.entries(navigationRequest || {}).filter(
+      ([_, value]) => value !== undefined
+    )
+  );
+};
+
+const mapperWrapper = (type: string, payload: unknown) => {
+  return JSON.stringify({ type, payload });
+};
+
+const ViewerMapper = {
+  // Configuration
+  followUser: (follow: boolean) => {
+    return mapperWrapper("camera.follow_user", follow);
+  },
+  setLanguage: (lang: string) => {
+    return mapperWrapper("ui.set_language", lang);
+  },
+  initialConfiguration: (style: any) => {
+    return mapperWrapper("ui.initial_configuration", {
+      ...(style && {
+        style: style,
+      }),
+    });
+  },
+  // Cartography
+  selectPoi: (poiId: number | null) => {
+    return mapperWrapper(`cartography.select_poi`, { identifier: poiId });
+  },
+  // Location
+  location: (location: Location) => {
+    return mapperWrapper("location.update", {
       ...(location.position && {
         latitude: location.position.coordinate.latitude,
         longitude: location.position.coordinate.longitude,
@@ -27,106 +111,63 @@ const Mapper = {
         hasBearing: location.hasBearing,
       }),
       status: location.status,
-    }),
-  locationStatus: (locationStatus: Location["status"]) =>
-    mapperWrapper("location_status.update", locationStatus),
-
-  route: (directions: Directions) =>
-    mapperWrapper("directions.update", directions),
-
-  navigation: (navigation: Navigation) =>
-    mapperWrapper(`navigation.${navigation.status}`, navigation),
-
-  navigateToPoi: (navigate: NavigateToPoiType) =>
-    mapperWrapper(`navigation.start`, { navigationTo: navigate?.navigationTo }),
-
-  cancelNavigation: () => mapperWrapper(`navigation.cancel`, {}),
-
-  selectPoi: (poiId: number | null) =>
-    mapperWrapper(`cartography.select_poi`, { identifier: poiId }),
-
-  followUser: (follow: boolean) => mapperWrapper("camera.follow_user", follow),
-  setLanguage: (lang: string) => mapperWrapper("ui.set_language", lang),
-
-  initialConfiguration: (
-    style: any,
-    enablePoiClustering: any,
-    showPoiNames: any,
-    minZoom: any,
-    maxZoom: any,
-    initialZoom: any,
-    useDashboardTheme: any
-  ) =>
-    mapperWrapper("ui.initial_configuration", {
-      ...(style && {
-        style: style,
-      }),
-      ...(enablePoiClustering && {
-        enablePoiClustering: enablePoiClustering,
-      }),
-      ...(showPoiNames && {
-        showPoiNames: showPoiNames,
-      }),
-      ...(minZoom && {
-        minZoom: minZoom,
-      }),
-      ...(maxZoom && {
-        maxZoom: maxZoom,
-      }),
-      ...(initialZoom && {
-        initialZoom: initialZoom,
-      }),
-      ...(useDashboardTheme && {
-        useDashboardTheme: useDashboardTheme,
-      }),
-    }),
-
-  routeToResult: (navigation: any): Navigation => {
-    //console.log('navigation/route to be mapped:', navigation);
-    return {
-      status: navigation.status,
-      destination: {
-        category: navigation?.destinationId ? "POI" : "COORDINATE",
-        identifier: navigation?.destinationId,
-        //name:, //TODO
-        point: {
-          buildingIdentifier:
-            navigation.to.buildingIdentifier ||
-            navigation.TO.buildingIdentifier,
-          floorIdentifier:
-            navigation.to.floorIdentifier || navigation.TO.floorIdentifier,
-          coordinate: {
-            latitude:
-              navigation.to.coordinate.latitude ||
-              navigation.TO.coordinate.latitude,
-            longitude:
-              navigation.to.coordinate.longitude ||
-              navigation.TO.coordinate.longitude,
-          },
-        } as DirectionPoint,
-      } as Destination,
-    } as Navigation;
+    });
   },
-
-  navigationToResult: (navigation: SDKNavigation): Navigation => {
+  locationStatus: (locationStatus: Location["status"]) => {
+    return mapperWrapper("location_status.update", locationStatus);
+  },
+  // Directions
+  route: (directions: Directions) => {
+    return mapperWrapper("directions.update", directions);
+  },
+  routeToResult: (route: any): OnNavigationResult => {
     return {
-      status: navigation?.type,
+      navigation: {
+        status: route.status,
+        destination: {
+          category: route?.destinationId ? "POI" : "COORDINATE",
+          identifier: route?.destinationId,
+          //name:, //TODO
+          point: route.to ? createPoint(route.to) : createPoint(route.TO),
+        },
+      },
     };
-    // return {
-    //   status: navigation.status,
-    //   destination: {
-    //     category: navigation.routeStep.TO.destinationId ? 'POI' : 'COORDINATE',
-    //     identifier: navigation.routeStep.TO.destinationId,
-    //     //name:, //TODO
-    //     point: {
-    //       buildingId: navigation.routeStep.TO.buildingIdentifier,
-    //       floorId: navigation.routeStep.TO.floorIdentifier,
-    //       latitude: navigation.routeStep.TO.coordinate.latitude,
-    //       longitude: navigation.routeStep.TO.coordinate.longitude,
-    //     } as Point,
-    //   } as Destination,
-    // } as Navigation;
+  },
+  // Navigation
+  navigation: (navigation: Navigation) => {
+    return mapperWrapper(`navigation.${navigation.status}`, navigation);
+  },
+  navigateToPoi: (navigate: NavigateToPoiPayload) => {
+    return mapperWrapper(`navigation.start`, {
+      navigationTo: navigate?.identifier,
+      type: navigate.accessibilityMode,
+    });
+  },
+  navigateToPoint: ({
+    lat,
+    lng,
+    floorIdentifier,
+    navigationName,
+    accessibilityMode,
+  }: NavigateToPointPayload) => {
+    return mapperWrapper(`navigation.start`, {
+      lat,
+      lng,
+      floorIdentifier,
+      navigationName,
+      type: accessibilityMode,
+    });
+  },
+  cancelNavigation: () => {
+    return mapperWrapper(`navigation.cancel`, {});
+  },
+  navigationToResult: (navigation: NavigationProgress): OnNavigationResult => {
+    return {
+      navigation: {
+        status: navigation?.type,
+      },
+    };
   },
 };
 
-export default Mapper;
+export default ViewerMapper;
