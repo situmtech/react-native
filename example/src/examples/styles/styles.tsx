@@ -7,4 +7,20 @@ export default StyleSheet.create({
   screenWrapper: {
     padding: 16,
   },
+  title: {
+    fontSize: 20,
+  },
+  padding: {
+    paddingVertical: 16,
+  },
+  margin: {
+    marginVertical: 5,
+  },
+  container: {
+    width: '100%',
+    height: '100%',
+  },
+  indicator: {
+    position: 'absolute',
+  },
 });

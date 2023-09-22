@@ -17,36 +17,47 @@ export interface PermissionsRequestResult {
 
 async function requestPermissions(): Promise<PermissionsRequestResult> {
   return new Promise(async (resolve, _reject) => {
-    console.log('Retrieving permissions for platform ' + Platform.OS);
+    console.debug(
+      'Situm > permisssions > Retrieving permissions for platform ' +
+        Platform.OS,
+    );
     if (Platform.OS === 'ios') {
       let granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
 
       if (granted === RESULTS.GRANTED) {
-        console.info('LOCATION_WHEN_IN_USE permission granted');
+        console.debug(
+          'Situm > permisssions > LOCATION_WHEN_IN_USE permission granted',
+        );
 
         if (Platform.OS === 'ios' && parseInt(Platform.Version, 10) > 12) {
           granted = await request(PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL);
 
           if (granted === RESULTS.GRANTED) {
-            console.log('BLUETOOTH_PERIPHERAL permission granted');
+            console.debug(
+              'Situm > permisssions > BLUETOOTH_PERIPHERAL permission granted',
+            );
             resolve({result: PermissionsRequestResultTypes.GRANTED});
           } else {
-            console.log('BLUETOOTH_PERIPHERAL permission not granted');
+            console.debug(
+              'Situm > permisssions > BLUETOOTH_PERIPHERAL permission not granted',
+            );
             resolve({result: PermissionsRequestResultTypes.NOT_GRANTED});
           }
         } else {
-          console.warn('BLUETOOTH_PERIPHERAL permissions not required');
+          console.warn(
+            'Situm > permisssions > BLUETOOTH_PERIPHERAL permissions not required',
+          );
           resolve({result: PermissionsRequestResultTypes.GRANTED});
         }
       } else {
-        console.info('ACCESS_FINE_LOCATION denied');
+        console.error('Situm > permisssions > ACCESS_FINE_LOCATION denied');
         resolve({result: PermissionsRequestResultTypes.NOT_GRANTED});
       }
     } else {
       try {
         //@ts-ignore
         if (Platform.Version > 30) {
-          console.log('ANDROID VERSION > 30');
+          console.debug('Situm > permisssions > Android API is 30+');
           let granted = await requestMultiple([
             PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
             PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
@@ -64,14 +75,16 @@ async function requestPermissions(): Promise<PermissionsRequestResult> {
           }
           resolve({result: PermissionsRequestResultTypes.NOT_GRANTED});
         } else {
-          console.info('ANDROID VERSION < 30');
+          console.debug('Situm > permisssions > Android API <30');
           let granted = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
 
           if (granted === RESULTS.GRANTED) {
-            console.info('ACCESS_FINE_LOCATION granted');
+            console.debug(
+              'Situm > permisssions > ACCESS_FINE_LOCATION granted',
+            );
             resolve({result: PermissionsRequestResultTypes.GRANTED});
           } else {
-            console.info('ACCESS_FINE_LOCATION denied');
+            console.error('Situm > permisssions > ACCESS_FINE_LOCATION denied');
             resolve({result: PermissionsRequestResultTypes.NOT_GRANTED});
           }
         }

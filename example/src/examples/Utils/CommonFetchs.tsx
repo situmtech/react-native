@@ -1,49 +1,45 @@
-import SitumPlugin from '@situm/react-native';
-import {Building} from '../../../../src/sdk';
+import SitumPlugin, {Building, BuildingInfo} from '@situm/react-native';
 
-export const fetchBuilding = async (buildingId: String) => {
-  return new Promise((resolve, reject) => {
-    SitumPlugin.fetchBuildings(
-      (buildings: Building[]) => {
-        if (!buildings || buildings.length === 0) {
-          console.log(
-            'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
-          );
-          return;
-        }
-        var myBuilding = buildings.filter(
-          b => b.buildingIdentifier === buildingId,
-        );
-        if (myBuilding.length === 0) {
-          console.log(
-            'Please specify a building ID that exists on your account (on situm.tsx file)',
-          );
-          return;
-        }
+export const fetchBuilding = async (buildingId: String): Promise<Building> => {
+  try {
+    const buildings = await SitumPlugin.fetchBuildings();
 
-        resolve(myBuilding[0]);
-      },
-      (error: any) => {
-        reject(error);
-      },
-    );
-  });
+    if (!buildings || buildings.length === 0) {
+      console.log(
+        'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
+      );
+      throw new Error('No buildings found');
+    }
+
+    const myBuilding = buildings.find(b => b.buildingIdentifier === buildingId);
+
+    if (!myBuilding) {
+      console.log(
+        'Please specify a building ID that exists on your account (on situm.tsx file)',
+      );
+      throw new Error('Building ID not found');
+    }
+
+    return myBuilding;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
-export const fetchBuildingInfo = (building: any): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    SitumPlugin.fetchBuildingInfo(
-      building,
-      (buildingInfo: any) => {
-        if (buildingInfo.floors.length === 0) {
-          console.log('No buildingInfo found!');
-          return;
-        }
-        resolve(buildingInfo);
-      },
-      (error: string) => {
-        reject(error);
-      },
-    );
-  });
+export const fetchBuildingInfo = async (
+  building: Building,
+): Promise<BuildingInfo> => {
+  try {
+    const buildingInfo = await SitumPlugin.fetchBuildingInfo(building);
+
+    if (!buildingInfo || buildingInfo.floors.length === 0) {
+      console.log('No buildingInfo found!');
+      throw new Error('No buildingInfo found');
+    }
+    return buildingInfo;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };

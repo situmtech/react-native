@@ -1,53 +1,50 @@
 import React from 'react';
 import {useEffect, useState} from 'react';
 import {ScrollView, Text} from 'react-native';
-import SitumPlugin from '@situm/react-native';
-import styles from './styles/styles';
+import SitumPlugin, {Building} from '@situm/react-native';
+import styles from '../styles/styles';
 import {Card} from 'react-native-paper';
 
 export const BuildingsBasicInfo = () => {
-  const [buildings, setBuildings] = useState<any>();
-  const [error, setError] = useState<String>();
+  const [buildings, setBuildings] = useState<Building[]>();
+  const [error, setError] = useState<string>();
 
-  const getBuildings = () => {
-    SitumPlugin.fetchBuildings(
-      (b: any) => {
-        if (!b || b.length === 0) {
+  useEffect(() => {
+    SitumPlugin.fetchBuildings()
+      .then(_buildings => {
+        if (!_buildings || _buildings.length === 0) {
           setError(
             'No buildings, add a few buildings first by going to:\nhttps://dashboard.situm.es/buildings',
           );
+        } else {
+          setBuildings(_buildings);
         }
-        console.log(JSON.stringify(b));
-        setBuildings(JSON.stringify(b, null, 2));
-      },
-      (error: any) => {
-        console.log(error);
-        setError(error);
-      },
-    );
-  };
-
-  useEffect(() => {
-    getBuildings();
+      })
+      .catch(e => {
+        console.error(`Situm > example > Could not fetch buildings ${e}`);
+        setError(e);
+      });
   }, []);
 
   return (
     <ScrollView style={{...styles.screenWrapper}}>
       {error ? (
-        <Card mode="contained" style={{marginVertical: 5}}>
+        <Card mode="contained" style={styles.margin}>
           <Card.Title title={'Error'} />
           <Card.Content>
             <Text style={styles.text}>{error}</Text>
           </Card.Content>
         </Card>
       ) : (
-        <Card mode="contained" style={{marginVertical: 5}}>
+        <Card mode="contained" style={styles.margin}>
           <Card.Title
             titleVariant="headlineSmall"
             title={'Buildings information'}
           />
           <Card.Content>
-            <Text style={styles.text}>{buildings}</Text>
+            <Text style={styles.text}>
+              {JSON.stringify(buildings, null, 2)}
+            </Text>
           </Card.Content>
         </Card>
       )}

@@ -1,55 +1,27 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import {View, useColorScheme, StyleSheet, ScrollView, Text} from 'react-native';
-import {
-  Avatar,
-  Card,
-  List,
-  PaperProvider,
-  TouchableRipple,
-} from 'react-native-paper';
+import {Card, List, PaperProvider, TouchableRipple} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SitumPlugin from '@situm/react-native';
 
-import {SITUM_EMAIL, SITUM_API_KEY, SITUM_DASHBOARD_URL} from './situm';
+import {SITUM_API_KEY, SITUM_DASHBOARD_URL} from './situm';
 import Theme from './examples/styles/theme';
 
-import PositioningScreen from './examples/Positioning';
-import {BuildingsBasicInfo} from './examples/BuildingsBasicInfo';
-import {BuildingFullInfo} from './examples/BuildingFullInfo';
-import {InfoFromBuilding} from './examples/InfoFromBuilding';
-import {RouteBetweenPOIs} from './examples/RouteBetweenPOIs';
-import {ShowBuildingOnMap} from './examples/ShowBuildingOnMap';
-import {DrawRouteBetweenPOIs} from './examples/DrawRouteBetweenPOIs';
-import {RemoteConfig} from './examples/RemoteConfig';
-import {GetPoisIcons} from './examples/GetPoisIcons';
-import {SetCacheMaxAge} from './examples/SetCacheMaxAge';
-import {TiledBuilding} from './examples/TiledBuilding';
-import Wayfinding from './examples/Wayfinding';
-
-function initSitumSdk() {
-  SitumPlugin.initSitumSDK();
-  SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL, (response: any) => {
-    console.log(
-      `Set dashboard url to [${SITUM_DASHBOARD_URL}]: ${JSON.stringify(
-        response,
-      )}`,
-    );
-  });
-  SitumPlugin.setApiKey(
-    SITUM_EMAIL,
-    SITUM_API_KEY,
-    (response: {success: any}) => {
-      console.log(`Authenticated Succesfully: ${response.success}`);
-    },
-  );
-  SitumPlugin.setCacheMaxAge(1, (response: {success: any}) => {
-    console.log(`Cache Age: ${response.success}`);
-  });
-  SitumPlugin.sdkVersions((response: any) => {
-    console.log(`VERSIONS: ${JSON.stringify(response)}`);
-  });
-}
+import PositioningScreen from './examples/sdk/Positioning';
+import {BuildingsBasicInfo} from './examples/sdk/BuildingsBasicInfo';
+import {BuildingFullInfo} from './examples/sdk/BuildingFullInfo';
+import {InfoFromBuilding} from './examples/sdk/InfoFromBuilding';
+import {RouteBetweenPOIs} from './examples/sdk/RouteBetweenPOIs';
+import {ShowBuildingOnMap} from './examples/sdk/ShowBuildingOnMap';
+import {DrawRouteBetweenPOIs} from './examples/sdk/DrawRouteBetweenPOIs';
+import {RemoteConfig} from './examples/sdk/RemoteConfig';
+import {GetPoisIcons} from './examples/sdk/GetPoisIcons';
+import {SetCacheMaxAge} from './examples/sdk/SetCacheMaxAge';
+import {TiledBuilding} from './examples/sdk/TiledBuilding';
+import Wayfinding from './examples/wayfinding/Wayfinding';
+import NavigateToPoi from './examples/wayfinding/NavigateToPoi';
+import SelectPoi from './examples/wayfinding/SelectPoi';
 
 const styles = StyleSheet.create({
   container: {
@@ -63,91 +35,122 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
   },
+  title: {
+    fontSize: 20,
+  },
+  padding: {
+    paddingVertical: 16,
+  },
 });
 
 const HomeScreen = ({navigation}) => {
-  React.useEffect(() => {
-    initSitumSdk();
+  useEffect(() => {
+    try {
+      SitumPlugin.init();
+      SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL);
+      SitumPlugin.setApiKey(SITUM_API_KEY);
+    } catch (e) {
+      console.error(`Situm > example > Could not initialize SDK ${e}`);
+    }
   }, []);
 
   const screensAndSections = [
     {
-      title: 'Examples rendered on a map',
+      title: 'Situm WYF',
       screens: [
         {
-          title: 'Full wayfinding experience',
+          title: 'Complete Wayfinding Experience',
           subtitle:
-            'Easy to integrate full experience of wayfinding implemented by Situm',
+            'An integrated wayfinding experience powered by Situm, designed for ease of integration.',
           key: 'Wayfinding',
         },
         {
-          title: 'Draw a building on top of a map',
+          title: 'Navigate to POI',
           subtitle:
-            'Basic example that renders a building on top of Google Maps',
+            'Shows how to trigger the navigation to a concrete POI programmatically that, once computed, will be displayed on the map.',
+          key: 'NavigateToPoi',
+        },
+        {
+          title: 'Select POI',
+          subtitle:
+            'Shows how to select a POI programmatically, which is then displayed as selected on the map',
+          key: 'SelectPoi',
+        },
+      ],
+    },
+
+    {
+      title: 'Build-your own UI (Not Recommended)',
+      screens: [
+        {
+          title: 'Display a Building on Google Maps',
+          subtitle:
+            'A foundational example that overlays a building layout on Google Maps.',
           key: 'ShowBuildingOnMap',
         },
-
         {
-          title: 'Draw route between POIs',
+          title: 'Visualize Route Between POIs',
           subtitle:
-            'Renders the route calculated using our SDK between to POIs on your building on top of a map',
+            'Demonstrates how to use the SDK to calculate and display a route between two Points of Interest (POIs) on a map.',
           key: 'DrawRouteBetweenPOIs',
         },
         {
-          title: 'Draw pois with custom icons on a map',
+          title: 'Custom Icons for POIs on a Map',
           subtitle:
-            'This example renders your building POIs as markers on a map',
+            'Showcase how to represent building POIs with custom marker icons on a map.',
           key: 'GetPoisIcons',
         },
         {
-          title: 'Draw a building with tiles on a map',
-          subtitle: 'Show a building on a map using map tiels.',
+          title: 'Tile-based Building Display on a Map',
+          subtitle:
+            'Illustrates how to render a building on a map using map tiles.',
           key: 'TiledBuilding',
         },
       ],
     },
     {
-      title: 'Examples using primitives (JSON)',
+      title: 'JSON-based Examples',
       screens: [
         {
-          title: 'Positioning',
+          title: 'Indoor Positioning',
           subtitle:
-            'Example that ilustrates how to start/stop the Situm indoor positioning',
+            'A hands-on example detailing the steps to initiate and terminate indoor positioning with Situm.',
           key: 'Positioning',
         },
         {
-          title: 'Positioning with remote configuration',
+          title: 'Positioning with Remote Configuration',
           subtitle:
-            'This example shows how to start positioning using the remote configuration feature',
+            'Learn how to initiate positioning by leveraging the remote configuration feature of Situm SDK.',
           key: 'RemoteConfig',
         },
         {
-          title: 'Buildings basic info',
+          title: 'Retrieve Basic Building Information',
           subtitle:
-            'Fetches the buildings available on your account and shows them in RAW format',
+            'Fetch and display basic details of the buildings associated with your account in a raw format.',
           key: 'BuildingsBasicInfo',
         },
         {
-          title: 'Building full information using different calls',
+          title: 'Comprehensive Building Information',
           subtitle:
-            'Example that fetches and shows all the information of a building. Information fetched using differente calls to our API',
+            'A deep dive into fetching all available information about a building using various API calls.',
           key: 'BuildingFullInfo',
         },
         {
-          title: "Building's full information",
-          subtitle: 'Shows the building full information on RAW text',
+          title: 'Complete Building Details',
+          subtitle:
+            'View the entire set of details for a building in raw text format.',
           key: 'InfoFromBuilding',
         },
         {
-          title: 'Set cache max age and invalidate it',
+          title: 'Manage Cache Duration and Invalidate Cache',
           subtitle:
-            'Example that shows how to set a custom max age to the cache elements.',
+            'Understand how to set a custom expiration time for cache elements and how to invalidate them when needed.',
           key: 'SetCacheMaxAge',
         },
         {
-          title: 'Calculate route between two POIs on RAW format',
+          title: 'Calculate Route Between Two POIs (Raw Format)',
           subtitle:
-            'Calculates and shows on RAW format a route between two POI',
+            'Learn to compute and display a route between two POIs in a raw text format.',
           key: 'RouteBetweenPOIs',
         },
       ],
@@ -163,7 +166,7 @@ const HomeScreen = ({navigation}) => {
         {screensAndSections.map(item => (
           <List.Section
             title={item.title}
-            titleStyle={{fontSize: 20}}
+            titleStyle={styles.title}
             key={item.title}>
             {item.screens.map(screen => (
               <Card
@@ -180,7 +183,7 @@ const HomeScreen = ({navigation}) => {
                     titleVariant="titleMedium"
                     subtitle={screen.subtitle}
                     subtitleNumberOfLines={5}
-                    style={{paddingVertical: 16}}
+                    style={styles.padding}
                   />
                 </TouchableRipple>
               </Card>
@@ -265,6 +268,16 @@ function App() {
             name="Wayfinding"
             component={Wayfinding}
             options={{title: 'Full Wayfinding'}}
+          />
+          <Stack.Screen
+            name="NavigateToPoi"
+            component={NavigateToPoi}
+            options={{title: 'Navigate To Poi'}}
+          />
+          <Stack.Screen
+            name="SelectPoi"
+            component={SelectPoi}
+            options={{title: 'Select Poi'}}
           />
         </Stack.Navigator>
       </NavigationContainer>
