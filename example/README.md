@@ -51,8 +51,8 @@ yarn install;
 yarn example install;
 ```
 
-- **iOS**
-  In case you are using iOS, the last step is to install de dependencies specified in [`example/ios/Podfile`](./ios/Podfile) with:
+-   **iOS**
+    In case you are using iOS, the last step is to install de dependencies specified in [`example/ios/Podfile`](./ios/Podfile) with:
 
 ```bash
 cd ios/
@@ -77,21 +77,21 @@ export const SITUM_DASHBOARD_URL = 'https://dashboard.situm.com';
 
 #### Android
 
-- **Run from command line:**
+-   **Run from command line:**
 
-  1. Initialize the metro terminal with `$ react-native start`
-  2. Then (in another terminal) compile and run this app in your device with `$ react-native run-android`.
+    1. Initialize the metro terminal with `$ react-native start`
+    2. Then (in another terminal) compile and run this app in your device with `$ react-native run-android`.
 
-- **Run from Android Studio:** Open `root/android` folder in Android Studio and run project.
+-   **Run from Android Studio:** Open `root/android` folder in Android Studio and run project.
 
 #### iOS
 
-- **Run from command line:**
+-   **Run from command line:**
 
-  1. Initialize the metro terminal with `$ react-native start`
-  2. Then (in another terminal) compile and run this app in your device with `$ react-native run-ios`.
+    1. Initialize the metro terminal with `$ react-native start`
+    2. Then (in another terminal) compile and run this app in your device with `$ react-native run-ios`.
 
-- **Run from XCode:** Go to `example/ios` folder and open `example.xcworkspace` or run command `xed ios` from root directory.
+-   **Run from XCode:** Go to `example/ios` folder and open `example.xcworkspace` or run command `xed ios` from root directory.
 
 ## Documentation <a name="documentation"/>
 
@@ -101,16 +101,22 @@ More information on how to use the official React Native plugin and the set of A
 
 In case you want to learn how to use our plugin, you may want to take a look at our code samples of the basics functionalities:
 
-1. [**Positioning**](https://github.com/situmtech/situm-react-native-plugin/blob/master/example/src/examples/Positioning.tsx): Learn how to start positioning and get the user location by using our listener with the specified positioning configuration inside [`src/settings.tsx`](./src/settings.tsx) file.
-2. [**Positioning with Remote Configuration**](https://github.com/situmtech/situm-react-native-plugin/blob/master/example/src/examples/RemoteConfig.tsx): Learn how to start positioning with the [remote configuration](https://situm.com/docs/sdk-remote-configuration/) defined in the settings section inside our [dashboard](https://dashboard.situm.com/settings). This way you can manage your positioning parameters with ease and avoid doing several code changes to test different configurations.
-3. [**Show buildings basic info**](https://github.com/situmtech/situm-react-native-plugin/blob/master/example/src/examples/BuildingBasicInfo.tsx): Learn how to retrieve the basic info of a building. (e.g. buildingIdentifier, name, creation date, ...)
-4. [**Show a building full info from different calls**](https://github.com/situmtech/situm-react-native-plugin/blob/master/example/src/examples/InfoFromBuilding.tsx): Learn how to retrive all the information related to a building in different calls. (e.g. floors, pois, geofences, custom fields, ...)
-5. [**Draw a building in top of google maps**](https://github.com/situmtech/situm-react-native-plugin/blob/master/example/src/examples/ShowBuildingOnMap.tsx): Draw a building above google maps.
-6. [**Show a building's full info**](https://github.com/situmtech/situm-react-native-plugin/blob/master/example/src/examples/BuildingFullInfo.tsx): Learn how to fetch all the information related to a building with just one call.
-7. [**Show the route between pois**](https://github.com/situmtech/situm-react-native-plugin/blob/master/example/src/examples/RouteBetweenPOIs.tsx): Learn how to retrieve all the info of a route between 2 pois.
-8. [**Draw route between pois**](https://github.com/situmtech/situm-react-native-plugin/blob/master/example/src/examples/DrawRouteBetweenPOIs.tsx): Learn how to draw a route between 2 pois above a floor plan.
-9. [**Draw POIs with custom icons**](https://github.com/situmtech/situm-react-native-plugin/blob/master/example/src/examples/GetPoisIcons.tsx): Learn how to display POIs with custom icons. You may need to know first how to [_create a custom POI category with custom icons_](https://situm.com/docs/cartography-management/#poi-categories).
-10. [**Set cache max age and invalidate it**](https://github.com/situmtech/situm-react-native-plugin/blob/master/example/src/examples/SetCacheMaxAge.tsx): Learn how to set the maximum cache age and how to invalidate it.
+-   **Showcasing our SDK**
+    1. [**Positioning**](./src/examples/sdk/Positioning.tsx): Learn how to start positioning and get the user location by using our listener with the specified positioning configuration inside [`src/settings.tsx`](./src/settings.tsx) file.
+    2. [**Positioning with Remote Configuration**](./src/examples/sdk/RemoteConfig.tsx): Learn how to start positioning with the [remote configuration](https://situm.com/docs/sdk-remote-configuration/) defined in the settings section inside our [dashboard](https://dashboard.situm.com/settings). This way you can manage your positioning parameters with ease and avoid doing several code changes to test different configurations.
+    3. [**Show buildings basic info**](./src/examples/sdk/BuildingBasicInfo.tsx): Learn how to retrieve the basic info of a building. (e.g. buildingIdentifier, name, creation date, ...)
+    4. [**Show a building full info from different calls**](./src/examples/sdk/InfoFromBuilding.tsx): Learn how to retrive all the information related to a building in different calls. (e.g. floors, pois, geofences, custom fields, ...)
+    5. [**Draw a building in top of google maps**](./src/examples/sdk/ShowBuildingOnMap.tsx): Draw a building above google maps.
+    6. [**Show a building's full info**](./src/examples/sdk/BuildingFullInfo.tsx): Learn how to fetch all the information related to a building with just one call.
+    7. [**Show the route between pois**](./src/examples/sdk/RouteBetweenPOIs.tsx): Learn how to retrieve all the info of a route between 2 pois.
+-   **Showcasing our Wayfinding module**:
+    1. [**Complete Wayfinding Experience**](./src/examples/wayfinding/Wayfinding.tsx): An integrated wayfinding experience powered by Situm, designed for ease of integration.
+    2. [**Navigate to POI**](./src/examples/wayfinding/NavigateToPoi.tsx): Learn how to trigger the navigation to a concrete POI and display it on the map.
+    3. [**Select POI**](./src/examples/wayfinding/SelectPoi.tsx): Learn how to set a POI as selected on the map.
+-   **Build your own UI (Not recommended)**:
+    1. [**Draw route between pois**](./src/examples/sdk/DrawRouteBetweenPOIs.tsx): Learn how to draw a route between 2 pois above a floor plan.
+    2. [**Draw POIs with custom icons**](./src/examples/sdk/GetPoisIcons.tsx): Learn how to display POIs with custom icons. You may need to know first how to [_create a custom POI category with custom icons_](https://situm.com/docs/cartography-management/#poi-categories).
+    3. [**Set cache max age and invalidate it**](./src/examples/sdk/SetCacheMaxAge.tsx): Learn how to set the maximum cache age and how to invalidate it.
 
 ## Versioning
 
