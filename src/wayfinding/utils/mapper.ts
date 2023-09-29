@@ -78,7 +78,7 @@ const mapperWrapper = (type: string, payload: unknown) => {
 const ViewerMapper = {
   // Configuration
   followUser: (follow: boolean) => {
-    return mapperWrapper("camera.follow_user", follow);
+    return mapperWrapper("camera.follow_user", {value: follow});
   },
   setLanguage: (lang: string) => {
     return mapperWrapper("ui.set_language", lang);
