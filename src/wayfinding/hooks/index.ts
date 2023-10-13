@@ -225,13 +225,14 @@ export const useSitumInternal = () => {
       return;
     }
 
-    try {
-      SitumPlugin.removeNavigationUpdates();
-      console.debug("Situm > hook > Successfully removed navigation updates");
-      dispatch(setNavigation({ status: NavigationStatus.STOP }));
-    } catch (e) {
-      console.error(`Situm > hook > Could not remove navigation updates ${e}`);
-    }
+    SitumPlugin.removeNavigationUpdates()
+      .then(() => {
+        console.debug("Situm > hook > Successfully removed navigation updates");
+        dispatch(setNavigation({ status: NavigationStatus.STOP }));
+      })
+      .catch((e) => {
+        console.warn(`Situm > hook > Could not remove navigation updates ${e}`);
+      });
   };
 
   return {
