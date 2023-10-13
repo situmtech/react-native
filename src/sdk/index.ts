@@ -460,7 +460,7 @@ export default class SitumPlugin {
    *
    */
   static removeNavigationUpdates = () => {
-    return exceptionWrapper<void>(({ onCallback }) => {
+    return promiseWrapper<void>(({ onCallback }) => {
       if (!SitumPlugin.navigationIsRunning()) {
         throw "Situm > hook > Navigation updates were not active.";
       }
