@@ -78,7 +78,7 @@ const mapperWrapper = (type: string, payload: unknown) => {
 const ViewerMapper = {
   // Configuration
   followUser: (follow: boolean) => {
-    return mapperWrapper("camera.follow_user", {value: follow});
+    return mapperWrapper("camera.follow_user", { value: follow });
   },
   setLanguage: (lang: string) => {
     return mapperWrapper("ui.set_language", lang);
@@ -93,6 +93,11 @@ const ViewerMapper = {
   // Cartography
   selectPoi: (poiId: number | null) => {
     return mapperWrapper(`cartography.select_poi`, { identifier: poiId });
+  },
+  selectPoiCategory: (categoryId: number | null) => {
+    return mapperWrapper(`cartography.select_poi_category`, {
+      identifier: categoryId,
+    });
   },
   // Location
   location: (location: Location) => {
