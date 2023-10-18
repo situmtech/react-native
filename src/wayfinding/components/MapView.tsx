@@ -94,6 +94,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const {
       init,
       location,
+      locationStatus,
       directions,
       navigation,
 
@@ -272,6 +273,16 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       mapLoaded && sendFollowUser();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mapLoaded]);
+
+    //locationStatus
+    useEffect(() => {
+      if (!webViewRef.current || !locationStatus || !mapLoaded) return;
+
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.locationStatus(locationStatus)
+      );
+    }, [locationStatus, mapLoaded]);
 
     const handleRequestFromViewer = (event: WebViewMessageEvent) => {
       const eventParsed = JSON.parse(event.nativeEvent.data);
