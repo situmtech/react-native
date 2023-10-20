@@ -11,6 +11,9 @@ export interface MapViewError {
 export interface MapViewRef {
   selectPoi: (poiId: number) => void;
   selectPoiCategory: (categoryId: number | null) => void;
+  hidePoisByCustomField: (key: string, value?: string) => void;
+  showPoisByCustomField: (key: string, value?: string) => void;
+  selectPoiByCustomField: (key: string, value?: string) => void;
   navigateToPoi: ({
     identifier,
     accessibilityMode = AccessibilityMode.CHOOSE_SHORTEST,
