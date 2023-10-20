@@ -19,7 +19,7 @@ import type {
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
-import SitumPlugin from "../../sdk";
+import SitumPlugin, { type Building } from "../../sdk";
 import useSitum from "../hooks";
 import {
   type MapViewError,
@@ -91,6 +91,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const [buildingIdentifier, setBuildingIdentifier] = useState<string>(
       configuration.buildingIdentifier
     );
+    const [currentBuilding, setCurrentBuilding] = useState<
+      Building | undefined
+    >();
     const {
       init,
       location,
@@ -168,6 +171,62 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, []);
 
+    const _selectPoiByCustomField = useCallback(
+      async (key: string, value?: string) => {
+        const pois = await SitumPlugin.fetchIndoorPOIsFromBuilding(
+          currentBuilding
+        );
+        const poiId = pois.find((p) => {
+          if (value != null && value != "") {
+            return p.customFields[key] == value;
+          }
+          return p.customFields[key] != null;
+        })?.identifier;
+
+        if (!poiId) {
+          console.error(`No pois found for given custom field`);
+        } else {
+          sendMessageToViewer(
+            webViewRef.current,
+            ViewerMapper.selectPoi(parseInt(poiId, 10))
+          );
+        }
+      },
+      [currentBuilding]
+    );
+
+    const _hidePoisByCustomField = useCallback(
+      async (key: string, value?: string) => {
+        if (!webViewRef.current) {
+          return;
+        }
+
+        sendMessageToViewer(
+          webViewRef.current,
+          ViewerMapper.hidePois({
+            customField: { key: key, value: value },
+          })
+        );
+      },
+      []
+    );
+
+    const _showPoisByCustomField = useCallback(
+      async (key: string, value?: string) => {
+        if (!webViewRef.current) {
+          return;
+        }
+
+        sendMessageToViewer(
+          webViewRef.current,
+          ViewerMapper.showPois({
+            customField: { key: key, value: value },
+          })
+        );
+      },
+      []
+    );
+
     /**
      * API exported to the outside world from the MapViewer
      *
@@ -206,6 +265,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           selectPoiCategory(poiId: number) {
             _selectPoiCategory(poiId);
           },
+          hidePoisByCustomField: _hidePoisByCustomField,
+          selectPoiByCustomField: _selectPoiByCustomField,
+          showPoisByCustomField: _showPoisByCustomField,
           deselectPoi() {
             webViewRef.current &&
               sendMessageToViewer(
@@ -229,8 +291,29 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           },
         };
       },
-      [stopNavigation, _navigateToPoi, _navigateToPoint, _selectPoi]
+      [
+        stopNavigation,
+        _navigateToPoi,
+        _navigateToPoint,
+        _selectPoi,
+        _selectPoiCategory,
+        _hidePoisByCustomField,
+        _showPoisByCustomField,
+        _selectPoiByCustomField,
+      ]
     );
+
+    useEffect(() => {
+      if (!buildingIdentifier) {
+        setCurrentBuilding(undefined);
+      } else {
+        SitumPlugin.fetchBuildings().then((buildings) =>
+          setCurrentBuilding(
+            buildings.find((b) => b.buildingIdentifier == buildingIdentifier)
+          )
+        );
+      }
+    }, [buildingIdentifier]);
 
     useEffect(() => {
       if (!error) return;

@@ -23,6 +23,7 @@ import Wayfinding from './examples/wayfinding/Wayfinding';
 import NavigateToPoi from './examples/wayfinding/NavigateToPoi';
 import SelectPoi from './examples/wayfinding/SelectPoi';
 import SelectPoiCategory from './examples/wayfinding/SelectPoiCategory';
+import ShowHidePois from './examples/wayfinding/ShowHidePois';
 
 const styles = StyleSheet.create({
   container: {
@@ -82,6 +83,12 @@ const HomeScreen = ({navigation}) => {
           subtitle:
             'Shows how to select a POI category programmatically, which is then displayed as selected on the map',
           key: 'SelectPoiCategory',
+        },
+        {
+          title: 'Show / Hide pois',
+          subtitle:
+            'Demonstrates how to dynamically show or hide points of interest (POIs) on the map based on custom fields',
+          key: 'ShowHidePois',
         },
       ],
     },
@@ -290,6 +297,11 @@ function App() {
             name="SelectPoiCategory"
             component={SelectPoiCategory}
             options={{title: 'Select Poi Category'}}
+          />
+          <Stack.Screen
+            name="ShowHidePois"
+            component={ShowHidePois}
+            options={{title: 'Show / Hide pois'}}
           />
         </Stack.Navigator>
       </NavigationContainer>

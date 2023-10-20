@@ -99,6 +99,12 @@ const ViewerMapper = {
       identifier: categoryId,
     });
   },
+  hidePois: (filter: { customField: { key: string; value?: any } }) => {
+    return mapperWrapper(`cartography.hide_pois`, filter);
+  },
+  showPois: (filter: { customField: { key: string; value?: any } }) => {
+    return mapperWrapper(`cartography.show_pois`, filter);
+  },
   // Location
   location: (location: Location) => {
     return mapperWrapper("location.update", {

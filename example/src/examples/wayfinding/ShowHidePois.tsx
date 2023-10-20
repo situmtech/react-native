@@ -18,25 +18,38 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input_container: {
+    paddingHorizontal: 12,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     margin: 5,
+    gap: 6,
+  },
+  buttons_container: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    margin: 5,
+    gap: 6,
   },
   text_input: {
-    width: 180,
+    flex: 1,
+    borderRadius: 90,
   },
 });
 
 const Screen: React.FC = () => {
   const mapViewRef = useRef<MapViewRef>(null);
-  const [selectedPoiCategoryIdentifier, setSelectedPoiCategoryIdentifier] =
-    useState<string>();
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  // State
+  const [customFieldKey, setCustomFieldKey] = useState<string>();
+  const [customFieldValue, setCustomFieldValue] = useState<string>();
 
   /**
    * Helper function that sets up the system to start positioning
@@ -48,7 +61,7 @@ const Screen: React.FC = () => {
       // Request permissions and start positioning
       await requestPermission()
         .then(() => {
-          SitumPlugin.requestLocationUpdates();
+          // SitumPlugin.requestLocationUpdates();
         })
         .catch(console.debug);
     } catch (e) {
@@ -87,19 +100,53 @@ const Screen: React.FC = () => {
       </SafeAreaView>
       <SafeAreaView style={styles.input_container}>
         <TextInput
-          placeholder={'POI category identifier'}
-          value={selectedPoiCategoryIdentifier}
-          onChangeText={setSelectedPoiCategoryIdentifier}
+          mode="outlined"
+          placeholder={'Custom field key'}
+          value={customFieldKey}
+          onChangeText={setCustomFieldKey}
           style={styles.text_input}
         />
-        <Button
+        <TextInput
           mode="outlined"
+          placeholder={'Value (optional)'}
+          value={customFieldValue}
+          onChangeText={setCustomFieldValue}
+          style={styles.text_input}
+        />
+      </SafeAreaView>
+      <SafeAreaView style={styles.buttons_container}>
+        <Button
+          mode="contained"
+          icon={'eye'}
           onPress={() => {
-            mapViewRef?.current?.selectPoiCategory(
-              Number(selectedPoiCategoryIdentifier),
+            mapViewRef?.current?.showPoisByCustomField(
+              customFieldKey,
+              customFieldValue,
             );
           }}>
-          Select POI category
+          Show
+        </Button>
+        <Button
+          icon={'eye-off'}
+          mode="contained"
+          onPress={() => {
+            mapViewRef?.current?.hidePoisByCustomField(
+              customFieldKey,
+              customFieldValue,
+            );
+          }}>
+          Hide
+        </Button>
+        <Button
+          mode="contained"
+          icon={'arrow-right'}
+          onPress={() => {
+            mapViewRef?.current?.selectPoiByCustomField(
+              customFieldKey,
+              customFieldValue,
+            );
+          }}>
+          Select
         </Button>
       </SafeAreaView>
     </>
