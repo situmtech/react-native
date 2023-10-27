@@ -1,4 +1,5 @@
 import { AccessibilityMode } from "src/sdk";
+import type { SelectPoiFilterProps } from "src/wayfinding/utils/mapper";
 
 import type { Point } from "../../sdk/types";
 import { ErrorName } from "./constants";
@@ -10,6 +11,7 @@ export interface MapViewError {
 
 export interface MapViewRef {
   selectPoi: (poiId: number) => void;
+  selectPoiBy: (filters: SelectPoiFilterProps) => void;
   navigateToPoi: ({
     identifier,
     accessibilityMode = AccessibilityMode.CHOOSE_SHORTEST,

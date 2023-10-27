@@ -16,6 +16,23 @@ import type {
   OnNavigationResult,
 } from "../types";
 
+type SelectPoiByIdentifier = {
+  type: "identifier" | null;
+  data: number;
+};
+
+type SelectPoiByCf = {
+  type: "customField";
+  data: {
+    key: string;
+    value?: any;
+  };
+};
+
+export type SelectPoiFilterProps =
+  | ({ type: "identifier" } & SelectPoiByIdentifier)
+  | ({ type: "customField" } & SelectPoiByCf);
+
 export const createPoint = (payload: any): Point => {
   return {
     buildingIdentifier: payload.buildingIdentifier,
@@ -78,7 +95,7 @@ const mapperWrapper = (type: string, payload: unknown) => {
 const ViewerMapper = {
   // Configuration
   followUser: (follow: boolean) => {
-    return mapperWrapper("camera.follow_user", {value: follow});
+    return mapperWrapper("camera.follow_user", { value: follow });
   },
   setLanguage: (lang: string) => {
     return mapperWrapper("ui.set_language", lang);
@@ -91,8 +108,8 @@ const ViewerMapper = {
     });
   },
   // Cartography
-  selectPoi: (poiId: number | null) => {
-    return mapperWrapper(`cartography.select_poi`, { identifier: poiId });
+  selectPoi: (filters: SelectPoiFilterProps | null) => {
+    return mapperWrapper(`cartography.select_poi`, filters);
   },
   // Location
   location: (location: Location) => {
