@@ -33,6 +33,7 @@ steps:
 
       echo -e "\n[+] Install example dependencies\n"
       cd example
+      rm -rf ios/Podfile.lock
       npm install
 
     displayName: Install plugin dependencies
