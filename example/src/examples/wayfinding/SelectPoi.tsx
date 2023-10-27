@@ -103,7 +103,10 @@ const Screen: React.FC = () => {
         <Button
           mode="outlined"
           onPress={() => {
-            _controller?.selectPoi(Number(selectedPoiIdentifier));
+            _controller?.selectPoiBy({
+              type: 'identifier',
+              data: Number(selectedPoiIdentifier),
+            });
           }}>
           Select POI
         </Button>
