@@ -22,6 +22,7 @@ import {TiledBuilding} from './examples/sdk/TiledBuilding';
 import Wayfinding from './examples/wayfinding/Wayfinding';
 import NavigateToPoi from './examples/wayfinding/NavigateToPoi';
 import SelectPoi from './examples/wayfinding/SelectPoi';
+import SelectPoiCategory from './examples/wayfinding/SelectPoiCategory';
 
 const styles = StyleSheet.create({
   container: {
@@ -75,6 +76,12 @@ const HomeScreen = ({navigation}) => {
           subtitle:
             'Shows how to select a POI programmatically, which is then displayed as selected on the map',
           key: 'SelectPoi',
+        },
+        {
+          title: 'Select POI category',
+          subtitle:
+            'Shows how to select a POI category programmatically, which is then displayed as selected on the map',
+          key: 'SelectPoiCategory',
         },
       ],
     },
@@ -278,6 +285,11 @@ function App() {
             name="SelectPoi"
             component={SelectPoi}
             options={{title: 'Select Poi'}}
+          />
+          <Stack.Screen
+            name="SelectPoiCategory"
+            component={SelectPoiCategory}
+            options={{title: 'Select Poi Category'}}
           />
         </Stack.Navigator>
       </NavigationContainer>

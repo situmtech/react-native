@@ -153,6 +153,22 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       sendMessageToViewer(webViewRef.current, ViewerMapper.selectPoi(poiId));
     }, []);
 
+    const _selectPoiCategory = useCallback((categoryId: number) => {
+      if (!webViewRef.current) {
+        return;
+      }
+      if (SitumPlugin.navigationIsRunning()) {
+        console.error(
+          "Situm > hook > Navigation on course, poi category selection is unavailable"
+        );
+        return;
+      }
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.selectPoiCategory(categoryId)
+      );
+    }, []);
+
     /**
      * API exported to the outside world from the MapViewer
      *
@@ -187,6 +203,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           },
           selectPoi(poiId: number) {
             _selectPoi(poiId);
+          },
+          selectPoiCategory(poiId: number) {
+            _selectPoiCategory(poiId);
           },
           deselectPoi() {
             webViewRef.current &&
