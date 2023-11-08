@@ -94,6 +94,11 @@ const ViewerMapper = {
   selectPoi: (poiId: number | null) => {
     return mapperWrapper(`cartography.select_poi`, { identifier: poiId });
   },
+  selectPoiCategory: (categoryId: number) => {
+    return mapperWrapper(`cartography.select_poi_category`, {
+      identifier: categoryId,
+    });
+  },
   // Location
   location: (location: Location) => {
     return mapperWrapper("location.update", {
