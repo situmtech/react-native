@@ -32,7 +32,7 @@ import {
 } from "../types";
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
-import ViewerMapper from "../utils/mapper";
+import ViewerMapper, { type SelectPoiFilterProps } from "../utils/mapper";
 const SITUM_BASE_DOMAIN = "https://map-viewer.situm.com";
 
 const NETWORK_ERROR_CODE = {
@@ -140,7 +140,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     }, []);
 
     // Cartography
-    const _selectPoi = useCallback((poiId: number) => {
+    const _selectPoiBy = useCallback((filters: SelectPoiFilterProps) => {
       if (!webViewRef.current) {
         return;
       }
@@ -150,7 +150,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         );
         return;
       }
-      sendMessageToViewer(webViewRef.current, ViewerMapper.selectPoi(poiId));
+      sendMessageToViewer(webViewRef.current, ViewerMapper.selectPoi(filters));
     }, []);
 
     /**
@@ -186,7 +186,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
               );
           },
           selectPoi(poiId: number) {
-            _selectPoi(poiId);
+            _selectPoiBy({ type: "identifier", data: poiId });
+          },
+          selectPoiBy(filters: SelectPoiFilterProps) {
+            _selectPoiBy(filters);
           },
           deselectPoi() {
             webViewRef.current &&
@@ -211,7 +214,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           },
         };
       },
-      [stopNavigation, _navigateToPoi, _navigateToPoint, _selectPoi]
+      [stopNavigation, _navigateToPoi, _navigateToPoint, _selectPoiBy]
     );
 
     useEffect(() => {
