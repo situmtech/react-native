@@ -10,6 +10,7 @@ export interface MapViewError {
 
 export interface MapViewRef {
   selectPoi: (poiId: number) => void;
+  selectPoiCategory: (categoryId: number) => void;
   navigateToPoi: ({
     identifier,
     accessibilityMode = AccessibilityMode.CHOOSE_SHORTEST,
