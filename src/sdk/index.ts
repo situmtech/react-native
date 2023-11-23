@@ -233,13 +233,18 @@ export default class SitumPlugin {
 
   /**
    * Returns the device identifier that has generated the location
-   *
-   * @returns void
-   * @throw Exception
    */
   static getDeviceId = () => {
-    return exceptionWrapper<string>(({ onSuccess }) => {
-      RNCSitumPlugin.getDeviceId(onSuccess);
+    return promiseWrapper<string>(({ resolve, reject }) => {
+      RNCSitumPlugin.getDeviceId((response) => {
+        if (response && response["deviceId"]) {
+          // Resolve with the actual deviceId
+          resolve(response["deviceId"]);
+        } else {
+          // Reject if deviceId is not available in the response
+          reject(new Error("Device ID not found in the response"));
+        }
+      });
     });
   };
 
