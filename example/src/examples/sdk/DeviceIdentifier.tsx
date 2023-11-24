@@ -7,7 +7,7 @@ import {Text, Card} from 'react-native-paper';
 //You may use a few seconds in development and at least 30 minutes in production
 
 export const DeviceIdentifier = () => {
-  const [deviceId, setDeviceID] = useState('');
+  const [deviceId, setDeviceID] = useState<string>('');
 
   // Set the cache when the component mounts
   useEffect(() => {
