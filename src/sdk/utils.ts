@@ -1,4 +1,5 @@
 import { logError } from "..";
+import { ErrorCode, ErrorType } from "./types";
 import type { Error } from "./types";
 
 type PromiseResolve<T> = (response: T) => void;
@@ -127,3 +128,36 @@ export const promiseWrapper = <T>(
     }
   });
 };
+
+export function locationErrorAdapter(error) {
+  let adaptedCode = error.code;
+  let adaptedMessage = error.message;
+  let adaptedType = ErrorType.CRITICAL;
+
+  switch (error.code.toString()) {
+    case "8001": // MISSING_LOCATION_PERMISSION
+    case "8": // kSITLocationErrorLocationDisabled
+    case "9": // kSITLocationErrorLocationRestricted
+    case "10": // kSITLocationErrorLocationAuthStatusNotDetermined
+      adaptedCode = ErrorCode.LOCATION_PERMISSION_DENIED;
+      break;
+    case "8002": // LOCATION_DISABLED
+      adaptedCode = ErrorCode.LOCATION_DISABLED;
+      break;
+    case "8012": // MISSING_BLUETOOTH_PERMISSION
+      adaptedCode = ErrorCode.BLUETOOTH_PERMISSION_DENIED;
+      break;
+    case "6": // kSITLocationErrorBluetoothisOff
+      adaptedCode = ErrorCode.BLUETOOTH_DISABLED;
+      break;
+    // Add more cases as needed
+  }
+
+  const returnError: Error = {
+    code: adaptedCode,
+    message: adaptedMessage,
+    type: adaptedType,
+  };
+
+  return returnError;
+}
