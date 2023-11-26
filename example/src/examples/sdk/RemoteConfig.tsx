@@ -5,6 +5,7 @@ import SitumPlugin, {
   LocationStatusName,
   Location,
   Error,
+  ErrorCode,
 } from '@situm/react-native';
 import styles from '../styles/styles';
 import requestPermissions from '../Utils/RequestPermissions';
@@ -41,6 +42,29 @@ export const RemoteConfig = () => {
         'Situm > example > Error while positioning: ',
         JSON.stringify(err),
       );
+      // switch (err.code) {
+      //   case ErrorCode.LOCATION_PERMISSION_DENIED:
+      //     console.log(
+      //       "Without location permission, we can't geolocate the smartphone",
+      //     );
+      //     break;
+      //   case ErrorCode.BLUETOOTH_PERMISSION_DENIED:
+      //     console.log(
+      //       "Without Bluetooth permission, we can't scan BLE beacons.",
+      //     );
+      //     break;
+      //   case ErrorCode.BLUETOOTH_DISABLED:
+      //     console.log(
+      //       "If BLE is disabled, we can't scan beacons (except in Android < XXX)",
+      //     );
+      //     break;
+      //   case ErrorCode.LOCATION_DISABLED:
+      //     console.log(
+      //       "If location is disabled, we can't geolocate the smartphone",
+      //     );
+      //     break;
+      // }
+
       setError(err.message);
     });
 

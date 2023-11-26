@@ -537,9 +537,23 @@ export interface LocationStatus {
   statusCode: number;
 }
 
+export enum ErrorType {
+  CRITICAL = "critical",
+  NON_CRITICAL = "nonCritical",
+}
+
+//Location updates error codes
+export enum ErrorCode {
+  LOCATION_PERMISSION_DENIED = "LOCATION_PERMISSION_DENIED",
+  BLUETOOTH_PERMISSION_DENIED = "BLUETOOTH_PERMISSION_DENIED",
+  BLUETOOTH_DISABLED = "BLUETOOTH_DISABLED",
+  LOCATION_DISABLED = "LOCATION_DISABLED",
+}
+
 export interface Error {
-  code?: number;
+  code: ErrorCode;
   message: string;
+  type: ErrorType;
 }
 
 // TODO: add types

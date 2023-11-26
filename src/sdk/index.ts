@@ -27,7 +27,11 @@ import type {
   SdkVersion,
 } from "./types";
 import { SdkNavigationUpdateType } from "./types/constants";
-import { exceptionWrapper, promiseWrapper } from "./utils";
+import {
+  exceptionWrapper,
+  locationErrorAdapter,
+  promiseWrapper,
+} from "./utils";
 
 export type * from "./types";
 export * from "./types/constants";
@@ -577,7 +581,10 @@ export default class SitumPlugin {
    * @param callback the function called when there is an error
    */
   static onLocationError = (callback: (status: Error) => void) => {
-    SitumPluginEventEmitter.addListener("locationError", callback);
+    SitumPluginEventEmitter.addListener("locationError", (error) => {
+      const adaptedError = locationErrorAdapter(error);
+      callback(adaptedError);
+    });
   };
 
   /**
