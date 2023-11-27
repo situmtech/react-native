@@ -1,6 +1,6 @@
 import { logError } from "..";
-import { ErrorCode, ErrorType } from "./types";
 import type { Error } from "./types";
+import { ErrorCode, ErrorType } from "./types";
 
 type PromiseResolve<T> = (response: T) => void;
 type PromiseReject = (error?: Error) => void;
@@ -24,8 +24,9 @@ export const handleAsyncCallback = (
     resolve();
   } else {
     reject({
-      code: -1,
+      code: ErrorCode.UNKNOWN,
       message: errorMessage || "Unknown error.",
+      type: ErrorType.NON_CRITICAL,
     });
   }
 };
@@ -122,16 +123,17 @@ export const promiseWrapper = <T>(
     } catch (error) {
       logError(error);
       reject({
-        code: error?.code || -1,
+        code: ErrorCode.UNKNOWN,
         message: error?.message || "Unknown error.",
+        type: ErrorType.NON_CRITICAL,
       });
     }
   });
 };
 
-export function locationErrorAdapter(error) {
+export function locationErrorAdapter(error): Error {
   let adaptedCode = error.code;
-  let adaptedMessage = error.message;
+  const adaptedMessage = error.message;
   let adaptedType = ErrorType.CRITICAL;
 
   switch (error.code.toString()) {
@@ -147,8 +149,10 @@ export function locationErrorAdapter(error) {
     case "8012": // MISSING_BLUETOOTH_PERMISSION
       adaptedCode = ErrorCode.BLUETOOTH_PERMISSION_DENIED;
       break;
+    case "8100": //BLUETOOTH_DISABLED. 8100 ->This number does not exist in Situm SDK. We made it up in SitumMapper.java (RN adapter)
     case "6": // kSITLocationErrorBluetoothisOff
       adaptedCode = ErrorCode.BLUETOOTH_DISABLED;
+      adaptedType = ErrorType.NON_CRITICAL; // This error can be critical if BLE is the only positioning means
       break;
     // Add more cases as needed
   }

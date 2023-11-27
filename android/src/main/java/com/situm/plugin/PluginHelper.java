@@ -379,6 +379,12 @@ public class PluginHelper {
                         Log.i(PluginHelper.TAG, "onStatusChanged() called with: status = [" + status + "]");
                         JSONObject jsonObject = SitumMapper.locationStatusToJsonObject(status);
                         eventEmitter.emit(EVENT_LOCATION_STATUS_CHANGED, convertJsonToMap(jsonObject));
+                        // This is a dirty trick. The SDK should already emit this status as an error
+                        if (status.ordinal() == 17) {
+                            // BLE_SENSOR_DISABLED_BY_UYSER
+                            JSONObject jsonObjectBleError = SitumMapper.bleDisabledStatusAsError();
+                            eventEmitter.emit(EVENT_LOCATION_ERROR, convertJsonToMap(jsonObjectBleError));
+                        }
                     } catch (JSONException e) {
                         eventEmitter.emit(EVENT_LOCATION_ERROR, e.getMessage());
                     }

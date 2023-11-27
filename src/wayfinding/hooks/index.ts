@@ -5,6 +5,8 @@ import SitumPlugin from "../../sdk";
 import {
   type Building,
   type Error,
+  ErrorCode,
+  ErrorType,
   type Location,
   type LocationStatus,
   type NavigationProgress,
@@ -77,8 +79,6 @@ export const useSitumInternal = () => {
 
     SitumPlugin.onLocationError((err: Error) => {
       console.error(`Situm > hook > Error while positioning: ${err}}`);
-      //@ts-ignore
-      dispatch(setError({ message: err, code: 3001 } as SDKError));
     });
 
     SitumPlugin.onLocationStopped(() => {
@@ -207,7 +207,14 @@ export const useSitumInternal = () => {
           });
         } catch (e) {
           console.error(`Situm > hook > Could not update navigation ${e}`);
-          dispatch(setError({ message: "error", code: 3051 } as Error));
+          //TODO: Remove this and emit these errors in SitumPlugin.onNavigationError
+          dispatch(
+            setError({
+              message: "Could not update navigation",
+              code: ErrorCode.UNKNOWN,
+              type: ErrorType.NON_CRITICAL,
+            } as Error)
+          );
           stopNavigation();
         }
       })
