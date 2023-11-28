@@ -6,6 +6,7 @@ import SitumPlugin, {
   Location,
   Error,
   requestPermission,
+  ErrorCode,
 } from '@situm/react-native';
 import styles from '../styles/styles';
 import {Button, Card, Divider, List} from 'react-native-paper';
@@ -41,28 +42,29 @@ export const RemoteConfig = () => {
         'Situm > example > Error while positioning: ',
         JSON.stringify(err),
       );
-      // switch (err.code) {
-      //   case ErrorCode.LOCATION_PERMISSION_DENIED:
-      //     console.log(
-      //       "Without location permission, we can't geolocate the smartphone",
-      //     );
-      //     break;
-      //   case ErrorCode.BLUETOOTH_PERMISSION_DENIED:
-      //     console.log(
-      //       "Without Bluetooth permission, we can't scan BLE beacons.",
-      //     );
-      //     break;
-      //   case ErrorCode.BLUETOOTH_DISABLED:
-      //     console.log(
-      //       "If BLE is disabled, we can't scan beacons (except in Android < XXX)",
-      //     );
-      //     break;
-      //   case ErrorCode.LOCATION_DISABLED:
-      //     console.log(
-      //       "If location is disabled, we can't geolocate the smartphone",
-      //     );
-      //     break;
-      // }
+
+      switch (err.code) {
+        case ErrorCode.LOCATION_PERMISSION_DENIED:
+          console.log(
+            "Situm > example > Without location permission, we can't geolocate the smartphone",
+          );
+          break;
+        case ErrorCode.BLUETOOTH_PERMISSION_DENIED:
+          console.log(
+            "Situm > example > Without Bluetooth permission, we can't scan BLE beacons.",
+          );
+          break;
+        case ErrorCode.BLUETOOTH_DISABLED:
+          console.log(
+            "Situm > example > If BLE is disabled, we can't scan beacons (except in Android < XXX)",
+          );
+          break;
+        case ErrorCode.LOCATION_DISABLED:
+          console.log(
+            "Situm > example > If location is disabled, we can't geolocate the smartphone",
+          );
+          break;
+      }
 
       setError(err.message);
     });
@@ -90,14 +92,21 @@ export const RemoteConfig = () => {
     });
   };
 
-  // Request permissions required by Situm SDK
-  const requestLocationPermissions = async () => {
-    requestPermission();
+  const handlePermissionsButton = async () => {
+    try {
+      await requestPermission();
+    } catch (e) {
+      console.error('Error requesting permissions:', e);
+    }
   };
 
   // Start positioning using Situm SDK
   const startPositioning = async () => {
-    await requestPermission();
+    try {
+      await requestPermission();
+    } catch (e) {
+      console.warn('Error starting positioning:', e);
+    }
 
     console.log('Situm > example > Starting positioning');
     setLocation('');
@@ -146,7 +155,7 @@ export const RemoteConfig = () => {
   return (
     <ScrollView style={{...styles.screenWrapper}}>
       <List.Section>
-        <Button onPress={requestLocationPermissions} mode="contained">
+        <Button onPress={handlePermissionsButton} mode="contained">
           Request permissions
         </Button>
         <Divider style={styles.margin} />

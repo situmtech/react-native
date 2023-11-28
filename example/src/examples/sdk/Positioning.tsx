@@ -31,14 +31,21 @@ function PositioningScreen() {
     };
   }, []);
 
-  // Request permissions required by Situm SDK
-  const requestLocationPermissions = async () => {
-    requestPermission();
+  const handlePermissionsButton = async () => {
+    try {
+      await requestPermission();
+    } catch (e) {
+      console.error('Error requesting permissions:', e);
+    }
   };
 
   // Start positioning using Situm SDK
   const startPositioning = async () => {
-    await requestLocationPermissions();
+    try {
+      await requestPermission();
+    } catch (e) {
+      console.warn('Error starting positioning:', e);
+    }
 
     console.log('Starting positioning');
     setLocation('');
@@ -120,7 +127,7 @@ function PositioningScreen() {
   return (
     <ScrollView style={{...styles.screenWrapper}}>
       <List.Section>
-        <Button onPress={requestLocationPermissions} mode="contained">
+        <Button onPress={handlePermissionsButton} mode="contained">
           Request permissions
         </Button>
         <Divider style={styles.margin} />
