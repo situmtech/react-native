@@ -108,7 +108,7 @@ export const RemoteConfig = () => {
     try {
       await requestPermission();
     } catch (e) {
-      console.warn('Error starting positioning:', e);
+      console.warn('Situm > example > Error starting positioning:', e);
     }
 
     console.log('Situm > example > Starting positioning');
