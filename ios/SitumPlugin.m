@@ -809,19 +809,6 @@ RCT_EXPORT_METHOD(onExitGeofences){
     }
 }
 
-// - (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
-//        didFailWithError: (NSError * _Nullable)error {
-
-//     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-//     [dict setObject:error.description forKey:@"message"];
-
-//     if (_positioningUpdates) {
-//         [self sendEventWithName:@"locationError" body:error.copy];
-//     }
-// }
-
-
-
 - (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
        didFailWithError: (NSError * _Nullable)error {
 
@@ -829,17 +816,16 @@ RCT_EXPORT_METHOD(onExitGeofences){
     
     // Adding basic error details
     [errorInfo setObject:@(error.code) forKey:@"code"];
-    // [errorInfo setObject:error.domain forKey:@"domain"];
-    
+   
     // Add the error description
     if (error.localizedDescription) {
         [errorInfo setObject:error.localizedDescription forKey:@"message"];
     }
+    else{
+        [errorInfo setObject:@"" forKey:@"message"];
+    }
 
-    // Add more detailed error information if available
-    // if (error.userInfo) {
-    //     [errorInfo setObject:error.userInfo forKey:@"userInfo"];
-    // }
+ 
 
     if (_positioningUpdates) {
         [self sendEventWithName:@"locationError" body:errorInfo];

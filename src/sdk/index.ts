@@ -6,25 +6,26 @@ import { NativeEventEmitter, NativeModules, Platform } from "react-native";
 import packageJson from "../../package.json";
 import { logError } from "../utils/logError";
 import type { SitumPluginInterface } from "./nativeInterface";
-import type {
-  Building,
-  BuildingInfo,
-  ConfigurationOptions,
-  Directions,
-  DirectionsOptions,
-  Error,
-  Floor,
-  Geofence,
-  Location,
-  LocationRequest,
-  LocationStatus,
-  NavigationProgress,
-  NavigationRequest,
-  Poi,
-  PoiCategory,
-  PoiIcon,
-  Point,
-  SdkVersion,
+import {
+  type Building,
+  type BuildingInfo,
+  type ConfigurationOptions,
+  type Directions,
+  type DirectionsOptions,
+  type Error,
+  ErrorType,
+  type Floor,
+  type Geofence,
+  type Location,
+  type LocationRequest,
+  type LocationStatus,
+  type NavigationProgress,
+  type NavigationRequest,
+  type Poi,
+  type PoiCategory,
+  type PoiIcon,
+  type Point,
+  type SdkVersion,
 } from "./types";
 import { SdkNavigationUpdateType } from "./types/constants";
 import {
@@ -583,6 +584,8 @@ export default class SitumPlugin {
   static onLocationError = (callback: (status: Error) => void) => {
     SitumPluginEventEmitter.addListener("locationError", (error) => {
       const adaptedError = locationErrorAdapter(error);
+      if (adaptedError.type === ErrorType.CRITICAL)
+        this.removeLocationUpdates();
       callback(adaptedError);
     });
   };
