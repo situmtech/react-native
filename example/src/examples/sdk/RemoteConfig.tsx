@@ -56,7 +56,7 @@ export const RemoteConfig = () => {
           break;
         case ErrorCode.BLUETOOTH_DISABLED:
           console.log(
-            "Situm > example > If BLE is disabled, we can't scan beacons (except in Android < XXX)",
+            "Situm > example > If BLE is disabled, we can't scan beacons",
           );
           break;
         case ErrorCode.LOCATION_DISABLED:
