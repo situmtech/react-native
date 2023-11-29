@@ -538,8 +538,8 @@ export interface LocationStatus {
 }
 
 export enum ErrorType {
-  CRITICAL = "critical",
-  NON_CRITICAL = "nonCritical",
+  CRITICAL = "CRITICAL",
+  NON_CRITICAL = "NON_CRITICAL",
 }
 
 //Location updates error codes

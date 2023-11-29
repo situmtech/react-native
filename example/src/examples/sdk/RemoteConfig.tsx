@@ -43,6 +43,9 @@ export const RemoteConfig = () => {
         JSON.stringify(err),
       );
 
+      // The purpose of this switch is just to show how you may handle each error.
+      // Instead of outputing a log, you might want inform the user
+      // and direct him to take certain actions
       switch (err.code) {
         case ErrorCode.LOCATION_PERMISSION_DENIED:
           console.log(
@@ -66,7 +69,7 @@ export const RemoteConfig = () => {
           break;
       }
 
-      setError(err.message);
+      setError(JSON.stringify(err));
     });
 
     // Handle positioning stop event
