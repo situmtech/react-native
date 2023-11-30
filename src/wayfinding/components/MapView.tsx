@@ -8,6 +8,7 @@ import React, {
   useState,
 } from "react";
 import {
+  Linking,
   Platform,
   type StyleProp,
   StyleSheet,
@@ -70,6 +71,12 @@ export interface MapViewProps {
   onLoad?: (event: any) => void;
   onLoadError?: (event: MapViewError) => void;
   onFloorChanged?: (event: OnFloorChangedResult) => void;
+  /**
+   * Callback invoked when the user clicks on a link in the MapView that leads to a website different from the MapView's domain.
+   * If this callback is not set, the link will be opened in the system's default browser by default.
+   * @param event OnExternalLinkClickResult object.
+   * @returns
+   */
   onExternalLinkClick?: (event: OnExternalLinkClickResult) => void;
 }
 
@@ -83,7 +90,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onPoiSelected = () => {},
       onPoiDeselected = () => {},
       onFloorChanged = () => {},
-      onExternalLinkClick = () => {},
+      onExternalLinkClick = undefined,
     },
     ref
   ) => {
@@ -233,7 +240,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           },
         };
       },
-      [stopNavigation, _navigateToPoi, _navigateToPoint, _selectPoi]
+      [
+        stopNavigation,
+        _navigateToPoi,
+        _navigateToPoint,
+        _selectPoi,
+        _selectPoiCategory,
+      ]
     );
 
     useEffect(() => {
@@ -353,9 +366,14 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         request.url &&
         !request.url.startsWith(configuration.viewerDomain || SITUM_BASE_DOMAIN)
       ) {
-        onExternalLinkClick({ url: request.url });
+        if (onExternalLinkClick && typeof onExternalLinkClick === "function") {
+          onExternalLinkClick({ url: request.url });
+        } else {
+          Linking.openURL(request.url);
+        }
+        return false;
       }
-      return false;
+      return true;
     };
 
     return (
@@ -375,6 +393,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           }&show=rts`,
         }}
         style={StyleSheet.flatten([viewerStyles.webview, style])}
+        limitsNavigationsToAppBoundDomains={true}
         javaScriptEnabled={true}
         domStorageEnabled={true}
         startInLoadingState={true}

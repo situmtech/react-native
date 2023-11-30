@@ -78,6 +78,7 @@ const Screen: React.FC = () => {
   };
 
   const onExternalLinkClick = (event: OnExternalLinkClickResult) => {
+    // MapView will open the external link in the system's default browser if this callback is not set.
     console.log('Situm > example > click on external link: ' + event.url);
   };
 
