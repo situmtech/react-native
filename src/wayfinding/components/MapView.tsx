@@ -26,6 +26,7 @@ import {
   type MapViewRef,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
+  type OnExternalLinkClickResult,
   type OnFloorChangedResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
@@ -69,6 +70,7 @@ export interface MapViewProps {
   onLoad?: (event: any) => void;
   onLoadError?: (event: MapViewError) => void;
   onFloorChanged?: (event: OnFloorChangedResult) => void;
+  onExternalLinkClick?: (event: OnExternalLinkClickResult) => void;
 }
 
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
@@ -81,6 +83,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onPoiSelected = () => {},
       onPoiDeselected = () => {},
       onFloorChanged = () => {},
+      onExternalLinkClick = () => {},
     },
     ref
   ) => {
@@ -344,6 +347,17 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
     };
 
+    const _onShouldStartLoadWithRequest = (request) => {
+      if (
+        request &&
+        request.url &&
+        !request.url.startsWith(configuration.viewerDomain || SITUM_BASE_DOMAIN)
+      ) {
+        onExternalLinkClick({ url: request.url });
+      }
+      return false;
+    };
+
     return (
       <WebView
         ref={webViewRef}
@@ -361,12 +375,12 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           }&show=rts`,
         }}
         style={StyleSheet.flatten([viewerStyles.webview, style])}
-        limitsNavigationsToAppBoundDomains={true}
         javaScriptEnabled={true}
         domStorageEnabled={true}
         startInLoadingState={true}
         cacheEnabled
         onMessage={handleRequestFromViewer}
+        onShouldStartLoadWithRequest={_onShouldStartLoadWithRequest}
         onError={(evt: WebViewErrorEvent) => {
           if (!onLoadError) return;
           const { nativeEvent } = evt;

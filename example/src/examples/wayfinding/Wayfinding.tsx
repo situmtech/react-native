@@ -10,6 +10,7 @@ import SitumPlugin, {
 import type {
   OnPoiDeselectedResult,
   OnPoiSelectedResult,
+  OnExternalLinkClickResult,
   MapViewRef,
 } from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
@@ -76,6 +77,10 @@ const Screen: React.FC = () => {
     );
   };
 
+  const onExternalLinkClick = (event: OnExternalLinkClickResult) => {
+    console.log('Situm > example > click on external link: ' + event.url);
+  };
+
   return (
     <MapView
       ref={mapViewRef}
@@ -86,6 +91,7 @@ const Screen: React.FC = () => {
       onLoad={onLoad}
       onPoiSelected={onPoiSelected}
       onPoiDeselected={onPoiDeselected}
+      onExternalLinkClick={onExternalLinkClick}
     />
   );
 };
