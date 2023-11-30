@@ -27,7 +27,7 @@ import {
   type MapViewRef,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
-  type OnExternalLinkClickResult,
+  type OnExternalLinkClickedResult,
   type OnFloorChangedResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
@@ -74,10 +74,10 @@ export interface MapViewProps {
   /**
    * Callback invoked when the user clicks on a link in the MapView that leads to a website different from the MapView's domain.
    * If this callback is not set, the link will be opened in the system's default browser by default.
-   * @param event OnExternalLinkClickResult object.
+   * @param event OnExternalLinkClickedResult object.
    * @returns
    */
-  onExternalLinkClick?: (event: OnExternalLinkClickResult) => void;
+  onExternalLinkClicked?: (event: OnExternalLinkClickedResult) => void;
 }
 
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
@@ -90,7 +90,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onPoiSelected = () => {},
       onPoiDeselected = () => {},
       onFloorChanged = () => {},
-      onExternalLinkClick = undefined,
+      onExternalLinkClicked = undefined,
     },
     ref
   ) => {
@@ -366,8 +366,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         request.url &&
         !request.url.startsWith(configuration.viewerDomain || SITUM_BASE_DOMAIN)
       ) {
-        if (onExternalLinkClick && typeof onExternalLinkClick === "function") {
-          onExternalLinkClick({ url: request.url });
+        if (
+          onExternalLinkClicked &&
+          typeof onExternalLinkClicked === "function"
+        ) {
+          onExternalLinkClicked({ url: request.url });
         } else {
           Linking.openURL(request.url);
         }

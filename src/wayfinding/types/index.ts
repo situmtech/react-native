@@ -58,7 +58,7 @@ export interface OnFloorChangedResult {
   toFloorName: string;
 }
 
-export interface OnExternalLinkClickResult {
+export interface OnExternalLinkClickedResult {
   url: string;
 }
 
