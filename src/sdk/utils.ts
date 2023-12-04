@@ -132,9 +132,9 @@ export const promiseWrapper = <T>(
 };
 
 export function locationErrorAdapter(error): Error {
-  let adaptedCode = error.code;
+  let adaptedCode = ErrorCode.UNKNOWN;
   const adaptedMessage = error.message;
-  let adaptedType = ErrorType.CRITICAL;
+  const adaptedType = ErrorType.CRITICAL;
 
   switch (error.code.toString()) {
     case "8001": // MISSING_LOCATION_PERMISSION
@@ -152,7 +152,9 @@ export function locationErrorAdapter(error): Error {
     case "8100": //BLUETOOTH_DISABLED. 8100 ->This number does not exist in Situm SDK. We made it up in SitumMapper.java (RN adapter)
     case "6": // kSITLocationErrorBluetoothisOff
       adaptedCode = ErrorCode.BLUETOOTH_DISABLED;
-      adaptedType = ErrorType.NON_CRITICAL; // This error can be critical if BLE is the only positioning means
+      break;
+    case "11": //kSITLocationErrorLocationAccuracyAuthorizationStatusReducedAccuracy
+      adaptedCode = ErrorCode.REDUCED_ACCURACY;
       break;
     // Add more cases as needed
   }

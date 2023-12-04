@@ -833,11 +833,15 @@ RCT_EXPORT_METHOD(onExitGeofences){
 }
 
 - (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
-         didUpdateState:(SITLocationState)state {
+     didUpdateState:(SITLocationState)state {
 
     NSDictionary *locationChanged = [SitumLocationWrapper.shared locationStateToJsonObject:state];
-    if (_positioningUpdates) {
-        [self sendEventWithName:@"statusChanged" body:locationChanged.copy];
+    NSString *statusName = locationChanged[@"statusName"];
+
+    if (statusName){
+        if (_positioningUpdates|| [statusName isEqualToString:@"STOPPED"]) {
+            [self sendEventWithName:@"statusChanged" body:locationChanged.copy]; 
+        }
     }
 }
 

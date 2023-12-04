@@ -466,13 +466,11 @@ export default class SitumPlugin {
    */
   static removeNavigationUpdates = () => {
     return promiseWrapper<void>(({ onCallback }) => {
-      if (!SitumPlugin.navigationIsRunning()) {
-        throw "Situm > hook > Navigation updates were not active.";
-      }
+      if (!SitumPlugin.navigationIsRunning()) return;
 
       navigationRunning = false;
-      RNCSitumPlugin.removeNavigationUpdates((reponse) => {
-        onCallback(reponse, "Failed to remove navigation updates");
+      RNCSitumPlugin.removeNavigationUpdates((response) => {
+        onCallback(response, "Failed to remove navigation updates");
       });
     });
   };
@@ -581,7 +579,7 @@ export default class SitumPlugin {
    *
    * @param callback the function called when there is an error
    */
-  static onLocationError = (callback: (status: Error) => void) => {
+  static onLocationError = (callback: (error: Error) => void) => {
     SitumPluginEventEmitter.addListener("locationError", (error) => {
       const adaptedError = locationErrorAdapter(error);
       if (adaptedError.type === ErrorType.CRITICAL)
