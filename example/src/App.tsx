@@ -254,7 +254,7 @@ function App() {
           <Stack.Screen
             name="RemoteConfig"
             component={RemoteConfig}
-            options={{title: 'Positioning with remote connfiguration'}}
+            options={{title: 'Positioning with remote configuration'}}
           />
           <Stack.Screen
             name="GetPoisIcons"

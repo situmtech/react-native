@@ -226,11 +226,11 @@ export const useSitumInternal = () => {
   };
 
   const stopNavigation = () => {
-    console.debug("Situm > hook > Stopping navigation");
     // TODO: we should delegate this to the sdk plugin
     if (!navigation || navigation?.status === NavigationStatus.STOP) {
       return;
     }
+    console.debug("Situm > hook > Stopping navigation");
 
     SitumPlugin.removeNavigationUpdates()
       .then(() => {
