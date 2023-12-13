@@ -23,6 +23,7 @@ import Wayfinding from './examples/wayfinding/Wayfinding';
 import NavigateToPoi from './examples/wayfinding/NavigateToPoi';
 import SelectPoi from './examples/wayfinding/SelectPoi';
 import SelectPoiCategory from './examples/wayfinding/SelectPoiCategory';
+import {DeviceIdentifier} from './examples/sdk/DeviceIdentifier';
 
 const styles = StyleSheet.create({
   container: {
@@ -160,6 +161,12 @@ const HomeScreen = ({navigation}) => {
             'Learn to compute and display a route between two POIs in a raw text format.',
           key: 'RouteBetweenPOIs',
         },
+        {
+          title: 'Get Device ID',
+          subtitle:
+            'Retrieve the random Device Identifier that Situm assigns to each geolocation stored in Situm Platform (analytics only).',
+          key: 'DeviceIdentifier',
+        },
       ],
     },
   ];
@@ -290,6 +297,11 @@ function App() {
             name="SelectPoiCategory"
             component={SelectPoiCategory}
             options={{title: 'Select Poi Category'}}
+          />
+          <Stack.Screen
+            name="DeviceIdentifier"
+            component={DeviceIdentifier}
+            options={{title: 'Get Device ID'}}
           />
         </Stack.Navigator>
       </NavigationContainer>
