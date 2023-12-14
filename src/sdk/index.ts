@@ -13,6 +13,7 @@ import {
   type Directions,
   type DirectionsOptions,
   type Error,
+  ErrorCode,
   ErrorType,
   type Floor,
   type Geofence,
@@ -240,14 +241,20 @@ export default class SitumPlugin {
    * Returns the device identifier that has generated the location
    */
   static getDeviceId = () => {
-    return promiseWrapper<string>(({ resolve, reject }) => {
+    return promiseWrapper<string>(({ onSuccess, onError }) => {
       RNCSitumPlugin.getDeviceId((response) => {
-        if (response && response["deviceId"]) {
+        //@ts-ignore
+        if (response?.deviceId) {
           // Resolve with the actual deviceId
-          resolve(response["deviceId"]);
+          //@ts-ignore
+          onSuccess(response.deviceId);
         } else {
           // Reject if deviceId is not available in the response
-          reject(new Error("Device ID not found in the response"));
+          onError({
+            code: ErrorCode.UNKNOWN,
+            message: "Couldn't get device ID",
+            type: ErrorType.CRITICAL,
+          });
         }
       });
     });
