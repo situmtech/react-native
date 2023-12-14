@@ -118,7 +118,7 @@ export const RemoteConfig = () => {
 
     //You may overwrite some remote configuration options if you want
     const locationOptions = {
-      useBle: true,
+      //useBle: true,
     };
 
     try {
