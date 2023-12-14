@@ -578,16 +578,6 @@ class SitumMapper {
         return jo;
     }
 
-    static JSONObject bleDisabledStatusAsError() throws JSONException {
-        JSONObject jo = new JSONObject();
-        // This is a dirty trick while we don't fix this in the SDK.
-        // 8100 is a number in the 8xxx range so it's a location error in Android
-        // but not low enough to overlap with existing SDK errors (8000-8020 aprox).
-        jo.put(ERROR_CODE, 8100);
-        jo.put(ERROR_MESSAGE, "BLE sensor disabled by user");
-        return jo;
-    }
-
     static Point jsonPointToPoint(JSONObject jo) throws JSONException {
         Point point = null;
 
