@@ -387,8 +387,12 @@ public class PluginHelper {
                 public void onError(@NonNull Error error) {
                     Log.e(PluginHelper.TAG, "onError() called with: error = [" + error + "]");
                     locationListener = null;
-                    eventEmitter.emit(EVENT_LOCATION_ERROR, error.getMessage());
-
+                    try {
+                        JSONObject jsonObject = SitumMapper.locationErrorToJsonObject(error);
+                        eventEmitter.emit(EVENT_LOCATION_ERROR, convertJsonToMap(jsonObject));
+                    } catch (JSONException e) {
+                        Log.e(PluginHelper.TAG, "onError() could not throw error " + e);
+                    }
                 }
             };
             try {

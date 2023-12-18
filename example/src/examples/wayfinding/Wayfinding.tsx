@@ -1,11 +1,18 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
+import {
+  AppState,
+  NativeEventSubscription,
+  SafeAreaView,
+  StyleSheet,
+  useColorScheme,
+} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import SitumPlugin, {
   MapView,
   SitumProvider,
   requestPermission,
+  Error,
 } from '@situm/react-native';
 import type {
   OnPoiDeselectedResult,
@@ -33,24 +40,68 @@ const Screen: React.FC = () => {
   const mapViewRef = useRef<MapViewRef>(null);
   const [_controller, setController] = useState<MapViewRef | null>();
 
+  // When coming from background, try to start positioning (if not running yet)
+  // This will ensure that, if the user enables the app permissions from the phone settings
+  // your application will start positioning right away
+  const registerAppStateListener = (): NativeEventSubscription => {
+    return AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'active') {
+        if (!SitumPlugin.positioningIsRunning()) {
+          SitumPlugin.requestLocationUpdates();
+          console.log(
+            'Situm > example > Starting positioning after coming from background',
+          );
+        }
+      }
+    });
+  };
+
   // Initialize SDK when mounting map
   useEffect(() => {
+    let appStateListener: NativeEventSubscription;
+
     // Set positioning configuration
     SitumPlugin.setConfiguration({useRemoteConfig: true});
-
-    // Request necessary permissions to start positioning
+    //Request permissions and start positioning
     requestPermission()
       .then(() => {
-        console.log('Situm > example > Starting positioning');
-        SitumPlugin.requestLocationUpdates();
+        if (!SitumPlugin.positioningIsRunning()) {
+          SitumPlugin.requestLocationUpdates();
+          console.log('Situm > example > Starting positioning');
+        }
       })
       .catch(e => {
         console.log(`Situm > example > Permissions rejected: ${e}`);
+      })
+      .finally(() => {
+        //Register listener to react to the app comming from the background
+        appStateListener = registerAppStateListener();
+        //Register callbacks
+        registerCallbacks();
       });
 
-    // When unmounting make sure to stop positioning
-    return () => SitumPlugin.removeLocationUpdates();
+    // When unmounting make sure to stop positioning and remove listeners
+    return () => {
+      SitumPlugin.removeLocationUpdates();
+      appStateListener.remove();
+    };
   }, []);
+
+  // Register callbacks to handle Situm SDK events
+  const registerCallbacks = () => {
+    // Handle location errors
+    SitumPlugin.onLocationError((err: Error) => {
+      console.error(
+        'Situm > example > Error while positioning: ',
+        JSON.stringify(err),
+      );
+
+      // Please take a look to RemoteConfig.tsx to know what kind of errors
+      // your app may be able to react to (and other useful callbacks as well)
+      // E.g. you might want to inform the user that he/she needs to grant some permission
+      // based on the callbacks' result
+    });
+  };
 
   // Initialize controller
   useEffect(() => {
@@ -62,7 +113,7 @@ const Screen: React.FC = () => {
   }, [mapViewRef]);
 
   const onLoad = (event: any) => {
-    console.log('Situm > example > Map is ready', event);
+    console.log('Situm > example > Map is ready, received event: ', event);
   };
 
   const onPoiSelected = (event: OnPoiSelectedResult) => {

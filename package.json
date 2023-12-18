@@ -49,7 +49,7 @@
     "typescript": "tsc --noEmit",
     "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
-    "prepare": "bob build",
+    "prepare": "bob build; yarn doc",
     "release": "release-it",
     "example": "yarn --cwd example",
     "build:android": "cd example/android && ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a",

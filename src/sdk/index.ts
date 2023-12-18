@@ -6,28 +6,34 @@ import { NativeEventEmitter, NativeModules, Platform } from "react-native";
 import packageJson from "../../package.json";
 import { logError } from "../utils/logError";
 import type { SitumPluginInterface } from "./nativeInterface";
-import type {
-  Building,
-  BuildingInfo,
-  ConfigurationOptions,
-  Directions,
-  DirectionsOptions,
-  Error,
-  Floor,
-  Geofence,
-  Location,
-  LocationRequest,
-  LocationStatus,
-  NavigationProgress,
-  NavigationRequest,
-  Poi,
-  PoiCategory,
-  PoiIcon,
-  Point,
-  SdkVersion,
+import {
+  type Building,
+  type BuildingInfo,
+  type ConfigurationOptions,
+  type Directions,
+  type DirectionsOptions,
+  type Error,
+  ErrorCode,
+  ErrorType,
+  type Floor,
+  type Geofence,
+  type Location,
+  type LocationRequest,
+  type LocationStatus,
+  type NavigationProgress,
+  type NavigationRequest,
+  type Poi,
+  type PoiCategory,
+  type PoiIcon,
+  type Point,
+  type SdkVersion,
 } from "./types";
 import { SdkNavigationUpdateType } from "./types/constants";
-import { exceptionWrapper, promiseWrapper } from "./utils";
+import {
+  exceptionWrapper,
+  locationErrorAdapter,
+  promiseWrapper,
+} from "./utils";
 
 export type * from "./types";
 export * from "./types/constants";
@@ -233,13 +239,24 @@ export default class SitumPlugin {
 
   /**
    * Returns the device identifier that has generated the location
-   *
-   * @returns void
-   * @throw Exception
    */
   static getDeviceId = () => {
-    return exceptionWrapper<string>(({ onSuccess }) => {
-      RNCSitumPlugin.getDeviceId(onSuccess);
+    return promiseWrapper<string>(({ onSuccess, onError }) => {
+      RNCSitumPlugin.getDeviceId((response) => {
+        //@ts-ignore
+        if (response?.deviceId) {
+          // Resolve with the actual deviceId
+          //@ts-ignore
+          onSuccess(response.deviceId);
+        } else {
+          // Reject if deviceId is not available in the response
+          onError({
+            code: ErrorCode.UNKNOWN,
+            message: "Couldn't get device ID",
+            type: ErrorType.CRITICAL,
+          });
+        }
+      });
     });
   };
 
@@ -461,13 +478,11 @@ export default class SitumPlugin {
    */
   static removeNavigationUpdates = () => {
     return promiseWrapper<void>(({ onCallback }) => {
-      if (!SitumPlugin.navigationIsRunning()) {
-        throw "Situm > hook > Navigation updates were not active.";
-      }
+      if (!SitumPlugin.navigationIsRunning()) return;
 
       navigationRunning = false;
-      RNCSitumPlugin.removeNavigationUpdates((reponse) => {
-        onCallback(reponse, "Failed to remove navigation updates");
+      RNCSitumPlugin.removeNavigationUpdates((response) => {
+        onCallback(response, "Failed to remove navigation updates");
       });
     });
   };
@@ -576,8 +591,13 @@ export default class SitumPlugin {
    *
    * @param callback the function called when there is an error
    */
-  static onLocationError = (callback: (status: Error) => void) => {
-    SitumPluginEventEmitter.addListener("locationError", callback);
+  static onLocationError = (callback: (error: Error) => void) => {
+    SitumPluginEventEmitter.addListener("locationError", (error) => {
+      const adaptedError = locationErrorAdapter(error);
+      if (adaptedError.type === ErrorType.CRITICAL)
+        this.removeLocationUpdates();
+      callback(adaptedError);
+    });
   };
 
   /**

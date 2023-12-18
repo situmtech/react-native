@@ -1,5 +1,6 @@
 import { logError } from "..";
 import type { Error } from "./types";
+import { ErrorCode, ErrorType } from "./types";
 
 type PromiseResolve<T> = (response: T) => void;
 type PromiseReject = (error?: Error) => void;
@@ -23,8 +24,9 @@ export const handleAsyncCallback = (
     resolve();
   } else {
     reject({
-      code: -1,
+      code: ErrorCode.UNKNOWN,
       message: errorMessage || "Unknown error.",
+      type: ErrorType.NON_CRITICAL,
     });
   }
 };
@@ -121,9 +123,47 @@ export const promiseWrapper = <T>(
     } catch (error) {
       logError(error);
       reject({
-        code: error?.code || -1,
+        code: ErrorCode.UNKNOWN,
         message: error?.message || "Unknown error.",
+        type: ErrorType.NON_CRITICAL,
       });
     }
   });
 };
+
+export function locationErrorAdapter(error): Error {
+  let adaptedCode = ErrorCode.UNKNOWN;
+  const adaptedMessage = error.message;
+  const adaptedType = ErrorType.CRITICAL;
+
+  switch (error.code.toString()) {
+    case "8001": // MISSING_LOCATION_PERMISSION
+    case "8": // kSITLocationErrorLocationDisabled
+    case "9": // kSITLocationErrorLocationRestricted
+    case "10": // kSITLocationErrorLocationAuthStatusNotDetermined
+      adaptedCode = ErrorCode.LOCATION_PERMISSION_DENIED;
+      break;
+    case "8002": // LOCATION_DISABLED
+      adaptedCode = ErrorCode.LOCATION_DISABLED;
+      break;
+    case "8012": // MISSING_BLUETOOTH_PERMISSION
+      adaptedCode = ErrorCode.BLUETOOTH_PERMISSION_DENIED;
+      break;
+    case "8100": //BLUETOOTH_DISABLED. 8100 ->This number does not exist in Situm SDK. We made it up in SitumMapper.java (RN adapter)
+    case "6": // kSITLocationErrorBluetoothisOff
+      adaptedCode = ErrorCode.BLUETOOTH_DISABLED;
+      break;
+    case "11": //kSITLocationErrorLocationAccuracyAuthorizationStatusReducedAccuracy
+      adaptedCode = ErrorCode.REDUCED_ACCURACY;
+      break;
+    // Add more cases as needed
+  }
+
+  const returnError: Error = {
+    code: adaptedCode,
+    message: adaptedMessage,
+    type: adaptedType,
+  };
+
+  return returnError;
+}
