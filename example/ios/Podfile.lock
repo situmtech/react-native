@@ -520,17 +520,17 @@ PODS:
     - React-jsi (= 0.72.3)
     - React-logger (= 0.72.3)
     - React-perflogger (= 0.72.3)
-  - ReactNativeSitumPlugin (3.3.4):
+  - ReactNativeSitumPlugin (3.3.2):
     - RCT-Folly (= 2021.07.22.00)
     - React
     - React-Core
-    - SitumSDK (= 3.4.0)
+    - SitumSDK (= 3.5.0)
   - RNPermissions (3.9.2):
     - React-Core
   - RNScreens (3.25.0):
     - React-Core
     - React-RCTImage
-  - SitumSDK (3.4.0):
+  - SitumSDK (3.5.0):
     - Protobuf (~> 3.7)
     - SSZipArchive (~> 2.4)
   - SocketRocket (0.6.1)
@@ -794,10 +794,10 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 837c1bebd2f84572db17698cd702ceaf585b0d9a
   React-utils: bcb57da67eec2711f8b353f6e3d33bd8e4b2efa3
   ReactCommon: 3ccb8fb14e6b3277e38c73b0ff5e4a1b8db017a9
-  ReactNativeSitumPlugin: c2bde378839218b18aca3c6136d93cb288c9941c
+  ReactNativeSitumPlugin: cbc021c83e0bc6d488ed70064daa4ca394608f79
   RNPermissions: a9db2f3c0bd0c6d9f435010b7a0a02d27a3713b3
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
-  SitumSDK: 7d1a86872183ef071c62a2d518125e579bb8c90a
+  SitumSDK: 1285630173fe955b12738c31a91af6b8dabae885
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   Yoga: 8796b55dba14d7004f980b54bcc9833ee45b28ce

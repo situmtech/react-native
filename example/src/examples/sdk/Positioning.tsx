@@ -6,9 +6,9 @@ import SitumPlugin, {
   LocationStatusName,
   Location,
   Error,
+  requestPermission,
 } from '@situm/react-native';
 import styles from '../styles/styles';
-import requestPermissions from '../Utils/RequestPermissions';
 import {Button, Card, Divider, List} from 'react-native-paper';
 
 function PositioningScreen() {
@@ -31,14 +31,21 @@ function PositioningScreen() {
     };
   }, []);
 
-  // Request permissions required by Situm SDK
-  const requestLocationPermissions = async () => {
-    requestPermissions();
+  const handlePermissionsButton = async () => {
+    try {
+      await requestPermission();
+    } catch (e) {
+      console.error('Error requesting permissions:', e);
+    }
   };
 
   // Start positioning using Situm SDK
   const startPositioning = async () => {
-    await requestPermissions();
+    try {
+      await requestPermission();
+    } catch (e) {
+      console.warn('Situm > example > Error starting positioning:', e);
+    }
 
     console.log('Starting positioning');
     setLocation('');
@@ -120,7 +127,7 @@ function PositioningScreen() {
   return (
     <ScrollView style={{...styles.screenWrapper}}>
       <List.Section>
-        <Button onPress={requestLocationPermissions} mode="contained">
+        <Button onPress={handlePermissionsButton} mode="contained">
           Request permissions
         </Button>
         <Divider style={styles.margin} />

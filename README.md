@@ -167,7 +167,15 @@ Situm-React-Native-Plugin is licensed under [MIT License](https://opensource.org
 yarn run prepare
 ```
 
-More info is available at our [Developers Page](http://developers.situm.com/pages/mobile/react-native/).
+This will also generate the docs (see next section). More info is available at our [Developers Page](http://developers.situm.com/pages/mobile/react-native/).
+
+### Build the documentation
+
+```bash
+yarn run doc
+```
+
+Docs will be available in the _docs/_ folder.
 
 ### Release version
 
