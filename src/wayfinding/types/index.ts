@@ -58,6 +58,10 @@ export interface OnFloorChangedResult {
   toFloorName: string;
 }
 
+export interface OnExternalLinkClickedResult {
+  url: string;
+}
+
 export interface Destination {
   category: string;
   identifier?: string;
