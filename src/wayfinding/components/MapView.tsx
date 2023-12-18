@@ -8,6 +8,7 @@ import React, {
   useState,
 } from "react";
 import {
+  Linking,
   Platform,
   type StyleProp,
   StyleSheet,
@@ -26,6 +27,7 @@ import {
   type MapViewRef,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
+  type OnExternalLinkClickedResult,
   type OnFloorChangedResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
@@ -69,6 +71,13 @@ export interface MapViewProps {
   onLoad?: (event: any) => void;
   onLoadError?: (event: MapViewError) => void;
   onFloorChanged?: (event: OnFloorChangedResult) => void;
+  /**
+   * Callback invoked when the user clicks on a link in the MapView that leads to a website different from the MapView's domain.
+   * If this callback is not set, the link will be opened in the system's default browser by default.
+   * @param event OnExternalLinkClickedResult object.
+   * @returns
+   */
+  onExternalLinkClicked?: (event: OnExternalLinkClickedResult) => void;
 }
 
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
@@ -81,6 +90,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onPoiSelected = () => {},
       onPoiDeselected = () => {},
       onFloorChanged = () => {},
+      onExternalLinkClicked = undefined,
     },
     ref
   ) => {
@@ -230,7 +240,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           },
         };
       },
-      [stopNavigation, _navigateToPoi, _navigateToPoint, _selectPoi]
+      [
+        stopNavigation,
+        _navigateToPoi,
+        _navigateToPoint,
+        _selectPoi,
+        _selectPoiCategory,
+      ]
     );
 
     useEffect(() => {
@@ -344,6 +360,25 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
     };
 
+    const _onShouldStartLoadWithRequest = (request) => {
+      if (
+        request &&
+        request.url &&
+        !request.url.startsWith(configuration.viewerDomain || SITUM_BASE_DOMAIN)
+      ) {
+        if (
+          onExternalLinkClicked &&
+          typeof onExternalLinkClicked === "function"
+        ) {
+          onExternalLinkClicked({ url: request.url });
+        } else {
+          Linking.openURL(request.url);
+        }
+        return false;
+      }
+      return true;
+    };
+
     return (
       <WebView
         ref={webViewRef}
@@ -367,6 +402,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         startInLoadingState={true}
         cacheEnabled
         onMessage={handleRequestFromViewer}
+        onShouldStartLoadWithRequest={_onShouldStartLoadWithRequest}
         onError={(evt: WebViewErrorEvent) => {
           if (!onLoadError) return;
           const { nativeEvent } = evt;
