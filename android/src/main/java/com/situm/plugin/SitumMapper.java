@@ -38,6 +38,7 @@ import es.situm.sdk.location.util.CoordinateConverter;
 import es.situm.sdk.model.I18nString;
 import es.situm.sdk.model.MapperInterface;
 import es.situm.sdk.model.URL;
+import es.situm.sdk.error.Error;
 import es.situm.sdk.model.cartography.Building;
 import es.situm.sdk.model.cartography.BuildingInfo;
 import es.situm.sdk.model.cartography.Circle;
@@ -114,6 +115,8 @@ class SitumMapper {
     public static final String LONGITUDE = "longitude";
     public static final String STATUS_NAME = "statusName";
     public static final String STATUS_ORDINAL = "statusOrdinal";
+    public static final String ERROR_CODE = "code";
+    public static final String ERROR_MESSAGE = "message";
 
     public static final String HAS_BEARING = "hasBearing";
     public static final String HAS_CARTESIAN_BEARING = "hasCartesianBearing";
@@ -565,6 +568,13 @@ class SitumMapper {
         JSONObject jo = new JSONObject();
         jo.put(STATUS_NAME, locationStatus.name());
         jo.put(STATUS_ORDINAL, locationStatus.ordinal());
+        return jo;
+    }
+
+    static JSONObject locationErrorToJsonObject(Error error) throws JSONException {
+        JSONObject jo = new JSONObject();
+        jo.put(ERROR_CODE, error.getCode());
+        jo.put(ERROR_MESSAGE, error.getMessage());
         return jo;
     }
 
@@ -1099,12 +1109,11 @@ class SitumMapper {
         DirectionsRequest.AccessibilityMode accessibilityMode = DirectionsRequest.AccessibilityMode.CHOOSE_SHORTEST;
         Boolean minimizeFloorChanges = false;
         double startingAngle = 0.0;
-        
+
         if (joOptions != null) {
-        
-        
+
             if (joOptions.has(SitumMapper.ACCESSIBILITY_MODE)) {
-        
+
                 String mode = joOptions.getString(SitumMapper.ACCESSIBILITY_MODE);
                 if (mode.equals(DirectionsRequest.AccessibilityMode.ONLY_ACCESSIBLE.name())) {
                     accessibilityMode = DirectionsRequest.AccessibilityMode.ONLY_ACCESSIBLE;
@@ -1129,7 +1138,7 @@ class SitumMapper {
     }
 
     static ReadableArray mapList(List<? extends MapperInterface> modelObjects) {
-        
+
         WritableArray mappedList = new WritableNativeArray();
         for (MapperInterface modelObject : modelObjects) {
             ReadableMap modelMap = convertMapToReadableMap(modelObject.toMap());
@@ -1155,8 +1164,9 @@ class SitumMapper {
                 // Warning: #convertMapToReadableMap maybe called here:
                 response.putArray(key, convertListToReadableArray((List<Object>) value));
             } else if (value instanceof Map) {
-                // TODO: avoid recursive calls using a stack throws ObjectAlreadyConsumedException while
-                //  processing nested WritableMaps. Is there a way to avoid recursion?
+                // TODO: avoid recursive calls using a stack throws
+                // ObjectAlreadyConsumedException while
+                // processing nested WritableMaps. Is there a way to avoid recursion?
                 response.putMap(key, convertMapToReadableMap((Map) value));
             }
         }

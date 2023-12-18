@@ -9,7 +9,7 @@ const NUMBER_OF_SECONDS = 60;
 
 export const SetCacheMaxAge = () => {
   const [status, setStatus] = useState('');
-  const [buildings, setBuildings] = useState<Building[]>();
+  const [buildings, setBuildings] = useState<Building[]>([]);
 
   // Set the cache when the component mounts
   useEffect(() => {
@@ -21,6 +21,7 @@ export const SetCacheMaxAge = () => {
     try {
       SitumPlugin.invalidateCache();
       setStatus('Cache invalidated');
+      setBuildings([]);
     } catch (e) {
       console.error(`Situm > example > Could not invalidate cache ${e}`);
     }
@@ -33,6 +34,7 @@ export const SetCacheMaxAge = () => {
         cacheMaxAge: numSeconds,
       });
       setStatus(`Cache age set to ${numSeconds} seconds`);
+      setBuildings([]);
     } catch (e) {
       console.error(`Situm > example > Could not set max cache age ${e}`);
     }

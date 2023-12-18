@@ -812,20 +812,36 @@ RCT_EXPORT_METHOD(onExitGeofences){
 - (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
        didFailWithError: (NSError * _Nullable)error {
 
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    [dict setObject:error.description forKey:@"message"];
+    NSMutableDictionary *errorInfo = [[NSMutableDictionary alloc] init];
+    
+    // Adding basic error details
+    [errorInfo setObject:@(error.code) forKey:@"code"];
+   
+    // Add the error description
+    if (error.localizedDescription) {
+        [errorInfo setObject:error.localizedDescription forKey:@"message"];
+    }
+    else{
+        [errorInfo setObject:@"" forKey:@"message"];
+    }
+
+ 
 
     if (_positioningUpdates) {
-        [self sendEventWithName:@"locationError" body:error.description];
+        [self sendEventWithName:@"locationError" body:errorInfo];
     }
 }
 
 - (void)locationManager:(nonnull id<SITLocationInterface>)locationManager
-         didUpdateState:(SITLocationState)state {
+     didUpdateState:(SITLocationState)state {
 
     NSDictionary *locationChanged = [SitumLocationWrapper.shared locationStateToJsonObject:state];
-    if (_positioningUpdates) {
-        [self sendEventWithName:@"statusChanged" body:locationChanged.copy];
+    NSString *statusName = locationChanged[@"statusName"];
+
+    if (statusName){
+        if (_positioningUpdates|| [statusName isEqualToString:@"STOPPED"]) {
+            [self sendEventWithName:@"statusChanged" body:locationChanged.copy]; 
+        }
     }
 }
 

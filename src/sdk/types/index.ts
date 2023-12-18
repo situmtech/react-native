@@ -496,17 +496,45 @@ export type RealTimeData = {
   locations: Location[];
 };
 
+/**
+ * @name SdkVersion
+ * @description Represents the version information of the SDK and its compatibility with different platforms.
+ *
+ * @type
+ * @property {string} react_native - The version of React Native used in the SDK.
+ * @property {string} [ios] - Optional. The specific version of the Situm SDK for the iOS platform.
+ * @property {string} [android] - Optional. The specific version of the Situm SDK for the Android platform.
+ */
 export type SdkVersion = {
   react_native: string;
   ios?: string;
   android?: string;
 };
 
+/**
+ * @name ConfigurationOptions
+ * @description Configuration options for initializing the SDK or other modules.
+ *
+ * @type
+ * @property {boolean} [useRemoteConfig] - Optional. Determines whether to use Remote Configuration settings.
+ * @property {number} [cacheMaxAge] - Optional. The maximum age of the cache in seconds.
+ */
 export type ConfigurationOptions = {
   useRemoteConfig?: boolean;
   cacheMaxAge?: number;
 };
 
+/**
+ * @name Location
+ * @description Represents a location with various attributes including position, accuracy, and bearing.
+ *
+ * @interface
+ * @property {Position} [position] - Optional. The position information of the location.
+ * @property {number} [accuracy] - Optional. The accuracy of the location information in meters.
+ * @property {Object} [bearing] - Optional. Bearing information including degrees and degreesClockwise.
+ * @property {boolean} [hasBearing] - Optional. Indicates if bearing information is available.
+ * @property {LocationStatusName} status - The status of the location update.
+ */
 export interface Location {
   position?: Position;
   accuracy?: number;
@@ -532,14 +560,67 @@ export interface Position {
   buildingIdentifier?: string;
   floorIdentifier?: string;
 }
+
+/**
+ * @name LocationStatus
+ * @description Represents the status of a location, including a name and a numeric code.
+ *
+ * @interface
+ * @property {LocationStatusName} statusName - The name of the location status.
+ * @property {number} statusCode - The numeric code representing the location status.
+ */
 export interface LocationStatus {
   statusName: LocationStatusName;
   statusCode: number;
 }
 
+/**
+ * @name ErrorType
+ * @description Enumeration of error types to categorize the severity of errors.
+ *
+ * @enum {string}
+ * @property {string} CRITICAL - Represents critical errors that will cause the system not to work (e.g. positioning will be stopped).
+ * @property {string} NON_CRITICAL - Represents non-critical errors that are less severe.
+ */
+export enum ErrorType {
+  CRITICAL = "CRITICAL",
+  NON_CRITICAL = "NON_CRITICAL",
+}
+
+/**
+ * @name ErrorCode
+ * @description Enumeration of error codes provided by Situm SDK.
+ *
+ * @enum {string}
+ * @property {string} LOCATION_PERMISSION_DENIED - Indicates that location permissions were not granted by the user.
+ * @property {string} BLUETOOTH_PERMISSION_DENIED - Indicates that Bluetooth permissions were not granted.
+ * @property {string} BLUETOOTH_DISABLED - Indicates that Bluetooth is disabled on the device.
+ * @property {string} LOCATION_DISABLED - Indicates that the location services are disabled on the device.
+ * @property {string} REDUCED_ACCURACY - Indicates that the precise location has been turned off on the device.
+ * @property {string} UNKNOWN - Represents an unknown error or an error that does not fit other categories.
+ */
+export enum ErrorCode {
+  LOCATION_PERMISSION_DENIED = "LOCATION_PERMISSION_DENIED",
+  BLUETOOTH_PERMISSION_DENIED = "BLUETOOTH_PERMISSION_DENIED",
+  BLUETOOTH_DISABLED = "BLUETOOTH_DISABLED",
+  LOCATION_DISABLED = "LOCATION_DISABLED",
+  REDUCED_ACCURACY = "REDUCED_ACCURACY",
+  UNKNOWN = "UNKNOWN",
+}
+
+/**
+ * @name Error
+ * @description Represents an error with a specific code, message, and type.
+ *
+ * @interface
+ * @property {ErrorCode} code - The specific error code associated with this error.
+ * @property {string} message - A descriptive message providing more details about the error.
+ * @property {ErrorType} type - The type of the error indicating its severity (critical or non-critical).
+ */
 export interface Error {
-  code?: number;
+  code: ErrorCode;
   message: string;
+  type: ErrorType;
 }
 
 // TODO: add types
