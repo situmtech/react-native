@@ -5,9 +5,10 @@ import SitumPlugin, {
   LocationStatusName,
   Location,
   Error,
+  requestPermission,
+  ErrorCode,
 } from '@situm/react-native';
 import styles from '../styles/styles';
-import requestPermissions from '../Utils/RequestPermissions';
 import {Button, Card, Divider, List} from 'react-native-paper';
 
 export const RemoteConfig = () => {
@@ -41,7 +42,34 @@ export const RemoteConfig = () => {
         'Situm > example > Error while positioning: ',
         JSON.stringify(err),
       );
-      setError(err.message);
+
+      // The purpose of this switch is just to show how you may handle each error.
+      // Instead of outputing a log, you might want inform the user
+      // and direct him to take certain actions
+      switch (err.code) {
+        case ErrorCode.LOCATION_PERMISSION_DENIED:
+          console.log(
+            "Situm > example > Without location permission, we can't geolocate the smartphone",
+          );
+          break;
+        case ErrorCode.BLUETOOTH_PERMISSION_DENIED:
+          console.log(
+            "Situm > example > Without Bluetooth permission, we can't scan BLE beacons.",
+          );
+          break;
+        case ErrorCode.BLUETOOTH_DISABLED:
+          console.log(
+            "Situm > example > If BLE is disabled, we can't scan beacons",
+          );
+          break;
+        case ErrorCode.LOCATION_DISABLED:
+          console.log(
+            "Situm > example > If location is disabled, we can't geolocate the smartphone",
+          );
+          break;
+      }
+
+      setError(JSON.stringify(err));
     });
 
     // Handle positioning stop event
@@ -67,9 +95,21 @@ export const RemoteConfig = () => {
     });
   };
 
+  const handlePermissionsButton = async () => {
+    try {
+      await requestPermission();
+    } catch (e) {
+      console.error('Error requesting permissions:', e);
+    }
+  };
+
   // Start positioning using Situm SDK
   const startPositioning = async () => {
-    await requestPermissions();
+    try {
+      await requestPermission();
+    } catch (e) {
+      console.warn('Situm > example > Error starting positioning:', e);
+    }
 
     console.log('Situm > example > Starting positioning');
     setLocation('');
@@ -78,7 +118,7 @@ export const RemoteConfig = () => {
 
     //You may overwrite some remote configuration options if you want
     const locationOptions = {
-      useBle: true,
+      //useBle: true,
     };
 
     try {
@@ -118,7 +158,7 @@ export const RemoteConfig = () => {
   return (
     <ScrollView style={{...styles.screenWrapper}}>
       <List.Section>
-        <Button onPress={requestPermissions} mode="contained">
+        <Button onPress={handlePermissionsButton} mode="contained">
           Request permissions
         </Button>
         <Divider style={styles.margin} />

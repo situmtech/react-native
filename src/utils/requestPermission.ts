@@ -8,7 +8,7 @@ import {
 
 // TODO: can requestMultiple be used ?
 const checkIOSPermissions = async () => {
-  let granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+  const granted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
 
   // Check if already denied
   if (granted !== RESULTS.GRANTED) {
@@ -19,24 +19,7 @@ const checkIOSPermissions = async () => {
     "Situm > permissions > LOCATION_WHEN_IN_USE permission granted"
   );
 
-  //@ts-ignore
-  if (parseInt(Platform.Version, 10) > 12) {
-    granted = await request(PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL);
-
-    if (granted === RESULTS.GRANTED) {
-      console.debug(
-        "Situm > permissions > BLUETOOTH_PERIPHERAL permission granted"
-      );
-      return true;
-    } else {
-      throw "Situm > permissions > BLUETOOTH_PERIPHERAL permission not granted";
-    }
-  } else {
-    console.debug(
-      "Situm > permissions > BLUETOOTH_PERIPHERAL permissions not required"
-    );
-    return true;
-  }
+  return true;
 };
 
 const checkAndroidPermissions = async () => {
