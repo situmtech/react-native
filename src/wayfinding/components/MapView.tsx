@@ -31,6 +31,7 @@ import {
   type OnFloorChangedResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
+  type OnDirectionsRequestInterceptor,
 } from "../types";
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
@@ -71,6 +72,7 @@ export interface MapViewProps {
   onLoad?: (event: any) => void;
   onLoadError?: (event: MapViewError) => void;
   onFloorChanged?: (event: OnFloorChangedResult) => void;
+  onDirectionsRequestInterceptor?: OnDirectionsRequestInterceptor;
   /**
    * Callback invoked when the user clicks on a link in the MapView that leads to a website different from the MapView's domain.
    * If this callback is not set, the link will be opened in the system's default browser by default.
@@ -91,6 +93,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onPoiDeselected = () => {},
       onFloorChanged = () => {},
       onExternalLinkClicked = undefined,
+      onDirectionsRequestInterceptor = null,
     },
     ref
   ) => {
@@ -179,6 +182,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, []);
 
+    function _setOnDirectionsRequestInterceptor(interceptor: OnDirectionsRequestInterceptor) {
+      console.debug("Situm > Regue setInterceptor" + interceptor);
+      onDirectionsRequestInterceptor = interceptor;
+    }
+
     /**
      * API exported to the outside world from the MapViewer
      *
@@ -230,6 +238,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           navigateToPoint(payload: NavigateToPointPayload): void {
             _navigateToPoint(payload);
           },
+          setOnDirectionsRequestInterceptor(directionRequestInterceptor): void {
+            _setOnDirectionsRequestInterceptor(directionRequestInterceptor.onDirectionsRequestInterceptor);
+          },
           cancelNavigation(): void {
             if (!webViewRef.current) return;
             stopNavigation();
@@ -246,6 +257,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         _navigateToPoint,
         _selectPoi,
         _selectPoiCategory,
+        _setOnDirectionsRequestInterceptor
       ]
     );
 
@@ -328,10 +340,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           setMapLoaded(true);
           break;
         case "directions.requested":
-          calculateRoute(eventParsed.payload);
+          calculateRoute(eventParsed.payload, onDirectionsRequestInterceptor);
           break;
         case "navigation.requested":
-          startNavigation(eventParsed.payload);
+          startNavigation(eventParsed.payload, onDirectionsRequestInterceptor, onDirectionsRequestInterceptor);
           break;
         case "navigation.stopped":
           stopNavigation();
