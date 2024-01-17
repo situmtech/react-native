@@ -1837,7 +1837,7 @@
     "@sinonjs/commons" "^3.0.0"
 
 "@situm/react-native@file:..":
-  version "3.4.5"
+  version "3.4.6"
   dependencies:
     react-dom "^18.2.0"
     react-native-permissions "^3.8.4"
