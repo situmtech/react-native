@@ -46,6 +46,7 @@ export const createDirectionsRequest = (payload: any): DirectionsRequest => {
       payload.accessibilityMode || AccessibilityMode.CHOOSE_SHORTEST,
     minimizeFloorChanges: payload.minimizeFloorChanges || false,
     includedTags: payload.includedTags || null,
+    excludedTags: payload.excludedTags || null,
   };
 };
 

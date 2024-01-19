@@ -131,11 +131,10 @@ export const useSitumInternal = () => {
 
   const calculateRoute = async (payload: any, interceptor?: OnDirectionsRequestInterceptor, updateRoute = true) => {
     console.debug("Situm > hook > calculating route");
-    console.debug("Situm > hook > Regue interceptor = " + interceptor);
 
     let directionsRequest = createDirectionsRequest(payload.directionsRequest)
-    interceptor?.call(directionsRequest);
-    const { to, from, minimizeFloorChanges, accessibilityMode, bearingFrom, includedTags } =
+    interceptor && interceptor(directionsRequest);
+    const { to, from, minimizeFloorChanges, accessibilityMode, bearingFrom, includedTags, excludedTags } =
       directionsRequest;
     const { originIdentifier, destinationIdentifier, buildingIdentifier } =
       createDirectionsMessage(payload);
@@ -159,6 +158,7 @@ export const useSitumInternal = () => {
       accessibilityMode,
       bearingFrom,
       includedTags,
+      excludedTags,
     })
       .then((_directions) => {
         const newRoute = {
