@@ -233,6 +233,7 @@ class SitumMapper {
     public static final String NAME = "name";
     public static final String ACCESSIBILITY_MODE = "accessibilityMode";
     public static final String INCLUDED_TAGS = "includedTags";
+    public static final String EXCLUDED_TAGS = "excludedTags";
     public static final String POLYGON_POINTS = "polygonPoints";
     public static final String CODE = "code";
     public static final String BUILDING = "building";
@@ -1113,14 +1114,25 @@ class SitumMapper {
         Boolean minimizeFloorChanges = false;
         double startingAngle = 0.0;
         List<String> includedTags = null;
+        List<String> excludedTags = null;
 
 
         if (joOptions != null) {
 
             if (joOptions.has(SitumMapper.INCLUDED_TAGS) && joOptions.get(SitumMapper.INCLUDED_TAGS) != null) {
-                Log.i(TAG, "jo tags: " + joOptions.toString());
-                //String[] tags = (String[]) joOptions.get(SitumMapper.INCLUDED_TAGS);
-                //includedTags = new ArrayList<String>(Arrays.asList(tags));
+                includedTags = new ArrayList<String>();     
+                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.INCLUDED_TAGS); 
+                for (int i=0;i<jsonArray.length();i++) { 
+                    includedTags.add(jsonArray.get(i).toString());
+                }
+            }
+
+            if (joOptions.has(SitumMapper.EXCLUDED_TAGS) && joOptions.get(SitumMapper.EXCLUDED_TAGS) != null) {
+                excludedTags = new ArrayList<String>();     
+                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.EXCLUDED_TAGS); 
+                for (int i=0;i<jsonArray.length();i++) { 
+                    excludedTags.add(jsonArray.get(i).toString());
+                }
             }
 
             if (joOptions.has(SitumMapper.ACCESSIBILITY_MODE)) {
@@ -1145,7 +1157,7 @@ class SitumMapper {
             }
         }
         return new DirectionsRequest.Builder().from(from, Angle.fromDegrees(startingAngle)).to(to)
-                .accessibilityMode(accessibilityMode).minimizeFloorChanges(minimizeFloorChanges).includedTags(includedTags).build();
+                .accessibilityMode(accessibilityMode).minimizeFloorChanges(minimizeFloorChanges).includedTags(includedTags).excludedTags(excludedTags).build();
     }
 
     static ReadableArray mapList(List<? extends MapperInterface> modelObjects) {

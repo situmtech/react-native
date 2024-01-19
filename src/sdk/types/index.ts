@@ -447,6 +447,7 @@ export type DirectionsOptions = {
   startingAngle?: number;
   bearingFrom?: number;
   includedTags?: String[];
+  excludedTags?: String[];
 };
 
 /**
