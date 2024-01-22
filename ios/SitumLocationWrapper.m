@@ -864,6 +864,8 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     
     NSString *accessibilityModeValue = nil;
     SITAccessibilityMode accessibilityMode = kSITChooseShortest;
+    NSArray *includedTags = [NSMutableArray new];
+    NSArray *excludedTags = [NSMutableArray new];
     
     if(options) {
         accessibilityModeValue = options[@"accessibilityMode"];
@@ -875,6 +877,15 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
             }
             [directionsRequest setAccessibility:accessibilityMode];
         }
+        if (options[@"includedTags"] != nil && ![options[@"includedTags"] isEqual:[NSNull null]]) {
+            includedTags = options[@"includedTags"];
+            [directionsRequest setIncludedTags:includedTags];
+        }
+        if (options[@"excludedTags"] != nil && ![options[@"excludedTags"] isEqual:[NSNull null]]) {
+            excludedTags = options[@"excludedTags"];
+            [directionsRequest setExcludedTags:excludedTags];
+        }
+        
         // TODO: add support for the remaining direction options 
     }
     
