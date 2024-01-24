@@ -439,6 +439,8 @@ export type DirectionsRequest = {
  * @property {boolean} minimizeFloorChanges - Defines wheter or not the route should be calculated minimizing the floor changes even if the result is longer.
  * @property {string} accessibilityMode - Defines the accessibility mode of the route. Possible values are: CHOOSE_SHORTEST, ONLY_NOT_ACCESSIBLE_FLOOR_CHANGES, ONLY_ACCESSIBLE
  * @property {number} startingAngle - Current user's orientation in degrees.
+ * @property {String[]} includedTags List of tags that you want to use when calculating a route. Only the tags added here will be used. If there are other tags in the graph they won't be used. The edges without a tag will be used. If you don't set nothing all the graph will be used to calculate the route.
+ * @property {String[]} excludedTags List of tags that you want your route to avoid. If you exclude a tag the route will never pass through an edge that have this tag. If the route can only be generated passing through an edge with this tag the route calculation will fail.
  */
 export type DirectionsOptions = {
   minimizeFloorChanges?: boolean;
