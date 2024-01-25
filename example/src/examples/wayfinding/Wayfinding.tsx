@@ -112,13 +112,15 @@ const Screen: React.FC = () => {
     }
 
     setController(mapViewRef.current);
-    
-    let interceptor: OnDirectionsRequestInterceptor = function (directionsRequest: DirectionsRequest): void {
-      let tags: String[] = []
-      tags.push("tag1")
-      directionsRequest.includedTags = tags
+
+    let interceptor: OnDirectionsRequestInterceptor = function (
+      directionsRequest: DirectionsRequest,
+    ): void {
+      let tags: String[] = [];
+      tags.push('tag1');
+      directionsRequest.includedTags = tags;
     };
-    mapViewRef.current.setOnDirectionsRequestInterceptor(interceptor)
+    mapViewRef.current.setOnDirectionsRequestInterceptor(interceptor);
   }, [mapViewRef]);
 
   const onLoad = (event: any) => {
