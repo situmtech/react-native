@@ -35,7 +35,7 @@ import {
   promiseWrapper,
 } from "./utils";
 
-export type * from "./types";
+export * from "./types";
 export * from "./types/constants";
 
 const LINKING_ERROR =
