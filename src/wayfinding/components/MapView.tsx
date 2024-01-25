@@ -27,11 +27,11 @@ import {
   type MapViewRef,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
+  type OnDirectionsRequestInterceptor,
   type OnExternalLinkClickedResult,
   type OnFloorChangedResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
-  type OnDirectionsRequestInterceptor,
 } from "../types";
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
@@ -96,7 +96,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     ref
   ) => {
     const webViewRef = useRef<WebView>();
-    const [_onDirectionsRequestInterceptor, setInterceptor] = useState();
+    const [_onDirectionsRequestInterceptor, setInterceptor] =
+      useState<OnDirectionsRequestInterceptor>();
 
     // Local states
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);

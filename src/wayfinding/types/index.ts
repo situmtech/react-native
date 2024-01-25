@@ -32,7 +32,11 @@ export interface MapViewRef {
     accessibilityMode?: AccessibilityMode;
   }) => void;
   cancelNavigation: () => void;
-  setOnDirectionsRequestInterceptor: ({onDirectionsRequestInterceptor}: {onDirectionsRequestInterceptor: OnDirectionsRequestInterceptor}) => void;
+  setOnDirectionsRequestInterceptor: ({
+    onDirectionsRequestInterceptor,
+  }: {
+    onDirectionsRequestInterceptor: OnDirectionsRequestInterceptor;
+  }) => void;
 }
 
 export interface WayfindingResult {
