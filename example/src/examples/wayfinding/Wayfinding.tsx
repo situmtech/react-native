@@ -18,9 +18,7 @@ import type {
   OnPoiDeselectedResult,
   OnPoiSelectedResult,
   OnExternalLinkClickedResult,
-  OnDirectionsRequestInterceptor,
   MapViewRef,
-  DirectionsRequest,
 } from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
 
@@ -112,15 +110,6 @@ const Screen: React.FC = () => {
     }
 
     setController(mapViewRef.current);
-
-    let interceptor: OnDirectionsRequestInterceptor = function (
-      directionsRequest: DirectionsRequest,
-    ): void {
-      let tags: String[] = [];
-      tags.push('tag1');
-      directionsRequest.includedTags = tags;
-    };
-    mapViewRef.current.setOnDirectionsRequestInterceptor(interceptor);
   }, [mapViewRef]);
 
   const onLoad = (event: any) => {
