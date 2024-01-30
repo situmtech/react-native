@@ -1,6 +1,6 @@
 import { AccessibilityMode } from "src/sdk";
 
-import type { Point } from "../../sdk/types";
+import type { DirectionsRequest, Point } from "../../sdk/types";
 import { ErrorName } from "./constants";
 
 export interface MapViewError {
@@ -32,6 +32,11 @@ export interface MapViewRef {
     accessibilityMode?: AccessibilityMode;
   }) => void;
   cancelNavigation: () => void;
+  setOnDirectionsRequestInterceptor: ({
+    onDirectionsRequestInterceptor,
+  }: {
+    onDirectionsRequestInterceptor: OnDirectionsRequestInterceptor;
+  }) => void;
 }
 
 export interface WayfindingResult {
@@ -56,6 +61,14 @@ export interface OnFloorChangedResult {
   toFloorId: string;
   fromFloorName: string;
   toFloorName: string;
+}
+
+/**
+   * This interface allows you to modify all the parameters in the DirectionRequest used by the MapViewer to calculate the route.
+   * To use this you will need to load the MapView and once it ends loading use the MapViewRef that you obtain an call setOnDirectionsRequestInterceptor(interceptor)
+   */
+export interface OnDirectionsRequestInterceptor {
+  (directionRequest: DirectionsRequest): void;
 }
 
 export interface OnExternalLinkClickedResult {
