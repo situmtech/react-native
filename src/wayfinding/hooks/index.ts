@@ -31,6 +31,7 @@ import {
   UseSitumContext,
 } from "../store/index";
 import { useDispatch, useSelector } from "../store/utils";
+import type { OnDirectionsRequestInterceptor } from "../types";
 import {
   createDirectionsMessage,
   createDirectionsRequest,
@@ -128,11 +129,26 @@ export const useSitumInternal = () => {
     });
   }
 
-  const calculateRoute = async (payload: any, updateRoute = true) => {
+  const calculateRoute = async (
+    payload: any,
+    interceptor?: OnDirectionsRequestInterceptor,
+    updateRoute = true
+  ) => {
     console.debug("Situm > hook > calculating route");
 
-    const { to, from, minimizeFloorChanges, accessibilityMode, bearingFrom } =
-      createDirectionsRequest(payload.directionsRequest);
+    const directionsRequest = createDirectionsRequest(
+      payload.directionsRequest
+    );
+    interceptor && interceptor(directionsRequest);
+    const {
+      to,
+      from,
+      minimizeFloorChanges,
+      accessibilityMode,
+      bearingFrom,
+      includedTags,
+      excludedTags,
+    } = directionsRequest;
     const { originIdentifier, destinationIdentifier, buildingIdentifier } =
       createDirectionsMessage(payload);
 
@@ -154,6 +170,8 @@ export const useSitumInternal = () => {
       minimizeFloorChanges,
       accessibilityMode,
       bearingFrom,
+      includedTags,
+      excludedTags,
     })
       .then((_directions) => {
         const newRoute = {
@@ -177,14 +195,17 @@ export const useSitumInternal = () => {
   };
 
   // Navigation
-  const startNavigation = (payload: any) => {
+  const startNavigation = (
+    payload: any,
+    interceptor?: OnDirectionsRequestInterceptor
+  ) => {
     console.debug("Situm > hook > request to start navigation");
     // TODO: we should delegate this to the sdk plugin
     if (!navigation || navigation?.status !== NavigationStatus.STOP) {
       stopNavigation();
     }
 
-    calculateRoute(payload, false)
+    calculateRoute(payload, interceptor, false)
       .then((r) => {
         if (!r) {
           console.debug(`Situm > hook > No route was computed`);

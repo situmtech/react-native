@@ -27,6 +27,7 @@ import {
   type MapViewRef,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
+  type OnDirectionsRequestInterceptor,
   type OnExternalLinkClickedResult,
   type OnFloorChangedResult,
   type OnPoiDeselectedResult,
@@ -95,6 +96,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     ref
   ) => {
     const webViewRef = useRef<WebView>();
+    const [_onDirectionsRequestInterceptor, setInterceptor] =
+      useState<OnDirectionsRequestInterceptor>();
 
     // Local states
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
@@ -230,6 +233,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           navigateToPoint(payload: NavigateToPointPayload): void {
             _navigateToPoint(payload);
           },
+          setOnDirectionsRequestInterceptor(directionRequestInterceptor): void {
+            setInterceptor(() => directionRequestInterceptor);
+          },
           cancelNavigation(): void {
             if (!webViewRef.current) return;
             stopNavigation();
@@ -328,10 +334,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           setMapLoaded(true);
           break;
         case "directions.requested":
-          calculateRoute(eventParsed.payload);
+          calculateRoute(eventParsed.payload, _onDirectionsRequestInterceptor);
           break;
         case "navigation.requested":
-          startNavigation(eventParsed.payload);
+          startNavigation(eventParsed.payload, _onDirectionsRequestInterceptor);
           break;
         case "navigation.stopped":
           stopNavigation();
