@@ -63,6 +63,10 @@ export interface OnFloorChangedResult {
   toFloorName: string;
 }
 
+/**
+   * This interface allows you to modify all the parameters in the DirectionRequest used by the MapViewer to calculate the route.
+   * To use this you will need to load the MapView and once it ends loading use the MapViewRef that you obtain an call setOnDirectionsRequestInterceptor(interceptor)
+   */
 export interface OnDirectionsRequestInterceptor {
   (directionRequest: DirectionsRequest): void;
 }
