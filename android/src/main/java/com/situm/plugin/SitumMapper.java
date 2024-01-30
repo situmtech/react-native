@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Arrays;
+
 
 import es.situm.sdk.directions.DirectionsRequest;
 import es.situm.sdk.location.LocationRequest;
@@ -230,6 +232,8 @@ class SitumMapper {
     public static final String UPDATED_AT = "updatedAt";
     public static final String NAME = "name";
     public static final String ACCESSIBILITY_MODE = "accessibilityMode";
+    public static final String INCLUDED_TAGS = "includedTags";
+    public static final String EXCLUDED_TAGS = "excludedTags";
     public static final String POLYGON_POINTS = "polygonPoints";
     public static final String CODE = "code";
     public static final String BUILDING = "building";
@@ -1109,8 +1113,27 @@ class SitumMapper {
         DirectionsRequest.AccessibilityMode accessibilityMode = DirectionsRequest.AccessibilityMode.CHOOSE_SHORTEST;
         Boolean minimizeFloorChanges = false;
         double startingAngle = 0.0;
+        List<String> includedTags = null;
+        List<String> excludedTags = null;
+
 
         if (joOptions != null) {
+
+            if (joOptions.has(SitumMapper.INCLUDED_TAGS) && joOptions.get(SitumMapper.INCLUDED_TAGS) != null) {
+                includedTags = new ArrayList<String>();     
+                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.INCLUDED_TAGS); 
+                for (int i=0;i<jsonArray.length();i++) { 
+                    includedTags.add(jsonArray.get(i).toString());
+                }
+            }
+
+            if (joOptions.has(SitumMapper.EXCLUDED_TAGS) && joOptions.get(SitumMapper.EXCLUDED_TAGS) != null) {
+                excludedTags = new ArrayList<String>();     
+                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.EXCLUDED_TAGS); 
+                for (int i=0;i<jsonArray.length();i++) { 
+                    excludedTags.add(jsonArray.get(i).toString());
+                }
+            }
 
             if (joOptions.has(SitumMapper.ACCESSIBILITY_MODE)) {
 
@@ -1134,7 +1157,7 @@ class SitumMapper {
             }
         }
         return new DirectionsRequest.Builder().from(from, Angle.fromDegrees(startingAngle)).to(to)
-                .accessibilityMode(accessibilityMode).minimizeFloorChanges(minimizeFloorChanges).build();
+                .accessibilityMode(accessibilityMode).minimizeFloorChanges(minimizeFloorChanges).includedTags(includedTags).excludedTags(excludedTags).build();
     }
 
     static ReadableArray mapList(List<? extends MapperInterface> modelObjects) {
