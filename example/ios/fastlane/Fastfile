@@ -32,7 +32,6 @@ platform :ios do
     #====================================================
     #
     version_number = lane_context[SharedValues::LATEST_TESTFLIGHT_VERSION]
-    new_build_number = lane_context[SharedValues::LATEST_TESTFLIGHT_BUILD_NUMBER] + 1
     increment_version_number(
       version_number: version_number
       )

@@ -11,6 +11,9 @@ parameters:
     type: string
   - name: DASHBOARD_URL
     type: string
+  - name: BUILDNUMBER
+    type: string
+    default: "Value only set in iOS"
 steps:
   - checkout: self
     fetchDepth: 1
@@ -49,6 +52,7 @@ steps:
       echo -e "\t[+] BUILDINGID: ${{ parameters.BUILDINGID }}"
       echo -e "\t[+] FLOORID: ${{ parameters.FLOORID }}"
       echo -e "\t[+] DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}"
+      echo -e "\t[+] BUILDNUMBER: ${{ parameters.BUILDNUMBER }}"
       echo -e "\t[+] Plugin Version used: $pluginVersion"
 
       echo "export const SITUM_EMAIL = '${{ parameters.XAPIEMAIL }}';" > example/src/situm.tsx
