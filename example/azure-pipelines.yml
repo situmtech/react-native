@@ -131,6 +131,7 @@ jobs:
         FLOORID: $(FLOORID)
         DASHBOARD_URL: $(DASHBOARD_URL)
         system: $(macOSVersion)
+        BUILDNUMBER: $(BUILDNUMBER)
 
     - template: azure/build-examples.yaml
       parameters:
@@ -138,4 +139,5 @@ jobs:
         system: $(macOSVersion)
         XAPIEMAIL: $(XAPIEMAIL)
         BUILDINGID: $(BUILDINGID)
+        BUILDNUMBER: $(BUILDNUMBER)
 
