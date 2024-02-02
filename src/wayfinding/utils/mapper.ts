@@ -101,7 +101,10 @@ const ViewerMapper = {
       identifier: categoryId,
     });
   },
-  setDirectionsOptions: (includedTags: string[], excludedTags: string[]) => {
+  setDirectionsOptions: (
+    includedTags: string[] | null,
+    excludedTags: string[] | null
+  ) => {
     return mapperWrapper(`directions.set_options`, {
       includedTags: includedTags,
       excludedTags: excludedTags,
