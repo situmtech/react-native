@@ -315,7 +315,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       mapLoaded &&
         sendMessageToViewer(
           webViewRef.current,
-          ViewerMapper.setDirectionsOptions(["tag1"], [])
+          ViewerMapper.setDirectionsOptions(["tag1"], null)
         );
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mapLoaded]);
