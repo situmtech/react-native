@@ -36,7 +36,7 @@ import {
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
 import ViewerMapper from "../utils/mapper";
-const SITUM_BASE_DOMAIN = "https://map-viewer.situm.com";
+const SITUM_BASE_DOMAIN = "https://sagp2024-12.map-viewer.situm.com";
 
 const NETWORK_ERROR_CODE = {
   android: -2,
@@ -312,6 +312,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     // Update follow user
     useEffect(() => {
       mapLoaded && sendFollowUser();
+      mapLoaded &&
+        sendMessageToViewer(
+          webViewRef.current,
+          ViewerMapper.setDirectionsOptions(["tag1"], [])
+        );
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mapLoaded]);
 
