@@ -38,26 +38,16 @@ export const createDirectionsMessage = (payload: any): DirectionsMessage => {
 };
 
 export const createDirectionsRequest = (payload: any): DirectionsRequest => {
-  /**buildingIdentifier: payload.directionsRequest.from.buildingIdentifier,
-    to: createPoint(payload.directionsRequest.to),
-    from: createPoint(payload.directionsRequest.from),
-    bearingFrom: payload.directionsRequest.bearingFrom || 0,
-    accessibilityMode:
-    payload.directionsRequest.accessibilityMode || AccessibilityMode.CHOOSE_SHORTEST,
-    minimizeFloorChanges: payload.directionsRequest.minimizeFloorChanges || false,
-    includedTags: payload.directionsRequest.includedTags || [],
-    excludedTags: payload.directionsRequest.excludedTags || [],*/
-    console.log(`Situm > request web ${payload.from.buildingIdentifier}  ${payload.directionsRequest.includedTags}` );
   return {
     buildingIdentifier: payload.from.buildingIdentifier,
     to: createPoint(payload.to),
     from: createPoint(payload.from),
-    bearingFrom: payload.bearingFrom || 0,
+    bearingFrom: payload.bearingFrom.radians || 0,
     accessibilityMode:
       payload.accessibilityMode || AccessibilityMode.CHOOSE_SHORTEST,
     minimizeFloorChanges: payload.minimizeFloorChanges || false,
-    includedTags: payload.directionsRequest.includedTags || [],
-    excludedTags: payload.directionsRequest.excludedTags || [],
+    includedTags: payload.includedTags || [],
+    excludedTags: payload.excludedTags || [],
   };
 };
 
@@ -113,7 +103,6 @@ const ViewerMapper = {
     });
   },
   setDirectionsOptions: (directionsOptions: MapViewDirectionsOptions) => {
-    
       return mapperWrapper(`directions.set_options`,  {
         includedTags: directionsOptions.includedTags,
         excludedTags: directionsOptions.excludedTags
