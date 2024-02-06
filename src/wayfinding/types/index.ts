@@ -11,6 +11,7 @@ export interface MapViewError {
 export interface MapViewRef {
   selectPoi: (poiId: number) => void;
   selectPoiCategory: (categoryId: number) => void;
+  setDirectionsOptions: (directionsOptions: MapViewDirectionsOptions) => void;
   navigateToPoi: ({
     identifier,
     accessibilityMode = AccessibilityMode.CHOOSE_SHORTEST,
@@ -61,6 +62,11 @@ export interface OnFloorChangedResult {
   toFloorId: string;
   fromFloorName: string;
   toFloorName: string;
+}
+
+export interface MapViewDirectionsOptions {
+  includedTags?: string[];
+  excludedTags?: string[];
 }
 
 /**
