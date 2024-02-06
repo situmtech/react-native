@@ -64,6 +64,10 @@ export interface OnFloorChangedResult {
   toFloorName: string;
 }
 
+/**
+ * Interface that contains options that can be changed in the mapviewer regarding route calculation.
+ * Once you change this all the routes calculated will use this options.
+ */
 export interface MapViewDirectionsOptions {
   includedTags?: string[];
   excludedTags?: string[];
