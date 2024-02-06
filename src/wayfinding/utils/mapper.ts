@@ -10,6 +10,7 @@ import type {
 } from "../../sdk/types";
 import type {
   DirectionsMessage,
+  MapViewDirectionsOptions,
   NavigateToPointPayload,
   NavigateToPoiPayload,
   Navigation,
@@ -37,6 +38,16 @@ export const createDirectionsMessage = (payload: any): DirectionsMessage => {
 };
 
 export const createDirectionsRequest = (payload: any): DirectionsRequest => {
+  /**buildingIdentifier: payload.directionsRequest.from.buildingIdentifier,
+    to: createPoint(payload.directionsRequest.to),
+    from: createPoint(payload.directionsRequest.from),
+    bearingFrom: payload.directionsRequest.bearingFrom || 0,
+    accessibilityMode:
+    payload.directionsRequest.accessibilityMode || AccessibilityMode.CHOOSE_SHORTEST,
+    minimizeFloorChanges: payload.directionsRequest.minimizeFloorChanges || false,
+    includedTags: payload.directionsRequest.includedTags || [],
+    excludedTags: payload.directionsRequest.excludedTags || [],*/
+    console.log(`Situm > request web ${payload.from.buildingIdentifier}  ${payload.directionsRequest.includedTags}` );
   return {
     buildingIdentifier: payload.from.buildingIdentifier,
     to: createPoint(payload.to),
@@ -45,8 +56,8 @@ export const createDirectionsRequest = (payload: any): DirectionsRequest => {
     accessibilityMode:
       payload.accessibilityMode || AccessibilityMode.CHOOSE_SHORTEST,
     minimizeFloorChanges: payload.minimizeFloorChanges || false,
-    includedTags: payload.includedTags || [],
-    excludedTags: payload.excludedTags || [],
+    includedTags: payload.directionsRequest.includedTags || [],
+    excludedTags: payload.directionsRequest.excludedTags || [],
   };
 };
 
@@ -100,6 +111,13 @@ const ViewerMapper = {
     return mapperWrapper(`cartography.select_poi_category`, {
       identifier: categoryId,
     });
+  },
+  setDirectionsOptions: (directionsOptions: MapViewDirectionsOptions) => {
+    
+      return mapperWrapper(`directions.set_options`,  {
+        includedTags: directionsOptions.includedTags,
+        excludedTags: directionsOptions.excludedTags
+      })
   },
   // Location
   location: (location: Location) => {
