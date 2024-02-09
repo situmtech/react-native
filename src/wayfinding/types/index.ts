@@ -11,6 +11,7 @@ export interface MapViewError {
 export interface MapViewRef {
   selectPoi: (poiId: number) => void;
   selectPoiCategory: (categoryId: number) => void;
+  setDirectionsOptions: (directionsOptions: MapViewDirectionsOptions) => void;
   navigateToPoi: ({
     identifier,
     accessibilityMode = AccessibilityMode.CHOOSE_SHORTEST,
@@ -61,6 +62,17 @@ export interface OnFloorChangedResult {
   toFloorId: string;
   fromFloorName: string;
   toFloorName: string;
+}
+
+/**
+ * If you want to change the route calculated based on tags you can use this interface. 
+ * Using this interface you can change all the routes that will be calculated including or excluding tags.
+ * Use the method MapViewRef.setDirectionsOptions(MapViewDirectionsOptions) after the MapView ends loading
+ * You can call this as many times you want and the mapviewer will use the last options that you set.
+ */
+export interface MapViewDirectionsOptions {
+  includedTags?: string[];
+  excludedTags?: string[];
 }
 
 /**

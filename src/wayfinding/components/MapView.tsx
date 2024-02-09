@@ -32,6 +32,7 @@ import {
   type OnFloorChangedResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
+  type MapViewDirectionsOptions,
 } from "../types";
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
@@ -182,6 +183,16 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, []);
 
+    const _setDirectionsOptions = (directionsOptions: MapViewDirectionsOptions) => {
+      if (!webViewRef.current) {
+        return;
+      }
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.setDirectionsOptions(directionsOptions)
+      );
+    };
+
     /**
      * API exported to the outside world from the MapViewer
      *
@@ -220,6 +231,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           selectPoiCategory(poiId: number) {
             _selectPoiCategory(poiId);
           },
+          setDirectionsOptions(directionsOptions: MapViewDirectionsOptions) {
+            _setDirectionsOptions(directionsOptions);
+          },
           deselectPoi() {
             webViewRef.current &&
               sendMessageToViewer(
@@ -252,6 +266,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         _navigateToPoint,
         _selectPoi,
         _selectPoiCategory,
+        _setDirectionsOptions,
       ]
     );
 
