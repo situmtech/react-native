@@ -10,6 +10,7 @@ import type {
 } from "../../sdk/types";
 import type {
   DirectionsMessage,
+  MapViewDirectionsOptions,
   NavigateToPointPayload,
   NavigateToPoiPayload,
   Navigation,
@@ -41,7 +42,7 @@ export const createDirectionsRequest = (payload: any): DirectionsRequest => {
     buildingIdentifier: payload.from.buildingIdentifier,
     to: createPoint(payload.to),
     from: createPoint(payload.from),
-    bearingFrom: payload.bearingFrom || 0,
+    bearingFrom: payload.bearingFrom.radians || 0,
     accessibilityMode:
       payload.accessibilityMode || AccessibilityMode.CHOOSE_SHORTEST,
     minimizeFloorChanges: payload.minimizeFloorChanges || false,
@@ -100,6 +101,12 @@ const ViewerMapper = {
     return mapperWrapper(`cartography.select_poi_category`, {
       identifier: categoryId,
     });
+  },
+  setDirectionsOptions: (directionsOptions: MapViewDirectionsOptions) => {
+      return mapperWrapper(`directions.set_options`,  {
+        includedTags: directionsOptions.includedTags,
+        excludedTags: directionsOptions.excludedTags
+      })
   },
   // Location
   location: (location: Location) => {
