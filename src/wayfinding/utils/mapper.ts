@@ -103,10 +103,6 @@ const ViewerMapper = {
     });
   },
   setDirectionsOptions: (directionsOptions: MapViewDirectionsOptions) => {
-    console.log("Regue setOptions " + mapperWrapper(`directions.set_options`,  {
-      includedTags: directionsOptions.includedTags,
-      excludedTags: directionsOptions.excludedTags
-    }));
       return mapperWrapper(`directions.set_options`,  {
         includedTags: directionsOptions.includedTags,
         excludedTags: directionsOptions.excludedTags
