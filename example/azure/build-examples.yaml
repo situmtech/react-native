@@ -127,7 +127,7 @@ steps:
 
           echo -e "\n[+] Upload APK to $folder/$branchFolder/$destinationFolder\n"
           cd example/android/app/build/outputs/apk/debug
-          mv app-debug.apk app-$(pluginVersion)-debug.apk
-          m365 spo file add -p app-$(pluginVersion)-debug.apk -u $(SharepointUrl) -f $folder/$branchFolder/$destinationFolder
+          mv app-debug.apk ${{ parameters.BUILDNUMBER }}-debug.apk
+          m365 spo file add -p ${{ parameters.BUILDNUMBER }}-debug.apk -u $(SharepointUrl) -f $folder/$branchFolder/$destinationFolder
 
         displayName: Upload APK
