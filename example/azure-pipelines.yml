@@ -87,6 +87,7 @@ jobs:
         system: $(ubuntuVersion)
         BUILDINGID: $(BUILDINGID)
         XAPIEMAIL: $(XAPIEMAIL)
+        BUILDNUMBER: $(BUILDNUMBER)
 
   #===============================================================
   # Job for iOS app
