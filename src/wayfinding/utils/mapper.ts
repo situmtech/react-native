@@ -42,7 +42,7 @@ export const createDirectionsRequest = (payload: any): DirectionsRequest => {
     buildingIdentifier: payload.from.buildingIdentifier,
     to: createPoint(payload.to),
     from: createPoint(payload.from),
-    bearingFrom: payload.bearingFrom.radians || 0,
+    bearingFrom: payload.bearingFrom?.radians || 0,
     accessibilityMode:
       payload.accessibilityMode || AccessibilityMode.CHOOSE_SHORTEST,
     minimizeFloorChanges: payload.minimizeFloorChanges || false,
@@ -103,6 +103,10 @@ const ViewerMapper = {
     });
   },
   setDirectionsOptions: (directionsOptions: MapViewDirectionsOptions) => {
+    console.log("Regue setOptions " + mapperWrapper(`directions.set_options`,  {
+      includedTags: directionsOptions.includedTags,
+      excludedTags: directionsOptions.excludedTags
+    }));
       return mapperWrapper(`directions.set_options`,  {
         includedTags: directionsOptions.includedTags,
         excludedTags: directionsOptions.excludedTags
