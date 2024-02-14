@@ -168,7 +168,7 @@
   ],
   "prettier": {},
   "sdkVersions": {
-    "android": "3.10.1@aar",
+    "android": "feature-SAGP2024-49-3.10.1@aar",
     "ios": "3.7.1"
   }
 }
