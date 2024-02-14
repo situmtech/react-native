@@ -137,8 +137,10 @@ const Screen: React.FC = () => {
     <MapView
       ref={mapViewRef}
       configuration={{
-        buildingIdentifier: SITUM_BUILDING_ID,
-        situmApiKey: SITUM_API_KEY,
+        buildingIdentifier: "28",
+        situmApiKey: "330c3fb937b19bbf94b3c13e138c861c15f97b331c45d808333ee3eb8004861d",
+        viewerDomain:"https://adac260lowperformanceurl.map-viewer.situm.com",
+        
       }}
       onLoad={onLoad}
       onPoiSelected={onPoiSelected}
