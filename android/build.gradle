@@ -38,7 +38,7 @@ def getAndroidSDKVersion() {
 dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    implementation("es.situm:situm-sdk:${getAndroidSDKVersion()}") {
+    implementation("es.situm:situm-sdk-feature-SAGP2024-49:3.10.1-DEV@aar") {
         transitive = true
     }
     implementation 'org.locationtech.jts:jts-core:1.16.1'

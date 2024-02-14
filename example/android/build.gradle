@@ -25,5 +25,12 @@ allprojects {
          maven {
              url "https://repo.situm.es/artifactory/libs-release-local"
          }
+        maven {
+          credentials{
+            username = artifactoryUser
+            password = artifactoryPassword
+          }
+             url "https://repo.situm.com/artifactory/libs-snapshot-local-private"
+        }
     }
 }
