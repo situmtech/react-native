@@ -123,9 +123,9 @@ jobs:
 
     - bash: |
         echo -e "\n [+] Update MacOS \n"
-        brew update
+        brew uninstall cocoapods
         echo -e "\n[+] Install cocoapods \n"
-        brew install cocoapods
+        sudo gem install cocoapods -v "1.15.2"
         echo -e "\n[+] Install gnu-sed\n"
         brew install gnu-sed
       displayName: Install gnu-sed
