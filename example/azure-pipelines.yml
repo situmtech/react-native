@@ -122,10 +122,8 @@ jobs:
         displayName: Configure Manual run Vars
 
     - bash: |
-        echo -e "\n [+] Update MacOS \n"
-        brew uninstall cocoapods
         echo -e "\n[+] Install cocoapods \n"
-        sudo gem install cocoapods -v "1.15.2"
+        sudo gem install cocoapods -v $(cocoapodsVersion)
         echo -e "\n[+] Install gnu-sed\n"
         brew install gnu-sed
       displayName: Install gnu-sed

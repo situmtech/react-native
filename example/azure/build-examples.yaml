@@ -38,16 +38,16 @@ steps:
           provProfileSecureFile: DistributorOnline.mobileprovision
           removeProfile: true
 
-      - bash: |
-          echo -e "\n[+] Install iOS example dependencies\n"
-          cd example/ios
-          rm -rf Podfile.lock
-          echo -e "\n[+] Pod deintegrate \n"
-          pod deintegrate
+      # - bash: |
+      #     echo -e "\n[+] Install iOS example dependencies\n"
+      #     cd example/ios
+      #     rm -rf Podfile.lock
+      #     echo -e "\n[+] Pod deintegrate \n"
+      #     pod deintegrate
 
-          echo -e "\n[+] Pod install with --repo-update option \n"
-          pod install --repo-update
-        displayName: Install iOS example dependencies
+      #     echo -e "\n[+] Pod install with --repo-update option \n"
+      #     pod install --repo-update
+      #   displayName: Install iOS example dependencies
 
       - bash: |
 
