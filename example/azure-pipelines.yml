@@ -122,8 +122,10 @@ jobs:
         displayName: Configure Manual run Vars
 
     - bash: |
-         echo -e "\n[+] Install gnu-sed\n"
-         brew install gnu-sed
+        echo -e "\n[+] Install cocoapods \n"
+        sudo gem install cocoapods -v $(cocoapodsVersion)
+        echo -e "\n[+] Install gnu-sed\n"
+        brew install gnu-sed
       displayName: Install gnu-sed
 
     - template: azure/common-steps.yaml
