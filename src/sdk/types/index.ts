@@ -4,7 +4,7 @@ import type {
   AccessibilityMode,
   LocationStatusName,
   SdkNavigationUpdateType,
-} from "src/sdk";
+} from "./constants";
 
 /**
  * @name Building

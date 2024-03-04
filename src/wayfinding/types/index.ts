@@ -1,4 +1,4 @@
-import { AccessibilityMode } from "src/sdk";
+import { AccessibilityMode } from "../../sdk/types/constants";
 
 import type { DirectionsRequest, Point } from "../../sdk/types";
 import { ErrorName } from "./constants";
