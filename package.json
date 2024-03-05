@@ -102,7 +102,7 @@
   "dependencies": {
     "react-dom": "^18.2.0",
     "react-native-permissions": "^3.8.4",
-    "react-native-webview": "*"
+    "react-native-webview": "^13.3.1"
   },
   "resolutions": {
     "@types/react": "17.0.21"

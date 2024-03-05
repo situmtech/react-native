@@ -9,4 +9,5 @@ export { default as useSitum } from "./hooks";
 export { default as SitumProvider } from "./store";
 
 // Component
+export type { MapViewProps } from "./components/MapView";
 export { default as MapView } from "./components/MapView";
