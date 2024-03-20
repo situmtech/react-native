@@ -7,13 +7,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  Linking,
-  Platform,
-  type StyleProp,
-  StyleSheet,
-  type ViewStyle,
-} from "react-native";
+import { Linking, Platform, StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 import type {
   WebViewErrorEvent,
@@ -23,16 +17,12 @@ import type {
 import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
 import {
-  type MapViewError,
-  type MapViewRef,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
   type OnDirectionsRequestInterceptor,
-  type OnExternalLinkClickedResult,
-  type OnFloorChangedResult,
-  type OnPoiDeselectedResult,
-  type OnPoiSelectedResult,
   type MapViewDirectionsOptions,
+  type MapViewRef,
+  type MapViewProps,
 } from "../types";
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
@@ -48,39 +38,12 @@ const NETWORK_ERROR_CODE = {
   web: 0,
 };
 
-export type MapViewConfiguration = {
-  apiDomain?: string;
-  viewerDomain?: string;
-  situmApiKey: string;
-  remoteIdentifier?: string;
-  buildingIdentifier: string;
-  directionality?: string;
-  language?: string;
-};
-
 const viewerStyles = StyleSheet.create({
   webview: {
     minHeight: "100%",
     minWidth: "100%",
   },
 });
-
-export interface MapViewProps {
-  configuration: MapViewConfiguration;
-  style?: StyleProp<ViewStyle>;
-  onPoiSelected?: (event: OnPoiSelectedResult) => void;
-  onPoiDeselected?: (event: OnPoiDeselectedResult) => void;
-  onLoad?: (event: any) => void;
-  onLoadError?: (event: MapViewError) => void;
-  onFloorChanged?: (event: OnFloorChangedResult) => void;
-  /**
-   * Callback invoked when the user clicks on a link in the MapView that leads to a website different from the MapView's domain.
-   * If this callback is not set, the link will be opened in the system's default browser by default.
-   * @param event OnExternalLinkClickedResult object.
-   * @returns
-   */
-  onExternalLinkClicked?: (event: OnExternalLinkClickedResult) => void;
-}
 
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
   (
@@ -183,7 +146,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, []);
 
-    const _setDirectionsOptions = (directionsOptions: MapViewDirectionsOptions) => {
+    const _setDirectionsOptions = (
+      directionsOptions: MapViewDirectionsOptions
+    ) => {
       if (!webViewRef.current) {
         return;
       }
