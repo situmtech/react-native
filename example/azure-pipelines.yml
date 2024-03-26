@@ -88,6 +88,14 @@ jobs:
         BUILDINGID: $(BUILDINGID)
         XAPIEMAIL: $(XAPIEMAIL)
         BUILDNUMBER: $(BUILDNUMBER)
+    - ${{ if ne(variables['Build.Reason'],'manual') }}:
+      - template: azure-templates/teams-notifier.yml@sys_kubernetes_templates
+        parameters:
+          channelId: $(releasesMobileChannelId)
+          teamID: $(releasesMobileTeamId)
+          messageType: "error"
+          message: "Hey Team, 🚨 our <strong>React Native Android Example App auto build</strong> just took a dive off the high board and belly-flopped! 🚨 Let's put on our lifeguard hats and dive in for a rescue mission! 🚑 Time to debug and bring that pipeline back to smooth sailing! 🛠️⚓ Alert level: High! Let's fix it! 🚨"
+
 
   #===============================================================
   # Job for iOS app
@@ -145,4 +153,13 @@ jobs:
         XAPIEMAIL: $(XAPIEMAIL)
         BUILDINGID: $(BUILDINGID)
         BUILDNUMBER: $(BUILDNUMBER)
+
+    - ${{ if ne(variables['Build.Reason'],'manual') }}:
+      - template: azure-templates/teams-notifier.yml@sys_kubernetes_templates
+        parameters:
+          channelId: $(releasesMobileChannelId)
+          teamID: $(releasesMobileTeamId)
+          messageType: "error"
+          message: "Hey Team, 🚨 our <strong>React Native iOS Example App auto build</strong> just took a dive off the high board and belly-flopped! 🚨 Let's put on our lifeguard hats and dive in for a rescue mission! 🚑 Time to debug and bring that pipeline back to smooth sailing! 🛠️⚓ Alert level: High! Let's fix it! 🚨"
+
 
