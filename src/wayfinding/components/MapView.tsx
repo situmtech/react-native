@@ -51,10 +51,12 @@ const NETWORK_ERROR_CODE = {
 export type MapViewConfiguration = {
   /**
    * A String parameter that allows you to choose the API you will be retrieving our cartography from. Default is "dashboard.situm.com".
+   * In most cases this parameter shouldn't be changed.
    */
   apiDomain?: string;
   /**
    * A String parameter that allows you to specify which domain will be displayed inside our webview. Defaults to "https://map-viewer.situm.com/".
+   * In most cases this parameter shouldn't be changed.
    */
   viewerDomain?: string;
   /**
@@ -63,12 +65,13 @@ export type MapViewConfiguration = {
    */
   situmApiKey: string;
   /**
-   * A String identifier that allows you to remotely configure all map settings. In case you specify a buildingIdentifier in the given remote configuration, the {@link MapViewConfiguration#buildingIdentifier} parameter will be overwritten.
+   * A String identifier that allows you to remotely configure all map settings.
    */
   remoteIdentifier?: string;
   /**
    * @required
-   * The building that will be loaded on the map. In case you specify a remoteIdentifier, this parameter might be overwritten.
+   * The building that will be loaded on the map.
+   * In case you set a buildingIdentifier in your remote configuration, it will be prioritized over {@link MapViewConfiguration#buildingIdentifier} parameter.
    */
   buildingIdentifier: string;
   /**
@@ -95,7 +98,7 @@ export interface MapViewProps {
   configuration: MapViewConfiguration;
   style?: StyleProp<ViewStyle>;
   /**
-   * Get notified when the selected POI is selected.
+   * Get notified when a POI is selected.
    * @param event {@link OnPoiSelectedResult} object.
    */
   onPoiSelected?: (event: OnPoiSelectedResult) => void;
@@ -105,11 +108,11 @@ export interface MapViewProps {
    */
   onPoiDeselected?: (event: OnPoiDeselectedResult) => void;
   /**
-   * Get notified when the MapView has loaded and is ready to receive actions.
+   * Get notified when the MapView has been loaded and is ready to receive actions.
    */
   onLoad?: (event: any) => void;
   /**
-   * Get notified when some error is thrown while MapView is loading.
+   * Get notified when an error has occurred during the MapView load process.
    * @param event {@link MapViewError} object.
    */
   onLoadError?: (event: MapViewError) => void;
