@@ -411,7 +411,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "cartography.poi_deselected":
           onPoiDeselected(eventParsed?.payload);
           break;
-        case "cartography.floor_changed":
+        case "cartography.floor_selected":
           onFloorChanged(eventParsed?.payload);
           break;
         case "cartography.building_selected":
