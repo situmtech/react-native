@@ -16,7 +16,8 @@ export interface MapViewRef {
    */
   selectPoi: (poiId: number) => void;
   /**
-   * Selects the given POI category in the map.
+   * Selects the given POI category and displays the list of POIs that belong to the given category.
+   * Also, the POIs that do not belong to this category will be hidden in the map.
    * @param categoryId You can obtain the identifiers of your POI categories by retrieving them with [SitumPlugin.fetchPoiCategories()](https://developers.situm.com/sdk_documentation/react-native/typedoc/classes/default.html#fetchPoiCategories).
    */
   selectPoiCategory: (categoryId: number) => void;
