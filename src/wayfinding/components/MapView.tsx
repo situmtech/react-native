@@ -7,7 +7,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Linking, Platform, StyleSheet } from "react-native";
+import {
+  Linking,
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  type ViewStyle,
+} from "react-native";
 import WebView from "react-native-webview";
 import type {
   WebViewErrorEvent,
@@ -17,12 +23,16 @@ import type {
 import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
 import {
+  type MapViewDirectionsOptions,
+  type MapViewError,
+  type MapViewRef,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
   type OnDirectionsRequestInterceptor,
-  type MapViewDirectionsOptions,
-  type MapViewRef,
-  type MapViewProps,
+  type OnExternalLinkClickedResult,
+  type OnFloorChangedResult,
+  type OnPoiDeselectedResult,
+  type OnPoiSelectedResult,
 } from "../types";
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
@@ -38,12 +48,84 @@ const NETWORK_ERROR_CODE = {
   web: 0,
 };
 
+export type MapViewConfiguration = {
+  /**
+   * A String parameter that allows you to choose the API you will be retrieving our cartography from. Default is "dashboard.situm.com".
+   */
+  apiDomain?: string;
+  /**
+   * A String parameter that allows you to specify which domain will be displayed inside our webview. Defaults to "https://map-viewer.situm.com/".
+   */
+  viewerDomain?: string;
+  /**
+   * @required
+   * Your Situm API key. Find your API key at your [situm profile](https://dashboard.situm.com/accounts/profile)
+   */
+  situmApiKey: string;
+  /**
+   * A String identifier that allows you to remotely configure all map settings. Alternatively you can pass a buildingIdentifier, remoteIdentifier will be prioritized.
+   */
+  remoteIdentifier?: string;
+  /**
+   * @required
+   * The building that will be loaded on the map. In case you specify a remoteIdentifier, this parameter might be overwritten.
+   */
+  buildingIdentifier: string;
+  /**
+   * Sets the directionality of the texts that will be displayed inside MapView. Default is "ltr".
+   */
+  directionality?: string;
+  /**
+   * Sets the UI language based on the given ISO 639-1 code. Checkout the [Situm docs](https://situm.com/docs/query-params/) to see the list of supported languages.
+   */
+  language?: string;
+};
+
 const viewerStyles = StyleSheet.create({
   webview: {
     minHeight: "100%",
     minWidth: "100%",
   },
 });
+
+export interface MapViewProps {
+  /**
+   * The required basic configuration to use our MapView.
+   */
+  configuration: MapViewConfiguration;
+  style?: StyleProp<ViewStyle>;
+  /**
+   * Get notified when the selected POI is selected.
+   * @param event {@link OnPoiSelectedResult} object.
+   */
+  onPoiSelected?: (event: OnPoiSelectedResult) => void;
+  /**
+   * Get notified when the selected POI is deselected.
+   * @param event {@link OnPoiDeselectedResult} object.
+   */
+  onPoiDeselected?: (event: OnPoiDeselectedResult) => void;
+  /**
+   * Get notified when the MapView has loaded and is ready to receive actions.
+   */
+  onLoad?: (event: any) => void;
+  /**
+   * Get notified when some error is thrown while MapView is loading.
+   * @param event {@link MapViewError} object.
+   */
+  onLoadError?: (event: MapViewError) => void;
+  /**
+   * Get notified when the current floor displayed on the map has changed.
+   * @param event {@link OnFloorChangedResult} object.
+   */
+  onFloorChanged?: (event: OnFloorChangedResult) => void;
+  /**
+   * Callback invoked when the user clicks on a link in the MapView that leads to a website different from the MapView's domain.
+   * For example some POI description may contain a link to a video or a website, and if this callback is not set,
+   * the link will be opened in the system's default browser by default.
+   * @param event {@link OnExternalLinkClickedResult} object.
+   */
+  onExternalLinkClicked?: (event: OnExternalLinkClickedResult) => void;
+}
 
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
   (
@@ -146,17 +228,18 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, []);
 
-    const _setDirectionsOptions = (
-      directionsOptions: MapViewDirectionsOptions
-    ) => {
-      if (!webViewRef.current) {
-        return;
-      }
-      sendMessageToViewer(
-        webViewRef.current,
-        ViewerMapper.setDirectionsOptions(directionsOptions)
-      );
-    };
+    const _setDirectionsOptions = useCallback(
+      (directionsOptions: MapViewDirectionsOptions) => {
+        if (!webViewRef.current) {
+          return;
+        }
+        sendMessageToViewer(
+          webViewRef.current,
+          ViewerMapper.setDirectionsOptions(directionsOptions)
+        );
+      },
+      []
+    );
 
     /**
      * API exported to the outside world from the MapViewer
