@@ -37,6 +37,9 @@ export interface MapViewRef {
   }) => void;
   /**
    * Starts navigating to the given coordinates, at the given floor.
+   * @param params.lat The latitude of the destination point.
+   * @param params.lng The longitude of the destination point.
+   * @param params.floorIdentifier The floorIndetifier of the destination point.
    * @param params.navigationName You can optionally set the name of the destination to be displayed on the MapView.
    * @param params.accessibilityMode You can optionally choose the desired [AccessibilityMode](https://developers.situm.com/sdk_documentation/react-native/typedoc/enums/accessibilitymode) used to calculate the route.
    */
