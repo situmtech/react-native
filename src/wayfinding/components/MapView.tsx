@@ -63,7 +63,7 @@ export type MapViewConfiguration = {
    */
   situmApiKey: string;
   /**
-   * A String identifier that allows you to remotely configure all map settings. In case you specify a remoteIdentifier, the {@link MapViewConfiguration#buildingIdentifier} parameter might be overwritten.
+   * A String identifier that allows you to remotely configure all map settings. In case you specify a buildingIdentifier in the given remote configuration, the {@link MapViewConfiguration#buildingIdentifier} parameter will be overwritten.
    */
   remoteIdentifier?: string;
   /**
