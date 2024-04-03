@@ -71,7 +71,7 @@ export type MapViewConfiguration = {
   /**
    * @required
    * The building that will be loaded on the map.
-   * In case you set a buildingIdentifier in your remote configuration, it will be prioritized over {@link MapViewConfiguration#buildingIdentifier} parameter.
+   * In case you set a buildingIdentifier in your remote configuration, it will be prioritized over {@link MapViewConfiguration.buildingIdentifier} parameter.
    */
   buildingIdentifier: string;
   /**
