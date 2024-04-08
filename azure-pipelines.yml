@@ -122,6 +122,18 @@ steps:
 
         displayName: NPM publish
 
+      - template: azure-templates/commit-doc.yaml@sys_kubernetes_templates
+        parameters:
+          version: $(version)
+          docPath: "sdk_documentation/react-native"
+          system: "react-native"
+          release: "react-native"
+          developersBranch: "master"
+          bitbucket:
+            bitbucket_user: $(bitbucket_user)
+            bitbucket_pass: $(bitbucket_pass)
+
+
       - bash: |
           if [ -d "react-native" ];then
             cd react-native
