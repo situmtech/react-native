@@ -76,7 +76,9 @@ steps:
 
       - bash: |
 
-          cd react-native
+          if [ -d "react-native" ];then
+            cd react-native
+          fi
           echo -e "\n[+] Setting NPM version to $(version)"
           npm version $(version) --no-git-tag-version
 
@@ -108,7 +110,10 @@ steps:
             - "develop"
 
       - bash: |
-          cd react-native
+
+          if [ -d "react-native" ];then
+            cd react-native
+          fi
           echo -e "\n[+] Fetch all branches\n"
           git fetch
 
