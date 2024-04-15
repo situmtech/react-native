@@ -17,6 +17,7 @@ import SitumPlugin, {
 import type {
   OnPoiDeselectedResult,
   OnPoiSelectedResult,
+  OnFavoritePoisUpdatedResult,
   OnExternalLinkClickedResult,
   MapViewRef,
 } from '@situm/react-native';
@@ -133,6 +134,10 @@ const Screen: React.FC = () => {
     console.log('Situm > example > click on external link: ' + event.url);
   };
 
+  const onFavoritePoisUpdated = (event: OnFavoritePoisUpdatedResult) => {
+    console.log('Situm > example > favorite POIs: ' + event.favoritePois);
+  };
+
   return (
     <MapView
       ref={mapViewRef}
@@ -144,6 +149,7 @@ const Screen: React.FC = () => {
       onPoiSelected={onPoiSelected}
       onPoiDeselected={onPoiDeselected}
       onExternalLinkClicked={onExternalLinkClicked}
+      onFavoritePoisUpdated={onFavoritePoisUpdated}
     />
   );
 };
