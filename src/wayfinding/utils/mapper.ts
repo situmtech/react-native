@@ -103,10 +103,10 @@ const ViewerMapper = {
     });
   },
   setDirectionsOptions: (directionsOptions: MapViewDirectionsOptions) => {
-      return mapperWrapper(`directions.set_options`,  {
-        includedTags: directionsOptions.includedTags,
-        excludedTags: directionsOptions.excludedTags
-      })
+    return mapperWrapper(`directions.set_options`, {
+      includedTags: directionsOptions.includedTags,
+      excludedTags: directionsOptions.excludedTags,
+    });
   },
   // Location
   location: (location: Location) => {
