@@ -106,6 +106,10 @@ export interface OnExternalLinkClickedResult {
   url: string;
 }
 
+export interface OnFavoritePoisUpdatedResult {
+  favoritePois: string[];
+}
+
 export interface Destination {
   category: string;
   identifier?: string;

@@ -1,0 +1,2 @@
+-   Added favorite POIs setter
+-   Added favorite POIs updated callback
