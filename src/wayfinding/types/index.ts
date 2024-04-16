@@ -57,6 +57,15 @@ export interface MapViewRef {
   setOnDirectionsRequestInterceptor: (params: {
     onDirectionsRequestInterceptor: OnDirectionsRequestInterceptor;
   }) => void;
+
+  /**
+   * Performs a search with the given [SearchFilter].
+   * This action will have the same effect as the user searching in the searchbar.
+   * @param params.text The name of the poi
+   * @param params.poiCategoryIdentifier The id of the poi
+   *
+   */
+  search: (params: { searchFilter: SearchFilter }) => void;
 }
 
 export interface WayfindingResult {
@@ -144,3 +153,8 @@ export type DirectionsMessage = {
   destinationCategory: string;
   identifier: string;
 };
+
+export interface SearchFilter {
+  text?: string | null;
+  poiCategoryÍdentifier?: string | null;
+}
