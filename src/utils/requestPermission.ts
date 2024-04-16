@@ -12,7 +12,7 @@ const checkIOSPermissions = async () => {
 
   // Check if already denied
   if (granted !== RESULTS.GRANTED) {
-    throw "Situm > permissions > ACCESS_FINE_LOCATION denied";
+    throw "Situm > permissions > LOCATION_WHEN_IN_USE denied";
   }
 
   console.debug(
