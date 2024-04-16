@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
 const Screen: React.FC = () => {
   const mapViewRef = useRef<MapViewRef>(null);
   const [_controller, setController] = useState<MapViewRef | null>();
-  const [setAddedFavoritePoisIdentifiers] = useState<string>();
-  const [favoritePoisIds] = useState<string>('');
+  const [favoritePoisIds, setAddedFavoritePoisIdentifiers] =
+    useState<string>('');
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
