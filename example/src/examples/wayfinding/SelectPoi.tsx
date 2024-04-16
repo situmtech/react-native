@@ -1,5 +1,10 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  useColorScheme,
+} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import SitumPlugin, {
@@ -26,6 +31,9 @@ const styles = StyleSheet.create({
   },
   text_input: {
     width: 180,
+  },
+  btnSearch: {
+    margin: 5,
   },
 });
 
@@ -94,19 +102,71 @@ const Screen: React.FC = () => {
         />
       </SafeAreaView>
       <SafeAreaView style={styles.input_container}>
-        <TextInput
-          placeholder={'POI identifier'}
-          value={selectedPoiIdentifier}
-          onChangeText={setSelectedPoiIdentifier}
-          style={styles.text_input}
-        />
-        <Button
-          mode="outlined"
-          onPress={() => {
-            _controller?.selectPoi(Number(selectedPoiIdentifier));
-          }}>
-          Select POI
-        </Button>
+        <ScrollView>
+          <TextInput
+            placeholder={'POI identifier'}
+            value={selectedPoiIdentifier}
+            onChangeText={setSelectedPoiIdentifier}
+            style={styles.text_input}
+          />
+          <Button
+            style={styles.btnSearch}
+            mode="outlined"
+            onPress={() => {
+              _controller?.selectPoi(Number(selectedPoiIdentifier));
+            }}>
+            Select POI
+          </Button>
+
+          <Button
+            style={styles.btnSearch}
+            mode="outlined"
+            onPress={() => {
+              _controller?.selectPoi(Number(selectedPoiIdentifier));
+              _controller?.search({
+                searchFilter: {text: 'Elevator', poiCategoryÍdentifier: '2635'},
+              });
+            }}>
+            Search by text & category
+          </Button>
+
+          <Button
+            style={styles.btnSearch}
+            mode="outlined"
+            onPress={() => {
+              _controller?.selectPoi(Number(selectedPoiIdentifier));
+              _controller?.search({
+                searchFilter: {
+                  text: 'Elevator',
+                },
+              });
+            }}>
+            Search by text
+          </Button>
+
+          <Button
+            style={styles.btnSearch}
+            mode="outlined"
+            onPress={() => {
+              _controller?.selectPoi(Number(selectedPoiIdentifier));
+              _controller?.search({
+                searchFilter: {poiCategoryÍdentifier: '8941'},
+              });
+            }}>
+            Search by category
+          </Button>
+          <Button
+            style={styles.btnSearch}
+            mode="outlined"
+            onPress={() => {
+              _controller?.selectPoi(Number(selectedPoiIdentifier));
+              _controller?.search({
+                searchFilter: {text: '', poiCategoryÍdentifier: ''},
+              });
+            }}>
+            Reset search parameters
+          </Button>
+        </ScrollView>
       </SafeAreaView>
     </>
   );
