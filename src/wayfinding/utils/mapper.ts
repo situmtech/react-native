@@ -86,8 +86,8 @@ const ViewerMapper = {
   setLanguage: (lang: string) => {
     return mapperWrapper("ui.set_language", lang);
   },
-  setFavoritePOis: (favoritePois: string[]) => {
-    return mapperWrapper("ui.set_favorite_pois", favoritePois);
+  setFavoritePois: (poiIds: number[]) => {
+    return mapperWrapper("ui.set_favorite_pois", poiIds);
   },
   initialConfiguration: (style: any) => {
     return mapperWrapper("ui.initial_configuration", {
