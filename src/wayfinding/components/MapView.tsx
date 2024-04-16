@@ -129,6 +129,10 @@ export interface MapViewProps {
    * @param event {@link OnExternalLinkClickedResult} object.
    */
   onExternalLinkClicked?: (event: OnExternalLinkClickedResult) => void;
+  /**
+   * Callback invoked when the list of favoritePois is updated
+   * @param event {@link OnFavoritePoisUpdatedResult} object.
+   */
   onFavoritePoisUpdated?: (event: OnFavoritePoisUpdatedResult) => void;
 }
 
@@ -247,13 +251,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       []
     );
 
-    const _setFavoritePois = useCallback((favoritePois: string[]) => {
+    const _setFavoritePois = useCallback((poiIds: number[]) => {
       if (!webViewRef.current) {
         return;
       }
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.setFavoritePOis(favoritePois)
+        ViewerMapper.setFavoritePois(poiIds)
       );
     }, []);
 
@@ -298,8 +302,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           setDirectionsOptions(directionsOptions: MapViewDirectionsOptions) {
             _setDirectionsOptions(directionsOptions);
           },
-          setFavoritePois(favoritePois: string[]) {
-            _setFavoritePois(favoritePois);
+          setFavoritePois(poiIds: number[]) {
+            _setFavoritePois(poiIds);
           },
           deselectPoi() {
             webViewRef.current &&
@@ -431,9 +435,15 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "cartography.poi_deselected":
           onPoiDeselected(eventParsed?.payload);
           break;
-        case "ui.favorite_pois_updated":
-          onFavoritePoisUpdated(eventParsed?.payload);
+        case "ui.favorite_pois_updated": {
+          const favoritePoisIds = {
+            currentPoisIdentifiers: eventParsed.payload.favoritePois
+              ? [...eventParsed.payload.favoritePois]
+              : [],
+          };
+          onFavoritePoisUpdated(favoritePoisIds);
           break;
+        }
         case "cartography.floor_selected":
           onFloorChanged(eventParsed?.payload);
           break;

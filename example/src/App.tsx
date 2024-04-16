@@ -19,6 +19,7 @@ import Wayfinding from './examples/wayfinding/Wayfinding';
 import NavigateToPoi from './examples/wayfinding/NavigateToPoi';
 import SelectPoi from './examples/wayfinding/SelectPoi';
 import SelectPoiCategory from './examples/wayfinding/SelectPoiCategory';
+import SetFavoritePois from './examples/wayfinding/SetFavoritePois';
 import {DeviceIdentifier} from './examples/sdk/DeviceIdentifier';
 
 const styles = StyleSheet.create({
@@ -79,6 +80,11 @@ const HomeScreen = ({navigation}) => {
           subtitle:
             'Shows how to select a POI category programmatically, which is then displayed as selected on the map',
           key: 'SelectPoiCategory',
+        },
+        {
+          title: 'Select Favorite Pois',
+          subtitle: 'Shows how to set a list of favorite pois',
+          key: 'SetFavoritePois',
         },
       ],
     },
@@ -213,6 +219,7 @@ function App() {
             component={InfoFromBuilding}
             options={{title: 'Building info multiple calls'}}
           />
+          <Stack.Screen name="RouteBetweenPOIs" component={RouteBetweenPOIs} />
           <Stack.Screen
             name="RemoteConfig"
             component={RemoteConfig}
@@ -242,6 +249,11 @@ function App() {
             name="SelectPoiCategory"
             component={SelectPoiCategory}
             options={{title: 'Select Poi Category'}}
+          />
+          <Stack.Screen
+            name="SetFavoritePois"
+            component={SetFavoritePois}
+            options={{title: 'Select Favorite Pois'}}
           />
           <Stack.Screen
             name="DeviceIdentifier"
