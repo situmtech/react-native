@@ -15,6 +15,7 @@ import type {
   NavigateToPoiPayload,
   Navigation,
   OnNavigationResult,
+  SearchFilter,
 } from "../types";
 
 export const createPoint = (payload: any): Point => {
@@ -181,6 +182,9 @@ const ViewerMapper = {
         status: navigation?.type,
       },
     };
+  },
+  search: (payload: SearchFilter | null) => {
+    return mapperWrapper(`ui.set_search_filter`, { text: payload.text, poiCategoryIdentifier: payload.poiCategoryÍdentifier });
   },
 };
 
