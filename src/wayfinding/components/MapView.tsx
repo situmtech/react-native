@@ -465,7 +465,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
             configuration.buildingIdentifier
               ? `&buildingid=${configuration.buildingIdentifier}`
               : ""
-          }&show=rts`,
+          }&show=rts${
+            configuration.language ? `&lng=${configuration.language}` : ""
+          }`,
         }}
         style={StyleSheet.flatten([viewerStyles.webview, style])}
         limitsNavigationsToAppBoundDomains={true}
