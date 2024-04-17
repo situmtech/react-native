@@ -104,10 +104,10 @@ const ViewerMapper = {
     });
   },
   setDirectionsOptions: (directionsOptions: MapViewDirectionsOptions) => {
-      return mapperWrapper(`directions.set_options`,  {
-        includedTags: directionsOptions.includedTags,
-        excludedTags: directionsOptions.excludedTags
-      })
+    return mapperWrapper(`directions.set_options`, {
+      includedTags: directionsOptions.includedTags,
+      excludedTags: directionsOptions.excludedTags,
+    });
   },
   // Location
   location: (location: Location) => {
@@ -183,8 +183,11 @@ const ViewerMapper = {
       },
     };
   },
-  search: (payload: SearchFilter | null) => {
-    return mapperWrapper(`ui.set_search_filter`, { text: payload.text, poiCategoryIdentifier: payload.poiCategoryÍdentifier });
+  search: (payload: SearchFilter) => {
+    return mapperWrapper(`ui.set_search_filter`, {
+      text: payload.text,
+      poiCategoryIdentifier: payload.poiCategoryÍdentifier,
+    });
   },
 };
 
