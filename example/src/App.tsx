@@ -13,16 +13,13 @@ import {BuildingsBasicInfo} from './examples/sdk/BuildingsBasicInfo';
 import {BuildingFullInfo} from './examples/sdk/BuildingFullInfo';
 import {InfoFromBuilding} from './examples/sdk/InfoFromBuilding';
 import {RouteBetweenPOIs} from './examples/sdk/RouteBetweenPOIs';
-import {ShowBuildingOnMap} from './examples/sdk/ShowBuildingOnMap';
-import {DrawRouteBetweenPOIs} from './examples/sdk/DrawRouteBetweenPOIs';
 import {RemoteConfig} from './examples/sdk/RemoteConfig';
-import {GetPoisIcons} from './examples/sdk/GetPoisIcons';
 import {SetCacheMaxAge} from './examples/sdk/SetCacheMaxAge';
-import {TiledBuilding} from './examples/sdk/TiledBuilding';
 import Wayfinding from './examples/wayfinding/Wayfinding';
 import NavigateToPoi from './examples/wayfinding/NavigateToPoi';
 import SelectPoi from './examples/wayfinding/SelectPoi';
 import SelectPoiCategory from './examples/wayfinding/SelectPoiCategory';
+import SetFavoritePois from './examples/wayfinding/SetFavoritePois';
 import {DeviceIdentifier} from './examples/sdk/DeviceIdentifier';
 
 const styles = StyleSheet.create({
@@ -84,35 +81,10 @@ const HomeScreen = ({navigation}) => {
             'Shows how to select a POI category programmatically, which is then displayed as selected on the map',
           key: 'SelectPoiCategory',
         },
-      ],
-    },
-
-    {
-      title: 'Build-your own UI (Not Recommended)',
-      screens: [
         {
-          title: 'Display a Building on Google Maps',
-          subtitle:
-            'A foundational example that overlays a building layout on Google Maps.',
-          key: 'ShowBuildingOnMap',
-        },
-        {
-          title: 'Visualize Route Between POIs',
-          subtitle:
-            'Demonstrates how to use the SDK to calculate and display a route between two Points of Interest (POIs) on a map.',
-          key: 'DrawRouteBetweenPOIs',
-        },
-        {
-          title: 'Custom Icons for POIs on a Map',
-          subtitle:
-            'Showcase how to represent building POIs with custom marker icons on a map.',
-          key: 'GetPoisIcons',
-        },
-        {
-          title: 'Tile-based Building Display on a Map',
-          subtitle:
-            'Illustrates how to render a building on a map using map tiles.',
-          key: 'TiledBuilding',
+          title: 'Select Favorite Pois',
+          subtitle: 'Shows how to set a list of favorite pois',
+          key: 'SetFavoritePois',
         },
       ],
     },
@@ -243,40 +215,20 @@ function App() {
             options={{title: 'Full building info'}}
           />
           <Stack.Screen
-            name="ShowBuildingOnMap"
-            component={ShowBuildingOnMap}
-            options={{title: 'Building on map'}}
-          />
-          <Stack.Screen
             name="InfoFromBuilding"
             component={InfoFromBuilding}
             options={{title: 'Building info multiple calls'}}
           />
           <Stack.Screen name="RouteBetweenPOIs" component={RouteBetweenPOIs} />
           <Stack.Screen
-            name="DrawRouteBetweenPOIs"
-            component={DrawRouteBetweenPOIs}
-            options={{title: 'Route between POIs on map'}}
-          />
-          <Stack.Screen
             name="RemoteConfig"
             component={RemoteConfig}
             options={{title: 'Positioning with remote configuration'}}
           />
           <Stack.Screen
-            name="GetPoisIcons"
-            component={GetPoisIcons}
-            options={{title: 'POIs on map'}}
-          />
-          <Stack.Screen
             name="SetCacheMaxAge"
             component={SetCacheMaxAge}
             options={{title: 'Max cache age and cache invalidation'}}
-          />
-          <Stack.Screen
-            name="TiledBuilding"
-            component={TiledBuilding}
-            options={{title: 'Building with tiles on map'}}
           />
           <Stack.Screen
             name="Wayfinding"
@@ -297,6 +249,11 @@ function App() {
             name="SelectPoiCategory"
             component={SelectPoiCategory}
             options={{title: 'Select Poi Category'}}
+          />
+          <Stack.Screen
+            name="SetFavoritePois"
+            component={SetFavoritePois}
+            options={{title: 'Select Favorite Pois'}}
           />
           <Stack.Screen
             name="DeviceIdentifier"
