@@ -30,6 +30,7 @@ import {
   type NavigateToPoiPayload,
   type OnDirectionsRequestInterceptor,
   type OnExternalLinkClickedResult,
+  type OnFavoritePoisUpdatedResult,
   type OnFloorChangedResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
@@ -128,6 +129,11 @@ export interface MapViewProps {
    * @param event {@link OnExternalLinkClickedResult} object.
    */
   onExternalLinkClicked?: (event: OnExternalLinkClickedResult) => void;
+  /**
+   * Callback invoked when the list of favoritePois is updated
+   * @param event {@link OnFavoritePoisUpdatedResult} object.
+   */
+  onFavoritePoisUpdated?: (event: OnFavoritePoisUpdatedResult) => void;
 }
 
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
@@ -141,6 +147,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onPoiDeselected = () => {},
       onFloorChanged = () => {},
       onExternalLinkClicked = undefined,
+      onFavoritePoisUpdated = () => {},
     },
     ref
   ) => {
@@ -244,6 +251,16 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       []
     );
 
+    const _setFavoritePois = useCallback((poiIds: number[]) => {
+      if (!webViewRef.current) {
+        return;
+      }
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.setFavoritePois(poiIds)
+      );
+    }, []);
+
     /**
      * API exported to the outside world from the MapViewer
      *
@@ -285,6 +302,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           setDirectionsOptions(directionsOptions: MapViewDirectionsOptions) {
             _setDirectionsOptions(directionsOptions);
           },
+          setFavoritePois(poiIds: number[]) {
+            _setFavoritePois(poiIds);
+          },
           deselectPoi() {
             webViewRef.current &&
               sendMessageToViewer(
@@ -318,6 +338,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         _selectPoi,
         _selectPoiCategory,
         _setDirectionsOptions,
+        _setFavoritePois,
       ]
     );
 
@@ -414,6 +435,15 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "cartography.poi_deselected":
           onPoiDeselected(eventParsed?.payload);
           break;
+        case "ui.favorite_pois_updated": {
+          const favoritePoisIds = {
+            currentPoisIdentifiers: eventParsed.payload.favoritePois
+              ? [...eventParsed.payload.favoritePois]
+              : [],
+          };
+          onFavoritePoisUpdated(favoritePoisIds);
+          break;
+        }
         case "cartography.floor_selected":
           onFloorChanged(eventParsed?.payload);
           break;
