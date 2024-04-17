@@ -135,17 +135,6 @@ const Screen: React.FC = () => {
             mode="outlined"
             onPress={() => {
               _controller?.search({
-                searchFilter: {text: 'Elevator', poiCategoryÍdentifier: '2635'},
-              });
-            }}>
-            Search by text & category
-          </Button>
-
-          <Button
-            style={styles.btnSearch}
-            mode="outlined"
-            onPress={() => {
-              _controller?.search({
                 searchFilter: {
                   text: 'Elevator',
                 },
@@ -163,16 +152,6 @@ const Screen: React.FC = () => {
               });
             }}>
             Search by category
-          </Button>
-          <Button
-            style={styles.btnSearch}
-            mode="outlined"
-            onPress={() => {
-              _controller?.search({
-                searchFilter: {text: '', poiCategoryÍdentifier: ''},
-              });
-            }}>
-            Reset search parameters
           </Button>
         </ScrollView>
       </SafeAreaView>
