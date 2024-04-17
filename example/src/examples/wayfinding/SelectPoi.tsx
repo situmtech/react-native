@@ -41,6 +41,7 @@ const Screen: React.FC = () => {
   const mapViewRef = useRef<MapViewRef>(null);
   const [_controller, setController] = useState<MapViewRef | null>();
   const [selectedPoiIdentifier, setSelectedPoiIdentifier] = useState<string>();
+  const [selectedPoiText, setSelectedPoiText] = useState<string>();
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -104,25 +105,35 @@ const Screen: React.FC = () => {
       <SafeAreaView style={styles.input_container}>
         <ScrollView>
           <TextInput
-            placeholder={'POI identifier'}
+            placeholder={'POI catId'}
             value={selectedPoiIdentifier}
             onChangeText={setSelectedPoiIdentifier}
+            style={styles.text_input}
+          />
+          <TextInput
+            placeholder={'POI text'}
+            value={selectedPoiText}
+            onChangeText={setSelectedPoiText}
             style={styles.text_input}
           />
           <Button
             style={styles.btnSearch}
             mode="outlined"
             onPress={() => {
-              _controller?.selectPoi(Number(selectedPoiIdentifier));
+              _controller?.search({
+                searchFilter: {
+                  text: selectedPoiText,
+                  poiCategoryÍdentifier: selectedPoiIdentifier,
+                },
+              });
             }}>
-            Select POI
+            Search tf values
           </Button>
 
           <Button
             style={styles.btnSearch}
             mode="outlined"
             onPress={() => {
-              _controller?.selectPoi(Number(selectedPoiIdentifier));
               _controller?.search({
                 searchFilter: {text: 'Elevator', poiCategoryÍdentifier: '2635'},
               });
@@ -134,7 +145,6 @@ const Screen: React.FC = () => {
             style={styles.btnSearch}
             mode="outlined"
             onPress={() => {
-              _controller?.selectPoi(Number(selectedPoiIdentifier));
               _controller?.search({
                 searchFilter: {
                   text: 'Elevator',
@@ -148,7 +158,6 @@ const Screen: React.FC = () => {
             style={styles.btnSearch}
             mode="outlined"
             onPress={() => {
-              _controller?.selectPoi(Number(selectedPoiIdentifier));
               _controller?.search({
                 searchFilter: {poiCategoryÍdentifier: '8941'},
               });
@@ -159,7 +168,6 @@ const Screen: React.FC = () => {
             style={styles.btnSearch}
             mode="outlined"
             onPress={() => {
-              _controller?.selectPoi(Number(selectedPoiIdentifier));
               _controller?.search({
                 searchFilter: {text: '', poiCategoryÍdentifier: ''},
               });
