@@ -1,6 +1,6 @@
 {
   "name": "@situm/react-native",
-  "version": "3.5.16",
+  "version": "3.6.0",
   "description": "Set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system.",
   "private": false,
   "repository": "https://github.com/situmtech/react-native",
@@ -55,7 +55,7 @@
     "build:android": "cd example/android && ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a",
     "build:ios": "cd example/ios && xcodebuild -workspace AwesomeLibraryExample.xcworkspace -scheme AwesomeLibraryExample -configuration Debug -sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO",
     "bootstrap": "yarn example && yarn && yarn example pods",
-    "doc": "typedoc --out ./docs/types ./src  --tsconfig ./tsconfig.json",
+    "doc": "typedoc --out ./docs/types ./src  --tsconfig ./tsconfig.json && mkdir -p ./docs/types/docs/assets && cp -r ./docs/assets/* ./docs/types/docs/assets/",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build"
   },
   "keywords": [
@@ -92,7 +92,7 @@
     "metro-react-native-babel-preset": "0.73.7",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
-    "react-native": "^0.72.3",
+    "react-native": "^0.72.12",
     "react-native-builder-bob": "^0.21.3",
     "react-test-renderer": "18.2.0",
     "release-it": "^16.1.3",
