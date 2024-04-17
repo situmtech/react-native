@@ -24,6 +24,11 @@ resources:
       endpoint: Bitbucket - sistemas
       name: situm/sys-kubernetes-templates.git
       ref: master
+    - repository: web_developers
+      type: bitbucket
+      endpoint: Bitbucket - sistemas
+      name: situm/web-developers.git
+      ref: master
 
 steps:
   - ${{ if contains(variables['Build.SourceBranch'], 'release/') }}:
@@ -71,7 +76,9 @@ steps:
 
       - bash: |
 
-          cd react-native
+          if [ -d "react-native" ];then
+            cd react-native
+          fi
           echo -e "\n[+] Setting NPM version to $(version)"
           npm version $(version) --no-git-tag-version
 
@@ -103,7 +110,10 @@ steps:
             - "develop"
 
       - bash: |
-          cd react-native
+
+          if [ -d "react-native" ];then
+            cd react-native
+          fi
           echo -e "\n[+] Fetch all branches\n"
           git fetch
 
@@ -121,6 +131,18 @@ steps:
           npm publish
 
         displayName: NPM publish
+
+      - template: azure-templates/commit-doc.yaml@sys_kubernetes_templates
+        parameters:
+          version: $(version)
+          docPath: "sdk_documentation/react-native"
+          system: "react-native"
+          release: "react-native"
+          developersBranch: "master"
+          bitbucket:
+            bitbucket_user: $(bitbucket_user)
+            bitbucket_pass: $(bitbucket_pass)
+
 
       - bash: |
           if [ -d "react-native" ];then

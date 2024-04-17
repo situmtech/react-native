@@ -11,6 +11,11 @@ export interface MapViewError {
 
 export interface MapViewRef {
   /**
+   * Sets the list of favoritePois that will appear in the mapView. This method removes any previous pois from the favorite list.
+   * @param poiIds Ids of the pois you want to set as favorites. You can obtain the identifiers of your POIs by retrieving them with [SitumPlugin.fetchIndoorPOIsFromBuilding()](https://developers.situm.com/sdk_documentation/react-native/typedoc/classes/default.html#fetchIndoorPOIsFromBuilding).
+   */
+  setFavoritePois: (poiIds: number[]) => void;
+  /**
    * Selects the given POI in the map.
    * @param poiId You can obtain the identifiers of your POIs by retrieving them with [SitumPlugin.fetchIndoorPOIsFromBuilding()](https://developers.situm.com/sdk_documentation/react-native/typedoc/classes/default.html#fetchIndoorPOIsFromBuilding).
    */
@@ -104,6 +109,16 @@ export interface OnDirectionsRequestInterceptor {
 
 export interface OnExternalLinkClickedResult {
   url: string;
+}
+
+/**
+ * Result that will be returned when the list of favoritePois is updated
+ */
+export interface OnFavoritePoisUpdatedResult {
+  /**
+   * Array containing the list of ids of all the pois that are currently stored as favorites.
+   */
+  currentPoisIdentifiers: number[];
 }
 
 export interface Destination {

@@ -106,17 +106,12 @@ In case you want to learn how to use our plugin, you may want to take a look at 
     2. [**Positioning with Remote Configuration**](./src/examples/sdk/RemoteConfig.tsx): Learn how to start positioning with the [remote configuration](https://situm.com/docs/sdk-remote-configuration/) defined in the settings section inside our [dashboard](https://dashboard.situm.com/settings). This way you can manage your positioning parameters with ease and avoid doing several code changes to test different configurations.
     3. [**Show buildings basic info**](./src/examples/sdk/BuildingBasicInfo.tsx): Learn how to retrieve the basic info of a building. (e.g. buildingIdentifier, name, creation date, ...)
     4. [**Show a building full info from different calls**](./src/examples/sdk/InfoFromBuilding.tsx): Learn how to retrive all the information related to a building in different calls. (e.g. floors, pois, geofences, custom fields, ...)
-    5. [**Draw a building in top of google maps**](./src/examples/sdk/ShowBuildingOnMap.tsx): Draw a building above google maps.
     6. [**Show a building's full info**](./src/examples/sdk/BuildingFullInfo.tsx): Learn how to fetch all the information related to a building with just one call.
     7. [**Show the route between pois**](./src/examples/sdk/RouteBetweenPOIs.tsx): Learn how to retrieve all the info of a route between 2 pois.
 -   **Showcasing our Wayfinding module**:
     1. [**Complete Wayfinding Experience**](./src/examples/wayfinding/Wayfinding.tsx): An integrated wayfinding experience powered by Situm, designed for ease of integration.
     2. [**Navigate to POI**](./src/examples/wayfinding/NavigateToPoi.tsx): Learn how to trigger the navigation to a concrete POI and display it on the map.
     3. [**Select POI**](./src/examples/wayfinding/SelectPoi.tsx): Learn how to set a POI as selected on the map.
--   **Build your own UI (Not recommended)**:
-    1. [**Draw route between pois**](./src/examples/sdk/DrawRouteBetweenPOIs.tsx): Learn how to draw a route between 2 pois above a floor plan.
-    2. [**Draw POIs with custom icons**](./src/examples/sdk/GetPoisIcons.tsx): Learn how to display POIs with custom icons. You may need to know first how to [_create a custom POI category with custom icons_](https://situm.com/docs/cartography-management/#poi-categories).
-    3. [**Set cache max age and invalidate it**](./src/examples/sdk/SetCacheMaxAge.tsx): Learn how to set the maximum cache age and how to invalidate it.
 
 ## Versioning
 
