@@ -59,11 +59,9 @@ export interface MapViewRef {
   }) => void;
 
   /**
-   * Performs a search with the given [SearchFilter].
-   * This action will have the same effect as the user searching in the searchbar.
-   * @param params.text The name of the poi
-   * @param params.poiCategoryIdentifier The id of the poi
+   * Performs a search with the given SearchFilter.
    *
+   * This action will have the same effect as the user searching in the searchbar.
    */
   search: (params: { searchFilter: SearchFilter }) => void;
 }
@@ -155,6 +153,16 @@ export type DirectionsMessage = {
 };
 
 export interface SearchFilter {
+  /**
+   * Text used in the searchbar to filter and display the search results whose name or description matches the filter.
+   *
+   * An empty string will clear the current text filter (if any). A null value will apply no change.
+   */
   text?: string | null;
+  /**
+   * A [PoiCategory](https://developers.situm.com/sdk_documentation/react-native/typedoc/types/poicategory) identifier used to filter and display the POIs that belong to the given category.
+   *
+   * An empty string will clear the current category filter (if any). A null value will apply no change.
+   */
   poiCategoryÍdentifier?: string | null;
 }
