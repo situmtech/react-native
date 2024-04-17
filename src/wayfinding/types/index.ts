@@ -112,7 +112,7 @@ export interface OnExternalLinkClickedResult {
 }
 
 /**
- * Result that well be returned when the list of favoritePois is updated
+ * Result that will be returned when the list of favoritePois is updated
  */
 export interface OnFavoritePoisUpdatedResult {
   /**
