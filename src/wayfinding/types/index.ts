@@ -63,7 +63,7 @@ export interface MapViewRef {
    *
    * This action will have the same effect as the user searching in the searchbar.
    */
-  search: (params: { searchFilter: SearchFilter }) => void;
+  search: (searchFilter: SearchFilter) => void;
 }
 
 export interface WayfindingResult {
