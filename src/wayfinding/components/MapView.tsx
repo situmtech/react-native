@@ -315,7 +315,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
             );
           },
           search(payload): void {
-            _search(payload.searchFilter);
+            _search(payload);
           },
         };
       },
