@@ -164,5 +164,5 @@ export interface SearchFilter {
    *
    * An empty string will clear the current category filter (if any). A null value will apply no change.
    */
-  poiCategoryÍdentifier?: string | null;
+  poiCategoryIdentifier?: string | null;
 }
