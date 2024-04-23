@@ -183,10 +183,10 @@ const ViewerMapper = {
       },
     };
   },
-  search: (payload: SearchFilter) => {
+  search: (searchFilter: SearchFilter) => {
     return mapperWrapper(`ui.set_search_filter`, {
-      text: payload.text,
-      poiCategoryIdentifier: payload.poiCategoryÍdentifier,
+      text: searchFilter.text,
+      poiCategoryIdentifier: searchFilter.poiCategoryIdentifier,
     });
   },
 };
