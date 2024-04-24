@@ -100,6 +100,12 @@ const Screen: React.FC = () => {
             buildingIdentifier: SITUM_BUILDING_ID,
             situmApiKey: SITUM_API_KEY,
           }}
+          onLoad={() => {
+            _controller?.search({
+              text: 'Elevator',
+              poiCategoryÍdentifier: '8941',
+            });
+          }}
         />
       </SafeAreaView>
       <SafeAreaView style={styles.input_container}>
@@ -121,10 +127,8 @@ const Screen: React.FC = () => {
             mode="outlined"
             onPress={() => {
               _controller?.search({
-                searchFilter: {
-                  text: selectedPoiText,
-                  poiCategoryÍdentifier: selectedPoiIdentifier,
-                },
+                text: selectedPoiText,
+                poiCategoryÍdentifier: selectedPoiIdentifier,
               });
             }}>
             Search tf values
@@ -135,9 +139,7 @@ const Screen: React.FC = () => {
             mode="outlined"
             onPress={() => {
               _controller?.search({
-                searchFilter: {
-                  text: 'Elevator',
-                },
+                text: 'Elevator',
               });
             }}>
             Search by text
@@ -148,7 +150,7 @@ const Screen: React.FC = () => {
             mode="outlined"
             onPress={() => {
               _controller?.search({
-                searchFilter: {poiCategoryÍdentifier: '8941'},
+                poiCategoryÍdentifier: '8941',
               });
             }}>
             Search by category

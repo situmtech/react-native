@@ -79,7 +79,9 @@ export const useSitumInternal = () => {
     });
 
     SitumPlugin.onLocationError((err: Error) => {
-      console.error(`Situm > hook > Error while positioning: ${err}}`);
+      console.error(
+        `Situm > hook > Error while positioning: ${JSON.stringify(err)}}`
+      );
     });
 
     SitumPlugin.onLocationStopped(() => {

@@ -314,8 +314,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
               ViewerMapper.cancelNavigation()
             );
           },
-          search(payload): void {
-            _search(payload.searchFilter);
+          search(searchFilter): void {
+            _search(searchFilter);
           },
         };
       },
