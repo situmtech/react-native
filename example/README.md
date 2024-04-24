@@ -69,7 +69,7 @@ export const SITUM_API_KEY = '';
 export const BUILDING_IDENTIFIER = '';
 ```
 
-**NOTE**: You should also fill the [BUILDING_IDENTIFIER](https://situm.com/docs/sdk-cartography/#building-identifier) and [SITUM_FLOOR_IDENTIFIER](https://situm.com/docs/sdk-cartography/#floor-identifier) variables so all the examples are able to work as expected. In case you haven't created POIs or paths yet, learn [how to create these cartography elements](https://situm.com/docs/sdk-cartography/#sdk-a-basic-complete-cartography-example).
+**NOTE**: You should also fill the [BUILDING_IDENTIFIER](https://situm.com/docs/sdk-cartography/#building-identifier) variables so all the examples are able to work as expected. In case you haven't created POIs or paths yet, learn [how to create these cartography elements](https://situm.com/docs/sdk-cartography/#sdk-a-basic-complete-cartography-example).
 
 ### Step 3: Run the app <a name="runapplication"></a>
 
