@@ -103,7 +103,7 @@ const Screen: React.FC = () => {
           onLoad={() => {
             _controller?.search({
               text: 'Elevator',
-              poiCategoryÍdentifier: '8941',
+              poiCategoryIdentifier: '8941',
             });
           }}
         />
@@ -128,7 +128,7 @@ const Screen: React.FC = () => {
             onPress={() => {
               _controller?.search({
                 text: selectedPoiText,
-                poiCategoryÍdentifier: selectedPoiIdentifier,
+                poiCategoryIdentifier: selectedPoiIdentifier,
               });
             }}>
             Search tf values
@@ -150,7 +150,7 @@ const Screen: React.FC = () => {
             mode="outlined"
             onPress={() => {
               _controller?.search({
-                poiCategoryÍdentifier: '8941',
+                poiCategoryIdentifier: '8941',
               });
             }}>
             Search by category
