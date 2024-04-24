@@ -4,7 +4,7 @@ export const SITUM_API_KEY = 'YOUR-SITUM-API-KEY';
 // Set here the building identifier you want on the map.
 export const BUILDING_IDENTIFIER = 'YOUR-BUILDING-IDENTIFIER';
 
-// Alternatively, you can set an identifier that allows you to remotely configure all map settings.For now, you need to contact Situm to obtain yours.
+// Alternatively, you can set an identifier that allows you to remotely configure all map settings.
 //For now, you need to contact Situm to obtain yours.
 export const REMOTE_IDENTIFIER = '';
 
