@@ -20,7 +20,12 @@ import type {
   OnExternalLinkClickedResult,
   MapViewRef,
 } from '@situm/react-native';
-import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
+import {
+  SITUM_API_KEY,
+  BUILDING_IDENTIFIER,
+  LANGUAGE,
+  REMOTE_IDENTIFIER,
+} from '../../situm';
 
 const styles = StyleSheet.create({
   container: {
@@ -137,8 +142,10 @@ const Screen: React.FC = () => {
     <MapView
       ref={mapViewRef}
       configuration={{
-        buildingIdentifier: SITUM_BUILDING_ID,
+        buildingIdentifier: BUILDING_IDENTIFIER,
         situmApiKey: SITUM_API_KEY,
+        remoteIdentifier: REMOTE_IDENTIFIER,
+        language: LANGUAGE,
       }}
       onLoad={onLoad}
       onPoiSelected={onPoiSelected}
