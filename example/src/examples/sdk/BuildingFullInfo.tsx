@@ -3,7 +3,7 @@ import {ScrollView} from 'react-native';
 import SitumPlugin from '@situm/react-native';
 import type {Building, Floor, Poi} from '@situm/react-native';
 
-import {SITUM_BUILDING_ID} from '../../situm';
+import {BUILDING_IDENTIFIER} from '../../situm';
 import styles from '../styles/styles';
 import {fetchBuilding} from '../Utils/CommonFetchs';
 import {Card, Text} from 'react-native-paper';
@@ -41,7 +41,7 @@ export const BuildingFullInfo = () => {
   };
 
   useEffect(() => {
-    fetchBuilding(SITUM_BUILDING_ID)
+    fetchBuilding(BUILDING_IDENTIFIER)
       .then(setBuilding)
       .catch(error => {
         console.error(`Situm > example > Failed to fetch building: ${error}`);
@@ -56,7 +56,7 @@ export const BuildingFullInfo = () => {
 
   return (
     <ScrollView style={{...styles.screenWrapper}}>
-      {!SITUM_BUILDING_ID && (
+      {!BUILDING_IDENTIFIER && (
         <Text>No building id provided, please edit your situm.tsx file</Text>
       )}
       <Card mode="contained" style={styles.margin}>

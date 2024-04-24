@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Text, ScrollView} from 'react-native';
 
 import SitumPlugin, {BuildingInfo} from '@situm/react-native';
-import {SITUM_BUILDING_ID} from '../../situm';
+import {BUILDING_IDENTIFIER} from '../../situm';
 import styles from '../styles/styles';
 import {fetchBuilding} from '../Utils/CommonFetchs';
 import {Card} from 'react-native-paper';
@@ -23,7 +23,7 @@ export const InfoFromBuilding = () => {
   };
 
   useEffect(() => {
-    fetchBuilding(SITUM_BUILDING_ID)
+    fetchBuilding(BUILDING_IDENTIFIER)
       .then(myBuilding => getInfoFromBuilding(myBuilding))
       .catch(e => {
         console.error(`Situm > example > Could not fetch building: ${e}`);
