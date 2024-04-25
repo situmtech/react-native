@@ -34,6 +34,7 @@ import {
   type OnFloorChangedResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
+  type SearchFilter,
 } from "../types";
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
@@ -238,6 +239,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, []);
 
+    const _search = useCallback((payload: SearchFilter) => {
+      sendMessageToViewer(webViewRef.current, ViewerMapper.search(payload));
+    }, []);
+
     const _setDirectionsOptions = useCallback(
       (directionsOptions: MapViewDirectionsOptions) => {
         if (!webViewRef.current) {
@@ -329,6 +334,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
               ViewerMapper.cancelNavigation()
             );
           },
+          search(payload): void {
+            _search(payload);
+          },
         };
       },
       [
@@ -339,6 +347,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         _selectPoiCategory,
         _setDirectionsOptions,
         _setFavoritePois,
+        _search,
       ]
     );
 
