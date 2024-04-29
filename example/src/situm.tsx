@@ -12,7 +12,7 @@ export const REMOTE_IDENTIFIER = '';
 export const LANGUAGE = '';
 
 // A String parameter that allows you to specify which domain will be displayed inside our webview.
-export const SITUM_DASHBOARD_URL = 'https://dashboard.situm.com';
+export const API_DOMAIN = 'https://dashboard.situm.com';
 
 // Supporting documentation
 `
