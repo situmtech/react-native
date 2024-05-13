@@ -7,6 +7,8 @@ parameters:
     type: string
   - name: BUILDINGID
     type: string
+  - name: FLOORID
+    type: string    
   - name: DASHBOARD_URL
     type: string
   - name: BUILDNUMBER
@@ -48,6 +50,7 @@ steps:
       echo -e "\n[+] Variables to set:"
       echo -e "\t[+] X-API-EMAIL: ${{ parameters.XAPIEMAIL }}"
       echo -e "\t[+] BUILDINGID: ${{ parameters.BUILDINGID }}"
+      echo -e "\t[+] FLOORID: ${{ parameters.FLOORID }}"
       echo -e "\t[+] DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}"
       echo -e "\t[+] BUILDNUMBER: ${{ parameters.BUILDNUMBER }}"
       echo -e "\t[+] Plugin Version used: $pluginVersion"
