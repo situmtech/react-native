@@ -8,7 +8,7 @@ parameters:
   - name: BUILDINGID
     type: string
   - name: FLOORID
-    type: string    
+    type: string
   - name: DASHBOARD_URL
     type: string
   - name: BUILDNUMBER
