@@ -1,4 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
+import Tts from 'react-native-tts';
+
 import {
   AppState,
   NativeEventSubscription,
@@ -133,6 +135,10 @@ const Screen: React.FC = () => {
     console.log('Situm > example > click on external link: ' + event.url);
   };
 
+  const onSpeakAloudText = (event: OnSpeakAloudTextResult) => {
+    Tts.speak(event.text);
+  };
+
   return (
     <MapView
       ref={mapViewRef}
@@ -144,6 +150,7 @@ const Screen: React.FC = () => {
       onPoiSelected={onPoiSelected}
       onPoiDeselected={onPoiDeselected}
       onExternalLinkClicked={onExternalLinkClicked}
+      onSpeakAloudText={onSpeakAloudText}
     />
   );
 };
