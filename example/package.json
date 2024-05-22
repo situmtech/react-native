@@ -21,6 +21,7 @@
     "react-native-permissions": "^3.8.3",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",
+    "react-native-tts": "^4.1.0",
     "react-native-webview": "^13.2.2"
   },
   "devDependencies": {
