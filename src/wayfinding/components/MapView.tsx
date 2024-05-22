@@ -34,6 +34,7 @@ import {
   type OnFloorChangedResult,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
+  type OnSpeakAloudTextResult,
   type SearchFilter,
 } from "../types";
 import { ErrorName } from "../types/constants";
@@ -135,6 +136,12 @@ export interface MapViewProps {
    * @param event {@link OnFavoritePoisUpdatedResult} object.
    */
   onFavoritePoisUpdated?: (event: OnFavoritePoisUpdatedResult) => void;
+  /**
+   * Callback invoked when the map needs the third party integrator to speak
+   * aloud some text.
+   * @param event {@link OnSpeakAloudText} object.
+   */
+  onSpeakAloudText?: (event: OnSpeakAloudTextResult) => void;
 }
 
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
@@ -149,6 +156,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onFloorChanged = () => {},
       onExternalLinkClicked = undefined,
       onFavoritePoisUpdated = () => {},
+      onSpeakAloudText = () => {},
     },
     ref
   ) => {
@@ -451,6 +459,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
               : [],
           };
           onFavoritePoisUpdated(favoritePoisIds);
+          break;
+        }
+        case "ui.speak_aloud_text": {
+          onSpeakAloudText(eventParsed.payload.text);
+
           break;
         }
         case "cartography.floor_selected":
