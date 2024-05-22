@@ -128,6 +128,13 @@ export interface OnFavoritePoisUpdatedResult {
   currentPoisIdentifiers: number[];
 }
 
+export interface OnSpeakAloudTextResult {
+  /**
+   * Text that must be speak aloud.
+   */
+  text: string;
+}
+
 export interface Destination {
   category: string;
   identifier?: string;
