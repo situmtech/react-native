@@ -139,6 +139,7 @@ const Screen: React.FC = () => {
       configuration={{
         buildingIdentifier: SITUM_BUILDING_ID,
         situmApiKey: SITUM_API_KEY,
+        viewerDomain: 'http://192.168.1.142:5173/',
       }}
       onLoad={onLoad}
       onPoiSelected={onPoiSelected}

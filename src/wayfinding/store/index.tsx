@@ -19,33 +19,35 @@ interface User {
 }
 
 export interface State {
-  webViewRef: MutableRefObject<undefined>;
-  sdkInitialized: boolean;
-  user?: User;
-  location?: Location;
+  buildingIdentifier: string;
   buildings: Building[] | null;
   currentBuilding: Building;
-  pois: Poi[];
-  directions?: Directions;
-  navigation?: NavigationProgress;
   destinationPoiID?: number;
+  directions?: Directions;
   error?: Error;
-  buildingIdentifier: string;
+  location?: Location;
+  locationStatus?: LocationStatusName;
+  navigation?: NavigationProgress;
+  pois: Poi[];
+  sdkInitialized: boolean;
+  user?: User;
+  webViewRef: MutableRefObject<undefined>;
 }
 
 export const initialState: State = {
-  webViewRef: undefined,
-  sdkInitialized: false,
-  user: undefined,
-  location: { status: LocationStatusName.STOPPED },
+  buildingIdentifier: "-1",
   buildings: null,
   currentBuilding: undefined,
-  pois: [],
-  directions: undefined,
-  navigation: undefined,
   destinationPoiID: undefined,
+  directions: undefined,
   error: undefined,
-  buildingIdentifier: "-1",
+  location: undefined,
+  locationStatus: undefined,
+  navigation: undefined,
+  pois: [],
+  sdkInitialized: false,
+  user: undefined,
+  webViewRef: undefined,
 };
 
 export const SitumContext = createContext<
@@ -68,7 +70,8 @@ const store = createStore<State>({
       return { ...state, location: payload };
     },
     setLocationStatus: (state: State, payload: LocationStatusName) => {
-      return { ...state, location: { ...state.location, status: payload } };
+      console.log("settings status to provider", payload);
+      return { ...state, locationStatus: payload };
     },
     resetLocation: (state: State) => {
       return {
@@ -123,7 +126,7 @@ export const selectLocation = (state: State) => {
 };
 
 export const selectLocationStatus = (state: State) => {
-  return state.location?.status;
+  return state.locationStatus;
 };
 
 export const selectBuildings = (state: State) => {
