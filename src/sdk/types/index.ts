@@ -547,7 +547,6 @@ export interface Location {
     degreesClockwise: number;
   };
   hasBearing?: boolean;
-  status: LocationStatusName;
 }
 
 export interface Position {

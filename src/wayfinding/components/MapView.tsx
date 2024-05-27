@@ -20,7 +20,11 @@ import type {
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
-import SitumPlugin from "../../sdk";
+import SitumPlugin, {
+  LocationStatusName,
+  type Location,
+  type LocationStatus,
+} from "../../sdk";
 import useSitum from "../hooks";
 import {
   type MapViewDirectionsOptions,
@@ -157,6 +161,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       useState<OnDirectionsRequestInterceptor>();
 
     // Local states
+    const [locationStatus, setLocationStatus] = useState<LocationStatusName>();
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
     const [buildingIdentifier, setBuildingIdentifier] = useState<string>(
       configuration.buildingIdentifier
@@ -164,10 +169,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const {
       init,
       location,
-      locationStatus,
       directions,
       navigation,
-
       calculateRoute,
       startNavigation,
       stopNavigation,
@@ -266,6 +269,16 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, []);
 
+    const _onMapIsReady = () => {
+      console.log(
+        "Situm> WYF> Now the map is ready! Last status is: " + locationStatus
+      );
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.locationStatus(locationStatus)
+      );
+    };
+
     /**
      * API exported to the outside world from the MapViewer
      *
@@ -352,6 +365,29 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     );
 
     useEffect(() => {
+      SitumPlugin.onLocationStatus((status: LocationStatus) => {
+        console.debug(
+          `Mapview > Positioning state (NO FILTERS) updated ${status.statusName}`
+        );
+        if (status.statusName in LocationStatusName) {
+          setLocationStatus(status.statusName);
+        }
+      });
+
+      SitumPlugin.onLocationUpdate((_: Location) => {
+        // The callbacks used in `useEffect` won't be invoked if the value of locationStatus
+        // is set but hasn't changed.
+        // So, if we receive an OOB state, start positioning, and then receive another OOB state,
+        // the value of locationStatus hasn't actually changed, and the callback won't be triggered.
+        // This happens because the SDK won't notify a "positioning" status.
+        // Therefore, we reset the state when we receive positions.
+        setLocationStatus(null);
+      });
+
+      return () => {};
+    }, []);
+
+    useEffect(() => {
       if (!error) return;
 
       console.error(
@@ -363,27 +399,37 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     // Updated SDK location
     useEffect(() => {
-      if (!webViewRef.current || !location) return;
+      if (!webViewRef.current || !location || !mapLoaded) return;
 
       sendMessageToViewer(webViewRef.current, ViewerMapper.location(location));
     }, [location]);
 
+    // locationStatus
+    useEffect(() => {
+      if (!webViewRef.current || !locationStatus || !mapLoaded) return;
+
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.locationStatus(locationStatus)
+      );
+    }, [locationStatus, mapLoaded]);
+
     // Updated SDK navigation
     useEffect(() => {
-      if (!webViewRef.current || !navigation) return;
+      if (!webViewRef.current || !navigation || !mapLoaded) return;
 
       sendMessageToViewer(
         webViewRef.current,
         ViewerMapper.navigation(navigation)
       );
-    }, [navigation]);
+    }, [navigation, mapLoaded]);
 
     // Updated SDK route
     useEffect(() => {
-      if (!webViewRef.current || !directions) return;
+      if (!webViewRef.current || !directions || !mapLoaded) return;
 
       sendMessageToViewer(webViewRef.current, ViewerMapper.route(directions));
-    }, [directions]);
+    }, [directions, mapLoaded]);
 
     // Update language
     useEffect(() => {
@@ -411,23 +457,14 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mapLoaded]);
 
-    //locationStatus
-    useEffect(() => {
-      if (!webViewRef.current || !locationStatus || !mapLoaded) return;
-
-      sendMessageToViewer(
-        webViewRef.current,
-        ViewerMapper.locationStatus(locationStatus)
-      );
-    }, [locationStatus, mapLoaded]);
-
     const handleRequestFromViewer = (event: WebViewMessageEvent) => {
       const eventParsed = JSON.parse(event.nativeEvent.data);
       switch (eventParsed.type) {
         case "app.map_is_ready":
           init();
-          onLoad && onLoad("");
           setMapLoaded(true);
+          _onMapIsReady();
+          onLoad && onLoad("");
           break;
         case "directions.requested":
           calculateRoute(eventParsed.payload, _onDirectionsRequestInterceptor);

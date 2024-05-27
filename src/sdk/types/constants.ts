@@ -19,10 +19,6 @@ export enum SdkNavigationUpdateType {
 
 export enum LocationStatusName {
   STARTING = "STARTING",
-  CALCULATING = "CALCULATING",
-  // This status will always be sent to mapviewer-web, in case we recieve
-  // a location from SDK.
-  POSITIONING = "POSITIONING",
   USER_NOT_IN_BUILDING = "USER_NOT_IN_BUILDING",
   STOPPED = "STOPPED",
 }
