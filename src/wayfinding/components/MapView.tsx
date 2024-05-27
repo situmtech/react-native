@@ -413,6 +413,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     //locationStatus
     useEffect(() => {
+      console.log("mapview, changed status", { locationStatus });
       if (!webViewRef.current || !locationStatus || !mapLoaded) return;
 
       sendMessageToViewer(
