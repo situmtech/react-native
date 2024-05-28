@@ -133,6 +133,9 @@ const ViewerMapper = {
   locationStatus: (locationStatus: LocationStatusName) => {
     return mapperWrapper("location.update_status", { status: locationStatus });
   },
+  locationError: (errorCode: string) => {
+    return mapperWrapper("location.update_status", { status: errorCode });
+  },
   // Directions
   route: (directions: Directions) => {
     return mapperWrapper("directions.update", directions);

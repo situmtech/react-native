@@ -21,9 +21,10 @@ import type {
 } from "react-native-webview/lib/WebViewTypes";
 
 import SitumPlugin, {
-  LocationStatusName,
+  type Error,
   type Location,
   type LocationStatus,
+  LocationStatusName,
 } from "../../sdk";
 import useSitum from "../hooks";
 import {
@@ -162,6 +163,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     // Local states
     const [locationStatus, setLocationStatus] = useState<LocationStatusName>();
+    const [locationError, setLocationError] = useState<string>();
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
     const [buildingIdentifier, setBuildingIdentifier] = useState<string>(
       configuration.buildingIdentifier
@@ -270,13 +272,19 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     }, []);
 
     const _onMapIsReady = () => {
-      console.log(
-        "Situm> WYF> Now the map is ready! Last status is: " + locationStatus
-      );
-      sendMessageToViewer(
-        webViewRef.current,
-        ViewerMapper.locationStatus(locationStatus)
-      );
+      if (locationStatus) {
+        sendMessageToViewer(
+          webViewRef.current,
+          ViewerMapper.locationStatus(locationStatus)
+        );
+      }
+      if (locationError) {
+        // Right now, status and errors share message on the viewer:
+        sendMessageToViewer(
+          webViewRef.current,
+          ViewerMapper.locationError(locationError)
+        );
+      }
     };
 
     /**
@@ -366,14 +374,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     useEffect(() => {
       SitumPlugin.onLocationStatus((status: LocationStatus) => {
-        console.debug(
-          `Mapview > Positioning state (NO FILTERS) updated ${status.statusName}`
-        );
         if (status.statusName in LocationStatusName) {
           setLocationStatus(status.statusName);
         }
       });
-
+      SitumPlugin.onLocationError((e: Error) => {
+        setLocationError(e.code);
+      });
       SitumPlugin.onLocationUpdate((_: Location) => {
         // The callbacks used in `useEffect` won't be invoked if the value of locationStatus
         // is set but hasn't changed.
@@ -382,6 +389,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         // This happens because the SDK won't notify a "positioning" status.
         // Therefore, we reset the state when we receive positions.
         setLocationStatus(null);
+        setLocationError(null);
       });
 
       return () => {};
@@ -402,7 +410,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (!webViewRef.current || !location || !mapLoaded) return;
 
       sendMessageToViewer(webViewRef.current, ViewerMapper.location(location));
-    }, [location]);
+    }, [location, mapLoaded]);
 
     // locationStatus
     useEffect(() => {
