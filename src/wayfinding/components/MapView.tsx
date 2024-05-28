@@ -422,6 +422,16 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, [locationStatus, mapLoaded]);
 
+    // locationErroor
+    useEffect(() => {
+      if (!webViewRef.current || !locationError || !mapLoaded) return;
+
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.locationError(locationError)
+      );
+    }, [locationError, mapLoaded]);
+
     // Updated SDK navigation
     useEffect(() => {
       if (!webViewRef.current || !navigation || !mapLoaded) return;
