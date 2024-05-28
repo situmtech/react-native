@@ -537,7 +537,6 @@ export type ConfigurationOptions = {
  * @property {number} [accuracy] - Optional. The accuracy of the location information in meters.
  * @property {Object} [bearing] - Optional. Bearing information including degrees and degreesClockwise.
  * @property {boolean} [hasBearing] - Optional. Indicates if bearing information is available.
- * @property {LocationStatusName} status - The status of the location update.
  */
 export interface Location {
   position?: Position;

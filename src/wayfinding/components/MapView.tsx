@@ -422,7 +422,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, [locationStatus, mapLoaded]);
 
-    // locationErroor
+    // locationError
     useEffect(() => {
       if (!webViewRef.current || !locationError || !mapLoaded) return;
 

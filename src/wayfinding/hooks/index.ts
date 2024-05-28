@@ -66,7 +66,7 @@ export const useSitumInternal = () => {
       );
     });
 
-    // TODO: not working, using local state.
+    // TODO: not working, using local state at MapView.tsx.
     // SitumPlugin.onLocationStatus((status: LocationStatus) => {
     //   if (status.statusName in LocationStatusName) {
     //     console.debug(
