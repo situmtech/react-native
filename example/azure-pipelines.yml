@@ -26,6 +26,12 @@ parameters:
   - name: DASHBOARD_URL
     type: string
     default: "https://dashboard.situm.com"
+  - name: REMOTEID
+    type: string
+    default: "demo"
+  - name: LANG
+    type: string
+    default: "en"
 
 variables:
   - group: Passwords
@@ -54,6 +60,8 @@ jobs:
            echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo $(XAPIEMAIL_EXAMPLES))"
            echo "##vso[task.setvariable variable=BUILDINGID]$(echo $(BUILDING_ID_EXAMPLES))"
            echo "##vso[task.setvariable variable=FLOORID]$(echo $(FLOOR_ID_EXAMPLES))"
+           echo "##vso[task.setvariable variable=REMOTEID]$(echo 'demo')"
+           echo "##vso[task.setvariable variable=LANG]$(echo 'en')"
            echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo 'https://dashboard.situm.com')"
            echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
 
@@ -66,6 +74,8 @@ jobs:
            echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
            echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
            echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}})"
+           echo "##vso[task.setvariable variable=REMOTEID]$(echo ${{ parameters.REMOTEID}})"
+           echo "##vso[task.setvariable variable=LANG]$(echo ${{ parameters.LANG}})"
            echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
            echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
 
@@ -79,6 +89,8 @@ jobs:
         BUILDINGID: $(BUILDINGID)
         FLOORID: $(FLOORID)
         DASHBOARD_URL: $(DASHBOARD_URL)
+        REMOTEID: $(REMOTEID)
+        LANG: $(LANG)
         system: $(ubuntuVersion)
 
     - template: azure/build-examples.yaml
@@ -88,6 +100,7 @@ jobs:
         BUILDINGID: $(BUILDINGID)
         XAPIEMAIL: $(XAPIEMAIL)
         BUILDNUMBER: $(BUILDNUMBER)
+
     - ${{ if ne(variables['Build.Reason'],'manual') }}:
       - template: azure-templates/teams-notifier.yml@sys_kubernetes_templates
         parameters:
@@ -111,6 +124,8 @@ jobs:
            echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo $(XAPIEMAIL_EXAMPLES))"
            echo "##vso[task.setvariable variable=BUILDINGID]$(echo $(BUILDING_ID_EXAMPLES))"
            echo "##vso[task.setvariable variable=FLOORID]$(echo $(FLOOR_ID_EXAMPLES))"
+           echo "##vso[task.setvariable variable=REMOTEID]$(echo 'demo')"
+           echo "##vso[task.setvariable variable=LANG]$(echo 'en')"
            echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo 'https://dashboard.situm.com')"
            echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
 
@@ -123,6 +138,8 @@ jobs:
            echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
            echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
            echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}})"
+           echo "##vso[task.setvariable variable=REMOTEID]$(echo ${{ parameters.REMOTEID}})"
+           echo "##vso[task.setvariable variable=LANG]$(echo ${{ parameters.LANG}})"
            echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
            echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
 
@@ -143,6 +160,8 @@ jobs:
         BUILDINGID: $(BUILDINGID)
         FLOORID: $(FLOORID)
         DASHBOARD_URL: $(DASHBOARD_URL)
+        REMOTEID: $(REMOTEID)
+        LANG: $(LANG)
         system: $(macOSVersion)
         BUILDNUMBER: $(BUILDNUMBER)
 
@@ -153,6 +172,8 @@ jobs:
         XAPIEMAIL: $(XAPIEMAIL)
         BUILDINGID: $(BUILDINGID)
         BUILDNUMBER: $(BUILDNUMBER)
+        REMOTEID: $(REMOTEID)
+        LANG: $(LANG)
 
     - ${{ if ne(variables['Build.Reason'],'manual') }}:
       - template: azure-templates/teams-notifier.yml@sys_kubernetes_templates
