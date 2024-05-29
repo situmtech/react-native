@@ -10,6 +10,13 @@ parameters:
   - name: BUILDNUMBER
     type: string
     default: "202430015"
+  - name: REMOTEID
+    type: string
+    default: "demo"
+  - name: LANG
+    type: string
+    default: "en"
+
 
 steps:
     - ${{ if contains(parameters.system, 'macOS') }}:
@@ -54,7 +61,7 @@ steps:
           gem install fastlane
 
           dashboard=$(echo ${{ parameters.DASHBOARD_URL }} | awk -F"/" '{print $3}')
-          export WHATS_NEW="Plugin version: $(pluginVersion), USER: ${{parameters.XAPIEMAIL}}, BUILDINGID: ${{ parameters.BUILDINGID }}, DASHBOARD_URL: $dashboard"
+          export WHATS_NEW="Plugin version: $(pluginVersion), USER: ${{parameters.XAPIEMAIL}}, BUILDINGID: ${{ parameters.BUILDINGID }}, DASHBOARD_URL: $dashboard ,REMOTEID: ${{parameters.REMOTEID}}, LANG: ${{ parameters.LANG}} "
           export BUILDNUMBER=${{ parameters.BUILDNUMBER }}
           echo -e "\n[+] Setting variables to deploy:"
           echo -e "\t[+] Set WHATS_NEW: $WHATS_NEW"
