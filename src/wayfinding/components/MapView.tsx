@@ -374,8 +374,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     useEffect(() => {
       SitumPlugin.onLocationStatus((status: LocationStatus) => {
-        if (status.statusName in LocationStatusName) {
-          setLocationStatus(status.statusName);
+        // TODO: implement status & error adapter on native SDKs.
+        var finalStatus = status.statusName as string;
+        if (Platform.OS === "ios" && finalStatus == "CALCULATING") {
+          finalStatus = "STARTING";
+        }
+        if (finalStatus in LocationStatusName) {
+          setLocationStatus(finalStatus as LocationStatusName);
         }
       });
       SitumPlugin.onLocationError((e: Error) => {
