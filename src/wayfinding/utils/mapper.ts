@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AccessibilityMode } from "../../sdk";
+import { AccessibilityMode, LocationStatusName } from "../../sdk";
 import type {
   Directions,
   DirectionsRequest,
@@ -128,11 +128,13 @@ const ViewerMapper = {
         accuracy: location.accuracy,
         hasBearing: location.hasBearing,
       }),
-      status: location.status,
     });
   },
-  locationStatus: (locationStatus: Location["status"]) => {
+  locationStatus: (locationStatus: LocationStatusName) => {
     return mapperWrapper("location.update_status", { status: locationStatus });
+  },
+  locationError: (errorCode: string) => {
+    return mapperWrapper("location.update_status", { status: errorCode });
   },
   // Directions
   route: (directions: Directions) => {

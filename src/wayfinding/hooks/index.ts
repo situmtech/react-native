@@ -8,11 +8,9 @@ import {
   ErrorCode,
   ErrorType,
   type Location,
-  type LocationStatus,
   type NavigationProgress,
 } from "../../sdk/types";
 import {
-  LocationStatusName,
   NavigationStatus,
   NavigationUpdateType,
 } from "../../sdk/types/constants";
@@ -26,7 +24,6 @@ import {
   setDirections,
   setError,
   setLocation,
-  setLocationStatus,
   setNavigation,
   UseSitumContext,
 } from "../store/index";
@@ -69,18 +66,15 @@ export const useSitumInternal = () => {
       );
     });
 
-    SitumPlugin.onLocationStatus((status: LocationStatus) => {
-      if (status.statusName in LocationStatusName) {
-        console.debug(
-          `Situm > hook > Positioning state updated ${status.statusName}`
-        );
-        dispatch(setLocationStatus(status.statusName as LocationStatusName));
-      }
-    });
-
-    SitumPlugin.onLocationError((err: Error) => {
-      console.error(`Situm > hook > Error while positioning: ${err}}`);
-    });
+    // TODO: not working, using local state at MapView.tsx.
+    // SitumPlugin.onLocationStatus((status: LocationStatus) => {
+    //   if (status.statusName in LocationStatusName) {
+    //     console.debug(
+    //       `Situm > hook > Positioning state updated ${status.statusName}`
+    //     );
+    //     dispatch(setLocationStatus(status.statusName as LocationStatusName));
+    //   }
+    // });
 
     SitumPlugin.onLocationStopped(() => {
       console.debug("Situm > hook > Stopped positioning");
