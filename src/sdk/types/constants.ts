@@ -19,10 +19,10 @@ export enum SdkNavigationUpdateType {
 
 export enum LocationStatusName {
   STARTING = "STARTING",
-  CALCULATING = "CALCULATING",
-  // This status will always be sent to mapviewer-web, in case we recieve
-  // a location from SDK.
-  POSITIONING = "POSITIONING",
+  // CALCULATING: removed! The viewer will process STARTING status, not CALCULATING.
+  // We want to send the last (valid) known status to the viewer as soon as it is
+  // loaded. If we overwrite the STARTING status with CALCULATING, the viewer will not
+  // proccess it and it won't show the "positioning..." UI.
   USER_NOT_IN_BUILDING = "USER_NOT_IN_BUILDING",
   STOPPED = "STOPPED",
 }
