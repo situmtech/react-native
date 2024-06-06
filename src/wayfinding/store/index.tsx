@@ -23,6 +23,7 @@ export interface State {
   sdkInitialized: boolean;
   user?: User;
   location?: Location;
+  locationStatus?: LocationStatusName;
   buildings: Building[] | null;
   currentBuilding: Building;
   pois: Poi[];
@@ -37,7 +38,8 @@ export const initialState: State = {
   webViewRef: undefined,
   sdkInitialized: false,
   user: undefined,
-  location: { status: LocationStatusName.STOPPED },
+  location: null,
+  locationStatus: null,
   buildings: null,
   currentBuilding: undefined,
   pois: [],
@@ -67,8 +69,8 @@ const store = createStore<State>({
     setLocation: (state: State, payload: State["location"]) => {
       return { ...state, location: payload };
     },
-    setLocationStatus: (state: State, payload: LocationStatusName) => {
-      return { ...state, location: { ...state.location, status: payload } };
+    setLocationStatus: (state: State, payload: State["locationStatus"]) => {
+      return { ...state, locationStatus: payload };
     },
     resetLocation: (state: State) => {
       return {
@@ -123,7 +125,7 @@ export const selectLocation = (state: State) => {
 };
 
 export const selectLocationStatus = (state: State) => {
-  return state.location?.status;
+  return state.locationStatus;
 };
 
 export const selectBuildings = (state: State) => {
