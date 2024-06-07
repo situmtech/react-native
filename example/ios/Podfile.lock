@@ -491,7 +491,7 @@ PODS:
     - React-jsi (= 0.72.12)
     - React-logger (= 0.72.12)
     - React-perflogger (= 0.72.12)
-  - ReactNativeSitumPlugin (3.7.6):
+  - ReactNativeSitumPlugin (3.9.0-beta.0):
     - RCT-Folly (= 2021.07.22.00)
     - React
     - React-Core
@@ -745,7 +745,7 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 8aea338c561b2175f47018124c076d89d3808d30
   React-utils: 9a24cb88f950d1020ee55bddacbc8c16a611e2dc
   ReactCommon: 76843a9bb140596351ac2786257ac9fe60cafabb
-  ReactNativeSitumPlugin: 85de5ba460655dd9f3cf4324d792f6b047ba2e52
+  ReactNativeSitumPlugin: d1a845312fea67622e89fc98955bf2bf93553ca4
   RNPermissions: d9189887d0589d4e4f504836cb94f905b68b0a7d
   RNScreens: b8d370282cdeae9df85dd5eab20c88eb5181243b
   SitumSDK: f2c92d306f14be0609f87d0d347f3bba03d90796
