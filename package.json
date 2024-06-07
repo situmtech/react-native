@@ -1,6 +1,6 @@
 {
   "name": "@situm/react-native",
-  "version": "3.8.0",
+  "version": "3.9.0-beta.0",
   "description": "Set of utilities that allow any developer to build React Native location based apps using Situm's indoor positioning system.",
   "private": false,
   "repository": "https://github.com/situmtech/react-native",
@@ -101,7 +101,6 @@
   },
   "dependencies": {
     "react-dom": "^18.2.0",
-    "react-native-permissions": "^3.8.4",
     "react-native-webview": "*"
   },
   "resolutions": {
