@@ -169,6 +169,6 @@
   "prettier": {},
   "sdkVersions": {
     "android": "3.13.2@aar",
-    "ios": "3.13.0"
+    "ios": "3.13.1"
   }
 }
