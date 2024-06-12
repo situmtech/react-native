@@ -75,7 +75,7 @@ PODS:
   - hermes-engine/Pre-built (0.72.12)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
-  - Protobuf (3.27.0)
+  - Protobuf (3.27.1)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -491,18 +491,18 @@ PODS:
     - React-jsi (= 0.72.12)
     - React-logger (= 0.72.12)
     - React-perflogger (= 0.72.12)
-  - ReactNativeSitumPlugin (3.9.0-beta.0):
+  - ReactNativeSitumPlugin (3.8.1):
     - RCT-Folly (= 2021.07.22.00)
     - React
     - React-Core
-    - SitumSDK (= 3.13.0)
+    - SitumSDK (= 3.13.1)
   - RNPermissions (3.10.1):
     - React-Core
   - RNScreens (3.31.1):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - React-RCTImage
-  - SitumSDK (3.13.0):
+  - SitumSDK (3.13.1):
     - Protobuf (~> 3.7)
     - SSZipArchive (~> 2.4)
   - SocketRocket (0.6.1)
@@ -710,7 +710,7 @@ SPEC CHECKSUMS:
   hermes-engine: e89344b9e9e54351c3c5cac075e0275148fb37ba
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  Protobuf: 2c02b2e18bb9040d3bf3fd2cecaefb2a8b55265b
+  Protobuf: f1b82a3ffb1c8f13d20e141a838c411840e1c223
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: b6cea797b684c6d8d82ba0107cef58cbb679afdb
   RCTTypeSafety: d2eb5e0e8af9181b24034f5171f9b659994b4678
@@ -745,10 +745,10 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 8aea338c561b2175f47018124c076d89d3808d30
   React-utils: 9a24cb88f950d1020ee55bddacbc8c16a611e2dc
   ReactCommon: 76843a9bb140596351ac2786257ac9fe60cafabb
-  ReactNativeSitumPlugin: d1a845312fea67622e89fc98955bf2bf93553ca4
+  ReactNativeSitumPlugin: a8999ce983e504eeea54bfdd23a5628bc2df5b90
   RNPermissions: d9189887d0589d4e4f504836cb94f905b68b0a7d
   RNScreens: b8d370282cdeae9df85dd5eab20c88eb5181243b
-  SitumSDK: f2c92d306f14be0609f87d0d347f3bba03d90796
+  SitumSDK: 2b3537e9eeaf9883a02c0f9742a1c6eb6ab19d32
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   Yoga: 87e59f6d458e5061d2421086c5de994b3f7cd151
