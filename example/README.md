@@ -62,16 +62,13 @@ pod install
 ### Step 2: Set your credentials <a name="config"/>
 
 For this step you must create a situm account, so [setup your account](../README.md#setup-your-account) before continuing.
-After creating your situm account, you can set your credentials on the properties of [`src/situm.tsx`](./src/situm.tsx), like so:
+After creating your situm account, you can set your [credentials](https://situm.com/docs/built-in-wayfinding-ui/#prepare-viewer) on the properties of [`src/situm.tsx`](./src/situm.tsx), like so:
 
 ```js
-export const SITUM_EMAIL = '';
 export const SITUM_API_KEY = '';
-export const SITUM_BUILDING_ID = ''; // Identifier of the building
-export const SITUM_DASHBOARD_URL = 'https://dashboard.situm.com';
+export const BUILDING_IDENTIFIER = '';
 ```
 
-**NOTE**: You should also fill the [SITUM_BUILDING_ID](https://situm.com/docs/sdk-cartography/#building-identifier) and [SITUM_FLOOR_ID](https://situm.com/docs/sdk-cartography/#floor-identifier) variables so all the examples are able to work as expected. In case you haven't created POIs or paths yet, learn [how to create these cartography elements](https://situm.com/docs/sdk-cartography/#sdk-a-basic-complete-cartography-example).
 
 ### Step 3: Run the app <a name="runapplication"></a>
 

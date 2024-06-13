@@ -5,7 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SitumPlugin from '@situm/react-native';
 
-import {SITUM_API_KEY, SITUM_DASHBOARD_URL} from './situm';
+import {SITUM_API_KEY, API_DOMAIN} from './situm';
 import Theme from './examples/styles/theme';
 
 import PositioningScreen from './examples/sdk/Positioning';
@@ -46,7 +46,7 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     try {
       SitumPlugin.init();
-      SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL);
+      SitumPlugin.setDashboardURL(API_DOMAIN);
       SitumPlugin.setApiKey(SITUM_API_KEY);
     } catch (e) {
       console.error(`Situm > example > Could not initialize SDK ${e}`);

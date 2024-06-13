@@ -295,7 +295,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
      * <MapView
      *    ref={(ref: MapViewRef) => ref.selectPoi(122)}
      *    configuration={{
-     *      buildingIdentifier: SITUM_BUILDING_ID,
+     *      buildingIdentifier: BUILDING_IDENTIFIER,
      *    }}
      *    onLoad={onLoad} />
      */

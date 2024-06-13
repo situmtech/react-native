@@ -14,6 +14,12 @@ parameters:
   - name: BUILDNUMBER
     type: string
     default: "Value only set in iOS"
+  - name: REMOTEID
+    type: string
+    default: "demo"
+  - name: LANG
+    type: string
+    default: "en"
 steps:
   - checkout: self
     fetchDepth: 1
@@ -53,12 +59,14 @@ steps:
       echo -e "\t[+] FLOORID: ${{ parameters.FLOORID }}"
       echo -e "\t[+] DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}"
       echo -e "\t[+] BUILDNUMBER: ${{ parameters.BUILDNUMBER }}"
+      echo -e "\t[+] REMOTEID: ${{ parameters.REMOTEID }}"
+      echo -e "\t[+] LANG: ${{ parameters.LANG }}"
       echo -e "\t[+] Plugin Version used: $pluginVersion"
 
-      echo "export const SITUM_EMAIL = '${{ parameters.XAPIEMAIL }}';" > example/src/situm.tsx
-      echo "export const SITUM_API_KEY = '${{ parameters.XAPIKEY }}';" >> example/src/situm.tsx
-      echo "export const SITUM_BUILDING_ID = '${{ parameters.BUILDINGID }}';" >> example/src/situm.tsx
-      echo "export const SITUM_FLOOR_ID = '${{ parameters.FLOORID }}';" >> example/src/situm.tsx
-      echo "export const SITUM_DASHBOARD_URL = '${{ parameters.DASHBOARD_URL }}';"  >> example/src/situm.tsx
+      echo "export const SITUM_API_KEY = '${{ parameters.XAPIKEY }}';" > example/src/situm.tsx
+      echo "export const BUILDING_IDENTIFIER = '${{ parameters.BUILDINGID }}';" >> example/src/situm.tsx
+      echo "export const API_DOMAIN = '${{ parameters.DASHBOARD_URL }}';"  >> example/src/situm.tsx
+      echo "export const REMOTE_IDENTIFIER = '${{ parameters.REMOTEID }}';" >> example/src/situm.tsx
+      echo "export const LANGUAGE = '${{ parameters.LANG }}';"  >> example/src/situm.tsx
 
     displayName: Configure credentials

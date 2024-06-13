@@ -40,16 +40,15 @@ In this file we share a way to upgrade previous versions of react-native-situm-p
 ```js
 // your imports
 
-const SITUM_EMAIL = "YOUR_EMAIL_HERE";
 const SITUM_API_KEY = "YOUR_APIKEY_HERE";
-const SITUM_BUILDING_ID = "YOUR_BUILDING_ID_HERE";
+const BUILDING_IDENTIFIER = "YOUR_BUILDING_IDENTIFIER_HERE";
 
 const App: React.FC = () => {
     return (
         <View>
             <SitumProvider email={SITUM_EMAIL} apiKey={SITUM_API_KEY}>
                 <MapView
-                    buildingId={SITUM_BUILDING_ID}
+                    buildingId={BUILDING_IDENTIFIER}
                     // other props
                 />
             </SitumProvider>
