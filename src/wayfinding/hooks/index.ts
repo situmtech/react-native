@@ -81,8 +81,25 @@ export const useSitumInternal = () => {
       dispatch(resetLocation());
     });
 
+    SitumPlugin.onNavigationStart((route) => {
+      console.debug(
+        `Situm > hook > navigation started to ${route.poiTo?.poiName}`
+      );
+
+      dispatch(
+        setNavigation({
+          type: NavigationUpdateType.PROGRESS,
+          status: NavigationStatus.START,
+        })
+      );
+    });
+
     SitumPlugin.onNavigationProgress((progress: NavigationProgress) => {
-      console.debug("Situm > hook > NavigationProgress");
+      console.debug(
+        `Situm > hook > navigation progress, remanining distance to goal ${progress.distanceToGoal.toFixed(
+          2
+        )} m.`
+      );
 
       dispatch(
         setNavigation({
@@ -98,28 +115,45 @@ export const useSitumInternal = () => {
     });
 
     SitumPlugin.onNavigationOutOfRoute(() => {
+      console.debug("Situm > hook > user went out of route, recalculating ...");
+
       dispatch(
         setNavigation({
           type: NavigationUpdateType.OUT_OF_ROUTE,
           status: NavigationStatus.UPDATE,
         })
       );
-
-      console.debug("Situm > hook > NavigationOutOfRoute");
     });
 
-    SitumPlugin.onNavigationFinished(() => {
+    SitumPlugin.onNavigationDestinationReached((route) => {
+      console.debug(
+        `Situm > hook > destination ${route.poiTo?.poiName} was reached.`
+      );
+
       dispatch(
         setNavigation({
-          type: NavigationUpdateType.FINISHED,
+          type: NavigationUpdateType.DESTINATION_REACHED,
           status: NavigationStatus.UPDATE,
         })
       );
-      console.debug("Situm > hook > NavigationFinished");
     });
 
-    SitumPlugin.onNavigationError((progress: NavigationProgress) => {
-      console.debug("Situm > hook > NavigationProgress: ", progress);
+    SitumPlugin.onNavigationCancellation(() => {
+      console.debug("Situm > hook > navigation was cancelled by the user.");
+
+      dispatch(
+        setNavigation({
+          type: NavigationUpdateType.CANCELLED,
+          status: NavigationStatus.STOP,
+        })
+      );
+    });
+
+    SitumPlugin.onNavigationError((navigationError: any) => {
+      console.error(
+        "Situm > hook > ERROR while navigating: ",
+        JSON.stringify(navigationError)
+      );
     });
   }
 
@@ -235,7 +269,9 @@ export const useSitumInternal = () => {
       })
       .catch((e) => {
         console.error(
-          `Situm > hook > Could not compute route for navigation ${e}`
+          `Situm > hook > Could not compute route for navigation ${JSON.stringify(
+            e
+          )}`
         );
       });
   };
@@ -253,7 +289,11 @@ export const useSitumInternal = () => {
         dispatch(setNavigation({ status: NavigationStatus.STOP }));
       })
       .catch((e) => {
-        console.warn(`Situm > hook > Could not remove navigation updates ${e}`);
+        console.warn(
+          `Situm > hook > Could not remove navigation updates ${JSON.stringify(
+            e
+          )}`
+        );
       });
   };
 

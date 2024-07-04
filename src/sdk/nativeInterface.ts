@@ -94,6 +94,10 @@ interface NavigationAPI {
     onSuccess: (response: void) => void,
     onError: (error: Error) => void
   ) => void;
+  updateNavigationState: (externalNavigation: {
+    messageType: string;
+    payload: any;
+  }) => void;
 }
 
 interface DirectionsAPI {

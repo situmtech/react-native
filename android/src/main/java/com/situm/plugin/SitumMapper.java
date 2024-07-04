@@ -288,6 +288,18 @@ class SitumMapper {
         return map;
     }
 
+    static Map<String, Object> jsonObjectToMapObject(JSONObject jo) throws JSONException {
+        if (jo == null || jo.length() == 0) {
+          return new HashMap<String, Object>();
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        int length = jo.length();
+        for (int i = 0; i < length; i++) {
+            map.put(jo.names().get(i).toString(), jo.get(jo.names().get(i).toString()));
+        }
+        return map;
+    }
+
     static Building buildingJsonObjectToBuilding(JSONObject jo) throws JSONException, ParseException {
         Building building = null;
         Coordinate center = new Coordinate(jo.getJSONObject(CENTER).getDouble(LATITUDE),
@@ -1120,17 +1132,17 @@ class SitumMapper {
         if (joOptions != null) {
 
             if (joOptions.has(SitumMapper.INCLUDED_TAGS) && joOptions.get(SitumMapper.INCLUDED_TAGS) != null) {
-                includedTags = new ArrayList<String>();     
-                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.INCLUDED_TAGS); 
-                for (int i=0;i<jsonArray.length();i++) { 
+                includedTags = new ArrayList<String>();
+                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.INCLUDED_TAGS);
+                for (int i=0;i<jsonArray.length();i++) {
                     includedTags.add(jsonArray.get(i).toString());
                 }
             }
 
             if (joOptions.has(SitumMapper.EXCLUDED_TAGS) && joOptions.get(SitumMapper.EXCLUDED_TAGS) != null) {
-                excludedTags = new ArrayList<String>();     
-                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.EXCLUDED_TAGS); 
-                for (int i=0;i<jsonArray.length();i++) { 
+                excludedTags = new ArrayList<String>();
+                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.EXCLUDED_TAGS);
+                for (int i=0;i<jsonArray.length();i++) {
                     excludedTags.add(jsonArray.get(i).toString());
                 }
             }
