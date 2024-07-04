@@ -556,7 +556,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           });
           break;
         case "viewer.navigation.updated":
-          let externalNavigationMessageType = _processViewerNavigationUpdate(
+          const externalNavigationMessageType = _processViewerNavigationUpdate(
             eventParsed.payload
           );
 
