@@ -181,3 +181,11 @@ export interface SearchFilter {
    */
   poiCategoryIdentifier?: string | null;
 }
+
+/**
+ *  Used to change any parameter of the remote configuration file.
+ */
+export interface ConfigItem {
+  key: string;
+  value: string;
+}

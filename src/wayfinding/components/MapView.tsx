@@ -22,6 +22,7 @@ import type {
 
 import SitumPlugin, {
   type Error,
+  ExternalNavigationMessageType,
   type LocationStatus,
   LocationStatusName,
 } from "../../sdk";
@@ -88,6 +89,13 @@ export type MapViewConfiguration = {
    * Sets the UI language based on the given ISO 639-1 code. Checkout the [Situm docs](https://situm.com/docs/query-params/) to see the list of supported languages.
    */
   language?: string;
+  /**
+   * When set to true, the MapView's improved navigation engine will be managing the navigation.
+   * When set to false, the SDK will be the one managing the navigation.
+   *
+   * Defaults to the value specified in your remote configuration file.
+   */
+  useViewerNavigation?: boolean;
 };
 
 const viewerStyles = StyleSheet.create({
@@ -477,6 +485,24 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mapLoaded]);
 
+    // Choose between viewer or SDK navigation libraries
+    useEffect(() => {
+      if (
+        mapLoaded &&
+        configuration.useViewerNavigation != null &&
+        configuration.useViewerNavigation !== undefined
+      ) {
+        const navigationLibrary = {
+          key: "internal.navigationLibrary",
+          value: `${configuration.useViewerNavigation ? "webAssembly" : "sdk"}`,
+        };
+        sendMessageToViewer(
+          webViewRef.current,
+          ViewerMapper.setConfigItem([navigationLibrary])
+        );
+      }
+    }, [mapLoaded]);
+
     const handleRequestFromViewer = (event: WebViewMessageEvent) => {
       const eventParsed = JSON.parse(event.nativeEvent.data);
       switch (eventParsed.type) {
@@ -523,6 +549,30 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
             setBuildingIdentifier(eventParsed.payload.identifier.toString());
           }
           break;
+        case "viewer.navigation.started":
+          SitumPlugin.updateNavigationState({
+            messageType: ExternalNavigationMessageType.NAVIGATION_STARTED,
+            payload: eventParsed.payload,
+          });
+          break;
+        case "viewer.navigation.updated":
+          let externalNavigationMessageType = _processViewerNavigationUpdate(
+            eventParsed.payload
+          );
+
+          if (externalNavigationMessageType != null) {
+            SitumPlugin.updateNavigationState({
+              messageType: externalNavigationMessageType,
+              payload: eventParsed.payload,
+            });
+          }
+          break;
+        case "viewer.navigation.stopped":
+          SitumPlugin.updateNavigationState({
+            messageType: ExternalNavigationMessageType.NAVIGATION_CANCELLED,
+            payload: eventParsed.payload,
+          });
+          break;
         default:
           break;
       }
@@ -545,6 +595,26 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         return false;
       }
       return true;
+    };
+
+    const _processViewerNavigationUpdate = (
+      payload: any
+    ): ExternalNavigationMessageType => {
+      let result = null;
+
+      switch (payload.type) {
+        case "PROGRESS":
+          result = ExternalNavigationMessageType.NAVIGATION_UPDATED;
+          break;
+        case "DESTINATION_REACHED":
+          result = ExternalNavigationMessageType.DESTINATION_REACHED;
+          break;
+        case "OUT_OF_ROUTE":
+          result = ExternalNavigationMessageType.OUTSIDE_ROUTE;
+          break;
+      }
+
+      return result;
     };
 
     return (

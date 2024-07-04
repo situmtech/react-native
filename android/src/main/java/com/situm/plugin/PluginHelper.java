@@ -56,13 +56,19 @@ import es.situm.sdk.realtime.RealTimeRequest;
 import es.situm.sdk.utils.Handler;
 import es.situm.sdk.v1.SitumEvent;
 import es.situm.sdk.location.GeofenceListener;
+import es.situm.sdk.navigation.ExternalNavigation;
 
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_CHANGED;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_ERROR;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_STATUS_CHANGED;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_STOPPED;
+import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_START;
+import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_PROGRESS;
+import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_DESTINATION_REACHED;
+import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_FINISHED;
+import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_OUTSIDE_ROUTE;
+import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_CANCELLATION;
 import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_ERROR;
-import static com.situm.plugin.SitumPlugin.EVENT_NAVIGATION_UPDATE;
 import static com.situm.plugin.SitumPlugin.EVENT_REALTIME_ERROR;
 import static com.situm.plugin.SitumPlugin.EVENT_REALTIME_UPDATE;
 import static com.situm.plugin.SitumPlugin.EVENT_ENTER_GEOFENCES;
@@ -633,55 +639,7 @@ public class PluginHelper {
         navigationRequest = builder.build();
 
         // 2.2) Build Navigation Callback
-        navigationListener = new NavigationListener() {
-            public void onProgress(NavigationProgress progress) {
-                Log.d(TAG, "On progress received: " + progress);
-                try {
-                    JSONObject jsonProgress = SitumMapper.navigationProgressToJsonObject(progress, context);
-                    try {
-                        jsonProgress.put("type", "progress");
-                    } catch (JSONException e) {
-                        Log.e(TAG, "error inserting type in navigation progress");
-                    }
-                    eventEmitter.emit(EVENT_NAVIGATION_UPDATE, convertJsonToMap(jsonProgress));
-
-                } catch (Exception e) {
-                    Log.d(TAG, "On Error parsing progress: " + progress);
-                    eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
-                }
-            }
-
-            ;
-
-            public void onDestinationReached() {
-                Log.d(TAG, "On destination reached: ");
-                JSONObject jsonResult = new JSONObject();
-                try {
-                    jsonResult.put("type", "destinationReached");
-                    jsonResult.put("message", "Destination reached");
-                    eventEmitter.emit(EVENT_NAVIGATION_UPDATE, convertJsonToMap(jsonResult));
-                } catch (JSONException e) {
-                    Log.e(TAG, "error inserting type in destination reached");
-                }
-
-            }
-
-            ;
-
-            public void onUserOutsideRoute() {
-                Log.d(TAG, "On user outside route: ");
-                JSONObject jsonResult = new JSONObject();
-                try {
-                    jsonResult.put("type", "userOutsideRoute");
-                    jsonResult.put("message", "User outside route");
-                    eventEmitter.emit(EVENT_NAVIGATION_UPDATE, convertJsonToMap(jsonResult));
-
-                } catch (JSONException e) {
-                    Log.e(TAG, "error inserting type in user outside route");
-                }
-
-            }
-        };
+        navigationListener = _buildNavigationListener(eventEmitter, context);
 
         getNavigationManagerInstance().requestNavigationUpdates(navigationRequest, navigationListener);
 
@@ -704,6 +662,50 @@ public class PluginHelper {
         } catch (Exception e) {
             e.printStackTrace();
             invokeCallback(error, e.getMessage());
+        }
+    }
+
+    public void updateNavigationState(ReadableMap externalNavigationMap,
+            DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter, Context context) {
+
+        try {
+            JSONObject externalNavigationJson = convertMapToJson(externalNavigationMap);
+            if (!externalNavigationJson.has("payload")) {
+              externalNavigationJson.put("payload", new JSONObject());
+            }
+            String messageTypeValue = (String) externalNavigationJson.get("messageType");
+            Map<String, Object> payload = SitumMapper.jsonObjectToMapObject((JSONObject) externalNavigationJson.get("payload"));
+            ExternalNavigation.MessageType messageType = null;
+
+            switch(messageTypeValue) {
+                case "NavigationStarted":
+                    if (navigationListener == null) {
+                        navigationListener = _buildNavigationListener(eventEmitter, context);
+                        getNavigationManagerInstance().addNavigationListener(navigationListener);
+                    }
+                    messageType = ExternalNavigation.MessageType.NAVIGATION_STARTED;
+                    break;
+                case "NavigationUpdated":
+                    messageType = ExternalNavigation.MessageType.NAVIGATION_UPDATED;
+                    break;
+                case "DestinationReached":
+                    messageType = ExternalNavigation.MessageType.DESTINATION_REACHED;
+                    break;
+                case "OutsideRoute":
+                    messageType = ExternalNavigation.MessageType.OUTSIDE_ROUTE;
+                    break;
+                case "NavigationCancelled":
+                    messageType = ExternalNavigation.MessageType.NAVIGATION_CANCELLED;
+                    break;
+            }
+
+            if (messageType != null) {
+                ExternalNavigation externalNavigation = new ExternalNavigation(messageType, payload);
+                Log.i(TAG, "Update navigation state: " + externalNavigation.getMessageType());
+                getNavigationManagerInstance().updateNavigationState(externalNavigation);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -990,5 +992,73 @@ public class PluginHelper {
             }
         };
         SitumSdk.locationManager().setGeofenceListener(geofenceListener);
+    }
+
+    private NavigationListener _buildNavigationListener(
+        DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter,
+        Context context
+    ) {
+        return new NavigationListener() {
+            public void onStart(Route route) {
+                Log.d(TAG, "NavigationListener.onStart() called with: "+ route);
+                try {
+                    JSONObject jsonResult = SitumMapper.routeToJsonObject(route);
+                    eventEmitter.emit(EVENT_NAVIGATION_START, convertJsonToMap(jsonResult));
+                } catch (JSONException e) {
+                    Log.e(TAG, "error building onStart() hybrid message with native Route: "+ route);
+                    eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
+                }
+            }
+
+            public void onProgress(NavigationProgress progress) {
+                Log.d(TAG, "NavigationListener.onProgress() called with: " + progress);
+                try {
+                    JSONObject jsonProgress = SitumMapper.navigationProgressToJsonObject(progress, context);
+                    eventEmitter.emit(EVENT_NAVIGATION_PROGRESS, convertJsonToMap(jsonProgress));
+                } catch (Exception e) {
+                    Log.e(TAG, "error building onProgress() hybrid message with native NavigationProgress: " + progress);
+                    eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
+                }
+            }
+
+            public void onDestinationReached(Route route) {
+                Log.d(TAG, "NavigationListener.onDestinationReached() called with: " + route);
+                try {
+                    JSONObject jsonResult = SitumMapper.routeToJsonObject(route);
+                    eventEmitter.emit(EVENT_NAVIGATION_DESTINATION_REACHED, convertJsonToMap(jsonResult));
+                    eventEmitter.emit(EVENT_NAVIGATION_FINISHED, convertJsonToMap(jsonResult));
+                } catch (JSONException e) {
+                    Log.e(TAG, "error building onDestinationReached() hybrid message with native Route: "+ route);
+                    eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
+                }
+                getNavigationManagerInstance().removeNavigationListener(navigationListener);
+                navigationListener = null;
+            }
+
+            public void onUserOutsideRoute() {
+                Log.d(TAG, "NavigationListener.onUserOutsideRoute() called.");
+                JSONObject jsonResult = new JSONObject();
+                try {
+                    eventEmitter.emit(EVENT_NAVIGATION_OUTSIDE_ROUTE, convertJsonToMap(jsonResult));
+                } catch (JSONException e) {
+                    Log.e(TAG, "error building onUserOutsideRoute() hybrid message.");
+                    eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
+                }
+            }
+
+            public void onCancellation() {
+                Log.d(TAG, "NavigationListener.onCancellation() called.");
+                JSONObject jsonResult = new JSONObject();
+                try {
+                    eventEmitter.emit(EVENT_NAVIGATION_CANCELLATION, convertJsonToMap(jsonResult));
+                    eventEmitter.emit(EVENT_NAVIGATION_FINISHED, convertJsonToMap(jsonResult));
+                } catch (JSONException e) {
+                    Log.e(TAG, "error building onCancellation() hybrid message.");
+                    eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
+                }
+                getNavigationManagerInstance().removeNavigationListener(navigationListener);
+                navigationListener = null;
+            }
+        };
     }
 }

@@ -9,6 +9,7 @@ import type {
   Point,
 } from "../../sdk/types";
 import type {
+  ConfigItem,
   DirectionsMessage,
   MapViewDirectionsOptions,
   NavigateToPointPayload,
@@ -193,6 +194,9 @@ const ViewerMapper = {
       text: searchFilter.text,
       poiCategoryIdentifier: searchFilter.poiCategoryIdentifier,
     });
+  },
+  setConfigItem: (configItemList: ConfigItem[]) => {
+    return mapperWrapper(`app.set_config_item`, configItemList);
   },
 };
 
