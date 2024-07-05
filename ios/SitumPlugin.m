@@ -691,6 +691,39 @@ RCT_EXPORT_METHOD(updateNavigationWithLocation:(NSDictionary *)location  withSuc
         }
     }
 }
+RCT_EXPORT_METHOD(updateNavigationState:(NSDictionary *)arguments)
+{
+    if (arguments.count > 0) {
+        NSDictionary *data = (NSDictionary*) [arguments objectAtIndex:0];
+        NSString *messageType = (NSString*)[data objectForKey:@"messageType"];
+        NSDictionary *payload = (NSDictionary*)[data objectForKey:@"payload"];
+        SITExternalNavigation *externalNavigation;
+        if ([messageType isEqual:@"NavigationStarted"]) {
+            _navigationUpdates = YES;
+            [[SITNavigationManager sharedManager]  setDelegate:self]; // Add navigation delegate when starting.
+            externalNavigation = [[SITExternalNavigation alloc] initWithMessageType:kSITNavigationStarted
+                                                             payload:payload];
+        } else if ([messageType isEqual:@"NavigationUpdated"]) {
+            externalNavigation = [[SITExternalNavigation alloc] initWithMessageType:kSITNavigationUpdated
+                                                             payload:payload];
+        } else if ([messageType isEqual:@"DestinationReached"]) {
+            externalNavigation = [[SITExternalNavigation alloc] initWithMessageType:kSITDestinationReached
+                                                             payload:payload];
+        } else if ([messageType isEqual:@"OutsideRoute"]) {
+            externalNavigation = [[SITExternalNavigation alloc] initWithMessageType:kSITOutsideRoute
+                                                             payload:payload];
+        } else if ([messageType isEqual:@"NavigationCancelled"]) {
+            externalNavigation = [[SITExternalNavigation alloc] initWithMessageType:kSITNavigationCancelled
+                                                             payload:payload];
+        }
+        [[SITNavigationManager sharedManager] updateNavigationState:externalNavigation];
+
+        if ([messageType isEqual:@"DestinationReached"] || [messageType isEqual:@"NavigationCancelled"]) {
+            _navigationUpdates = NO;
+            [[SITNavigationManager sharedManager] removeUpdates];
+        }
+    }
+}
 
 RCT_EXPORT_METHOD(removeNavigationUpdates:(RCTResponseSenderBlock)callbackBlock)
 {
@@ -874,45 +907,68 @@ RCT_EXPORT_METHOD(onExitGeofences){
 
 // SITNavigationDelegate
 
+- (void)navigationManager:(id<SITNavigationInterface>)navigationManager
+        didStartOnRoute:(SITRoute *)route {
+    NSLog(@"%@", [NSString stringWithFormat: @"navigationManager.didStartOnRoute() called with: %ld", route]);
+
+    NSMutableDictionary *routeJO = [[SitumLocationWrapper.shared routeToJsonObject:route] mutableCopy];
+
+    if (_navigationUpdates) {
+        [self sendEventWithName:@"onNavigationStart" body:navigationJO.copy];
+    }
+}
 
 - (void)navigationManager:(id<SITNavigationInterface>)navigationManager
          didFailWithError:(NSError *)error {
+    NSLog(@"%@", [NSString stringWithFormat: @"navigationManager.didFailWithError() called with: %ld", error]);
+
     if (_navigationUpdates) {
-        [self sendEventWithName:@"navigationError" body:error.description];
+        [self sendEventWithName:@"onNavigationError" body:error.description];
     }
 }
 
 - (void)navigationManager:(id<SITNavigationInterface>)navigationManager
         didUpdateProgress:(SITNavigationProgress *)progress
                   onRoute:(SITRoute *)route {
+    NSLog(@"%@", [NSString stringWithFormat: @"navigationManager.didUpdateProgress() called with: %ld", progress]);
+
     NSMutableDictionary *navigationJO = [NSMutableDictionary dictionaryWithDictionary:[SitumLocationWrapper.shared navigationProgressToJsonObject:progress]];
-    [navigationJO setValue:@"progress" forKey:@"type"];
 
     if (_navigationUpdates) {
-        [self sendEventWithName:@"navigationUpdated" body:navigationJO.copy];
+        [self sendEventWithName:@"onNavigationProgress" body:navigationJO.copy];
     }
 }
 
 - (void)navigationManager:(id<SITNavigationInterface>)navigationManager
 destinationReachedOnRoute:(SITRoute *)route {
-    NSMutableDictionary *navigationJO = [[NSMutableDictionary alloc] init];
-    [navigationJO setValue:@"destinationReached" forKey:@"type"];
-    [navigationJO setValue:@"Destination reached" forKey:@"message"];
+    NSLog(@"%@", [NSString stringWithFormat: @"navigationManager.destinationReachedOnRoute() called with: %ld", route]);
+
+    NSMutableDictionary *routeJO = [[SitumLocationWrapper.shared routeToJsonObject:route] mutableCopy];
 
     if (_navigationUpdates) {
-        [self sendEventWithName:@"navigationUpdated" body:navigationJO.copy];
+        [self sendEventWithName:@"onNavigationDestinationReached" body:navigationJO.copy];
     }
 }
 
-
 - (void)navigationManager:(id<SITNavigationInterface>)navigationManager
          userOutsideRoute:(SITRoute *)route {
+    NSLog(@"navigationManager.userOutsideRoute() called.");
+
     NSMutableDictionary *navigationJO = [[NSMutableDictionary alloc] init];
-    [navigationJO setValue:@"userOutsideRoute" forKey:@"type"];
-    [navigationJO setValue:@"User outside route" forKey:@"message"];
 
     if (_navigationUpdates) {
-        [self sendEventWithName:@"navigationUpdated" body:navigationJO.copy];
+        [self sendEventWithName:@"onUserOutsideRoute" body:navigationJO.copy];
+    }
+}
+
+- (void)navigationManager:(id<SITNavigationInterface>)navigationManager
+        didCancelOnRoute:(SITRoute *)route {
+    NSLog(@"navigationManager.didCancelOnRoute() called.");
+
+    NSMutableDictionary *navigationJO = [[NSMutableDictionary alloc] init];
+
+    if (_navigationUpdates) {
+        [self sendEventWithName:@"onNavigationCancellation" body:navigationJO.copy];
     }
 }
 
