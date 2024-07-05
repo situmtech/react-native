@@ -32,12 +32,11 @@ steps:
 
 
       echo -e "\n[+] Install plugin dependencies\n"
-      npm install
+      yarn install
 
       echo -e "\n[+] Install example dependencies\n"
-      cd example
       rm -rf ios/Podfile.lock
-      npm install
+      yarn example install
 
     displayName: Install plugin dependencies
 
