@@ -116,15 +116,11 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
 
 ```xml
 <key>NSLocationWhenInUseUsageDescription</key>
-  <string>Location is required to find out where you are</string>
-<key>NSBluetoothPeripheralUsageDescription</key>
-  <string>Bluetooth is required to find out where you are</string>
-<key>NSLocationAlwaysUsageDescription</key>
-  <string>Location is required to find out where you are</string>
+<string>Location is required to find out where you are</string>
 <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  <string>Location is required to find out where you are</string>
-<key>NSBluetoothAlwaysUsageDescription</key>
-  <string>Bluetooth is required to find out where you are</string>
+<string>Location is required to find out where you are</string>
+<key>NSMotionUsageDescription</key>
+<string>We use your phone sensors (giroscope, accelerometer and altimeter) to improve location quality</string>
 ```
 
 3. For offline support you will have to add the underlying web application's domain inside the entry `WKAppBoundDomains` on `Info.plist` as follows:
