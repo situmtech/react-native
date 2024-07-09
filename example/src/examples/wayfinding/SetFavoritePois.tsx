@@ -2,15 +2,12 @@ import React, {useEffect, useState, useRef} from 'react';
 import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import SitumPlugin, {
-  MapView,
-  SitumProvider,
-  requestPermission,
-} from '@situm/react-native';
+import SitumPlugin, {MapView, SitumProvider} from '@situm/react-native';
 import type {MapViewRef} from '@situm/react-native';
 import type {OnFavoritePoisUpdatedResult} from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
 import {Button, TextInput} from 'react-native-paper';
+import requestPermission from '../Utils/requestPermission';
 
 const styles = StyleSheet.create({
   viewer_container: {
