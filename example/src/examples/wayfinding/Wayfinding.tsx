@@ -8,12 +8,7 @@ import {
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import SitumPlugin, {
-  MapView,
-  SitumProvider,
-  requestPermission,
-  Error,
-} from '@situm/react-native';
+import SitumPlugin, {MapView, SitumProvider, Error} from '@situm/react-native';
 import type {
   OnPoiDeselectedResult,
   OnPoiSelectedResult,
@@ -21,6 +16,7 @@ import type {
   MapViewRef,
 } from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
+import requestPermission from '../Utils/requestPermission';
 
 const styles = StyleSheet.create({
   container: {

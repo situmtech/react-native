@@ -86,19 +86,7 @@ up a Situm account.
 
 #### Android
 
-1. Include the Situm repository in your project level `build.gradle`:
-
-```groovy
-allprojects {
-    repositories {
-        maven {
-            url "https://repo.situm.es/artifactory/libs-release-local"
-        }
-    }
-}
-```
-
-2. Add the `ACCESS_FINE_LOCATION` permission to your `AndroidManifest.xml` file if you have configured Situm SDK to [use GPS](<https://developers.situm.com/sdk_documentation/android/javadoc/latest/es/situm/sdk/location/locationrequest#useGps()>):
+1. Add the `ACCESS_FINE_LOCATION` permission to your `AndroidManifest.xml` file if you have configured Situm SDK to [use GPS](<https://developers.situm.com/sdk_documentation/android/javadoc/latest/es/situm/sdk/location/locationrequest#useGps()>):
 
 ```xml
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

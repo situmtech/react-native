@@ -1,6 +1,14 @@
 import groovy.json.JsonSlurper
-apply plugin: 'com.android.library'
 
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://repo.situm.es/artifactory/libs-release-local" }
+    }
+}
+
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
