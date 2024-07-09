@@ -19,11 +19,3 @@ buildscript {
         classpath("com.facebook.react:react-native-gradle-plugin")
     }
 }
-
-allprojects {
-    repositories {
-         maven {
-             url "https://repo.situm.es/artifactory/libs-release-local"
-         }
-    }
-}
