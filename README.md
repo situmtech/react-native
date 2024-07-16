@@ -197,3 +197,4 @@ More info is available at our [Developers Page](https://situm.com/docs/01-introd
 ## Support information
 
 For any question or bug report, please send an email to [support@situm.es](mailto:support@situm.es)
+
