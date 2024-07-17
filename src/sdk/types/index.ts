@@ -629,16 +629,3 @@ export interface Error {
 
 // TODO: add types
 export type Directions = any;
-
-export interface ExternalNavigation {
-  messageType: ExternalNavigationMessageType;
-  payload: Map<string, any>;
-}
-
-export class ExternalNavigationMessageType {
-  static NAVIGATION_STARTED = "NavigationStarted";
-  static NAVIGATION_UPDATED = "NavigationUpdated";
-  static DESTINATION_REACHED = "DestinationReached";
-  static OUTSIDE_ROUTE = "OutsideRoute";
-  static NAVIGATION_CANCELLED = "NavigationCancelled";
-}
