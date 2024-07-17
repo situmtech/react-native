@@ -15,7 +15,6 @@ import {
   type Error,
   ErrorCode,
   ErrorType,
-  type ExternalNavigation,
   type Floor,
   type Geofence,
   type Location,
@@ -548,18 +547,14 @@ export default class SitumPlugin {
    *
    * @param externalNavigation
    */
-  static updateNavigationState = (externalNavigation: ExternalNavigation) => {
+  static updateNavigationState = (externalNavigation: Map<string, any>) => {
     return exceptionWrapper<void>(() => {
-      const externalNavigationMap = {
-        messageType: externalNavigation.messageType.toString(),
-        payload: externalNavigation.payload,
-      };
-      RNCSitumPlugin.updateNavigationState(externalNavigationMap);
+      RNCSitumPlugin.updateNavigationState(externalNavigation);
     });
   };
 
   //-----------------------------------------------------------------------------//
-  //-----------------------------GEOFENCES CALLBACKS----------------------------//
+  //-----------------------------GEOFENCES CALLBACKS-----------------------------//
   //-----------------------------------------------------------------------------//
 
   /**
@@ -594,7 +589,7 @@ export default class SitumPlugin {
   };
 
   //-----------------------------------------------------------------------------//
-  //-----------------------------LOCATION CALLBACKS----------------------------//
+  //-----------------------------LOCATION CALLBACKS------------------------------//
   //-----------------------------------------------------------------------------//
 
   /**

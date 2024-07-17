@@ -70,7 +70,7 @@ static NSString *DEFAULT_SITUM_LOG = @"SitumSDK >>: ";
 
 @implementation SitumPlugin
 
-BOOL _positioningUpdates, _navigationUpdates, _realtimeUpdates;
+BOOL _positioningUpdates, _realtimeUpdates;
 CLLocationManager *_locationManager;
 RNCSitumConfiguration _locationConfiguration;
 RNCSitumRequest *routeRequest;
@@ -92,7 +92,7 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 
 RCT_EXPORT_METHOD(initSitumSDK)
 {
-    // only specific to Android at the moment
+    [[SITNavigationManager sharedManager]  addDelegate:self];
 }
 
 RCT_EXPORT_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig withCallback:(RCTResponseSenderBlock)callback) {
@@ -670,11 +670,7 @@ RCT_EXPORT_METHOD(requestNavigationUpdates:(NSDictionary *)options)
             NSLog(@"%@", [NSString stringWithFormat: @"navigationRequest.timeToIgnoreUnexpectedFloorChanges: %ld", navigationRequest.timeToIgnoreUnexpectedFloorChanges]);
         }
 
-        _navigationUpdates = YES;
-        [[SITNavigationManager sharedManager]  setDelegate:self]; // Configure delegation first
         [[SITNavigationManager sharedManager] requestNavigationUpdates:navigationRequest];
-
-
     }
 }
 
@@ -694,40 +690,14 @@ RCT_EXPORT_METHOD(updateNavigationWithLocation:(NSDictionary *)location  withSuc
 RCT_EXPORT_METHOD(updateNavigationState:(NSDictionary *)arguments)
 {
     if (arguments.count > 0) {
-        NSDictionary *data = (NSDictionary*) [arguments objectAtIndex:0];
-        NSString *messageType = (NSString*)[data objectForKey:@"messageType"];
-        NSDictionary *payload = (NSDictionary*)[data objectForKey:@"payload"];
-        SITExternalNavigation *externalNavigation;
-        if ([messageType isEqual:@"NavigationStarted"]) {
-            _navigationUpdates = YES;
-            [[SITNavigationManager sharedManager]  setDelegate:self]; // Add navigation delegate when starting.
-            externalNavigation = [[SITExternalNavigation alloc] initWithMessageType:kSITNavigationStarted
-                                                             payload:payload];
-        } else if ([messageType isEqual:@"NavigationUpdated"]) {
-            externalNavigation = [[SITExternalNavigation alloc] initWithMessageType:kSITNavigationUpdated
-                                                             payload:payload];
-        } else if ([messageType isEqual:@"DestinationReached"]) {
-            externalNavigation = [[SITExternalNavigation alloc] initWithMessageType:kSITDestinationReached
-                                                             payload:payload];
-        } else if ([messageType isEqual:@"OutsideRoute"]) {
-            externalNavigation = [[SITExternalNavigation alloc] initWithMessageType:kSITOutsideRoute
-                                                             payload:payload];
-        } else if ([messageType isEqual:@"NavigationCancelled"]) {
-            externalNavigation = [[SITExternalNavigation alloc] initWithMessageType:kSITNavigationCancelled
-                                                             payload:payload];
-        }
-        [[SITNavigationManager sharedManager] updateNavigationState:externalNavigation];
+        SITExternalNavigation *externalNavigation = [SITExternalNavigation fromDictionary:[arguments objectAtIndex: 0]];
 
-        if ([messageType isEqual:@"DestinationReached"] || [messageType isEqual:@"NavigationCancelled"]) {
-            _navigationUpdates = NO;
-            [[SITNavigationManager sharedManager] removeUpdates];
-        }
+        [[SITNavigationManager sharedManager] updateNavigationState:externalNavigation];
     }
 }
 
 RCT_EXPORT_METHOD(removeNavigationUpdates:(RCTResponseSenderBlock)callbackBlock)
 {
-    _navigationUpdates = NO;
     [[SITNavigationManager sharedManager] removeUpdates];
 }
 
@@ -913,18 +883,14 @@ RCT_EXPORT_METHOD(onExitGeofences){
 
     NSMutableDictionary *routeJO = [[SitumLocationWrapper.shared routeToJsonObject:route] mutableCopy];
 
-    if (_navigationUpdates) {
-        [self sendEventWithName:@"onNavigationStart" body:navigationJO.copy];
-    }
+    [self sendEventWithName:@"onNavigationStart" body:navigationJO.copy];
 }
 
 - (void)navigationManager:(id<SITNavigationInterface>)navigationManager
          didFailWithError:(NSError *)error {
     NSLog(@"%@", [NSString stringWithFormat: @"navigationManager.didFailWithError() called with: %ld", error]);
 
-    if (_navigationUpdates) {
-        [self sendEventWithName:@"onNavigationError" body:error.description];
-    }
+    [self sendEventWithName:@"onNavigationError" body:error.description];
 }
 
 - (void)navigationManager:(id<SITNavigationInterface>)navigationManager
@@ -934,9 +900,7 @@ RCT_EXPORT_METHOD(onExitGeofences){
 
     NSMutableDictionary *navigationJO = [NSMutableDictionary dictionaryWithDictionary:[SitumLocationWrapper.shared navigationProgressToJsonObject:progress]];
 
-    if (_navigationUpdates) {
-        [self sendEventWithName:@"onNavigationProgress" body:navigationJO.copy];
-    }
+    [self sendEventWithName:@"onNavigationProgress" body:navigationJO.copy];
 }
 
 - (void)navigationManager:(id<SITNavigationInterface>)navigationManager
@@ -945,9 +909,7 @@ destinationReachedOnRoute:(SITRoute *)route {
 
     NSMutableDictionary *routeJO = [[SitumLocationWrapper.shared routeToJsonObject:route] mutableCopy];
 
-    if (_navigationUpdates) {
-        [self sendEventWithName:@"onNavigationDestinationReached" body:navigationJO.copy];
-    }
+    [self sendEventWithName:@"onNavigationDestinationReached" body:navigationJO.copy];
 }
 
 - (void)navigationManager:(id<SITNavigationInterface>)navigationManager
@@ -956,9 +918,7 @@ destinationReachedOnRoute:(SITRoute *)route {
 
     NSMutableDictionary *navigationJO = [[NSMutableDictionary alloc] init];
 
-    if (_navigationUpdates) {
-        [self sendEventWithName:@"onUserOutsideRoute" body:navigationJO.copy];
-    }
+    [self sendEventWithName:@"onUserOutsideRoute" body:navigationJO.copy];
 }
 
 - (void)navigationManager:(id<SITNavigationInterface>)navigationManager
@@ -967,9 +927,7 @@ destinationReachedOnRoute:(SITRoute *)route {
 
     NSMutableDictionary *navigationJO = [[NSMutableDictionary alloc] init];
 
-    if (_navigationUpdates) {
-        [self sendEventWithName:@"onNavigationCancellation" body:navigationJO.copy];
-    }
+    [self sendEventWithName:@"onNavigationCancellation" body:navigationJO.copy];
 }
 
 

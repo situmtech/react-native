@@ -12,7 +12,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.situm.plugin.utils.ReactNativeJson;
+import com.situm.plugin.utils.ReactNativeUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,9 +73,11 @@ import static com.situm.plugin.SitumPlugin.EVENT_REALTIME_ERROR;
 import static com.situm.plugin.SitumPlugin.EVENT_REALTIME_UPDATE;
 import static com.situm.plugin.SitumPlugin.EVENT_ENTER_GEOFENCES;
 import static com.situm.plugin.SitumPlugin.EVENT_EXIT_GEOFENCES;
-import static com.situm.plugin.utils.ReactNativeJson.convertJsonToArray;
-import static com.situm.plugin.utils.ReactNativeJson.convertJsonToMap;
-import static com.situm.plugin.utils.ReactNativeJson.convertMapToJson;
+import static com.situm.plugin.utils.ReactNativeUtils.convertJsonToArray;
+import static com.situm.plugin.utils.ReactNativeUtils.convertJsonToMap;
+import static com.situm.plugin.utils.ReactNativeUtils.convertMapToJson;
+import static com.situm.plugin.utils.ReactNativeUtils.convertReadableMapToMap;
+import static com.situm.plugin.utils.ReactNativeUtils.convertMapToReadableMap;
 
 public class PluginHelper {
 
@@ -138,10 +140,6 @@ public class PluginHelper {
         return nmInstance;
     }
 
-    public void setNavigationManager(NavigationManager navigationManager) {
-        nmInstance = navigationManager;
-    }
-
     public void fetchBuildings(Callback success, Callback error) {
         try {
             getCommunicationManagerInstance().fetchBuildings(new Handler<Collection<Building>>() {
@@ -181,7 +179,7 @@ public class PluginHelper {
     // building, floors, events, indoorPois, outdoorPois, ¿geofences? ¿Paths?
     public void fetchTilesFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
         try {
-            JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
+            JSONObject jsonBuilding = ReactNativeUtils.convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
 
             getCommunicationManagerInstance().fetchTilesFromBuilding(building.getIdentifier(), new Handler<String>() {
@@ -193,7 +191,7 @@ public class PluginHelper {
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("results", url);
 
-                        invokeCallback(success, ReactNativeJson.convertJsonToMap(jsonObject));
+                        invokeCallback(success, ReactNativeUtils.convertJsonToMap(jsonObject));
                     } catch (JSONException e) {
                         invokeCallback(error, e.getMessage());
                     }
@@ -215,7 +213,7 @@ public class PluginHelper {
     // building, floors, events, indoorPois, outdoorPois, ¿geofences? ¿Paths?
     public void fetchBuildingInfo(ReadableMap buildingMap, Callback success, Callback error) {
         try {
-            JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
+            JSONObject jsonBuilding = ReactNativeUtils.convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
 
             getCommunicationManagerInstance().fetchBuildingInfo(building, new Handler<BuildingInfo>() {
@@ -228,7 +226,7 @@ public class PluginHelper {
                                                                                               // parse ? This needs to
                                                                                               // be on sdk
 
-                        invokeCallback(success, ReactNativeJson.convertJsonToMap(jsonObject));
+                        invokeCallback(success, ReactNativeUtils.convertJsonToMap(jsonObject));
                     } catch (JSONException e) {
                         invokeCallback(error, e.getMessage());
                     }
@@ -249,7 +247,7 @@ public class PluginHelper {
 
     public void fetchFloorsFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
         try {
-            JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
+            JSONObject jsonBuilding = ReactNativeUtils.convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
 
             getCommunicationManagerInstance().fetchFloorsFromBuilding(building, new Handler<Collection<Floor>>() {
@@ -287,7 +285,7 @@ public class PluginHelper {
 
     public void fetchMapFromFloor(ReadableMap buildingMap, Callback success, Callback error) {
         try {
-            JSONObject jsonFloor = ReactNativeJson.convertMapToJson(buildingMap);
+            JSONObject jsonFloor = ReactNativeUtils.convertMapToJson(buildingMap);
             Floor floor = SitumMapper.floorJsonObjectToFloor(jsonFloor);
 
             getCommunicationManagerInstance().fetchMapFromFloor(floor, new Handler<Bitmap>() {
@@ -315,7 +313,7 @@ public class PluginHelper {
 
     public void fetchGeofencesFromBuilding(ReadableMap buildingMap, Callback success, Callback error) {
         try {
-            JSONObject jsonBuilding = ReactNativeJson.convertMapToJson(buildingMap);
+            JSONObject jsonBuilding = ReactNativeUtils.convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
 
             getCommunicationManagerInstance().fetchGeofencesFromBuilding(building, new Handler<List<Geofence>>() {
@@ -361,7 +359,7 @@ public class PluginHelper {
                 SitumSdk.locationManager().removeLocationListener(locationListener);
             }
 
-            JSONObject jsonRequst = ReactNativeJson.convertMapToJson(locationRequestMap);
+            JSONObject jsonRequst = ReactNativeUtils.convertMapToJson(locationRequestMap);
             LocationRequest.Builder locationBuilder = new LocationRequest.Builder();
             SitumMapper.locationRequestJSONObjectToLocationRequest(jsonRequst, locationBuilder);
             LocationRequest locationRequest = locationBuilder.build();
@@ -638,10 +636,7 @@ public class PluginHelper {
 
         navigationRequest = builder.build();
 
-        // 2.2) Build Navigation Callback
-        navigationListener = _buildNavigationListener(eventEmitter, context);
-
-        getNavigationManagerInstance().requestNavigationUpdates(navigationRequest, navigationListener);
+        getNavigationManagerInstance().requestNavigationUpdates(navigationRequest);
 
     }
 
@@ -665,45 +660,15 @@ public class PluginHelper {
         }
     }
 
-    public void updateNavigationState(ReadableMap externalNavigationMap,
+    public void updateNavigationState(ReadableMap payload,
             DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter, Context context) {
 
         try {
-            JSONObject externalNavigationJson = convertMapToJson(externalNavigationMap);
-            if (!externalNavigationJson.has("payload")) {
-              externalNavigationJson.put("payload", new JSONObject());
-            }
-            String messageTypeValue = (String) externalNavigationJson.get("messageType");
-            Map<String, Object> payload = SitumMapper.jsonObjectToMapObject((JSONObject) externalNavigationJson.get("payload"));
-            ExternalNavigation.MessageType messageType = null;
+            Map<String, Object> externalNavigationMap = convertReadableMapToMap(payload);
 
-            switch(messageTypeValue) {
-                case "NavigationStarted":
-                    if (navigationListener == null) {
-                        navigationListener = _buildNavigationListener(eventEmitter, context);
-                        getNavigationManagerInstance().addNavigationListener(navigationListener);
-                    }
-                    messageType = ExternalNavigation.MessageType.NAVIGATION_STARTED;
-                    break;
-                case "NavigationUpdated":
-                    messageType = ExternalNavigation.MessageType.NAVIGATION_UPDATED;
-                    break;
-                case "DestinationReached":
-                    messageType = ExternalNavigation.MessageType.DESTINATION_REACHED;
-                    break;
-                case "OutsideRoute":
-                    messageType = ExternalNavigation.MessageType.OUTSIDE_ROUTE;
-                    break;
-                case "NavigationCancelled":
-                    messageType = ExternalNavigation.MessageType.NAVIGATION_CANCELLED;
-                    break;
-            }
-
-            if (messageType != null) {
-                ExternalNavigation externalNavigation = new ExternalNavigation(messageType, payload);
-                Log.i(TAG, "Update navigation state: " + externalNavigation.getMessageType());
-                getNavigationManagerInstance().updateNavigationState(externalNavigation);
-            }
+            getNavigationManagerInstance().updateNavigationState(
+                ExternalNavigation.fromMap(externalNavigationMap)
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -994,6 +959,14 @@ public class PluginHelper {
         SitumSdk.locationManager().setGeofenceListener(geofenceListener);
     }
 
+    public void onSdkInitialized(
+        DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter,
+        Context context
+    ) {
+        navigationListener = _buildNavigationListener(eventEmitter, context);
+        SitumSdk.navigationManager().addNavigationListener(navigationListener);
+    }
+
     private NavigationListener _buildNavigationListener(
         DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter,
         Context context
@@ -1002,9 +975,8 @@ public class PluginHelper {
             public void onStart(Route route) {
                 Log.d(TAG, "NavigationListener.onStart() called with: "+ route);
                 try {
-                    JSONObject jsonResult = SitumMapper.routeToJsonObject(route);
-                    eventEmitter.emit(EVENT_NAVIGATION_START, convertJsonToMap(jsonResult));
-                } catch (JSONException e) {
+                    eventEmitter.emit(EVENT_NAVIGATION_START, convertMapToReadableMap(route.toMap()));
+                } catch (Exception e) {
                     Log.e(TAG, "error building onStart() hybrid message with native Route: "+ route);
                     eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
                 }
@@ -1013,8 +985,7 @@ public class PluginHelper {
             public void onProgress(NavigationProgress progress) {
                 Log.d(TAG, "NavigationListener.onProgress() called with: " + progress);
                 try {
-                    JSONObject jsonProgress = SitumMapper.navigationProgressToJsonObject(progress, context);
-                    eventEmitter.emit(EVENT_NAVIGATION_PROGRESS, convertJsonToMap(jsonProgress));
+                    eventEmitter.emit(EVENT_NAVIGATION_PROGRESS, convertMapToReadableMap(progress.toMap()));
                 } catch (Exception e) {
                     Log.e(TAG, "error building onProgress() hybrid message with native NavigationProgress: " + progress);
                     eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
@@ -1024,40 +995,23 @@ public class PluginHelper {
             public void onDestinationReached(Route route) {
                 Log.d(TAG, "NavigationListener.onDestinationReached() called with: " + route);
                 try {
-                    JSONObject jsonResult = SitumMapper.routeToJsonObject(route);
-                    eventEmitter.emit(EVENT_NAVIGATION_DESTINATION_REACHED, convertJsonToMap(jsonResult));
-                    eventEmitter.emit(EVENT_NAVIGATION_FINISHED, convertJsonToMap(jsonResult));
-                } catch (JSONException e) {
+                    eventEmitter.emit(EVENT_NAVIGATION_DESTINATION_REACHED, convertMapToReadableMap(route.toMap()));
+                    eventEmitter.emit(EVENT_NAVIGATION_FINISHED, convertMapToReadableMap(route.toMap()));
+                } catch (Exception e) {
                     Log.e(TAG, "error building onDestinationReached() hybrid message with native Route: "+ route);
                     eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
                 }
-                getNavigationManagerInstance().removeNavigationListener(navigationListener);
-                navigationListener = null;
             }
 
             public void onUserOutsideRoute() {
                 Log.d(TAG, "NavigationListener.onUserOutsideRoute() called.");
-                JSONObject jsonResult = new JSONObject();
-                try {
-                    eventEmitter.emit(EVENT_NAVIGATION_OUTSIDE_ROUTE, convertJsonToMap(jsonResult));
-                } catch (JSONException e) {
-                    Log.e(TAG, "error building onUserOutsideRoute() hybrid message.");
-                    eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
-                }
+                eventEmitter.emit(EVENT_NAVIGATION_OUTSIDE_ROUTE, Arguments.createMap());
             }
 
             public void onCancellation() {
                 Log.d(TAG, "NavigationListener.onCancellation() called.");
-                JSONObject jsonResult = new JSONObject();
-                try {
-                    eventEmitter.emit(EVENT_NAVIGATION_CANCELLATION, convertJsonToMap(jsonResult));
-                    eventEmitter.emit(EVENT_NAVIGATION_FINISHED, convertJsonToMap(jsonResult));
-                } catch (JSONException e) {
-                    Log.e(TAG, "error building onCancellation() hybrid message.");
-                    eventEmitter.emit(EVENT_NAVIGATION_ERROR, e.getMessage());
-                }
-                getNavigationManagerInstance().removeNavigationListener(navigationListener);
-                navigationListener = null;
+                eventEmitter.emit(EVENT_NAVIGATION_CANCELLATION, Arguments.createMap());
+                eventEmitter.emit(EVENT_NAVIGATION_FINISHED, Arguments.createMap());
             }
         };
     }
