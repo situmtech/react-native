@@ -69,6 +69,17 @@ export interface MapViewRef {
    * This action will have the same effect as the user searching in the searchbar.
    */
   search: (searchFilter: SearchFilter) => void;
+
+  /**
+   * Selects the given a point saved as find my car on the map.
+   */
+  selectCar: () => void;
+
+  /**
+   * Starts navigating to a point saved as find my car.
+   * @param params.accessibilityMode You can optionally choose the desired [AccessibilityMode](https://developers.situm.com/sdk_documentation/react-native/typedoc/enums/accessibilitymode) used to calculate the route.
+   */
+  navigateToCar: (params: NavigateToCarPayload) => void;
 }
 
 export interface WayfindingResult {
@@ -147,6 +158,10 @@ export interface OnNavigationResult {
 
 export type NavigateToPoiPayload = {
   identifier: number;
+  accessibilityMode?: AccessibilityMode;
+};
+
+export type NavigateToCarPayload = {
   accessibilityMode?: AccessibilityMode;
 };
 
