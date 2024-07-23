@@ -167,9 +167,9 @@ const ViewerMapper = {
       type: navigate.accessibilityMode,
     });
   },
-  navigateToCar: (navigate: NavigateToCarPayload) => {
+  navigateToCar: (params?: NavigateToCarPayload) => {
     return mapperWrapper(`navigation.to_car`, {
-      type: navigate.accessibilityMode,
+      type: params?.accessibilityMode,
     });
   },
   navigateToPoint: ({
