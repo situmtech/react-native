@@ -71,7 +71,7 @@ export interface MapViewRef {
   search: (searchFilter: SearchFilter) => void;
 
   /**
-   * Selects the given a point saved as find my car on the map.
+   * Selects a point saved as find my car on the map.
    */
   selectCar: () => void;
 
