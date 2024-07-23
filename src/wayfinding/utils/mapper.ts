@@ -168,7 +168,7 @@ const ViewerMapper = {
     });
   },
   navigateToCar: (params?: NavigateToCarPayload) => {
-    return mapperWrapper(`navigation.to_car`, {
+    return mapperWrapper(`navigation.start.to_car`, {
       type: params?.accessibilityMode,
     });
   },
