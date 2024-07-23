@@ -202,7 +202,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     }, []);
 
     const _navigateToCar = useCallback((payload: NavigateToCarPayload) => {
-      if (!webViewRef.current || !payload) return;
+      if (!webViewRef.current) return;
 
       sendMessageToViewer(
         webViewRef.current,
@@ -228,12 +228,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (!webViewRef.current) {
         return;
       }
-      if (SitumPlugin.navigationIsRunning()) {
-        console.error(
-          "Situm > hook > Navigation on course, poi selection is unavailable"
-        );
-        return;
-      }
+
       sendMessageToViewer(webViewRef.current, ViewerMapper.selectPoi(poiId));
     }, []);
 
@@ -241,12 +236,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (!webViewRef.current) {
         return;
       }
-      if (SitumPlugin.navigationIsRunning()) {
-        console.error(
-          "Situm > hook > Navigation on course, poi selection is unavailable"
-        );
-        return;
-      }
+
       sendMessageToViewer(webViewRef.current, ViewerMapper.selectCar());
     }, []);
 
