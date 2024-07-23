@@ -201,7 +201,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, []);
 
-    const _navigateToCar = useCallback((payload: NavigateToCarPayload) => {
+    const _navigateToCar = useCallback((payload?: NavigateToCarPayload) => {
       if (!webViewRef.current) return;
 
       sendMessageToViewer(
