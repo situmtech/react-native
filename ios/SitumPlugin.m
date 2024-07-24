@@ -690,7 +690,7 @@ RCT_EXPORT_METHOD(updateNavigationWithLocation:(NSDictionary *)location  withSuc
 RCT_EXPORT_METHOD(updateNavigationState:(NSDictionary *)arguments)
 {
     if (arguments.count > 0) {
-        SITExternalNavigation *externalNavigation = [SITExternalNavigation fromDictionary:[arguments objectAtIndex: 0]];
+        SITExternalNavigation *externalNavigation = [SITExternalNavigation fromDictionary:arguments];
 
         [[SITNavigationManager sharedManager] updateNavigationState:externalNavigation];
     }
@@ -883,7 +883,7 @@ RCT_EXPORT_METHOD(onExitGeofences){
 
     NSMutableDictionary *routeJO = [[SitumLocationWrapper.shared routeToJsonObject:route] mutableCopy];
 
-    [self sendEventWithName:@"onNavigationStart" body:navigationJO.copy];
+    [self sendEventWithName:@"onNavigationStart" body:routeJO.copy];
 }
 
 - (void)navigationManager:(id<SITNavigationInterface>)navigationManager
@@ -909,7 +909,7 @@ destinationReachedOnRoute:(SITRoute *)route {
 
     NSMutableDictionary *routeJO = [[SitumLocationWrapper.shared routeToJsonObject:route] mutableCopy];
 
-    [self sendEventWithName:@"onNavigationDestinationReached" body:navigationJO.copy];
+    [self sendEventWithName:@"onNavigationDestinationReached" body:routeJO.copy];
 }
 
 - (void)navigationManager:(id<SITNavigationInterface>)navigationManager
