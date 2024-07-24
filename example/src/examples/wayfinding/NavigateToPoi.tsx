@@ -5,7 +5,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import SitumPlugin, {MapView, SitumProvider} from '@situm/react-native';
 import type {MapViewRef} from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
-import {Button, TextInput} from 'react-native-paper';
+import {Button} from 'react-native-paper';
 import requestPermission from '../Utils/requestPermission';
 
 const styles = StyleSheet.create({
@@ -94,20 +94,19 @@ const Screen: React.FC = () => {
         />
       </SafeAreaView>
       <SafeAreaView style={styles.input_container}>
-        <TextInput
-          placeholder={'POI identifier'}
-          value={selectedPoiIdentifier}
-          onChangeText={setSelectedPoiIdentifier}
-          style={styles.text_input}
-        />
         <Button
           mode="outlined"
           onPress={() => {
-            _controller?.navigateToPoi({
-              identifier: Number(selectedPoiIdentifier),
-            });
+            _controller?.selectCar();
           }}>
-          Navigate to POI
+          Select
+        </Button>
+        <Button
+          mode="outlined"
+          onPress={() => {
+            _controller?.navigateToCar();
+          }}>
+          Navigate
         </Button>
       </SafeAreaView>
     </>
@@ -116,7 +115,7 @@ const Screen: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <SitumProvider apiKey={SITUM_API_KEY}>
+    <SitumProvider>
       <Screen />
     </SitumProvider>
   );
