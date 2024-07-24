@@ -5750,9 +5750,9 @@ react-native-screens@^3.18.2:
     warn-once "^0.1.0"
 
 react-native-webview@*, react-native-webview@^13.2.2:
-  version "13.10.5"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-13.10.5.tgz#d6d2238b12dd295765eb5d4fdbb34759ffd1df27"
-  integrity sha512-ZfQJHyifuZop8cQB8HYpL9dxss9Cw9sOlMU+/yarfG/ugoL0rky/0tq9QmEydFMXjDSplSUb22OrRdFlqfXe0g==
+  version "13.10.3"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-13.10.3.tgz#afde1a52311fa6c56314466850764d142b7e6729"
+  integrity sha512-Gs8TvwvKvf8C6eVa3znyDn1MeYnC6tyPyBZz2D+pxys+tMn5bFUnDVdv7UpACEyoXIifsKRG7zJZu0D8OUsd2w==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
