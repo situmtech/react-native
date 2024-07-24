@@ -5,11 +5,11 @@ import SitumPlugin, {
   LocationStatusName,
   Location,
   Error,
-  requestPermission,
   ErrorCode,
 } from '@situm/react-native';
 import styles from '../styles/styles';
 import {Button, Card, Divider, List} from 'react-native-paper';
+import requestPermission from '../Utils/requestPermission';
 
 export const RemoteConfig = () => {
   // State variables to store location, status, error, and geofences data

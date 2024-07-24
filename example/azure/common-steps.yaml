@@ -33,10 +33,11 @@ steps:
 
       echo -e "\n[+] Install plugin dependencies\n"
       yarn install
-
+      
       echo -e "\n[+] Install example dependencies\n"
+      cd example
       rm -rf ios/Podfile.lock
-      yarn example install
+      yarn install
 
     displayName: Install plugin dependencies
 
