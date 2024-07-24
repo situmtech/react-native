@@ -71,13 +71,17 @@ export interface MapViewRef {
   search: (searchFilter: SearchFilter) => void;
 
   /**
-   * Selects a point saved as find my car on the map.
+   * Selects a point saved as Find My Car on the map.
+   *
+   * To use it, the feature 'Find My Car' must be enabled.
    */
   selectCar: () => void;
 
   /**
    * Starts navigating to a point saved as find my car.
    * @param params.accessibilityMode You can optionally choose the desired [AccessibilityMode](https://developers.situm.com/sdk_documentation/react-native/typedoc/enums/AccessibilityMode.html) used to calculate the route.
+   *
+   * To use it, the feature 'Find My Car' must be enabled.
    */
   navigateToCar: (params?: NavigateToCarPayload) => void;
 }
