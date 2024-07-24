@@ -77,7 +77,7 @@ export interface MapViewRef {
 
   /**
    * Starts navigating to a point saved as find my car.
-   * @param params.accessibilityMode You can optionally choose the desired [AccessibilityMode](https://developers.situm.com/sdk_documentation/react-native/typedoc/enums/accessibilitymode) used to calculate the route.
+   * @param params.accessibilityMode You can optionally choose the desired [AccessibilityMode](https://developers.situm.com/sdk_documentation/react-native/typedoc/enums/AccessibilityMode.html) used to calculate the route.
    */
   navigateToCar: (params?: NavigateToCarPayload) => void;
 }
