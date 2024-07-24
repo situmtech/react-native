@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
 const Screen: React.FC = () => {
   const mapViewRef = useRef<MapViewRef>(null);
   const [_controller, setController] = useState<MapViewRef | null>();
-  const [selectedPoiIdentifier, setSelectedPoiIdentifier] = useState<string>();
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -87,9 +86,7 @@ const Screen: React.FC = () => {
           configuration={{
             buildingIdentifier: SITUM_BUILDING_ID,
             situmApiKey: SITUM_API_KEY,
-          }}
-          onPoiSelected={evt => {
-            setSelectedPoiIdentifier(evt?.identifier.toString());
+            viewerDomain: 'https://pro-3477.map-viewer.situm.com',
           }}
         />
       </SafeAreaView>
