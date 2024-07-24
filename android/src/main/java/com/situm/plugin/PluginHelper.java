@@ -660,9 +660,7 @@ public class PluginHelper {
         }
     }
 
-    public void updateNavigationState(ReadableMap payload,
-            DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter, Context context) {
-
+    public void updateNavigationState(ReadableMap payload) {
         try {
             Map<String, Object> externalNavigationMap = convertReadableMapToMap(payload);
 
