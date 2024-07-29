@@ -51,6 +51,39 @@ const HomeScreen = ({navigation}) => {
     } catch (e) {
       console.error(`Situm > example > Could not initialize SDK ${e}`);
     }
+    SitumPlugin.onNavigationStart(route => {
+      console.log(
+        `Situm > example > navigation started to ${route.poiTo?.poiName}`,
+      );
+    });
+    SitumPlugin.onNavigationProgress(progress => {
+      console.log(
+        `Situm > example > navigation progress, remanining distance to goal ${progress.distanceToGoal.toFixed(
+          2,
+        )} m.`,
+      );
+    });
+    SitumPlugin.onNavigationDestinationReached(route => {
+      console.log(
+        `Situm > example > destination ${route.poiTo?.poiName} was reached.`,
+      );
+    });
+    SitumPlugin.onNavigationFinished(() => {
+      console.log('Situm > example > navigation has ended.');
+    });
+    SitumPlugin.onNavigationOutOfRoute(() => {
+      console.log(
+        'Situm > example > user went out of route, recalculating ...',
+      );
+    });
+    SitumPlugin.onNavigationCancellation(() => {
+      console.log('Situm > example > navigation was cancelled by the user.');
+    });
+    SitumPlugin.onNavigationError(error => {
+      console.log(
+        `Situm > example > there was some error while navigating: ${error}`,
+      );
+    });
   }, []);
 
   const screensAndSections = [
