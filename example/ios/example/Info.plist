@@ -57,12 +57,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>WKAppBoundDomains</key>
-	<array>
-		<string>map-viewer.situm.com</string>
-		<string>map-viewer-pre.situm.com</string>
-		<string>map-viewer-des.situm.com</string>
-		<string>pro-3477.map-viewer.situm.com</string>
-	</array>
 </dict>
 </plist>
