@@ -1,13 +1,17 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  useColorScheme,
+} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
 import SitumPlugin, {MapView, SitumProvider} from '@situm/react-native';
-import type {MapViewRef} from '@situm/react-native';
+import {AccessibilityMode, MapViewRef} from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
-import {Button, TextInput} from 'react-native-paper';
+import {Button, RadioButton} from 'react-native-paper';
 import requestPermission from '../Utils/requestPermission';
-
 const styles = StyleSheet.create({
   viewer_container: {
     flex: 1,
@@ -24,17 +28,22 @@ const styles = StyleSheet.create({
   text_input: {
     width: 180,
   },
+  radio_group: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 25,
+  },
 });
-
 const Screen: React.FC = () => {
   const mapViewRef = useRef<MapViewRef>(null);
   const [_controller, setController] = useState<MapViewRef | null>();
-  const [selectedPoiIdentifier, setSelectedPoiIdentifier] = useState<string>();
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-
+  const [accessibilityMode, setAccessibilityMode] =
+    React.useState<AccessibilityMode>(AccessibilityMode.CHOOSE_SHORTEST);
   /**
    * Helper function that sets up the system to start positioning
    */
@@ -52,7 +61,6 @@ const Screen: React.FC = () => {
       console.log(`Situm > example > Could not start positioning ${e}`);
     }
   };
-
   /**
    * Helper function that stop the positioning session
    */
@@ -63,14 +71,12 @@ const Screen: React.FC = () => {
       console.log(`Situm > example > Could not stop positioning ${e}`);
     }
   };
-
   // Initialize SDK when mounting map and start positioning
   useEffect(() => {
     initializeSitum();
     // Once component unmounts, stop positioning
     return () => stopPositioning();
   }, []);
-
   // Initialize controller
   useEffect(() => {
     if (!mapViewRef) {
@@ -78,7 +84,6 @@ const Screen: React.FC = () => {
     }
     setController(mapViewRef.current);
   }, [mapViewRef]);
-
   return (
     <>
       <SafeAreaView style={{...styles.viewer_container, ...backgroundStyle}}>
@@ -87,39 +92,53 @@ const Screen: React.FC = () => {
           configuration={{
             buildingIdentifier: SITUM_BUILDING_ID,
             situmApiKey: SITUM_API_KEY,
-          }}
-          onPoiSelected={evt => {
-            setSelectedPoiIdentifier(evt?.identifier.toString());
+            viewerDomain: 'https://pro-3477.map-viewer.situm.com',
           }}
         />
       </SafeAreaView>
       <SafeAreaView style={styles.input_container}>
-        <TextInput
-          placeholder={'POI identifier'}
-          value={selectedPoiIdentifier}
-          onChangeText={setSelectedPoiIdentifier}
-          style={styles.text_input}
-        />
         <Button
           mode="outlined"
           onPress={() => {
-            _controller?.navigateToPoi({
-              identifier: Number(selectedPoiIdentifier),
-            });
+            _controller?.selectCar();
           }}>
-          Navigate to POI
+          Select
         </Button>
+        <Button
+          mode="outlined"
+          onPress={() => {
+            _controller?.navigateToCar({accessibilityMode: accessibilityMode});
+          }}>
+          Navigate
+        </Button>
+      </SafeAreaView>
+      <SafeAreaView>
+        <RadioButton.Group
+          onValueChange={newValue => {
+            setAccessibilityMode(newValue as AccessibilityMode);
+          }}
+          value={accessibilityMode}>
+          {Object.keys(AccessibilityMode).map(v => {
+            return (
+              <View style={styles.radio_group} key={v}>
+                <RadioButton
+                  value={v}
+                  status={accessibilityMode === v ? 'checked' : 'unchecked'}
+                />
+                <Text>{v}</Text>
+              </View>
+            );
+          })}
+        </RadioButton.Group>
       </SafeAreaView>
     </>
   );
 };
-
 const App: React.FC = () => {
   return (
-    <SitumProvider apiKey={SITUM_API_KEY}>
+    <SitumProvider>
       <Screen />
     </SitumProvider>
   );
 };
-
 export default App;
