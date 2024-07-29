@@ -1,16 +1,10 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  useColorScheme,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, View, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import SitumPlugin, {MapView, SitumProvider} from '@situm/react-native';
 import {AccessibilityMode, MapViewRef} from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
-import {Button, RadioButton} from 'react-native-paper';
+import {Button, Text} from 'react-native-paper';
 import requestPermission from '../Utils/requestPermission';
 const styles = StyleSheet.create({
   viewer_container: {
@@ -32,7 +26,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    height: 25,
   },
 });
 const Screen: React.FC = () => {
@@ -113,23 +106,18 @@ const Screen: React.FC = () => {
         </Button>
       </SafeAreaView>
       <SafeAreaView>
-        <RadioButton.Group
-          onValueChange={newValue => {
-            setAccessibilityMode(newValue as AccessibilityMode);
-          }}
-          value={accessibilityMode}>
-          {Object.keys(AccessibilityMode).map(v => {
-            return (
-              <View style={styles.radio_group} key={v}>
-                <RadioButton
-                  value={v}
-                  status={accessibilityMode === v ? 'checked' : 'unchecked'}
-                />
-                <Text>{v}</Text>
-              </View>
-            );
-          })}
-        </RadioButton.Group>
+        {Object.keys(AccessibilityMode).map(v => {
+          return (
+            <View style={styles.radio_group} key={v}>
+              <Button
+                mode="outlined"
+                onPress={() => setAccessibilityMode(v as AccessibilityMode)}>
+                {v}
+              </Button>
+            </View>
+          );
+        })}
+        <Text>Route type: {accessibilityMode}</Text>
       </SafeAreaView>
     </>
   );
