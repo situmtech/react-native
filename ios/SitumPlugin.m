@@ -84,7 +84,7 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"locationChanged", @"statusChanged", @"locationError", @"locationStopped", @"navigationUpdated", @"navigationError", @"realtimeUpdated", @"realtimeError", @"onEnterGeofences", @"onExitGeofences"];
+    return @[@"locationChanged", @"statusChanged", @"locationError", @"locationStopped", @"onNavigationStart", @"onNavigationError", @"onNavigationProgress", @"onNavigationDestinationReached", @"onNavigationCancellation", @"onUserOutsideRoute", @"realtimeUpdated", @"realtimeError", @"onEnterGeofences", @"onExitGeofences"];
 }
 
 @synthesize computedRoute = _computedRoute;
