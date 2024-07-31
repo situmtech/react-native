@@ -26,6 +26,7 @@ import {
   type PoiCategory,
   type PoiIcon,
   type Point,
+  type Route,
   type SdkVersion,
 } from "./types";
 import { SdkNavigationUpdateType } from "./types/constants";
@@ -538,6 +539,25 @@ export default class SitumPlugin {
   };
 
   /**
+   * INTERNAL METHOD.
+   *
+   * Update SDK with the viewer navigation states.
+   * Do not use this method as it is intended for internal use
+   * by the map viewer module.
+   *
+   * @param externalNavigation
+   */
+  static updateNavigationState = (externalNavigation: Map<string, any>) => {
+    return exceptionWrapper<void>(() => {
+      RNCSitumPlugin.updateNavigationState(externalNavigation);
+    });
+  };
+
+  //-----------------------------------------------------------------------------//
+  //-----------------------------GEOFENCES CALLBACKS-----------------------------//
+  //-----------------------------------------------------------------------------//
+
+  /**
    * Callback that notifies when the user enters a {@link Geofence}.
    *
    * In order to use correctly these callbacks you must know the following:
@@ -567,6 +587,10 @@ export default class SitumPlugin {
     RNCSitumPlugin.onExitGeofences();
     SitumPluginEventEmitter.addListener("onExitGeofences", callback);
   };
+
+  //-----------------------------------------------------------------------------//
+  //-----------------------------LOCATION CALLBACKS------------------------------//
+  //-----------------------------------------------------------------------------//
 
   /**
    * Callback that notifies when the user {@link Location} changes.
@@ -609,54 +633,88 @@ export default class SitumPlugin {
     SitumPluginEventEmitter.addListener("locationStopped", callback);
   };
 
+  //-----------------------------------------------------------------------------//
+  //-----------------------------NAVIGATION CALLBACKS----------------------------//
+  //-----------------------------------------------------------------------------//
+
   /**
-   * Callback that notifies every navigation progress.
+   * Callback that notifies when navigation starts.
    *
-   * @param callback the function called when there is a navigation progress.
+   * @param callback a function that returns the initial {@link Route} by parameters.
+   */
+  static onNavigationStart = (callback: (route: Route) => void) => {
+    SitumPluginEventEmitter.addListener(
+      SdkNavigationUpdateType.START,
+      (route: Route) => callback(route)
+    );
+  };
+
+  /**
+   * Callback that notifies every progress the user makes while navigating.
+   *
+   * @param callback a function that returns the {@link NavigationProgress} by parameters.
    */
   static onNavigationProgress = (
     callback: (progress: NavigationProgress) => void
   ) => {
     SitumPluginEventEmitter.addListener(
-      "navigationUpdated",
-      (progress: NavigationProgress) => {
-        if (progress.type === SdkNavigationUpdateType.PROGRESS) {
-          callback(progress);
-        }
-      }
+      SdkNavigationUpdateType.PROGRESS,
+      (progress: NavigationProgress) => callback(progress)
     );
   };
 
   /**
-   * Callback that notifies when the user gets out of the current route
+   * Callback that notifies when the user reaches the destination POI.
+   *
+   * @param callback a function that returns the completed {@link Route} by parameters.
+   */
+  static onNavigationDestinationReached = (
+    callback: (route: Route) => void
+  ) => {
+    SitumPluginEventEmitter.addListener(
+      SdkNavigationUpdateType.DESTINATION_REACHED,
+      (route: Route) => callback(route)
+    );
+  };
+
+  /**
+   * Callback that notifies when the user gets out of the current route.
    *
    * @param callback the function called when the user gets out of the current route.
    */
   static onNavigationOutOfRoute = (callback: () => void) => {
     SitumPluginEventEmitter.addListener(
-      "navigationUpdated",
-      (progress: NavigationProgress) => {
-        if (progress.type === SdkNavigationUpdateType.OUT_OF_ROUTE) {
-          // TODO: maybe this causes the navigation to not work on oor?
-          callback();
-        }
-      }
+      SdkNavigationUpdateType.OUTSIDE_ROUTE,
+      // TODO: maybe this causes the navigation to not work on oor?
+      callback
     );
   };
 
   /**
+   * @deprecated
+   * DEPRECATED: Use instead onNavigationCancellation()
+   * and onNavigationDestinationReached() to determine why did the navigation end.
+   *
    * Callback that notifies when the user finishes the route.
    *
    * @param callback the function called when the user finishes the route.
    */
   static onNavigationFinished = (callback: () => void) => {
     SitumPluginEventEmitter.addListener(
-      "navigationUpdated",
-      (progress: NavigationProgress) => {
-        if (progress.type === SdkNavigationUpdateType.FINISHED) {
-          callback();
-        }
-      }
+      SdkNavigationUpdateType.FINISHED,
+      callback
+    );
+  };
+
+  /**
+   * Callback that notifies when the user does cancel the navigation.
+   *
+   * @param callback the function called when the user cancels the navigation.
+   */
+  static onNavigationCancellation = (callback: () => void) => {
+    SitumPluginEventEmitter.addListener(
+      SdkNavigationUpdateType.CANCELLATION,
+      callback
     );
   };
 
@@ -666,6 +724,9 @@ export default class SitumPlugin {
    * @param callback the function called when there is an error during navigation.
    */
   static onNavigationError = (callback: (error: any) => void) => {
-    SitumPluginEventEmitter.addListener("navigationError", callback);
+    SitumPluginEventEmitter.addListener(
+      SdkNavigationUpdateType.ERROR,
+      callback
+    );
   };
 }

@@ -1120,17 +1120,17 @@ class SitumMapper {
         if (joOptions != null) {
 
             if (joOptions.has(SitumMapper.INCLUDED_TAGS) && joOptions.get(SitumMapper.INCLUDED_TAGS) != null) {
-                includedTags = new ArrayList<String>();     
-                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.INCLUDED_TAGS); 
-                for (int i=0;i<jsonArray.length();i++) { 
+                includedTags = new ArrayList<String>();
+                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.INCLUDED_TAGS);
+                for (int i=0;i<jsonArray.length();i++) {
                     includedTags.add(jsonArray.get(i).toString());
                 }
             }
 
             if (joOptions.has(SitumMapper.EXCLUDED_TAGS) && joOptions.get(SitumMapper.EXCLUDED_TAGS) != null) {
-                excludedTags = new ArrayList<String>();     
-                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.EXCLUDED_TAGS); 
-                for (int i=0;i<jsonArray.length();i++) { 
+                excludedTags = new ArrayList<String>();
+                JSONArray jsonArray = joOptions.getJSONArray(SitumMapper.EXCLUDED_TAGS);
+                for (int i=0;i<jsonArray.length();i++) {
                     excludedTags.add(jsonArray.get(i).toString());
                 }
             }

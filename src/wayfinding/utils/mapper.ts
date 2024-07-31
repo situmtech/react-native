@@ -11,6 +11,7 @@ import type {
 import type {
   DirectionsMessage,
   MapViewDirectionsOptions,
+  NavigateToCarPayload,
   NavigateToPointPayload,
   NavigateToPoiPayload,
   Navigation,
@@ -75,8 +76,8 @@ export const createNavigationRequest = (payload: any): NavigationRequest => {
   );
 };
 
-const mapperWrapper = (type: string, payload: unknown) => {
-  return JSON.stringify({ type, payload });
+const mapperWrapper = (type: string, payload?: unknown) => {
+  return JSON.stringify({ type, payload: payload ?? {} });
 };
 
 const ViewerMapper = {
@@ -100,6 +101,9 @@ const ViewerMapper = {
   // Cartography
   selectPoi: (poiId: number | null) => {
     return mapperWrapper(`cartography.select_poi`, { identifier: poiId });
+  },
+  selectCar: () => {
+    return mapperWrapper(`cartography.select_car`);
   },
   selectPoiCategory: (categoryId: number) => {
     return mapperWrapper(`cartography.select_poi_category`, {
@@ -161,6 +165,11 @@ const ViewerMapper = {
     return mapperWrapper(`navigation.start`, {
       navigationTo: navigate?.identifier,
       type: navigate.accessibilityMode,
+    });
+  },
+  navigateToCar: (params?: NavigateToCarPayload) => {
+    return mapperWrapper(`navigation.start.to_car`, {
+      type: params?.accessibilityMode,
     });
   },
   navigateToPoint: ({
