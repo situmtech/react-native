@@ -84,7 +84,7 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"locationChanged", @"statusChanged", @"locationError", @"locationStopped", @"onNavigationStart", @"onNavigationError", @"onNavigationProgress", @"onNavigationDestinationReached", @"onNavigationCancellation", @"onUserOutsideRoute", @"realtimeUpdated", @"realtimeError", @"onEnterGeofences", @"onExitGeofences"];
+    return @[@"locationChanged", @"statusChanged", @"locationError", @"locationStopped", @"onNavigationStart", @"onNavigationError", @"onNavigationProgress", @"onNavigationDestinationReached", @"onNavigationCancellation", @"onUserOutsideRoute", @"realtimeUpdated", @"realtimeError", @"onEnterGeofences", @"onExitGeofences", @"onNavigationFinished"];
 }
 
 @synthesize computedRoute = _computedRoute;
@@ -909,6 +909,7 @@ destinationReachedOnRoute:(SITRoute *)route {
 
     NSMutableDictionary *routeJO = [[SitumLocationWrapper.shared routeToJsonObject:route] mutableCopy];
 
+    [self sendEventWithName:@"onNavigationFinished" body: nil];
     [self sendEventWithName:@"onNavigationDestinationReached" body:routeJO.copy];
 }
 
@@ -927,6 +928,7 @@ destinationReachedOnRoute:(SITRoute *)route {
 
     NSMutableDictionary *navigationJO = [[NSMutableDictionary alloc] init];
 
+    [self sendEventWithName:@"onNavigationFinished" body: nil];
     [self sendEventWithName:@"onNavigationCancellation" body:navigationJO.copy];
 }
 
