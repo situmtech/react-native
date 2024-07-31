@@ -34,7 +34,7 @@ export interface MapViewRef {
   /**
    * Starts navigating to the given POI.
    * @param params.identifier You can obtain the identifiers of your POIs by retrieving them with [SitumPlugin.fetchIndoorPOIsFromBuilding()](https://developers.situm.com/sdk_documentation/react-native/typedoc/classes/default.html#fetchIndoorPOIsFromBuilding).
-   * @param params.accessibilityMode You can optionally choose the desired [AccessibilityMode](https://developers.situm.com/sdk_documentation/react-native/typedoc/enums/accessibilitymode) used to calculate the route.
+   * @param params.accessibilityMode You can optionally choose the desired [AccessibilityMode](https://developers.situm.com/sdk_documentation/react-native/typedoc/enums/AccessibilityMode.html) used to calculate the route.
    */
   navigateToPoi: (params: {
     identifier: number;
@@ -46,7 +46,7 @@ export interface MapViewRef {
    * @param params.lng The longitude of the destination point.
    * @param params.floorIdentifier The floorIndetifier of the destination point.
    * @param params.navigationName You can optionally set the name of the destination to be displayed on the MapView.
-   * @param params.accessibilityMode You can optionally choose the desired [AccessibilityMode](https://developers.situm.com/sdk_documentation/react-native/typedoc/enums/accessibilitymode) used to calculate the route.
+   * @param params.accessibilityMode You can optionally choose the desired [AccessibilityMode](https://developers.situm.com/sdk_documentation/react-native/typedoc/enums/AccessibilityMode.html) used to calculate the route.
    */
   navigateToPoint: (params: {
     lat: number;
@@ -69,6 +69,21 @@ export interface MapViewRef {
    * This action will have the same effect as the user searching in the searchbar.
    */
   search: (searchFilter: SearchFilter) => void;
+
+  /**
+   * Selects a point saved as Find My Car on the map.
+   *
+   * To use it, the feature 'Find My Car' must be enabled.
+   */
+  selectCar: () => void;
+
+  /**
+   * Starts navigating to a point saved as find my car.
+   * @param params.accessibilityMode You can optionally choose the desired [AccessibilityMode](https://developers.situm.com/sdk_documentation/react-native/typedoc/enums/AccessibilityMode.html) used to calculate the route.
+   *
+   * To use it, the feature 'Find My Car' must be enabled.
+   */
+  navigateToCar: (params?: NavigateToCarPayload) => void;
 }
 
 export interface WayfindingResult {
@@ -147,6 +162,10 @@ export interface OnNavigationResult {
 
 export type NavigateToPoiPayload = {
   identifier: number;
+  accessibilityMode?: AccessibilityMode;
+};
+
+export type NavigateToCarPayload = {
   accessibilityMode?: AccessibilityMode;
 };
 
