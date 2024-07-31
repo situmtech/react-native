@@ -378,7 +378,7 @@ PODS:
     - glog
   - react-native-safe-area-context (4.10.8):
     - React-Core
-  - react-native-webview (13.10.5):
+  - react-native-webview (13.10.3):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - React-NativeModulesApple (0.72.12):
@@ -491,18 +491,18 @@ PODS:
     - React-jsi (= 0.72.12)
     - React-logger (= 0.72.12)
     - React-perflogger (= 0.72.12)
-  - ReactNativeSitumPlugin (3.8.5):
+  - ReactNativeSitumPlugin (3.9.3):
     - RCT-Folly (= 2021.07.22.00)
     - React
     - React-Core
-    - SitumSDK (= 3.14.1)
+    - SitumSDK (= 3.15.0)
   - RNPermissions (3.10.1):
     - React-Core
   - RNScreens (3.32.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - React-RCTImage
-  - SitumSDK (3.14.1):
+  - SitumSDK (3.15.0):
     - Protobuf (~> 3.7)
     - SSZipArchive (~> 2.4)
   - SocketRocket (0.6.1)
@@ -727,7 +727,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 8e291ed0ab371314de269001d6b9b25db6aabf42
   React-logger: d4010de0b0564e63637ad08373bc73b5d919974b
   react-native-safe-area-context: b7daa1a8df36095a032dff095a1ea8963cb48371
-  react-native-webview: f1745c33e5278e7c58ff7b8aff48dbb801395269
+  react-native-webview: 9946090a1cd4add775cf91327f93bc910bf89286
   React-NativeModulesApple: 694679e4193a49c09f0a76ee27ec09b2c466d59c
   React-perflogger: 63606aeab27683112e1bd4ef25bd099ec1cb03f8
   React-RCTActionSheet: 5b39fc2b479d47325e5ac95193c482044bfebbc6
@@ -745,10 +745,10 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 8aea338c561b2175f47018124c076d89d3808d30
   React-utils: 9a24cb88f950d1020ee55bddacbc8c16a611e2dc
   ReactCommon: 76843a9bb140596351ac2786257ac9fe60cafabb
-  ReactNativeSitumPlugin: e7f1e1ecc08c1eb55e4d659a507fe3addfa47ffe
+  ReactNativeSitumPlugin: 2dbff68c7c9cca83491e47bb1ebe2737ccba83f0
   RNPermissions: 4377d1d869b3b32308932b8c11ba47880933d7c6
   RNScreens: ad1c105ac9107cf1a613bf80889485458eb20bd7
-  SitumSDK: 926a7dd54f768cf825bfa6963125e3261171c131
+  SitumSDK: c8cd36171ea37e87f74108b81b9771c1ac63e0ac
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   Yoga: 87e59f6d458e5061d2421086c5de994b3f7cd151
