@@ -94,6 +94,7 @@ interface NavigationAPI {
     onSuccess: (response: void) => void,
     onError: (error: Error) => void
   ) => void;
+  updateNavigationState: (externalNavigation: Map<string, any>) => void;
 }
 
 interface DirectionsAPI {

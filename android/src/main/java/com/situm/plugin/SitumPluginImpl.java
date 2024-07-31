@@ -53,6 +53,10 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @ReactMethod
     public void initSitumSDK() {
         SitumSdk.init(reactContext);
+        getPluginInstance().onSdkInitialized(
+            getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class),
+            getReactApplicationContext()
+        );
     }
 
     // Required for rn built in EventEmitter Calls.
@@ -238,6 +242,12 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @ReactMethod
     public void updateNavigationWithLocation(ReadableMap map, Callback success, Callback error) {
         getPluginInstance().updateNavigationWithLocation(map, success, error);
+    }
+
+    @Override
+    @ReactMethod
+    public void updateNavigationState(ReadableMap map) {
+        getPluginInstance().updateNavigationState(map);
     }
 
     @Override

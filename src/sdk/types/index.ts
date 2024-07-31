@@ -236,6 +236,7 @@ export type Point = {
  * @name Route
  * @description Route between two points.
  *
+ * @property {Poi} poiTo - The destination Poi the user is currently navigating to.
  * @property {RouteStep[]} edges - Ordered list of steps to go to the goal point
  * @property {RouteStep} firstStep - First step
  * @property {Point} from - Point where the route starts.
@@ -248,6 +249,7 @@ export type Point = {
  * @property {RouteSegment[]} segments - List of segments formed by consecutive points and a floor identifier
  */
 export type Route = {
+  poiTo?: Poi;
   edges: RouteStep[];
   firstStep: RouteStep;
   from: Point;

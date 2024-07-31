@@ -10,8 +10,13 @@ public interface SitumPlugin {
     String EVENT_LOCATION_STATUS_CHANGED = "statusChanged";
     String EVENT_LOCATION_STOPPED = "locationStopped";
 
-    String EVENT_NAVIGATION_UPDATE = "navigationUpdated";
-    String EVENT_NAVIGATION_ERROR = "navigationError";
+    String EVENT_NAVIGATION_START = "onNavigationStart";
+    String EVENT_NAVIGATION_PROGRESS = "onNavigationProgress";
+    String EVENT_NAVIGATION_FINISHED = "onNavigationFinished";
+    String EVENT_NAVIGATION_DESTINATION_REACHED = "onNavigationDestinationReached";
+    String EVENT_NAVIGATION_OUTSIDE_ROUTE = "onUserOutsideRoute";
+    String EVENT_NAVIGATION_CANCELLATION = "onNavigationCancellation";
+    String EVENT_NAVIGATION_ERROR = "onNavigationError";
 
     String EVENT_REALTIME_ERROR = "realtimeError";
     String EVENT_REALTIME_UPDATE = "realtimeUpdated";
@@ -64,6 +69,8 @@ public interface SitumPlugin {
     void requestNavigationUpdates(ReadableMap map);
 
     void updateNavigationWithLocation(ReadableMap map, Callback success, Callback error);
+
+    void updateNavigationState(ReadableMap map);
 
     void removeNavigationUpdates(Callback callback);
 

@@ -8,13 +8,18 @@ export enum NavigationStatus {
 export enum NavigationUpdateType {
   PROGRESS = "PROGRESS",
   OUT_OF_ROUTE = "OUT_OF_ROUTE",
-  FINISHED = "DESTINATION_REACHED",
+  DESTINATION_REACHED = "DESTINATION_REACHED",
+  CANCELLED = "CANCELLED",
 }
 
 export enum SdkNavigationUpdateType {
-  PROGRESS = "progress",
-  OUT_OF_ROUTE = "userOutsideRoute",
-  FINISHED = "destinationReached",
+  START = "onNavigationStart",
+  PROGRESS = "onNavigationProgress",
+  FINISHED = "onNavigationFinished",
+  DESTINATION_REACHED = "onNavigationDestinationReached",
+  OUTSIDE_ROUTE = "onUserOutsideRoute",
+  CANCELLATION = "onNavigationCancellation",
+  ERROR = "onNavigationError",
 }
 
 export enum LocationStatusName {

@@ -30,6 +30,7 @@ import {
   type MapViewDirectionsOptions,
   type MapViewError,
   type MapViewRef,
+  type NavigateToCarPayload,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
   type OnDirectionsRequestInterceptor,
@@ -200,6 +201,15 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, []);
 
+    const _navigateToCar = useCallback((payload?: NavigateToCarPayload) => {
+      if (!webViewRef.current) return;
+
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.navigateToCar(payload)
+      );
+    }, []);
+
     const _navigateToPoint = useCallback((payload: NavigateToPointPayload) => {
       if (
         !webViewRef.current ||
@@ -218,13 +228,16 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (!webViewRef.current) {
         return;
       }
-      if (SitumPlugin.navigationIsRunning()) {
-        console.error(
-          "Situm > hook > Navigation on course, poi selection is unavailable"
-        );
+
+      sendMessageToViewer(webViewRef.current, ViewerMapper.selectPoi(poiId));
+    }, []);
+
+    const _selectCar = useCallback(() => {
+      if (!webViewRef.current) {
         return;
       }
-      sendMessageToViewer(webViewRef.current, ViewerMapper.selectPoi(poiId));
+
+      sendMessageToViewer(webViewRef.current, ViewerMapper.selectCar());
     }, []);
 
     const _selectPoiCategory = useCallback((categoryId: number) => {
@@ -321,6 +334,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           selectPoi(poiId: number) {
             _selectPoi(poiId);
           },
+          selectCar() {
+            _selectCar();
+          },
           selectPoiCategory(poiId: number) {
             _selectPoiCategory(poiId);
           },
@@ -339,6 +355,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           },
           navigateToPoi(payload): void {
             _navigateToPoi(payload);
+          },
+          navigateToCar(payload): void {
+            _navigateToCar(payload);
           },
           navigateToPoint(payload: NavigateToPointPayload): void {
             _navigateToPoint(payload);
@@ -362,8 +381,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       [
         stopNavigation,
         _navigateToPoi,
+        _navigateToCar,
         _navigateToPoint,
         _selectPoi,
+        _selectCar,
         _selectPoiCategory,
         _setDirectionsOptions,
         _setFavoritePois,
@@ -522,6 +543,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           } else {
             setBuildingIdentifier(eventParsed.payload.identifier.toString());
           }
+          break;
+        case "viewer.navigation.started":
+        case "viewer.navigation.updated":
+        case "viewer.navigation.stopped":
+          SitumPlugin.updateNavigationState(eventParsed.payload);
           break;
         default:
           break;

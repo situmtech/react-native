@@ -999,6 +999,10 @@ static SitumLocationWrapper *singletonSitumLocationWrapperObj;
     [jo setObject:stepsJsonArray.lastObject forKey:@"lastStep"];
     [jo setObject:pointsJsonArray forKey:@"nodes"];
     
+    if (route.poiTo == nil) return jo;
+    
+    [jo setObject:[route.poiTo toDictionary] forKey:@"poiTo"];
+    
     return jo.copy;
 }
 
