@@ -110,6 +110,12 @@ const ViewerMapper = {
       identifier: categoryId,
     });
   },
+  selectFloor: (floorIdentifier: number, options?: { fitCamera?: boolean }) => {
+    return mapperWrapper(`cartography.select_floor`, {
+      identifier: floorIdentifier,
+      options,
+    });
+  },
   setDirectionsOptions: (directionsOptions: MapViewDirectionsOptions) => {
     return mapperWrapper(`directions.set_options`, {
       includedTags: directionsOptions.includedTags,
