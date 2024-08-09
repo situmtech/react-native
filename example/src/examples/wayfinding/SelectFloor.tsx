@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 const Screen: React.FC = () => {
   const mapViewRef = useRef<MapViewRef>(null);
   const [_controller, setController] = useState<MapViewRef | null>();
-  const [selectedPoiCategoryIdentifier, setSelectedPoiCategoryIdentifier] =
+  const [selectedFloorIdentifier, setSelectedFloorIdentifier] =
     useState<string>();
   const [fitCamera, setFitCamera] = useState<boolean>(false);
   const isDarkMode = useColorScheme() === 'dark';
@@ -102,8 +102,8 @@ const Screen: React.FC = () => {
       <SafeAreaView style={styles.input_container}>
         <TextInput
           placeholder={'Floor identifier'}
-          value={selectedPoiCategoryIdentifier}
-          onChangeText={setSelectedPoiCategoryIdentifier}
+          value={selectedFloorIdentifier}
+          onChangeText={setSelectedFloorIdentifier}
           style={styles.text_input}
         />
         <SafeAreaView style={styles.input_buttons}>
@@ -117,11 +117,10 @@ const Screen: React.FC = () => {
           <Button
             mode="outlined"
             onPress={() => {
-              selectedPoiCategoryIdentifier &&
-                _controller?.selectFloor(
-                  Number(selectedPoiCategoryIdentifier),
-                  {fitCamera: fitCamera},
-                );
+              selectedFloorIdentifier &&
+                _controller?.selectFloor(Number(selectedFloorIdentifier), {
+                  fitCamera: fitCamera,
+                });
             }}>
             Select Floor
           </Button>
