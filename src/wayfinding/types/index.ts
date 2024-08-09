@@ -33,7 +33,7 @@ export interface MapViewRef {
    */
   selectFloor: (
     floorIdentifier: number,
-    options?: { fitCamera?: boolean }
+    options?: CartographySelectionOptions
   ) => void;
   /**
    * Define the {@link MapViewDirectionsOptions} that the routes calculated by the MapView will use.
@@ -208,4 +208,8 @@ export interface SearchFilter {
    * An empty string will clear the current category filter (if any). A null value will apply no change.
    */
   poiCategoryIdentifier?: string | null;
+}
+
+export interface CartographySelectionOptions {
+  fitCamera?: boolean;
 }
