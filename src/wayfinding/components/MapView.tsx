@@ -27,6 +27,7 @@ import SitumPlugin, {
 } from "../../sdk";
 import useSitum from "../hooks";
 import {
+  type CartographySelectionOptions,
   type MapViewDirectionsOptions,
   type MapViewError,
   type MapViewRef,
@@ -257,7 +258,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     }, []);
 
     const _selectFloor = useCallback(
-      (floorId: number, options?: { fitCamera?: boolean }) => {
+      (floorId: number, options?: CartographySelectionOptions) => {
         if (!webViewRef.current) {
           return;
         }
@@ -359,7 +360,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           selectPoiCategory(poiId: number) {
             _selectPoiCategory(poiId);
           },
-          selectFloor(poiId: number, options?: { fitCamera?: boolean }) {
+          selectFloor(poiId: number, options?: CartographySelectionOptions) {
             _selectFloor(poiId, options);
           },
           setDirectionsOptions(directionsOptions: MapViewDirectionsOptions) {

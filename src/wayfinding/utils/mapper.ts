@@ -9,6 +9,7 @@ import type {
   Point,
 } from "../../sdk/types";
 import type {
+  CartographySelectionOptions,
   DirectionsMessage,
   MapViewDirectionsOptions,
   NavigateToCarPayload,
@@ -110,7 +111,10 @@ const ViewerMapper = {
       identifier: categoryId,
     });
   },
-  selectFloor: (floorIdentifier: number, options?: { fitCamera?: boolean }) => {
+  selectFloor: (
+    floorIdentifier: number,
+    options?: CartographySelectionOptions
+  ) => {
     return mapperWrapper(`cartography.select_floor`, {
       identifier: floorIdentifier,
       options,
