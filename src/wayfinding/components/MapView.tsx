@@ -27,6 +27,7 @@ import SitumPlugin, {
 } from "../../sdk";
 import useSitum from "../hooks";
 import {
+  type CartographySelectionOptions,
   type MapViewDirectionsOptions,
   type MapViewError,
   type MapViewRef,
@@ -256,6 +257,25 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, []);
 
+    const _selectFloor = useCallback(
+      (floorId: number, options?: CartographySelectionOptions) => {
+        if (!webViewRef.current) {
+          return;
+        }
+        if (SitumPlugin.navigationIsRunning()) {
+          console.error(
+            "Situm > hook > Navigation on course, floor selection is unavailable"
+          );
+          return;
+        }
+        sendMessageToViewer(
+          webViewRef.current,
+          ViewerMapper.selectFloor(floorId, options)
+        );
+      },
+      []
+    );
+
     const _search = useCallback((payload: SearchFilter) => {
       sendMessageToViewer(webViewRef.current, ViewerMapper.search(payload));
     }, []);
@@ -340,6 +360,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           selectPoiCategory(poiId: number) {
             _selectPoiCategory(poiId);
           },
+          selectFloor(poiId: number, options?: CartographySelectionOptions) {
+            _selectFloor(poiId, options);
+          },
           setDirectionsOptions(directionsOptions: MapViewDirectionsOptions) {
             _setDirectionsOptions(directionsOptions);
           },
@@ -386,6 +409,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         _selectPoi,
         _selectCar,
         _selectPoiCategory,
+        _selectFloor,
         _setDirectionsOptions,
         _setFavoritePois,
         _search,
