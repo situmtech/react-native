@@ -27,6 +27,15 @@ export interface MapViewRef {
    */
   selectPoiCategory: (categoryId: number) => void;
   /**
+   * Selects the given floor by its ID and optionally fit the ViewPort to floor.
+   * @param floorIdentifier Floor identifier [SitumPlugin.fetchFloorsFromBuilding()](https://developers.situm.com/sdk_documentation/react-native/typedoc/classes/fetchFloorsFromBuilding.html.
+   * @param options Optional parameter that indicates the viewer to modify the selection behaviour like fitting the camera to the cartograpgic element selected.
+   */
+  selectFloor: (
+    floorIdentifier: number,
+    options?: CartographySelectionOptions
+  ) => void;
+  /**
    * Define the {@link MapViewDirectionsOptions} that the routes calculated by the MapView will use.
    * @param directionsOptions {@link MapViewDirectionsOptions}
    */
@@ -199,4 +208,8 @@ export interface SearchFilter {
    * An empty string will clear the current category filter (if any). A null value will apply no change.
    */
   poiCategoryIdentifier?: string | null;
+}
+
+export interface CartographySelectionOptions {
+  fitCamera?: boolean;
 }
