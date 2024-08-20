@@ -21,6 +21,7 @@ import SelectPoi from './examples/wayfinding/SelectPoi';
 import SelectPoiCategory from './examples/wayfinding/SelectPoiCategory';
 import SetFavoritePois from './examples/wayfinding/SetFavoritePois';
 import {DeviceIdentifier} from './examples/sdk/DeviceIdentifier';
+import SelectFloor from './examples/wayfinding/SelectFloor';
 
 const styles = StyleSheet.create({
   container: {
@@ -80,6 +81,12 @@ const HomeScreen = ({navigation}) => {
           subtitle:
             'Shows how to select a POI category programmatically, which is then displayed as selected on the map',
           key: 'SelectPoiCategory',
+        },
+        {
+          title: 'Select Floor',
+          subtitle:
+            'Shows how to select a floor programmatically, which is then displayed on the map',
+          key: 'SelectFloor',
         },
         {
           title: 'Select Favorite Pois',
@@ -249,6 +256,11 @@ function App() {
             name="SelectPoiCategory"
             component={SelectPoiCategory}
             options={{title: 'Select Poi Category'}}
+          />
+          <Stack.Screen
+            name="SelectFloor"
+            component={SelectFloor}
+            options={{title: 'Select Floor'}}
           />
           <Stack.Screen
             name="SetFavoritePois"
