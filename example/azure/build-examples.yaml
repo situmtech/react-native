@@ -106,7 +106,7 @@ steps:
           npm i -g $(office365Cli)
 
           echo -e "\n[+] Login in Sharepoint \n"
-          m365 login --authType password --userName $(sharepoint_user)  --password $(sharepoint_pass)
+          m365 login --authType password --userName $(sharepoint_user)  --password $(sharepoint_pass) --appId $(sharepoint_appId)
 
           echo -e "\n[+] Create Branch folder $folder/$branchFolder\n"
           m365 spo folder add -p $folder -u $(SharepointUrl) --name $branchFolder
