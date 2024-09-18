@@ -146,6 +146,7 @@ export interface SitumPluginInterface
   getDeviceId: (callback: (response: string) => void) => void;
   requestRealTimeUpdates: (options: any) => void;
   removeRealTimeUpdates: () => void;
+  validateMapViewProjectSettings: () => void;
 }
 
 const { RNCSitumPlugin } = NativeModules;
