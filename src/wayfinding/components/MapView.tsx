@@ -431,6 +431,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         setLocationError(e.code);
       });
 
+      SitumPlugin.validateMapViewProjectSettings();
+
       return () => {};
     }, []);
 

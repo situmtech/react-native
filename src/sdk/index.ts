@@ -553,6 +553,23 @@ export default class SitumPlugin {
     });
   };
 
+  /**
+   * INTERNAL METHOD.
+   *
+   * Validate if the mapView internal settings have been properly configured
+   * Do not use this method as it is intended for internal use
+   * by the map viewer module.
+   *
+   * @param validateMapViewProjectSettings
+   */
+    static validateMapViewProjectSettings = () => {
+      if (Platform.OS === 'ios') {
+        return exceptionWrapper<void>(() => {
+          RNCSitumPlugin.validateMapViewProjectSettings();
+        });
+      }
+    };
+
   //-----------------------------------------------------------------------------//
   //-----------------------------GEOFENCES CALLBACKS-----------------------------//
   //-----------------------------------------------------------------------------//
