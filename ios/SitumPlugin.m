@@ -160,6 +160,11 @@ RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(R
         callback(@[response]);
 }
 
+RCT_EXPORT_METHOD(validateMapViewProjectSettings)
+{
+    [SITMapViewValidator validateMapViewProjectSettings];
+}
+
 RCT_EXPORT_METHOD(fetchBuildings: (RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
     if (buildingsStored == nil) {
