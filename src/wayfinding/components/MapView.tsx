@@ -187,7 +187,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         location?.position?.buildingIdentifier ===
           configuration.buildingIdentifier
       ) {
-        sendMessageToViewer(webViewRef.current, ViewerMapper.followUser(true));
+        _followUser(true);
       }
     };
 
@@ -200,6 +200,12 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         webViewRef.current,
         ViewerMapper.navigateToPoi(payload)
       );
+    }, []);
+
+    const _followUser = useCallback((payload: boolean) => {
+      if (!webViewRef.current) return;
+
+      sendMessageToViewer(webViewRef.current, ViewerMapper.followUser(payload));
     }, []);
 
     const _navigateToCar = useCallback((payload?: NavigateToCarPayload) => {
@@ -337,19 +343,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       ref,
       () => {
         return {
-          followUser() {
-            webViewRef.current &&
-              sendMessageToViewer(
-                webViewRef.current,
-                ViewerMapper.followUser(true)
-              );
-          },
-          unFollowUser() {
-            webViewRef.current &&
-              sendMessageToViewer(
-                webViewRef.current,
-                ViewerMapper.followUser(false)
-              );
+          followUser(value: boolean) {
+            _followUser(value);
           },
           selectPoi(poiId: number) {
             _selectPoi(poiId);
@@ -404,6 +399,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       [
         stopNavigation,
         _navigateToPoi,
+        _followUser,
         _navigateToCar,
         _navigateToPoint,
         _selectPoi,
