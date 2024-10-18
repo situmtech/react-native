@@ -22,6 +22,7 @@ import SelectPoiCategory from './examples/wayfinding/SelectPoiCategory';
 import SetFavoritePois from './examples/wayfinding/SetFavoritePois';
 import {DeviceIdentifier} from './examples/sdk/DeviceIdentifier';
 import SelectFloor from './examples/wayfinding/SelectFloor';
+import FollowUser from './examples/wayfinding/FollowUser';
 
 const styles = StyleSheet.create({
   container: {
@@ -69,6 +70,11 @@ const HomeScreen = ({navigation}) => {
           subtitle:
             'Shows how to trigger the navigation to a concrete POI programmatically that, once computed, will be displayed on the map.',
           key: 'NavigateToPoi',
+        },
+        {
+          title: 'Follow user',
+          subtitle: 'Follow user programmatically',
+          key: 'FollowUser',
         },
         {
           title: 'Select POI',
@@ -246,6 +252,11 @@ function App() {
             name="NavigateToPoi"
             component={NavigateToPoi}
             options={{title: 'Navigate To Poi'}}
+          />
+          <Stack.Screen
+            name="FollowUser"
+            component={FollowUser}
+            options={{title: 'Follow User'}}
           />
           <Stack.Screen
             name="SelectPoi"
