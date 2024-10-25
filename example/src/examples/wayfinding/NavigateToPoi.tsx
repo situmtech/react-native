@@ -7,7 +7,6 @@ import type {MapViewRef} from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
 import {Button, TextInput} from 'react-native-paper';
 import requestPermission from '../Utils/requestPermission';
-import {getDefaultLocationOptions} from '../../settings';
 
 const styles = StyleSheet.create({
   viewer_container: {
@@ -78,25 +77,7 @@ const Screen: React.FC = () => {
       return;
     }
     setController(mapViewRef.current);
-    startPositioning();
   }, [mapViewRef]);
-
-  const startPositioning = async () => {
-    try {
-      await requestPermission();
-    } catch (e) {
-      console.warn('Situm > example > Error starting positioning:', e);
-    }
-
-    console.log('Starting positioning');
-
-    const locationOptions = getDefaultLocationOptions();
-    try {
-      SitumPlugin.requestLocationUpdates(locationOptions);
-    } catch (e) {
-      console.log(`Situm > example > Could not start positioning ${e}`);
-    }
-  };
 
   return (
     <>
@@ -128,13 +109,6 @@ const Screen: React.FC = () => {
           }}>
           Navigate to POI
         </Button>
-        {/* <Button
-          mode="outlined"
-          onPress={() => {
-            startPositioning();
-          }}>
-          {'>'}
-        </Button> */}
       </SafeAreaView>
     </>
   );
