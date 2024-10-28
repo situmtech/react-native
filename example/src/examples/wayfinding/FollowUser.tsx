@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
 const Screen: React.FC = () => {
   const mapViewRef = useRef<MapViewRef>(null);
   const [_controller, setController] = useState<MapViewRef | null>();
+  const [isFollowing, setIsFollowing] = useState(false);
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -50,6 +51,17 @@ const Screen: React.FC = () => {
         .catch(console.debug);
     } catch (e) {
       console.log(`Situm > example > Could not start positioning ${e}`);
+    }
+  };
+
+  /**
+   * Helper function that stop the positioning session
+   */
+  const stopPositioning = () => {
+    try {
+      SitumPlugin.removeLocationUpdates();
+    } catch (e) {
+      console.log(`Situm > example > Could not stop positioning ${e}`);
     }
   };
 
@@ -87,6 +99,24 @@ const Screen: React.FC = () => {
     }
   };
 
+  /**
+   * Handles follow or unfollow actions for a user.
+   * Sends a request to the Mapview to start or stop following the user's position.
+   * Requires that positioning services are enabled.
+   * If attempting to follow an already-followed user or unfollow a user not currently followed, no action is taken.
+   */
+  const handleFollowUnfollowUser = () => {
+    if (!isFollowing) {
+      // if not following start following
+      _controller?.followUser();
+      setIsFollowing(true);
+    } else {
+      //if already following stop following
+      _controller?.unfollowUser();
+      setIsFollowing(false);
+    }
+  };
+
   return (
     <>
       <SafeAreaView style={{...styles.viewer_container, ...backgroundStyle}}>
@@ -106,12 +136,8 @@ const Screen: React.FC = () => {
           }}>
           Start positioning
         </Button>
-        <Button
-          mode="outlined"
-          onPress={() => {
-            _controller?.followUser(true);
-          }}>
-          Follow
+        <Button mode="outlined" onPress={handleFollowUnfollowUser}>
+          {!isFollowing ? 'Follow' : 'Unfollow'}
         </Button>
       </SafeAreaView>
     </>
