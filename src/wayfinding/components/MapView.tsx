@@ -343,8 +343,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       ref,
       () => {
         return {
-          followUser(value: boolean) {
-            _followUser(value);
+          followUser() {
+            _followUser(true);
+          },
+          unfollowUser() {
+            _followUser(false);
           },
           selectPoi(poiId: number) {
             _selectPoi(poiId);

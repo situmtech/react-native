@@ -50,10 +50,13 @@ export interface MapViewRef {
     accessibilityMode?: AccessibilityMode;
   }) => void;
   /**
-   * Focuses or stops focusing camera on user's current position
-   * @param params.value Boolean value that indicates if camera must follow user or not
+   * Focuses camera on user's current position locking it till user moves it
    */
-  followUser: (value: boolean) => void;
+  followUser: () => void;
+  /**
+   * Stops focusing camera on user's current position
+   */
+  unfollowUser: () => void;
   /**
    * Starts navigating to the given coordinates, at the given floor.
    * @param params.lat The latitude of the destination point.
