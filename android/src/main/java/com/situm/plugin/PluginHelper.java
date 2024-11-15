@@ -79,6 +79,9 @@ import static com.situm.plugin.utils.ReactNativeUtils.convertMapToJson;
 import static com.situm.plugin.utils.ReactNativeUtils.convertReadableMapToMap;
 import static com.situm.plugin.utils.ReactNativeUtils.convertMapToReadableMap;
 
+import es.situm.sdk.location.ForegroundServiceNotificationOptions;
+
+
 public class PluginHelper {
 
     private static final String TAG = "PluginHelper";

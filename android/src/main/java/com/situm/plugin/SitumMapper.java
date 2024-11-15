@@ -68,6 +68,12 @@ import es.situm.sdk.v1.Point2f;
 import es.situm.sdk.v1.SitumConversionArea;
 import es.situm.sdk.v1.SitumEvent;
 
+import es.situm.sdk.location.ForegroundServiceNotificationOptions;
+import es.situm.sdk.location.ForegroundServiceNotificationOptions.TapAction;
+
+
+
+
 class SitumMapper {
 
     public static final float MIN_SNR = 10;
@@ -244,6 +250,16 @@ class SitumMapper {
     public static final String OUTDOOR_POIS = "outdoorPOIs";
     public static final String LOCATIONS = "locations";
     public static final String POLL_TIME = "pollTime";
+
+    public static final String FOREGROUND_SERVICE_NOTIFICATION_OPTIONS = "foregroundServiceNotificationOptions";
+    public static final String TITLE = "title";
+    public static final String MESSAGE = "message";
+    public static final String SHOW_STOP_ACTION = "showStopAction";
+    public static final String STOP_ACTION_TEXT = "stopActioText";
+    public static final String TAP_ACTION = "tapAction";
+
+
+
 
     public static final DateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy", Locale.US);
 
@@ -868,8 +884,73 @@ class SitumMapper {
         return locationBuilder.build();
     }
 
+
+    static ForegroundServiceNotificationOptions buildForegroundServiceNotificationOptions(JSONObject foregroundServiceNotificationOptions) throws JSONException {
+        ForegroundServiceNotificationOptions.Builder optionsBuilder = new ForegroundServiceNotificationOptions.Builder();
+    
+        if (foregroundServiceNotificationOptions.has(SitumMapper.TITLE)) {
+            String title = foregroundServiceNotificationOptions.optString(SitumMapper.TITLE, "default");
+            optionsBuilder.title(title);
+            Log.i(TAG, "title: " + title);
+        }
+    
+        if (foregroundServiceNotificationOptions.has(SitumMapper.MESSAGE)) {
+            String message = foregroundServiceNotificationOptions.optString(SitumMapper.MESSAGE, "default");
+            optionsBuilder.message(message);
+            Log.i(TAG, "message: " + message);
+        }
+    
+        if (foregroundServiceNotificationOptions.has(SitumMapper.SHOW_STOP_ACTION)) {
+            boolean showStopAction = foregroundServiceNotificationOptions.optBoolean(SitumMapper.SHOW_STOP_ACTION, true);
+            optionsBuilder.showStopAction(showStopAction);
+            Log.i(TAG, "showStopAction: " + showStopAction);
+        }
+    
+        if (foregroundServiceNotificationOptions.has(SitumMapper.STOP_ACTION_TEXT)) {
+            String stopActionText = foregroundServiceNotificationOptions.optString(SitumMapper.STOP_ACTION_TEXT, "STOP");
+            optionsBuilder.stopActionText(stopActionText);
+            Log.i(TAG, "stopActionText: " + stopActionText);
+        }
+
+         
+        if (foregroundServiceNotificationOptions.has(SitumMapper.TAP_ACTION)) {
+            String tapActionValue = foregroundServiceNotificationOptions.optString(SitumMapper.TAP_ACTION);
+
+            switch (tapActionValue) {
+
+                case "LAUNCH_APP":
+                optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue));                      
+                break;
+              
+                case "LAUNCH_SETTINGS":
+                    optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue)); 
+                    break;
+
+                case "DO_NOTHING":
+                    optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue));  
+                    break;
+            }
+        }
+
+        return optionsBuilder.build();
+    }
+    
+    
+
+
+
     static LocationRequest.Builder locationRequestJSONObjectToLocationRequest(JSONObject request,
             LocationRequest.Builder locationBuilder) throws JSONException {
+
+                Log.i(TAG, "REQUEST" + request);
+
+        if (request.has(SitumMapper.FOREGROUND_SERVICE_NOTIFICATION_OPTIONS)) {
+             JSONObject notificationOptions = request.getJSONObject(SitumMapper.FOREGROUND_SERVICE_NOTIFICATION_OPTIONS);
+             ForegroundServiceNotificationOptions notificationConfig = buildForegroundServiceNotificationOptions(notificationOptions);
+             locationBuilder.foregroundServiceNotificationOptions(notificationConfig);
+        }
+        
+
         if (request.has(SitumMapper.BUILDING_IDENTIFIER)) {
             String buildingIdentifier;
             if (request.get(SitumMapper.BUILDING_IDENTIFIER) instanceof String) {
