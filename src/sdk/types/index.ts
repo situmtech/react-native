@@ -371,6 +371,7 @@ export type NavigationProgress = {
  * @property {BeaconFilter[]} beaconFilters - Deprecated - Beacon filters to be handled during scan time, otherwise only Situm beacons will be scanned. Can be invoked multiple times to add as much beacon filters as you want. The SitumSDK now does it automatically
  * @property {number} smallestDisplacement - Default smallest displacement to notify location updates
  * @property {string} realtimeUpdateInterval - Default interval to send locations to the Realtime. Possible values are REALTIME, FAST, NORMAL, SLOW, and BATTERY_SAVER
+ * @property {ForegroundServiceNotificationOptions} foregroundServiceNotificationOptions
  */
 export type LocationRequest = {
   autoEnableBleDuringPositioning?: boolean;
@@ -386,9 +387,24 @@ export type LocationRequest = {
   useBle?: boolean;
   useDeadReckoning?: boolean;
   useForegroundService?: boolean;
+  foregroundServiceNotificationOptions?: ForegroundServiceNotificationOptions;
   useGps?: boolean;
   useWifi?: boolean;
 };
+
+export type ForegroundServiceNotificationOptions = {
+  title?: string;
+  message?: string;
+  showStopAction?: boolean;
+  stopActionText?: string;
+  tapAction?: ForegroundServiceNotificationsTapAction;
+};
+
+export enum ForegroundServiceNotificationsTapAction {
+  LaunchApp = "LAUNCH_APP",
+  LaunchSettings = "LAUNCH_SETTINGS",
+  DoNothing = "DO_NOTHING",
+}
 
 /**
  * @name NavigationRequest
