@@ -67,7 +67,6 @@ import es.situm.sdk.realtime.RealTimeRequest;
 import es.situm.sdk.v1.Point2f;
 import es.situm.sdk.v1.SitumConversionArea;
 import es.situm.sdk.v1.SitumEvent;
-
 import es.situm.sdk.location.ForegroundServiceNotificationOptions;
 import es.situm.sdk.location.ForegroundServiceNotificationOptions.TapAction;
 
@@ -255,7 +254,7 @@ class SitumMapper {
     public static final String TITLE = "title";
     public static final String MESSAGE = "message";
     public static final String SHOW_STOP_ACTION = "showStopAction";
-    public static final String STOP_ACTION_TEXT = "stopActioText";
+    public static final String STOP_ACTION_TEXT = "stopActionText";
     public static final String TAP_ACTION = "tapAction";
 
 
@@ -934,9 +933,7 @@ class SitumMapper {
 
         return optionsBuilder.build();
     }
-    
-    
-
+ 
 
 
     static LocationRequest.Builder locationRequestJSONObjectToLocationRequest(JSONObject request,
@@ -945,10 +942,10 @@ class SitumMapper {
                 Log.i(TAG, "REQUEST" + request);
 
         if (request.has(SitumMapper.FOREGROUND_SERVICE_NOTIFICATION_OPTIONS)) {
-             JSONObject notificationOptions = request.getJSONObject(SitumMapper.FOREGROUND_SERVICE_NOTIFICATION_OPTIONS);
-             ForegroundServiceNotificationOptions notificationConfig = buildForegroundServiceNotificationOptions(notificationOptions);
-             locationBuilder.foregroundServiceNotificationOptions(notificationConfig);
-        }
+              JSONObject notificationOptions = request.getJSONObject(SitumMapper.FOREGROUND_SERVICE_NOTIFICATION_OPTIONS);
+              ForegroundServiceNotificationOptions notificationConfig = buildForegroundServiceNotificationOptions(notificationOptions);
+              locationBuilder.foregroundServiceNotificationOptions(notificationConfig);
+         }
         
 
         if (request.has(SitumMapper.BUILDING_IDENTIFIER)) {
