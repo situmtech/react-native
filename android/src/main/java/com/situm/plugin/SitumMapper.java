@@ -70,9 +70,6 @@ import es.situm.sdk.v1.SitumEvent;
 import es.situm.sdk.location.ForegroundServiceNotificationOptions;
 import es.situm.sdk.location.ForegroundServiceNotificationOptions.TapAction;
 
-
-
-
 class SitumMapper {
 
     public static final float MIN_SNR = 10;
