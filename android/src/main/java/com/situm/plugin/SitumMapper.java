@@ -929,7 +929,6 @@ class SitumMapper {
 
         return optionsBuilder.build();
     }
- 
 
     static LocationRequest.Builder locationRequestJSONObjectToLocationRequest(JSONObject request,
             LocationRequest.Builder locationBuilder) throws JSONException {
