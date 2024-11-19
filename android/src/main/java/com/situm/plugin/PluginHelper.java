@@ -366,7 +366,7 @@ public class PluginHelper {
             LocationRequest.Builder locationBuilder = new LocationRequest.Builder();
             SitumMapper.locationRequestJSONObjectToLocationRequest(jsonRequst, locationBuilder);
             LocationRequest locationRequest = locationBuilder.build();
-        
+
             locationListener = new LocationListener() {
                 public void onLocationChanged(Location location) {
                     try {
