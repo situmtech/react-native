@@ -371,7 +371,7 @@ export type NavigationProgress = {
  * @property {BeaconFilter[]} beaconFilters - Deprecated - Beacon filters to be handled during scan time, otherwise only Situm beacons will be scanned. Can be invoked multiple times to add as much beacon filters as you want. The SitumSDK now does it automatically
  * @property {number} smallestDisplacement - Default smallest displacement to notify location updates
  * @property {string} realtimeUpdateInterval - Default interval to send locations to the Realtime. Possible values are REALTIME, FAST, NORMAL, SLOW, and BATTERY_SAVER
- * @property {ForegroundServiceNotificationOptions} foregroundServiceNotificationOptions
+ * @property {ForegroundServiceNotificationOptions} foregroundServiceNotificationOptions - Used to configure the notification options for a foreground service, allowing the definition of the title, message, stop button, button text, and the {@link ForegroundServiceNotificationsTapAction}.
  */
 export type LocationRequest = {
   autoEnableBleDuringPositioning?: boolean;
@@ -392,6 +392,13 @@ export type LocationRequest = {
   useWifi?: boolean;
 };
 
+/**
+ * A data object that let you customize the Foreground Service Notification
+ * that will be shown in the system's tray when the app is running as a
+ * Foreground Service.
+ * To be used with {@link LocationRequest}.
+ * Only applies for Android.
+ */
 export type ForegroundServiceNotificationOptions = {
   title?: string;
   message?: string;
@@ -400,9 +407,23 @@ export type ForegroundServiceNotificationOptions = {
   tapAction?: ForegroundServiceNotificationsTapAction;
 };
 
+/**
+ * Predefined actions performed when tapping the Situm Foreground Service Notification.
+ */
 export enum ForegroundServiceNotificationsTapAction {
+  /**
+   * Launch the app's main activity using the information returned by android.content.pm.PackageManager#getLaunchIntentForPackage(String).
+   */
   LaunchApp = "LAUNCH_APP",
+
+  /**
+   *  Launch the operating system settings screen for the current app.
+   */
   LaunchSettings = "LAUNCH_SETTINGS",
+
+  /**
+   * Do nothing when tapping the notification.
+   */
   DoNothing = "DO_NOTHING",
 }
 
