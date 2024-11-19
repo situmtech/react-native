@@ -907,17 +907,13 @@ class SitumMapper {
 
         if (foregroundServiceNotificationOptions.has(SitumMapper.TAP_ACTION)) {
             String tapActionValue = foregroundServiceNotificationOptions.optString(SitumMapper.TAP_ACTION);
-
             switch (tapActionValue) {
-
                 case "LAUNCH_APP":
                 optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue));                      
                 break;
-              
                 case "LAUNCH_SETTINGS":
                     optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue)); 
                     break;
-
                 case "DO_NOTHING":
                     optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue));  
                     break;
