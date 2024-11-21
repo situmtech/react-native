@@ -1,6 +1,5 @@
-## Unreleased
+## [3.12.0-beta.0] 2024-11-21
 
-### Added
+### Changed
 
--   Added new xcode log for iOS to warn you if you havent added WKAppBoundDomains to your App Info.plist and you use the MapView
--   Added support to follow user using viewer's ref and example for it
+- Updated Android SDK to version 3.21.0-beta, which moves to Gradle 8.x.
