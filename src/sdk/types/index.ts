@@ -405,7 +405,7 @@ export type ForegroundServiceNotificationOptions = {
   message?: string;
   showStopAction?: boolean;
   stopActionText?: string;
-  tapAction: ForegroundServiceNotificationsTapAction;
+  tapAction?: ForegroundServiceNotificationsTapAction;
 };
 
 /**
@@ -416,17 +416,17 @@ export enum ForegroundServiceNotificationsTapAction {
   /**
    * Launch the app's main activity using the information returned by android.content.pm.PackageManager#getLaunchIntentForPackage(String).
    */
-  LAUNCH_APP = "LAUNCH_APP",
+  LaunchApp = "LAUNCH_APP",
 
   /**
    *  Launch the operating system settings screen for the current app.
    */
-  LAUNCH_SETTINGS = "LAUNCH_SETTINGS",
+  LaunchSettings = "LAUNCH_SETTINGS",
 
   /**
    * Do nothing when tapping the notification.
    */
-  DO_NOTHING = "DO_NOTHING",
+  DoNothing = "DO_NOTHING",
 }
 
 /**
