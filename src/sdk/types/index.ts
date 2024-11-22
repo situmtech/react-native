@@ -398,33 +398,35 @@ export type LocationRequest = {
  * Foreground Service.
  * To be used with {@link LocationRequest}.
  * Only applies for Android.
+ * @property {ForegroundServiceNotificationOptions} foregroundServiceNotificationOptions
  */
 export type ForegroundServiceNotificationOptions = {
   title?: string;
   message?: string;
   showStopAction?: boolean;
   stopActionText?: string;
-  tapAction?: ForegroundServiceNotificationsTapAction;
+  tapAction: ForegroundServiceNotificationsTapAction;
 };
 
 /**
- * Predefined actions performed when tapping the Situm Foreground Service Notification.
+ * @name ForegroundServiceNotificationsTapAction
+ * @description Predefined actions performed when tapping the Situm Foreground Service Notification.
  */
 export enum ForegroundServiceNotificationsTapAction {
   /**
    * Launch the app's main activity using the information returned by android.content.pm.PackageManager#getLaunchIntentForPackage(String).
    */
-  LaunchApp = "LAUNCH_APP",
+  LAUNCH_APP = "LAUNCH_APP",
 
   /**
    *  Launch the operating system settings screen for the current app.
    */
-  LaunchSettings = "LAUNCH_SETTINGS",
+  LAUNCH_SETTINGS = "LAUNCH_SETTINGS",
 
   /**
    * Do nothing when tapping the notification.
    */
-  DoNothing = "DO_NOTHING",
+  DO_NOTHING = "DO_NOTHING",
 }
 
 /**
