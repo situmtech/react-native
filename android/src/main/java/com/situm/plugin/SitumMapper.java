@@ -881,41 +881,47 @@ class SitumMapper {
   static ForegroundServiceNotificationOptions buildForegroundServiceNotificationOptions(JSONObject foregroundServiceNotificationOptions) throws JSONException {
     ForegroundServiceNotificationOptions.Builder optionsBuilder = new ForegroundServiceNotificationOptions.Builder();
 
-    if (foregroundServiceNotificationOptions.has(SitumMapper.TITLE)) {
-      String title = foregroundServiceNotificationOptions.optString(SitumMapper.TITLE, "default");
-      optionsBuilder.title(title);
-      Log.i(TAG, "title: " + title);
-    }
+        String title = foregroundServiceNotificationOptions.optString(SitumMapper.TITLE);
+        if (foregroundServiceNotificationOptions.has(SitumMapper.TITLE)
+          && !foregroundServiceNotificationOptions.isNull(SitumMapper.TITLE)
+          && !title.trim().isEmpty()){
+          optionsBuilder.title(title);
+          Log.i(TAG, "title: " + title);
+        }
 
-    if (foregroundServiceNotificationOptions.has(SitumMapper.MESSAGE)) {
-      String message = foregroundServiceNotificationOptions.optString(SitumMapper.MESSAGE, "default");
-      optionsBuilder.message(message);
-      Log.i(TAG, "message: " + message);
-    }
+        String message = foregroundServiceNotificationOptions.optString(SitumMapper.MESSAGE);
+        if (foregroundServiceNotificationOptions.has(SitumMapper.MESSAGE)
+          && !foregroundServiceNotificationOptions.isNull(SitumMapper.MESSAGE)
+          && !message.trim().isEmpty()) {
+            optionsBuilder.message(message);
+            Log.i(TAG, "message: " + message);
+        }
 
-    if (foregroundServiceNotificationOptions.has(SitumMapper.SHOW_STOP_ACTION)) {
-      boolean showStopAction = foregroundServiceNotificationOptions.optBoolean(SitumMapper.SHOW_STOP_ACTION, true);
-      optionsBuilder.showStopAction(showStopAction);
-      Log.i(TAG, "showStopAction: " + showStopAction);
-    }
+        if (foregroundServiceNotificationOptions.has(SitumMapper.SHOW_STOP_ACTION)) {
+          boolean showStopAction = foregroundServiceNotificationOptions.optBoolean(SitumMapper.SHOW_STOP_ACTION);
+          optionsBuilder.showStopAction(showStopAction);
+          Log.i(TAG, "showStopAction: " + showStopAction);
+        }
 
-    if (foregroundServiceNotificationOptions.has(SitumMapper.STOP_ACTION_TEXT)) {
-      String stopActionText = foregroundServiceNotificationOptions.optString(SitumMapper.STOP_ACTION_TEXT, "STOP");
-      optionsBuilder.stopActionText(stopActionText);
-      Log.i(TAG, "stopActionText: " + stopActionText);
-    }
+        String stopActionText = foregroundServiceNotificationOptions.optString(SitumMapper.STOP_ACTION_TEXT);
+        if (foregroundServiceNotificationOptions.has(SitumMapper.STOP_ACTION_TEXT)
+          && !foregroundServiceNotificationOptions.isNull(SitumMapper.STOP_ACTION_TEXT)
+          && !stopActionText.trim().isEmpty()) {
+            optionsBuilder.stopActionText(stopActionText);
+            Log.i(TAG, "stopActionText: " + stopActionText);
+        }
 
         if (foregroundServiceNotificationOptions.has(SitumMapper.TAP_ACTION)) {
             String tapActionValue = foregroundServiceNotificationOptions.optString(SitumMapper.TAP_ACTION);
             switch (tapActionValue) {
                 case "LAUNCH_APP":
-                    optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue));                      
+                    optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue));
                     break;
                 case "LAUNCH_SETTINGS":
-                    optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue)); 
+                    optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue));
                     break;
                 case "DO_NOTHING":
-                    optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue));  
+                    optionsBuilder.tapAction(ForegroundServiceNotificationOptions.TapAction.valueOf(tapActionValue));
                     break;
             }
         }
