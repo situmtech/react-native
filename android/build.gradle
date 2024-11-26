@@ -12,7 +12,7 @@ apply plugin: 'com.android.library'
 
 android {
     if (project.android.hasProperty("namespace")) {
-        namespace 'com.situm.react_native'
+        namespace 'com.situm.plugin'
     }
 
     compileSdkVersion rootProject.ext.compileSdkVersion
