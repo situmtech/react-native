@@ -135,6 +135,7 @@ const Screen: React.FC = () => {
       configuration={{
         buildingIdentifier: SITUM_BUILDING_ID,
         situmApiKey: SITUM_API_KEY,
+        viewerDomain: 'https://uom.map-viewer.situm.com',
       }}
       onLoad={onLoad}
       onPoiSelected={onPoiSelected}
