@@ -7,10 +7,13 @@ import {
   type Error,
   ErrorCode,
   ErrorType,
+  InternalCall,
   type Location,
   type NavigationProgress,
 } from "../../sdk/types";
 import {
+  InternalCallType,
+  LocationStatusName,
   NavigationStatus,
   NavigationUpdateType,
 } from "../../sdk/types/constants";
@@ -24,6 +27,7 @@ import {
   setDirections,
   setError,
   setLocation,
+  setLocationStatus,
   setNavigation,
   UseSitumContext,
 } from "../store/index";
@@ -58,102 +62,86 @@ export const useSitumInternal = () => {
   };
 
   function registerCallbacks() {
-    SitumPlugin.onLocationUpdate((loc: Location) => {
-      dispatch(
-        setLocation({
-          ...loc,
-        })
-      );
-    });
-
-    // TODO: not working, using local state at MapView.tsx.
-    // SitumPlugin.onLocationStatus((status: LocationStatus) => {
-    //   if (status.statusName in LocationStatusName) {
-    //     console.debug(
-    //       `Situm > hook > Positioning state updated ${status.statusName}`
-    //     );
-    //     dispatch(setLocationStatus(status.statusName as LocationStatusName));
-    //   }
-    // });
-
-    SitumPlugin.onLocationStopped(() => {
-      console.debug("Situm > hook > Stopped positioning");
-      dispatch(resetLocation());
-    });
-
-    SitumPlugin.onNavigationStart((route) => {
-      console.debug(
-        `Situm > hook > navigation started to ${route.poiTo?.poiName}`
-      );
-
-      dispatch(
-        setNavigation({
-          type: NavigationUpdateType.PROGRESS,
-          status: NavigationStatus.START,
-        })
-      );
-    });
-
-    SitumPlugin.onNavigationProgress((progress: NavigationProgress) => {
-      console.debug(
-        `Situm > hook > navigation progress, remanining distance to goal ${progress.distanceToGoal.toFixed(
-          2
-        )} m.`
-      );
-
-      dispatch(
-        setNavigation({
-          currentIndication: progress?.currentIndication,
-          routeStep: progress?.routeStep,
-          distanceToGoal: progress?.distanceToGoal,
-          points: progress?.points,
-          type: NavigationUpdateType.PROGRESS,
-          segments: progress?.segments,
-          status: NavigationStatus.UPDATE,
-        })
-      );
-    });
-
-    SitumPlugin.onNavigationOutOfRoute(() => {
-      console.debug("Situm > hook > user went out of route, recalculating ...");
-
-      dispatch(
-        setNavigation({
-          type: NavigationUpdateType.OUT_OF_ROUTE,
-          status: NavigationStatus.UPDATE,
-        })
-      );
-    });
-
-    SitumPlugin.onNavigationDestinationReached((route) => {
-      console.debug(
-        `Situm > hook > destination ${route.poiTo?.poiName} was reached.`
-      );
-
-      dispatch(
-        setNavigation({
-          type: NavigationUpdateType.DESTINATION_REACHED,
-          status: NavigationStatus.UPDATE,
-        })
-      );
-    });
-
-    SitumPlugin.onNavigationCancellation(() => {
-      console.debug("Situm > hook > navigation was cancelled by the user.");
-
-      dispatch(
-        setNavigation({
-          type: NavigationUpdateType.CANCELLED,
-          status: NavigationStatus.STOP,
-        })
-      );
-    });
-
-    SitumPlugin.onNavigationError((navigationError: any) => {
-      console.error(
-        "Situm > hook > ERROR while navigating: ",
-        JSON.stringify(navigationError)
-      );
+    SitumPlugin.internalSetMethodCallMapDelegate((internalCall: InternalCall) => {
+      switch(internalCall.type) {
+        case InternalCallType.LOCATION:
+          let location = internalCall.get<Location>();
+          dispatch(
+            setLocation({
+              ...location,
+            })
+          );
+          break;
+        case InternalCallType.LOCATION_STATUS:
+          let statusName = internalCall.get<string>();
+          if (statusName in LocationStatusName) {
+            dispatch(
+              setLocationStatus(statusName)
+            );
+          }
+          break;
+        case InternalCallType.LOCATION_STOPPED:
+          // TODO: LOCATION_STOPPED exists only in RN, delete!
+          dispatch(resetLocation());
+          break;
+        case InternalCallType.LOCATION_ERROR:
+          let error = internalCall.get<Error>();
+          dispatch(
+            setError(error)
+          );
+          break;
+        case InternalCallType.NAVIGATION_START:
+          dispatch(
+            setNavigation({
+              type: NavigationUpdateType.PROGRESS,
+              status: NavigationStatus.START,
+            })
+          );
+          break;
+        case InternalCallType.NAVIGATION_DESTINATION_REACHED:
+          dispatch(
+            setNavigation({
+              type: NavigationUpdateType.DESTINATION_REACHED,
+              status: NavigationStatus.UPDATE,
+            })
+          );
+          break;
+        case InternalCallType.NAVIGATION_PROGRESS:
+          let progress = internalCall.get<NavigationProgress>();
+          dispatch(
+            setNavigation({
+              currentIndication: progress?.currentIndication,
+              routeStep: progress?.routeStep,
+              distanceToGoal: progress?.distanceToGoal,
+              points: progress?.points,
+              type: NavigationUpdateType.PROGRESS,
+              segments: progress?.segments,
+              status: NavigationStatus.UPDATE,
+            })
+          );
+          break;
+        case InternalCallType.NAVIGATION_OUT_OF_ROUTE:
+          dispatch(
+            setNavigation({
+              type: NavigationUpdateType.OUT_OF_ROUTE,
+              status: NavigationStatus.UPDATE,
+            })
+          );
+          break;
+        case InternalCallType.NAVIGATION_CANCELLATION:
+          dispatch(
+            setNavigation({
+              type: NavigationUpdateType.CANCELLED,
+              status: NavigationStatus.STOP,
+            })
+          );
+          break;
+        case InternalCallType.NAVIGATION_ERROR:
+        case InternalCallType.GEOFENCES_ENTER:
+        case InternalCallType.GEOFENCES_EXIT:
+          // Do nothing.
+          break;
+      }
     });
   }
 
