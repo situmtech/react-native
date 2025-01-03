@@ -1,0 +1,3 @@
+## Unreleased
+### Changed
+- Now all `SitumPlugin` callbacks behave like setters. Until now, every time methods such as `SitumPlugin.onLocationUpdate(callback)` or `SitumPlugin.onEnterGeofences(callback)` were invoked, the callback functions were added as many times as the methods were called. This behavior was prone to unnecessary duplications and related issues. From now on, these methods will act as pure setters. This is a breaking change, and you may need to adapt your code accordingly.
