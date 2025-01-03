@@ -17,6 +17,7 @@ import {
   ErrorType,
   type Floor,
   type Geofence,
+  InternalCall,
   type Location,
   type LocationRequest,
   type LocationStatus,
@@ -29,10 +30,14 @@ import {
   type Route,
   type SdkVersion,
 } from "./types";
-import { SdkNavigationUpdateType } from "./types/constants";
+import {
+  InternalCallType,
+  SdkNavigationUpdateType
+} from "./types/constants";
 import {
   exceptionWrapper,
   locationErrorAdapter,
+  locationStatusAdapter,
   promiseWrapper,
 } from "./utils";
 
@@ -62,6 +67,10 @@ const SitumPluginEventEmitter = new NativeEventEmitter(RNCSitumPlugin);
 let positioningRunning = false;
 let navigationRunning = false;
 let realtimeSubscriptions = [];
+
+let internalMethodCallMapDelegate = (_: InternalCall) => {
+  // internalMethodCallMapDelegate is am empty function by default.
+};
 
 export default class SitumPlugin {
   /**
@@ -587,7 +596,11 @@ export default class SitumPlugin {
   static onEnterGeofences = (callback: (event: Geofence) => void) => {
     RNCSitumPlugin.onEnterGeofences();
     // Adopts SDK behavior (setter):
-    SitumPluginEventEmitter.addListener("onEnterGeofences", callback);
+    SitumPluginEventEmitter.removeAllListeners("onEnterGeofences");
+    SitumPluginEventEmitter.addListener("onEnterGeofences", (data) => {
+      internalMethodCallMapDelegate(new InternalCall(InternalCallType.GEOFENCES_ENTER, data));
+      callback(data);
+    });
   };
 
   /**
@@ -602,7 +615,21 @@ export default class SitumPlugin {
    */
   static onExitGeofences = (callback: (event: Geofence) => void) => {
     RNCSitumPlugin.onExitGeofences();
-    SitumPluginEventEmitter.addListener("onExitGeofences", callback);
+    SitumPluginEventEmitter.removeAllListeners("onExitGeofences");
+    SitumPluginEventEmitter.addListener("onExitGeofences", (data) => {
+      internalMethodCallMapDelegate(new InternalCall(InternalCallType.GEOFENCES_EXIT, data));
+      callback(data);
+    });
+  };
+
+  /**
+   * INTERNAL METHOD.
+   * 
+   * Set a native MethodCall delegate. Do not use this method as it is intended for internal use by the map viewer module.
+   * @param callback 
+   */
+  static internalSetMethodCallMapDelegate = (callback: (internalCall: InternalCall) => void) => {
+    internalMethodCallMapDelegate = callback;
   };
 
   //-----------------------------------------------------------------------------//
@@ -615,7 +642,11 @@ export default class SitumPlugin {
    * @param callback the function called when the user {@link Location} changes
    */
   static onLocationUpdate = (callback: (location: Location) => void) => {
-    SitumPluginEventEmitter.addListener("locationChanged", callback);
+    SitumPluginEventEmitter.removeAllListeners("locationChanged");
+    SitumPluginEventEmitter.addListener("locationChanged", (data) => {
+      internalMethodCallMapDelegate(new InternalCall(InternalCallType.LOCATION, data));
+      callback(data);
+    });
   };
 
   /**
@@ -624,7 +655,14 @@ export default class SitumPlugin {
    * @param callback the function called when the user {@link LocationStatus} changes
    */
   static onLocationStatus = (callback: (status: LocationStatus) => void) => {
-    SitumPluginEventEmitter.addListener("statusChanged", callback);
+    SitumPluginEventEmitter.removeAllListeners("statusChanged");
+    SitumPluginEventEmitter.addListener("statusChanged", (data) => {
+      let mapViewStatusName = locationStatusAdapter(data.statusName);
+      internalMethodCallMapDelegate(new InternalCall(InternalCallType.LOCATION_STATUS, mapViewStatusName));
+      // TODO: we are delegating different values to the internal and client callbacks. The viewer only understands 
+      // the states defined in LocationStatusName, but the integrator might be interested in any state from the SDK.
+      callback(data);
+    });
   };
 
   /**
@@ -633,10 +671,12 @@ export default class SitumPlugin {
    * @param callback the function called when there is an error
    */
   static onLocationError = (callback: (error: Error) => void) => {
+    SitumPluginEventEmitter.removeAllListeners("locationError");
     SitumPluginEventEmitter.addListener("locationError", (error) => {
       const adaptedError = locationErrorAdapter(error);
       if (adaptedError.type === ErrorType.CRITICAL)
         this.removeLocationUpdates();
+      internalMethodCallMapDelegate(new InternalCall(InternalCallType.LOCATION_ERROR, adaptedError));
       callback(adaptedError);
     });
   };
@@ -647,7 +687,11 @@ export default class SitumPlugin {
    * @param callback the function called when the user stops positioning.
    */
   static onLocationStopped = (callback: () => void) => {
-    SitumPluginEventEmitter.addListener("locationStopped", callback);
+    SitumPluginEventEmitter.removeAllListeners("locationStopped");
+    SitumPluginEventEmitter.addListener("locationStopped", () => {
+      internalMethodCallMapDelegate(new InternalCall(InternalCallType.LOCATION_STOPPED, undefined));
+      callback();
+    });
   };
 
   //-----------------------------------------------------------------------------//
@@ -660,9 +704,13 @@ export default class SitumPlugin {
    * @param callback a function that returns the initial {@link Route} by parameters.
    */
   static onNavigationStart = (callback: (route: Route) => void) => {
+    SitumPluginEventEmitter.removeAllListeners(SdkNavigationUpdateType.START);
     SitumPluginEventEmitter.addListener(
       SdkNavigationUpdateType.START,
-      (route: Route) => callback(route)
+      (route: Route) => {
+        internalMethodCallMapDelegate(new InternalCall(InternalCallType.NAVIGATION_START, route));
+        callback(route);
+      }
     );
   };
 
@@ -674,9 +722,13 @@ export default class SitumPlugin {
   static onNavigationProgress = (
     callback: (progress: NavigationProgress) => void
   ) => {
+    SitumPluginEventEmitter.removeAllListeners(SdkNavigationUpdateType.PROGRESS);
     SitumPluginEventEmitter.addListener(
       SdkNavigationUpdateType.PROGRESS,
-      (progress: NavigationProgress) => callback(progress)
+      (progress: NavigationProgress) => {
+        internalMethodCallMapDelegate(new InternalCall(InternalCallType.NAVIGATION_PROGRESS, progress));
+        callback(progress);
+      }
     );
   };
 
@@ -688,9 +740,13 @@ export default class SitumPlugin {
   static onNavigationDestinationReached = (
     callback: (route: Route) => void
   ) => {
+    SitumPluginEventEmitter.removeAllListeners(SdkNavigationUpdateType.DESTINATION_REACHED);
     SitumPluginEventEmitter.addListener(
       SdkNavigationUpdateType.DESTINATION_REACHED,
-      (route: Route) => callback(route)
+      (route: Route) => {
+        internalMethodCallMapDelegate(new InternalCall(InternalCallType.NAVIGATION_DESTINATION_REACHED, route));
+        callback(route)
+      }
     );
   };
 
@@ -700,10 +756,14 @@ export default class SitumPlugin {
    * @param callback the function called when the user gets out of the current route.
    */
   static onNavigationOutOfRoute = (callback: () => void) => {
+    SitumPluginEventEmitter.removeAllListeners(SdkNavigationUpdateType.OUTSIDE_ROUTE);
     SitumPluginEventEmitter.addListener(
       SdkNavigationUpdateType.OUTSIDE_ROUTE,
       // TODO: maybe this causes the navigation to not work on oor?
-      callback
+      () => {
+        internalMethodCallMapDelegate(new InternalCall(InternalCallType.NAVIGATION_OUT_OF_ROUTE, undefined));
+        callback();
+      }
     );
   };
 
@@ -717,9 +777,13 @@ export default class SitumPlugin {
    * @param callback the function called when the user finishes the route.
    */
   static onNavigationFinished = (callback: () => void) => {
+    SitumPluginEventEmitter.removeAllListeners(SdkNavigationUpdateType.FINISHED);
     SitumPluginEventEmitter.addListener(
       SdkNavigationUpdateType.FINISHED,
-      callback
+      () => {
+        internalMethodCallMapDelegate(new InternalCall(InternalCallType.NAVIGATION_CANCELLATION, undefined));
+        callback();
+      }
     );
   };
 
@@ -729,9 +793,13 @@ export default class SitumPlugin {
    * @param callback the function called when the user cancels the navigation.
    */
   static onNavigationCancellation = (callback: () => void) => {
+    SitumPluginEventEmitter.removeAllListeners(SdkNavigationUpdateType.CANCELLATION);
     SitumPluginEventEmitter.addListener(
       SdkNavigationUpdateType.CANCELLATION,
-      callback
+      () => {
+        internalMethodCallMapDelegate(new InternalCall(InternalCallType.NAVIGATION_CANCELLATION, undefined));
+        callback();
+      }
     );
   };
 
@@ -741,9 +809,13 @@ export default class SitumPlugin {
    * @param callback the function called when there is an error during navigation.
    */
   static onNavigationError = (callback: (error: any) => void) => {
+    SitumPluginEventEmitter.removeAllListeners(SdkNavigationUpdateType.ERROR);
     SitumPluginEventEmitter.addListener(
       SdkNavigationUpdateType.ERROR,
-      callback
+      (error) => {
+        internalMethodCallMapDelegate(new InternalCall(InternalCallType.NAVIGATION_ERROR, error));
+        callback(error);
+      }
     );
   };
 }
