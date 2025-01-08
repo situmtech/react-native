@@ -69,7 +69,13 @@ let navigationRunning = false;
 let realtimeSubscriptions = [];
 
 let internalMethodCallMapDelegate = (_: InternalCall) => {
-  // internalMethodCallMapDelegate is am empty function by default.
+  // internalMethodCallMapDelegate is an empty function by default.
+};
+
+// TODO: For now, I am keeping this behavior as it was, but it seems like a candidate for refactoring.
+let locationCallbackForNavigation = (loc: Location) => {
+  if (!SitumPlugin.navigationIsRunning()) return;
+  SitumPlugin.updateNavigationWithLocation(loc);
 };
 
 export default class SitumPlugin {
@@ -401,12 +407,6 @@ export default class SitumPlugin {
       RNCSitumPlugin.startPositioning(locationRequest || {});
 
       positioningRunning = true;
-
-      SitumPlugin.onLocationUpdate((loc: Location) => {
-        if (!SitumPlugin.navigationIsRunning()) return;
-
-        SitumPlugin.updateNavigationWithLocation(loc);
-      });
     });
   };
 
@@ -644,7 +644,10 @@ export default class SitumPlugin {
   static onLocationUpdate = (callback: (location: Location) => void) => {
     SitumPluginEventEmitter.removeAllListeners("locationChanged");
     SitumPluginEventEmitter.addListener("locationChanged", (data) => {
+      // MapView internal callback:
       internalMethodCallMapDelegate(new InternalCall(InternalCallType.LOCATION, data));
+      // Navigation internal callback: TODO review this, seems to be different to other plugins and candidate for refactoring.
+      locationCallbackForNavigation(data);
       callback(data);
     });
   };
