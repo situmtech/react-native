@@ -80,6 +80,7 @@ const locationCallbackForNavigation = (loc: Location) => {
 
 let locationCallback = (_: Location) => {};
 let locationStatusCallback = (_: LocationStatus) => {};
+let locationStoppedCallback = () => {};
 let locationErrorCallback = (_: Error) => {};
 let navigationStartedCallback = (_: Route) => {};
 let navigationProgressCallback = (_: NavigationProgress) => {};
@@ -117,6 +118,14 @@ const _internalLocationStatusCallback = (status: LocationStatus) => {
   // TODO: we are delegating different values to the internal and client callbacks. The viewer only understands
   // the states defined in LocationStatusName, but the integrator might be interested in any state from the SDK.
   locationStatusCallback?.(status);
+};
+
+const _internalLocationStoppedCallback = () => {
+  internalMethodCallMapDelegate(
+    new InternalCall(InternalCallType.LOCATION_STOPPED, undefined)
+  );
+  // TODO: this callback is used only in RN, delete!
+  locationStoppedCallback?.();
 };
 
 const _internalLocationErrorCallback = (error: Error) => {
@@ -197,6 +206,7 @@ const _registerCallbacks = () => {
   const callbacksMap = {
     locationChanged: _internalLocationCallback,
     statusChanged: _internalLocationStatusCallback,
+    locationStopped: _internalLocationStoppedCallback,
     locationError: _internalLocationErrorCallback,
     [SdkNavigationUpdateType.START]: _internalNavigationStartedCallback,
     [SdkNavigationUpdateType.PROGRESS]: _internalNavigationProgressCallback,
@@ -806,13 +816,7 @@ export default class SitumPlugin {
    * @param callback the function called when the user stops positioning.
    */
   static onLocationStopped = (callback: () => void) => {
-    SitumPluginEventEmitter.removeAllListeners("locationStopped");
-    SitumPluginEventEmitter.addListener("locationStopped", () => {
-      internalMethodCallMapDelegate(
-        new InternalCall(InternalCallType.LOCATION_STOPPED, undefined)
-      );
-      callback();
-    });
+    locationStoppedCallback = callback;
   };
 
   //-----------------------------------------------------------------------------//
