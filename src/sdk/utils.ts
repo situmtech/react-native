@@ -1,4 +1,4 @@
-import { logError } from "..";
+import { LocationStatusName, logError } from "..";
 import type { Error } from "./types";
 import { ErrorCode, ErrorType } from "./types";
 
@@ -130,6 +130,16 @@ export const promiseWrapper = <T>(
     }
   });
 };
+
+export function locationStatusAdapter(statusName): string {
+  // The MapView will only understand status names declared at LocationStatusName and CALCULATING
+  // is not one of them.
+  // TODO: implement status & error adapter on native SDKs.
+  if (statusName === "CALCULATING") {
+    statusName = LocationStatusName.STARTING;
+  }
+  return statusName;
+}
 
 export function locationErrorAdapter(error): Error {
   let adaptedCode = ErrorCode.UNKNOWN;
