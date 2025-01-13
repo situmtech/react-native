@@ -19,12 +19,7 @@ import type {
   WebViewErrorEvent,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
-
-import SitumPlugin, {
-  type Error,
-  type LocationStatus,
-  LocationStatusName,
-} from "../../sdk";
+import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
 import {
   type CartographySelectionOptions,
@@ -45,6 +40,7 @@ import {
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
 import ViewerMapper from "../utils/mapper";
+import { setError, setLocationStatus } from "../store";
 const SITUM_BASE_DOMAIN = "https://map-viewer.situm.com";
 
 const NETWORK_ERROR_CODE = {
@@ -163,8 +159,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       useState<OnDirectionsRequestInterceptor>();
 
     // Local states
-    const [locationStatus, setLocationStatus] = useState<LocationStatusName>();
-    const [locationError, setLocationError] = useState<string>();
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
     const [buildingIdentifier, setBuildingIdentifier] = useState<string>(
       configuration.buildingIdentifier
@@ -172,6 +166,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const {
       init,
       location,
+      locationStatus,
       directions,
       navigation,
       calculateRoute,
@@ -316,11 +311,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           ViewerMapper.locationStatus(locationStatus)
         );
       }
-      if (locationError) {
+      if (error) {
         // Right now, status and errors share message on the viewer:
         sendMessageToViewer(
           webViewRef.current,
-          ViewerMapper.locationError(locationError)
+          ViewerMapper.locationError(error)
         );
       }
     };
@@ -416,20 +411,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     );
 
     useEffect(() => {
-      SitumPlugin.onLocationStatus((status: LocationStatus) => {
-        // TODO: implement status & error adapter on native SDKs.
-        let finalStatus = status.statusName as string;
-        if (Platform.OS === "ios" && finalStatus === "CALCULATING") {
-          finalStatus = "STARTING";
-        }
-        if (finalStatus in LocationStatusName) {
-          setLocationStatus(finalStatus as LocationStatusName);
-        }
-      });
-      SitumPlugin.onLocationError((e: Error) => {
-        setLocationError(e.code);
-      });
-
       SitumPlugin.validateMapViewProjectSettings();
 
       return () => {};
@@ -468,17 +449,17 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     // locationError
     useEffect(() => {
-      if (!webViewRef.current || !locationError || !mapLoaded) return;
+      if (!webViewRef.current || !error || !mapLoaded) return;
 
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.locationError(locationError)
+        ViewerMapper.locationError(error)
       );
       // Callbacks used in `useEffect` won't be invoked if the value of locationStatus
       // is set but hasn't changed. Set locationStatus to null always to avoid missing
       // repeated messages.
-      setLocationError(null);
-    }, [locationError, mapLoaded]);
+      setError(null);
+    }, [error, mapLoaded]);
 
     // Updated SDK navigation
     useEffect(() => {
