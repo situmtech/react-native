@@ -2,6 +2,7 @@
 
 import type {
   AccessibilityMode,
+  InternalCallType,
   LocationStatusName,
   SdkNavigationUpdateType,
 } from "src/sdk";
@@ -668,3 +669,17 @@ export interface Error {
 
 // TODO: add types
 export type Directions = any;
+
+export class InternalCall<T = any> {
+  readonly type: InternalCallType;
+  readonly data: T;
+
+  constructor(type: InternalCallType, data: T) {
+    this.type = type;
+    this.data = data;
+  }
+
+  get<T>(): T {
+    return this.data as unknown as T;
+  }
+}
