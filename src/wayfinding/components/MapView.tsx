@@ -586,9 +586,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     const _effectiveProfile = () => {
       let effectiveProfile = configuration.profile;
-      if (configuration.remoteIdentifier) {
+      if (configuration.remoteIdentifier && configuration.remoteIdentifier.length > 0) {
         console.warn('Situm> MapView> [!] "remoteIdentifier" is deprecated. Use "profile" instead.');
-        if (!configuration.profile) {
+        if (!configuration.profile || configuration.profile.length == 0) {
           effectiveProfile = configuration.remoteIdentifier;
         }
       }
