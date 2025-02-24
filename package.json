@@ -167,7 +167,12 @@
   ],
   "prettier": {},
   "sdkVersions": {
+<<<<<<< Updated upstream
     "android": "3.22.0@aar",
     "ios": "3.25.0"
+=======
+    "android": "3.21.3@aar",
+    "ios": "3.25.1"
+>>>>>>> Stashed changes
   }
 }
