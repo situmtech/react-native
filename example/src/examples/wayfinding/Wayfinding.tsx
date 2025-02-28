@@ -15,7 +15,7 @@ import type {
   OnExternalLinkClickedResult,
   MapViewRef,
 } from '@situm/react-native';
-import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
+import {SITUM_API_KEY, SITUM_BUILDING_ID, SITUM_PROFILE} from '../../situm';
 import requestPermission from '../Utils/requestPermission';
 
 const styles = StyleSheet.create({
@@ -135,6 +135,7 @@ const Screen: React.FC = () => {
       configuration={{
         buildingIdentifier: SITUM_BUILDING_ID,
         situmApiKey: SITUM_API_KEY,
+        profile: SITUM_PROFILE,
       }}
       onLoad={onLoad}
       onPoiSelected={onPoiSelected}

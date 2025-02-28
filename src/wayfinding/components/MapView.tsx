@@ -69,9 +69,14 @@ export type MapViewConfiguration = {
    */
   situmApiKey: string;
   /**
+   * @deprecated Use `profile` instead.
    * A String identifier that allows you to remotely configure all map settings.
    */
   remoteIdentifier?: string;
+  /**
+   * A String that specifies the selected profile name for configuring the MapView with its corresponding remote settings.
+   */
+  profile?: string;
   /**
    * @required
    * The building that will be loaded on the map.
@@ -579,13 +584,24 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       return true;
     };
 
+    const _effectiveProfile = () => {
+      let effectiveProfile = configuration.profile;
+      if (configuration.remoteIdentifier && configuration.remoteIdentifier.length > 0) {
+        console.warn('Situm> MapView> [!] "remoteIdentifier" is deprecated. Use "profile" instead.');
+        if (!configuration.profile || configuration.profile.length == 0) {
+          effectiveProfile = configuration.remoteIdentifier;
+        }
+      }
+      return effectiveProfile;
+    }
+
     return (
       <WebView
         ref={webViewRef}
         source={{
           uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${
-            configuration.remoteIdentifier
-              ? `id/${configuration.remoteIdentifier}`
+            _effectiveProfile()
+              ? `id/${_effectiveProfile()}`
               : ""
           }?&apikey=${
             configuration.situmApiKey
