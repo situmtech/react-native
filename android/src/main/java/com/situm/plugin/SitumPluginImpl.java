@@ -351,4 +351,9 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         getPluginInstance().onExitGeofences(
                 getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
     }
+
+    @ReactMethod
+    public void autoManage(boolean autoManage) {
+        SitumSdk.userHelperManager().autoManage(autoManage);
+    }
 }

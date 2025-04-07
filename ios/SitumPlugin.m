@@ -951,4 +951,8 @@ destinationReachedOnRoute:(SITRoute *)route {
 
     [self sendEventWithName:@"onExitGeofences" body:geofencesJO];
 }
+
+RCT_EXPORT_METHOD(autoManage:(BOOL)autoManage) {
+    [[SITUserHelperManager sharedInstance] autoManage:autoManage];
+}
 @end
