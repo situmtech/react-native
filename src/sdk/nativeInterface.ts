@@ -113,12 +113,17 @@ interface DirectionsAPI {
   ) => void;
 }
 
+interface UserHelperManagerAPI {
+  autoManage: (autoManage: boolean) => void;
+}
+
 export interface SitumPluginInterface
   extends NativeModule,
     CartographyAPI,
     LocationAPI,
     NavigationAPI,
-    DirectionsAPI {
+    DirectionsAPI,
+    UserHelperManagerAPI {
   initSitumSDK: () => void;
   setApiKey: (
     email: string,

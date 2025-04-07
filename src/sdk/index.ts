@@ -893,4 +893,8 @@ export default class SitumPlugin {
   static onNavigationError = (callback: (error: any) => void) => {
     navigationErrorCallback = callback;
   };
+
+  static autoManage = (autoManage: boolean) => {
+    RNCSitumPlugin.autoManage(autoManage);
+  };
 }
