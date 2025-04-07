@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   StyleSheet,
   useColorScheme,
+  View,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
@@ -16,7 +17,6 @@ import type {
   MapViewRef,
 } from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID, SITUM_PROFILE} from '../../situm';
-import requestPermission from '../Utils/requestPermission';
 
 const styles = StyleSheet.create({
   container: {
@@ -27,6 +27,13 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   mapview: {
+    width: '100%',
+    height: '100%',
+  },
+  screenWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
     height: '100%',
   },
@@ -56,25 +63,19 @@ const Screen: React.FC = () => {
   useEffect(() => {
     let appStateListener: NativeEventSubscription;
 
-    // Set positioning configuration
+    // Initial configuration
     SitumPlugin.setConfiguration({useRemoteConfig: true});
-    //Request permissions and start positioning
-    requestPermission()
-      .then(() => {
-        if (!SitumPlugin.positioningIsRunning()) {
-          SitumPlugin.requestLocationUpdates();
-          console.log('Situm > example > Starting positioning');
-        }
-      })
-      .catch(e => {
-        console.log(`Situm > example > Permissions rejected: ${e}`);
-      })
-      .finally(() => {
-        //Register listener to react to the app comming from the background
-        appStateListener = registerAppStateListener();
-        //Register callbacks
-        registerCallbacks();
-      });
+    
+    // Start positioning
+    if (!SitumPlugin.positioningIsRunning()) {
+      SitumPlugin.requestLocationUpdates();
+      console.log('Situm > example > Starting positioning');
+    }
+
+    // Register listener to react to the app comming from the background
+    appStateListener = registerAppStateListener();
+    // Register callbacks
+    registerCallbacks();
 
     // When unmounting make sure to stop positioning and remove listeners
     return () => {
@@ -129,19 +130,36 @@ const Screen: React.FC = () => {
     console.log('Situm > example > click on external link: ' + event.url);
   };
 
+  const onFloorChanged = (event: any) => {
+    console.log('Situm > example > floor changed to: ' + event.floor);
+  };
+
+  const onFavoritePoisUpdated = (event: any) => {
+    console.log('Situm > example > favorite pois updated: ' + JSON.stringify(event.pois));
+  };
+
+  const onMapError = (error: any) => {
+    console.error('Situm > example > map error: ' + error.message);
+  };
+
   return (
-    <MapView
-      ref={mapViewRef}
-      configuration={{
-        buildingIdentifier: SITUM_BUILDING_ID,
-        situmApiKey: SITUM_API_KEY,
-        profile: SITUM_PROFILE,
-      }}
-      onLoad={onLoad}
-      onPoiSelected={onPoiSelected}
-      onPoiDeselected={onPoiDeselected}
-      onExternalLinkClicked={onExternalLinkClicked}
-    />
+    <View style={styles.screenWrapper}>
+      <MapView
+        ref={mapViewRef}
+        configuration={{
+          situmApiKey: SITUM_API_KEY,
+          buildingIdentifier: SITUM_BUILDING_ID,
+          profile: SITUM_PROFILE,
+        }}
+        onLoad={onLoad}
+        onLoadError={onMapError}
+        onPoiSelected={onPoiSelected}
+        onPoiDeselected={onPoiDeselected}
+        onFloorChanged={onFloorChanged}
+        onExternalLinkClicked={onExternalLinkClicked}
+        onFavoritePoisUpdated={onFavoritePoisUpdated}
+      />
+    </View>
   );
 };
 

@@ -50,6 +50,7 @@ const HomeScreen = ({navigation}) => {
       SitumPlugin.init();
       SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL);
       SitumPlugin.setApiKey(SITUM_API_KEY);
+      SitumPlugin.autoManage(true);
     } catch (e) {
       console.error(`Situm > example > Could not initialize SDK ${e}`);
     }
