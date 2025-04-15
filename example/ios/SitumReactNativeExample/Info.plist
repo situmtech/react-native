@@ -30,13 +30,23 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+  	<string>Location is required to find out where you are</string>
+  	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  	<string>Location is required to find out where you are</string>
+  	<key>NSMotionUsageDescription</key>
+  	<string>We use your phone sensors (giroscope, accelerometer and altimeter) to improve location quality</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -51,5 +61,12 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>WKAppBoundDomains</key>
+	<array>
+		<string>maps.situm.com</string>
+		<string>map-viewer.situm.com</string>
+		<string>map-viewer-pre.situm.com</string>
+		<string>map-viewer-des.situm.com</string>
+	</array>
 </dict>
 </plist>

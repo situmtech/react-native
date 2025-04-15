@@ -5,12 +5,26 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TabNavigator } from './navigation/TabNavigator';
+import SitumPlugin from '@situm/react-native';
+import { SITUM_API_KEY, SITUM_DASHBOARD_URL } from './situm';
 
 function App(): React.JSX.Element {
+
+  useEffect(() => {
+    try {
+      SitumPlugin.init();
+      SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL);
+      SitumPlugin.setApiKey(SITUM_API_KEY);
+      SitumPlugin.autoManage(true);
+    } catch (e) {
+      console.error(`Situm > example > Could not initialize SDK ${e}`);
+    }
+  }, []);
+
   return (
     <SafeAreaProvider>
       <NavigationContainer>
