@@ -2,7 +2,7 @@
 
 <p align="center" style="text-align:center">
 
-Set of utilities that allow any developer to build React Native location based apps using [Situm](https://www.situm.com/)'s indoor positioning system.
+[Situm Wayfinding](https://situm.com/wayfinding) for React Native. Integrate plug&play navigation experience with indoor maps, routes and turn-by-turn directions in no time. With the power of [Situm](https://www.situm.com/).
 
 </p>
 

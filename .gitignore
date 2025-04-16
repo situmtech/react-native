@@ -6,15 +6,15 @@
 # node.js
 #
 coverage/
-node_modules/
-npm-debug.log
-yarn-debug.log
-yarn-error.log
+**/node_modules/
+**/npm-debug.log
+**/yarn-debug.log
+**/yarn-error.log
 
 
 # Xcode
 #
-build/
+**/build/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -88,7 +88,7 @@ example/ios/Pods
 
 # Ruby
 example/vendor/
-/vendor/bundle/
+**/vendor/bundle/
 
 # BUCK
 buck-out/
@@ -180,3 +180,9 @@ DerivedData/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.gitignore.io/api/xcode
+
+# Credentials:
+**/situm.tsx
+
+# Yarn
+**/.yarn
