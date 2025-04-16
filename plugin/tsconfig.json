@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "baseUrl": "./src",
+    "types": ["node"],
+    "paths": {
+      "@situm/react-native": ["./index"]
+    }
+  },
+  "include": ["src/**/*"]
+}

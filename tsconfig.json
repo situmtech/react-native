@@ -1,29 +1,16 @@
 {
-  "include": ["./src"],
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "@situm/react-native": ["./src/index"]
+    "compilerOptions": {
+      "paths": {
+        "@situm/react-native": ["./plugin/src/index"]
+      },
+      "esModuleInterop": true,
+      "jsx": "react-jsx",
+      "lib": ["esnext"],
+      "moduleResolution": "node",
+      "strict": true,
+      "skipLibCheck": true,
+      "baseUrl": ".",
+      "types": []
     },
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
-    "lib": ["esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noImplicitUseStrict": false,
-    "noStrictGenericChecks": false,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    // "strict": true,
-    "target": "esnext",
-    "verbatimModuleSyntax": true
+    "exclude": ["node_modules"]
   }
-}
