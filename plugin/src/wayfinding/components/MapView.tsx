@@ -159,7 +159,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     },
     ref
   ) => {
-    const webViewRef = useRef<WebView>();
+    const webViewRef = useRef<WebView>(null);
     const [_onDirectionsRequestInterceptor, setInterceptor] =
       useState<OnDirectionsRequestInterceptor>();
 
@@ -565,8 +565,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
     };
 
-    const _onShouldStartLoadWithRequest = (request) => {
-      console.log("_onShouldStartLoadWithRequest!!!", request.url);
+    const _onShouldStartLoadWithRequest = (request: any) => {
       if (
         request &&
         request.url &&
@@ -576,10 +575,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           onExternalLinkClicked &&
           typeof onExternalLinkClicked === "function"
         ) {
-          console.log("onExternalLinkClicked!!!");
           onExternalLinkClicked({ url: request.url });
         } else {
-          console.log("Linking!!!");
           Linking.openURL(request.url);
         }
         return false;

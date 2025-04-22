@@ -19,13 +19,13 @@ interface User {
 }
 
 export interface State {
-  webViewRef: MutableRefObject<undefined>;
+  webViewRef: MutableRefObject<undefined> | undefined;
   sdkInitialized: boolean;
   user?: User;
   location?: Location;
   locationStatus?: LocationStatusName;
   buildings: Building[] | null;
-  currentBuilding: Building;
+  currentBuilding: Building | undefined;
   pois: Poi[];
   directions?: Directions;
   navigation?: NavigationProgress;
@@ -38,8 +38,8 @@ export const initialState: State = {
   webViewRef: undefined,
   sdkInitialized: false,
   user: undefined,
-  location: null,
-  locationStatus: null,
+  location: undefined,
+  locationStatus: undefined,
   buildings: null,
   currentBuilding: undefined,
   pois: [],

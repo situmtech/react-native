@@ -223,8 +223,10 @@ const _registerCallbacks = () => {
   };
 
   Object.entries(callbacksMap).forEach(([eventName, callback]) => {
+    console.log("Event emitter add listener: ", eventName);
     SitumPluginEventEmitter.removeAllListeners(eventName);
     SitumPluginEventEmitter.addListener(eventName, callback);
+    console.log("Event emitter add listener finished: ", eventName);
   });
 };
 
