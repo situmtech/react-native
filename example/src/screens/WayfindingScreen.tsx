@@ -1,83 +1,32 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {
-  AppState,
-  NativeEventSubscription,
   SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
 
-import SitumPlugin, {MapView, SitumProvider, Error} from '@situm/react-native';
-import type {
-  OnPoiDeselectedResult,
-  OnPoiSelectedResult,
-  OnExternalLinkClickedResult,
-  MapViewRef,
+import {
+  type OnPoiDeselectedResult,
+  type OnPoiSelectedResult,
+  type OnExternalLinkClickedResult,
+  type MapViewRef,
+  SitumProvider,
+  MapView,
 } from '@situm/react-native';
-import {SITUM_API_KEY, SITUM_BUILDING_ID, SITUM_PROFILE} from '../situm';
 
-const Screen: React.FC = () => {
+import {SITUM_API_KEY, SITUM_BUILDING_ID, SITUM_PROFILE} from '../situm';
+import { Dialog, FAB, Icon, List, PaperProvider, Portal } from 'react-native-paper';
+import { Colors } from '../SharedStyles';
+
+export const WayfindingScreen: React.FC = () => {
+  
+    // ////////////////////////////////////////////////////////////////////////
+    // INITIALIZATION
+    // ////////////////////////////////////////////////////////////////////////
+
     const mapViewRef = useRef<MapViewRef>(null);
-    const [_controller, setController] = useState<MapViewRef | null>();
-  
-    // When coming from background, try to start positioning (if not running yet)
-    // This will ensure that, if the user enables the app permissions from the phone settings
-    // your application will start positioning right away
-    const registerAppStateListener = (): NativeEventSubscription => {
-      return AppState.addEventListener('change', nextAppState => {
-        if (nextAppState === 'active') {
-          if (!SitumPlugin.positioningIsRunning()) {
-            SitumPlugin.requestLocationUpdates();
-            console.log(
-              'Situm > example > Starting positioning after coming from background',
-            );
-          }
-        }
-      });
-    };
-  
-    // Initialize SDK when mounting map
-    useEffect(() => {
-      let appStateListener: NativeEventSubscription;
-  
-      // Initial configuration
-      SitumPlugin.setConfiguration({useRemoteConfig: true});
-      
-      // Start positioning
-      if (!SitumPlugin.positioningIsRunning()) {
-        SitumPlugin.requestLocationUpdates();
-        console.log('Situm > example > Starting positioning');
-      }
-  
-      // Register listener to react to the app comming from the background
-      appStateListener = registerAppStateListener();
-      // Register callbacks
-      registerCallbacks();
-  
-      // When unmounting make sure to stop positioning and remove listeners
-      return () => {
-        SitumPlugin.removeLocationUpdates();
-        appStateListener.remove();
-      };
-    }, []);
-  
-    // Register callbacks to handle Situm SDK events
-    const registerCallbacks = () => {
-      // Handle location errors
-      SitumPlugin.onLocationError((err: Error) => {
-        console.error(
-          'Situm > example > Error while positioning: ',
-          JSON.stringify(err),
-        );
-  
-        // Please take a look to RemoteConfig.tsx to know what kind of errors
-        // your app may be able to react to (and other useful callbacks as well)
-        // E.g. you might want to inform the user that he/she needs to grant some permission
-        // based on the callbacks' result
-      });
-    };
-  
-    // Initialize controller
+    const [controller, setController] = useState<MapViewRef | null>();
+
     useEffect(() => {
       if (!mapViewRef) {
         return;
@@ -90,13 +39,21 @@ const Screen: React.FC = () => {
       console.log('Situm > example > Map is ready, received event: ', event);
     };
   
+    // ////////////////////////////////////////////////////////////////////////
+    // CALLBACKS:
+    // ////////////////////////////////////////////////////////////////////////
+
+    const [selectedPoi, setSelectedPoi] = useState<string | null>();
+
     const onPoiSelected = (event: OnPoiSelectedResult) => {
+      setSelectedPoi(event.identifier);
       console.log(
         'Situm > example > on poi selected detected: ' + JSON.stringify(event),
       );
     };
   
     const onPoiDeselected = (event: OnPoiDeselectedResult) => {
+      setSelectedPoi(null);
       console.log(
         'Situm > example > on poi deselected detected: ' + JSON.stringify(event),
       );
@@ -108,7 +65,7 @@ const Screen: React.FC = () => {
     };
   
     const onFloorChanged = (event: any) => {
-      console.log('Situm > example > floor changed to: ' + event.floor);
+      console.log('Situm > example > floor changed to: ' + event.identifier);
     };
   
     const onFavoritePoisUpdated = (event: any) => {
@@ -118,37 +75,82 @@ const Screen: React.FC = () => {
     const onMapError = (error: any) => {
       console.error('Situm > example > map error: ' + error.message);
     };
-  
-    return (
-      <View style={styles.screenWrapper}>
-        <MapView
-          ref={mapViewRef}
-          configuration={{
-            situmApiKey: SITUM_API_KEY,
-            buildingIdentifier: SITUM_BUILDING_ID,
-            profile: SITUM_PROFILE,
-          }}
-          onLoad={onLoad}
-          onLoadError={onMapError}
-          onPoiSelected={onPoiSelected}
-          onPoiDeselected={onPoiDeselected}
-          onFloorChanged={onFloorChanged}
-          onExternalLinkClicked={onExternalLinkClicked}
-          onFavoritePoisUpdated={onFavoritePoisUpdated}
-        />
-      </View>
-    );
-  };
 
-export const WayfindingScreen = () => {
+    // ////////////////////////////////////////////////////////////////////////
+    // ACTIONS:
+    // ////////////////////////////////////////////////////////////////////////
+
+    const [dialogVisible, setDialogVisible] = useState(false);
+
+    const showDialog = () => setDialogVisible(true);
+    const hideDialog = () => setDialogVisible(false);
+  
+    const followUser = () => {
+      controller?.followUser();
+      hideDialog();
+    }
+  
+    const navigateToPoi = () => {
+      if (!selectedPoi) return;
+      controller?.navigateToPoi({
+        identifier: Number(selectedPoi)
+      });
+      hideDialog();
+    }
+
     return (
+      <PaperProvider>
+
+        {/* Add a SitumProvider with a valid API KEY */}
         <SitumProvider apiKey={SITUM_API_KEY}>
           <SafeAreaView style={{...styles.container}}>
-            <Screen />
+            <View style={styles.screenWrapper}>
+
+              {/* Add your MapView with a MapViewConfiguration */}
+              <MapView
+                ref={mapViewRef}
+                configuration={{
+                  situmApiKey: SITUM_API_KEY,
+                  buildingIdentifier: SITUM_BUILDING_ID,
+                  profile: SITUM_PROFILE,
+                }}
+                onLoad={onLoad}
+                onLoadError={onMapError}
+                onPoiSelected={onPoiSelected}
+                onPoiDeselected={onPoiDeselected}
+                onFloorChanged={onFloorChanged}
+                onExternalLinkClicked={onExternalLinkClicked}
+                onFavoritePoisUpdated={onFavoritePoisUpdated}
+              />
+            </View>
+
+            {/* Actions FAB+dialog available after selecting a POI */}
+            <FAB
+              visible={mapViewRef != null}
+              style={[styles.fab, { backgroundColor: Colors.primary }]}
+              icon="code-greater-than"
+              onPress={showDialog}
+            />
+            <Portal>
+              <Dialog visible={dialogVisible} onDismiss={hideDialog}>
+                <Dialog.Title>Programmatic actions:</Dialog.Title>
+                <Dialog.Content>
+                  <List.Item 
+                    title="Navigate to selected POI"
+                    onPress={navigateToPoi} disabled={!selectedPoi}
+                    left={() => <Icon source="navigation-variant-outline" size={20} />} />
+                  <List.Item
+                    title="Follow user" 
+                    onPress={followUser}
+                    left={() => <Icon source="crosshairs-gps" size={20} />} />
+                </Dialog.Content>
+              </Dialog>
+            </Portal>
           </SafeAreaView>
         </SitumProvider>
-      );
-};
+      </PaperProvider>
+    );
+  };
 
 const styles = StyleSheet.create({
     container: {
@@ -169,38 +171,10 @@ const styles = StyleSheet.create({
       width: '100%',
       height: '100%',
     },
+    fab: {
+      position: 'absolute',
+      margin: 16,
+      right: 0,
+      top: 64,
+    },
   });
-
-
-// import React from 'react';
-// import { View, Text, StyleSheet } from 'react-native';
-
-// export const WayfindingScreen = () => {
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.title}>Welcome to Situm Example</Text>
-//       <Text style={styles.subtitle}>
-//         This example shows how to integrate Situm SDK in your React Native application
-//       </Text>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 16,
-//     backgroundColor: '#fff',
-//   },
-//   title: {
-//     fontSize: 24,
-//     fontWeight: '600',
-//     marginBottom: 16,
-//     color: '#000',
-//   },
-//   subtitle: {
-//     fontSize: 16,
-//     color: '#666',
-//     lineHeight: 24,
-//   },
-// }); 

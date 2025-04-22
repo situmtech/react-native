@@ -29,11 +29,7 @@ In this file we share a way to upgrade previous versions of react-native-situm-p
 
     -   Remove the `user` and `apikey` props.
     -   Pass the mapboxApiKey props, otherwise only your floor plan will be shown without underlying map.
-    -   TODO: If you use Android 14 please specify in your `android/app/src/main/AndroidManifest.xml` the next permission
 
-        ```xml
-        <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
-        ```
 
 ### Code example
 

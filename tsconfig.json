@@ -1,8 +1,5 @@
 {
     "compilerOptions": {
-      "paths": {
-        "@situm/react-native": ["./plugin/src/index"]
-      },
       "esModuleInterop": true,
       "jsx": "react-jsx",
       "lib": ["esnext"],

@@ -183,6 +183,7 @@ export type Geofence = {
   infoHtml: string;
   polygonPoints: Point[];
   customFields: object;
+  name: string;
 };
 
 /**
@@ -588,6 +589,7 @@ export interface Location {
     degreesClockwise: number;
   };
   hasBearing?: boolean;
+  timestamp?: number;
 }
 
 export interface Position {

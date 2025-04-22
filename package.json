@@ -17,10 +17,6 @@
     },
     "packageManager": "yarn@4.0.1",
     "devDependencies": {
-        "@types/jest": "^29.5.14",
-        "@types/node": "^22.14.1",
-        "@types/react": "^19.1.2",
-        "@types/react-native": "^0.73.0",
         "eslint": "^8.44.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-functional": "^5.0.8",
