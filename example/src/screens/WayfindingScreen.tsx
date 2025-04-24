@@ -15,8 +15,9 @@ import {
 } from '@situm/react-native';
 
 import {SITUM_API_KEY, SITUM_BUILDING_ID, SITUM_PROFILE} from '../situm';
-import { Dialog, FAB, Icon, List, PaperProvider, Portal } from 'react-native-paper';
-import { Colors } from '../SharedStyles';
+import { PaperProvider } from 'react-native-paper';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { RootTabsParamsList } from '../navigation/types';
 
 export const WayfindingScreen: React.FC = () => {
   
@@ -26,6 +27,7 @@ export const WayfindingScreen: React.FC = () => {
 
     const mapViewRef = useRef<MapViewRef>(null);
     const [controller, setController] = useState<MapViewRef | null>();
+    const [mapViewLoaded, setMapViewLoaded] = useState<boolean>(false);
 
     useEffect(() => {
       if (!mapViewRef) {
@@ -36,6 +38,9 @@ export const WayfindingScreen: React.FC = () => {
     }, [mapViewRef]);
   
     const onLoad = (event: any) => {
+      // The "onLoad" callback indicates that the map has been loaded and is 
+      // ready to receive calls to perform actions (e.g., selectPoi, navigateToPoi).
+      setMapViewLoaded(true);
       console.log('Situm > example > Map is ready, received event: ', event);
     };
   
@@ -43,17 +48,13 @@ export const WayfindingScreen: React.FC = () => {
     // CALLBACKS:
     // ////////////////////////////////////////////////////////////////////////
 
-    const [selectedPoi, setSelectedPoi] = useState<string | null>();
-
     const onPoiSelected = (event: OnPoiSelectedResult) => {
-      setSelectedPoi(event.identifier);
       console.log(
         'Situm > example > on poi selected detected: ' + JSON.stringify(event),
       );
     };
   
     const onPoiDeselected = (event: OnPoiDeselectedResult) => {
-      setSelectedPoi(null);
       console.log(
         'Situm > example > on poi deselected detected: ' + JSON.stringify(event),
       );
@@ -80,22 +81,31 @@ export const WayfindingScreen: React.FC = () => {
     // ACTIONS:
     // ////////////////////////////////////////////////////////////////////////
 
-    const [dialogVisible, setDialogVisible] = useState(false);
+    // Get the POI identifier from react-navigation route params.
+    const route = useRoute<RouteProp<RootTabsParamsList, 'Wayfinding'>>();
+    const { poiIdentifier, action } = route.params || {};
 
-    const showDialog = () => setDialogVisible(true);
-    const hideDialog = () => setDialogVisible(false);
-  
-    const followUser = () => {
-      controller?.followUser();
-      hideDialog();
+    useEffect(() => {
+      // The MapView must be loaded to perform actions.
+      if (!mapViewLoaded) return;
+      if (!poiIdentifier || !action) return;
+
+      if (action === 'select') {
+        selectPoi(poiIdentifier);
+      } else if (action === 'navigate') {
+        navigateToPoi(poiIdentifier)
+      }
+      
+    }, [poiIdentifier, action, mapViewLoaded]);
+
+    const selectPoi = (poiIdentifier: string) => {
+      controller?.selectPoi(Number(poiIdentifier));
     }
-  
-    const navigateToPoi = () => {
-      if (!selectedPoi) return;
+
+    const navigateToPoi = (poiIdentifier: string) => {
       controller?.navigateToPoi({
-        identifier: Number(selectedPoi)
+        identifier: Number(poiIdentifier)
       });
-      hideDialog();
     }
 
     return (
@@ -123,29 +133,6 @@ export const WayfindingScreen: React.FC = () => {
                 onFavoritePoisUpdated={onFavoritePoisUpdated}
               />
             </View>
-
-            {/* Actions FAB+dialog available after selecting a POI */}
-            <FAB
-              visible={mapViewRef != null}
-              style={[styles.fab, { backgroundColor: Colors.primary }]}
-              icon="code-greater-than"
-              onPress={showDialog}
-            />
-            <Portal>
-              <Dialog visible={dialogVisible} onDismiss={hideDialog}>
-                <Dialog.Title>Programmatic actions:</Dialog.Title>
-                <Dialog.Content>
-                  <List.Item 
-                    title="Navigate to selected POI"
-                    onPress={navigateToPoi} disabled={!selectedPoi}
-                    left={() => <Icon source="navigation-variant-outline" size={20} />} />
-                  <List.Item
-                    title="Follow user" 
-                    onPress={followUser}
-                    left={() => <Icon source="crosshairs-gps" size={20} />} />
-                </Dialog.Content>
-              </Dialog>
-            </Portal>
           </SafeAreaView>
         </SitumProvider>
       </PaperProvider>
