@@ -11,6 +11,8 @@ import { PositioningCard } from './cards/PositioningCard';
 import { ScrollView, StyleSheet } from 'react-native';
 import { FetchResourcesCard } from './cards/FetchResourcesCard';
 import { SITUM_BUILDING_ID } from '../situm';
+import { MapInteractionCard } from './cards/MapInteractionCard';
+import { useNavigation } from '@react-navigation/native';
 
 export const HomeScreen = () => {
   // ////////////////////////////////////////////////////////////////////////
@@ -76,12 +78,20 @@ export const HomeScreen = () => {
   // MAP INTERACTION:
   // ////////////////////////////////////////////////////////////////////////
 
-  const selectPoi = (identifier: string) => {
+  const navigation = useNavigation();
 
+  const selectPoi = (identifier: string) => {
+    navigation.navigate('Wayfinding', { 
+      poiIdentifier: identifier,
+      action: 'select' 
+    });
   }
 
   const navigateToPoi = (identifier: string) => {
-
+    navigation.navigate('Wayfinding', { 
+      poiIdentifier: identifier,
+      action: 'navigate' 
+    });
   }
 
   // ////////////////////////////////////////////////////////////////////////
@@ -164,6 +174,10 @@ export const HomeScreen = () => {
             location={location}
             status={status}
             error={error}
+          />
+          <MapInteractionCard 
+            onSelectPoi={selectPoi}
+            onNavigateToPoi={navigateToPoi}
           />
           <FetchResourcesCard
             onFetchBuildingInfo={fetchBuildingInfo}

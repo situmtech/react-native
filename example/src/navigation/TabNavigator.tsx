@@ -4,8 +4,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { HomeScreen } from '../screens/HomeScreen';
 import { WayfindingScreen } from '../screens/WayfindingScreen';
 import { Colors } from '../SharedStyles';
+import { RootTabsParamsList } from './types';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<RootTabsParamsList>(); // See types.tsx.
 
 export const TabNavigator = () => {
   return (
