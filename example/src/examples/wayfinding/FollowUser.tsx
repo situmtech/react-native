@@ -6,7 +6,6 @@ import SitumPlugin, {MapView, SitumProvider} from '@situm/react-native';
 import type {MapViewRef} from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
 import {Button} from 'react-native-paper';
-import requestPermission from '../Utils/requestPermission';
 import {getDefaultLocationOptions} from '../../settings';
 
 const styles = StyleSheet.create({
@@ -40,18 +39,9 @@ const Screen: React.FC = () => {
    * Helper function that sets up the system to start positioning
    */
   const initializeSitum = async () => {
-    try {
-      // Define your own configuration if needed
-      SitumPlugin.setConfiguration({useRemoteConfig: true});
-      // Request permissions and start positioning
-      await requestPermission()
-        .then(() => {
-          SitumPlugin.requestLocationUpdates();
-        })
-        .catch(console.debug);
-    } catch (e) {
-      console.log(`Situm > example > Could not start positioning ${e}`);
-    }
+    // Define your own configuration if needed
+    SitumPlugin.setConfiguration({useRemoteConfig: true});
+    SitumPlugin.requestLocationUpdates();
   };
 
   /**
@@ -83,12 +73,6 @@ const Screen: React.FC = () => {
   }, [mapViewRef]);
 
   const startPositioning = async () => {
-    try {
-      await requestPermission();
-    } catch (e) {
-      console.warn('Situm > example > Error starting positioning:', e);
-    }
-
     console.log('Starting positioning');
 
     const locationOptions = getDefaultLocationOptions();

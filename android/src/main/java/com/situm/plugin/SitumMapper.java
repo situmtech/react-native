@@ -69,6 +69,7 @@ import es.situm.sdk.v1.SitumConversionArea;
 import es.situm.sdk.v1.SitumEvent;
 import es.situm.sdk.location.ForegroundServiceNotificationOptions;
 import es.situm.sdk.location.ForegroundServiceNotificationOptions.TapAction;
+import es.situm.sdk.userhelper.UserHelperColorScheme;
 
 class SitumMapper {
 
@@ -1282,5 +1283,25 @@ class SitumMapper {
             }
         }
         return response;
+    }
+
+    static UserHelperColorScheme jsonObjectToUserHelperColorScheme(JSONObject args) throws JSONException {
+        UserHelperColorScheme.Builder builder = new UserHelperColorScheme.Builder();
+
+        if (args.has("primaryColor")) {
+            String primaryColor = args.getString("primaryColor");
+            if (primaryColor != null) {
+            builder.setPrimaryColor(primaryColor);
+            }
+        }
+
+        if (args.has("secondaryColor")) {
+            String secondaryColor = args.getString("secondaryColor");
+            if (secondaryColor != null) {
+            builder.setSecondaryColor(secondaryColor);
+            }
+        }
+
+        return builder.build();
     }
 }

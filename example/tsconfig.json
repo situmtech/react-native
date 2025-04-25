@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
-    "jsx": "react"
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "@situm/react-native": ["../src"],
+      "@situm/react-native-wayfinding": ["../src/wayfinding"]
+    }
   },
   "extends": "@tsconfig/react-native/tsconfig.json"
 }
