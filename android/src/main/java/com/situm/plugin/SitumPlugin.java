@@ -82,11 +82,11 @@ public interface SitumPlugin {
 
     void invalidateCache();
 
-    void requestAuthorization();
-
     void getDeviceId(Callback callback);
 
     void onEnterGeofences();
 
     void onExitGeofences();
+
+    void configureUserHelper(ReadableMap map, Callback success, Callback error);
 }

@@ -9,7 +9,6 @@ import SitumPlugin, {
 } from '@situm/react-native';
 import styles from '../styles/styles';
 import {Button, Card, Divider, List} from 'react-native-paper';
-import requestPermission from '../Utils/requestPermission';
 
 function PositioningScreen() {
   // State variables to store location, status, error, and geofences data
@@ -32,20 +31,11 @@ function PositioningScreen() {
   }, []);
 
   const handlePermissionsButton = async () => {
-    try {
-      await requestPermission();
-    } catch (e) {
-      console.error('Error requesting permissions:', e);
-    }
+    // Do nothing
   };
 
   // Start positioning using Situm SDK
   const startPositioning = async () => {
-    try {
-      await requestPermission();
-    } catch (e) {
-      console.warn('Situm > example > Error starting positioning:', e);
-    }
 
     console.log('Starting positioning');
     setLocation('');
