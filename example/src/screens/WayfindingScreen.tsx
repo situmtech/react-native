@@ -16,7 +16,7 @@ import {
 
 import {SITUM_API_KEY, SITUM_BUILDING_ID, SITUM_PROFILE} from '../situm';
 import { PaperProvider } from 'react-native-paper';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootTabsParamsList } from '../navigation/types';
 
 export const WayfindingScreen: React.FC = () => {
@@ -82,6 +82,7 @@ export const WayfindingScreen: React.FC = () => {
     // ////////////////////////////////////////////////////////////////////////
 
     // Get the POI identifier from react-navigation route params.
+    const navigation = useNavigation();
     const route = useRoute<RouteProp<RootTabsParamsList, 'Wayfinding'>>();
     const { poiIdentifier, action } = route.params || {};
 
@@ -95,6 +96,12 @@ export const WayfindingScreen: React.FC = () => {
       } else if (action === 'navigate') {
         navigateToPoi(poiIdentifier)
       }
+
+      // Reset params to make the useEffect execute even with the same values.
+      navigation.setParams({
+          poiIdentifier: undefined,
+          action: undefined,
+      });
       
     }, [poiIdentifier, action, mapViewLoaded]);
 
