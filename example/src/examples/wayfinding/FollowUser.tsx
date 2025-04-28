@@ -41,6 +41,10 @@ const Screen: React.FC = () => {
   const initializeSitum = async () => {
     // Define your own configuration if needed
     SitumPlugin.setConfiguration({useRemoteConfig: true});
+    // Tells the underlying native SDKs to automatically manage permissions
+    // and sensor related issues.
+    SitumPlugin.enableUserHelper();
+    // Start positioning: 
     SitumPlugin.requestLocationUpdates();
   };
 

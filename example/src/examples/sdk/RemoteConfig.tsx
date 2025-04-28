@@ -135,6 +135,10 @@ export const RemoteConfig = () => {
     SitumPlugin.setConfiguration({
       useRemoteConfig: true,
     });
+    // Tells the underlying native SDKs to automatically manage permissions
+    // and sensor related issues.
+    SitumPlugin.enableUserHelper();
+
     registerCallbacks();
 
     return () => {
