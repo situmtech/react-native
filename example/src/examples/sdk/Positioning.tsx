@@ -22,6 +22,10 @@ function PositioningScreen() {
     SitumPlugin.setConfiguration({
       useRemoteConfig: false,
     });
+    // Tells the underlying native SDKs to automatically manage permissions
+    // and sensor related issues.
+    SitumPlugin.enableUserHelper();
+
     registerCallbacks();
 
     return () => {

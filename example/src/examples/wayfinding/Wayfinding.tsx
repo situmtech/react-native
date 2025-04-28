@@ -61,7 +61,7 @@ const Screen: React.FC = () => {
     appStateListener = registerAppStateListener();
     // Register callbacks
     registerCallbacks();
-    // Tells the underlying native SDKs to automatically manage permissions request
+    // Tells the underlying native SDKs to automatically manage permissions
     // and sensor related issues.
     SitumPlugin.enableUserHelper();
     // Start positioning: 
