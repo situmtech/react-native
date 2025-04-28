@@ -785,8 +785,8 @@ RCT_EXPORT_METHOD(onExitGeofences){
 }
 
 RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+                  withSuccessCallback:(RCTResponseSenderBlock)successBlock
+                  errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
     @try {
         BOOL enabled = NO;
@@ -818,10 +818,10 @@ RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options
             }
         }
         
-        resolve(@"User helper configured");
+        successBlock(@[@"User helper configured"]);
     }
     @catch (NSException *exception) {
-        reject(@"configure_user_helper_error", exception.reason, nil);
+        errorBlock(@[exception.reason]);
     }
 }
 
