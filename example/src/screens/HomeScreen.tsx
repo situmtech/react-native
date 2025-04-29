@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import React, { useEffect, useState } from "react";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import SitumPlugin, {
   LocationStatus,
   Location,
   Error,
   Geofence,
   Building,
-} from '@situm/react-native';
-import { PositioningCard } from './cards/PositioningCard';
-import { ScrollView, StyleSheet } from 'react-native';
-import { FetchResourcesCard } from './cards/FetchResourcesCard';
-import { SITUM_BUILDING_ID } from '../situm';
-import { MapInteractionCard } from './cards/MapInteractionCard';
-import { useNavigation } from '@react-navigation/native';
+} from "@situm/react-native";
+import { PositioningCard } from "./cards/PositioningCard";
+import { ScrollView, StyleSheet } from "react-native";
+import { FetchResourcesCard } from "./cards/FetchResourcesCard";
+import { SITUM_BUILDING_ID } from "../situm";
+import { MapInteractionCard } from "./cards/MapInteractionCard";
+import { useNavigation } from "@react-navigation/native";
 
 export const HomeScreen = () => {
   // ////////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ export const HomeScreen = () => {
 
   const [location, setLocation] = useState<Location>();
   const [status, setStatus] = useState<LocationStatus>();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     SitumPlugin.setConfiguration({
@@ -35,20 +35,20 @@ export const HomeScreen = () => {
   }, []);
 
   const startPositioning = async () => {
-    console.log('Starting positioning');
+    console.log("Starting positioning");
     clearPositioningData();
     SitumPlugin.requestLocationUpdates({});
   };
 
   const stopPositioning = () => {
-    console.log('Stopping positioning');
+    console.log("Stopping positioning");
     SitumPlugin.removeLocationUpdates();
   };
 
   const clearPositioningData = () => {
     setLocation(undefined);
     setStatus(undefined);
-    setError('');
+    setError("");
   };
 
   const registerCallbacks = () => {
@@ -81,101 +81,111 @@ export const HomeScreen = () => {
   const navigation = useNavigation();
 
   const selectPoi = (identifier: string) => {
-    navigation.navigate('Wayfinding', { 
+    navigation.navigate("Wayfinding", {
       poiIdentifier: identifier,
-      action: 'select' 
+      action: "select",
     });
-  }
+  };
 
   const navigateToPoi = (identifier: string) => {
-    navigation.navigate('Wayfinding', { 
+    navigation.navigate("Wayfinding", {
       poiIdentifier: identifier,
-      action: 'navigate' 
+      action: "navigate",
     });
-  }
+  };
 
   // ////////////////////////////////////////////////////////////////////////
   // FETCH RESOURCES:
   // ////////////////////////////////////////////////////////////////////////
 
-  const [fetchOutput, setFetchOutput] = useState('No data');
+  const [fetchOutput, setFetchOutput] = useState("No data");
   const [building, setBuilding] = useState<Building>();
 
   useEffect(() => {
     SitumPlugin.fetchBuildings()
       .then((buildings: Building[]) => {
-        const myBuilding = buildings.find(b => b.buildingIdentifier === SITUM_BUILDING_ID);
+        const myBuilding = buildings.find(
+          (b) => b.buildingIdentifier === SITUM_BUILDING_ID
+        );
         setBuilding(myBuilding);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(`Situm > example > Failed to fetch buildings: ${error}`);
       });
   }, []);
 
   const fetchBuildingInfo = () => {
-    setFetchOutput('fetchBuildingInfo...');
+    setFetchOutput("fetchBuildingInfo...");
     if (!building) return;
     SitumPlugin.fetchBuildingInfo(building)
       .then(setJsonFetchOutput)
-      .catch(error => {
-        console.error(`Situm > example > Failed to fetch building info: ${error}`);
+      .catch((error) => {
+        console.error(
+          `Situm > example > Failed to fetch building info: ${error}`
+        );
       });
-  }
+  };
 
   const fetchPois = () => {
-    setFetchOutput('fetchPois...');
+    setFetchOutput("fetchPois...");
     if (!building) return;
     SitumPlugin.fetchIndoorPOIsFromBuilding(building)
       .then(setJsonFetchOutput)
-      .catch(error => {
-        console.error(`Situm > example > Failed to fetch building info: ${error}`);
+      .catch((error) => {
+        console.error(
+          `Situm > example > Failed to fetch building info: ${error}`
+        );
       });
-  }
+  };
 
   const fetchPoiCategories = () => {
-    setFetchOutput('...');
+    setFetchOutput("...");
     SitumPlugin.fetchPoiCategories()
       .then(setJsonFetchOutput)
-      .catch(error => {
-        console.error(`Situm > example > Failed to fetch building info: ${error}`);
+      .catch((error) => {
+        console.error(
+          `Situm > example > Failed to fetch building info: ${error}`
+        );
       });
-  }
+  };
 
   const fetchGeofences = () => {
-    setFetchOutput('fetchGeofences...');
+    setFetchOutput("fetchGeofences...");
     if (!building) return;
     SitumPlugin.fetchGeofencesFromBuilding(building)
       .then(setJsonFetchOutput)
-      .catch(error => {
-        console.error(`Situm > example > Failed to fetch building info: ${error}`);
+      .catch((error) => {
+        console.error(
+          `Situm > example > Failed to fetch building info: ${error}`
+        );
       });
-  }
+  };
 
   const invalidateCache = () => {
-    setFetchOutput('invalidateCache...');
+    setFetchOutput("invalidateCache...");
     SitumPlugin.invalidateCache();
-    setFetchOutput('Cache invalidated');
-  }
+    setFetchOutput("Cache invalidated");
+  };
 
   const setJsonFetchOutput = (data: any) => {
     setFetchOutput(JSON.stringify(data, undefined, 2));
-  }
+  };
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView edges={['top']} style={styles.container}>
-        <ScrollView 
+      <SafeAreaView edges={["top"]} style={styles.container}>
+        <ScrollView
           contentContainerStyle={styles.scrollContainer}
           showsVerticalScrollIndicator={true}
         >
-          <PositioningCard 
+          <PositioningCard
             onStartPositioning={startPositioning}
             onStopPositioning={stopPositioning}
             location={location}
             status={status}
             error={error}
           />
-          <MapInteractionCard 
+          <MapInteractionCard
             onSelectPoi={selectPoi}
             onNavigateToPoi={navigateToPoi}
           />

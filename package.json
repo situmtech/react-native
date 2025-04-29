@@ -1,29 +1,33 @@
 {
-    "workspaces": {
-        "packages": [
-            "plugin",
-            "example"
-        ]
-    },
-    "resolutions": {
-        "@react-native/gradle-plugin": "0.79.1"
-    },
-    "description": "Situm React Native plugin monorepo.",
-    "private": true,
-    "author": "Situm Technologies <mobile@situm.com>",
-    "license": "MIT",
-    "scripts": {
-        "example": "yarn workspace example"
-    },
-    "packageManager": "yarn@4.0.1",
-    "devDependencies": {
-        "eslint": "^8.44.0",
-        "eslint-config-prettier": "^8.8.0",
-        "eslint-plugin-functional": "^5.0.8",
-        "eslint-plugin-import": "^2.27.5",
-        "eslint-plugin-prettier": "^4.2.1",
-        "eslint-plugin-simple-import-sort": "^10.0.0",
-        "typescript": "^5.5.2"
-    },
-    "prettier": {}
+  "workspaces": {
+    "packages": [
+      "plugin",
+      "example"
+    ]
+  },
+  "resolutions": {
+    "@react-native/gradle-plugin": "0.79.1"
+  },
+  "description": "Situm React Native plugin monorepo.",
+  "private": true,
+  "author": "Situm Technologies <mobile@situm.com>",
+  "license": "MIT",
+  "scripts": {
+    "example": "yarn workspace example",
+    "typescript": "npx tsc --noEmit",
+    "test": "yarn typescript && yarn test:jest"
+  },
+  "packageManager": "yarn@4.0.1",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.15.3",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-functional": "^5.0.8",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "typescript": "^5.5.2"
+  },
+  "prettier": {}
 }

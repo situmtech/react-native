@@ -16,16 +16,16 @@ import startingPositioning from "./resources/startPositioning/2_startingPosition
 import calculating from "./resources/startPositioning/3_calculating.json";
 import position from "./resources/startPositioning/4_position.json";
 
-let building,
-  floor,
-  indoorPoi,
-  outdoorPoi,
-  event,
-  poiCategory,
-  edge,
-  node,
-  point,
-  step;
+let building: any,
+  floor: any,
+  indoorPoi: any,
+  outdoorPoi: any,
+  event: any,
+  poiCategory: any,
+  edge: any,
+  node: any,
+  point: any,
+  step: any;
 
 describe("Test fetchBuildings -> ", () => {
   it("Check reutrned value", () => {
@@ -391,7 +391,7 @@ describe("Test startPositioning ->", () => {
   });
 });
 
-const testBounds = (bounds) => {
+const testBounds = (bounds: any) => {
   expect(typeof bounds.northEast).toBe("object");
   expect(typeof bounds.northWest).toBe("object");
   expect(typeof bounds.southEast).toBe("object");
@@ -402,22 +402,22 @@ const testBounds = (bounds) => {
   testCoordinate(bounds.southWest);
 };
 
-const testCoordinate = (coordinate) => {
+const testCoordinate = (coordinate: any) => {
   expect(typeof coordinate.latitude).toBe("number");
   expect(typeof coordinate.longitude).toBe("number");
 };
 
-const testDimension = (dimension) => {
+const testDimension = (dimension: any) => {
   expect(typeof dimension.width).toBe("number");
   expect(typeof dimension.height).toBe("number");
 };
 
-const testCartesianCoordinate = (cartesianCoordinate) => {
+const testCartesianCoordinate = (cartesianCoordinate: any) => {
   expect(typeof cartesianCoordinate.x).toBe("number");
   expect(typeof cartesianCoordinate.y).toBe("number");
 };
 
-const testPoint = (p) => {
+const testPoint = (p: any) => {
   expect(typeof p.buildingIdentifier).toBe("string");
   expect(typeof p.cartesianCoordinate).toBe("object");
   expect(typeof p.coordinate).toBe("object");
@@ -428,7 +428,7 @@ const testPoint = (p) => {
   testCoordinate(p.coordinate);
 };
 
-const testConversionArea = (conversionArea) => {
+const testConversionArea = (conversionArea: any) => {
   expect(typeof conversionArea.floorIdentifier).toBe("number");
   expect(typeof conversionArea.topLeft).toBe("string");
   expect(typeof conversionArea.topRight).toBe("string");
@@ -436,13 +436,13 @@ const testConversionArea = (conversionArea) => {
   expect(typeof conversionArea.bottomRight).toBe("string");
 };
 
-const testCircle = (circle) => {
+const testCircle = (circle: any) => {
   expect(typeof circle.radius).toBe("number");
   expect(typeof circle.center).toBe("object");
   testPoint(circle.center);
 };
 
-const testRouteStep = (routeStep) => {
+const testRouteStep = (routeStep: any) => {
   expect(typeof routeStep.distance).toBe("number");
   expect(typeof routeStep.distanceToGoal).toBe("number");
   expect(typeof routeStep.from).toBe("object");
@@ -454,7 +454,7 @@ const testRouteStep = (routeStep) => {
   testPoint(routeStep.TO);
 };
 
-const testIndication = (indication) => {
+const testIndication = (indication: any) => {
   expect(typeof indication.distance).toBe("number");
   expect(typeof indication.distanceToNextLevel).toBe("number");
   expect(typeof indication.indicationType).toBe("string");
@@ -466,12 +466,12 @@ const testIndication = (indication) => {
   expect(typeof indication.humanReadableMessage).toBe("string");
 };
 
-const testSegment = (segment) => {
+const testSegment = (segment: any) => {
   expect(typeof segment.floorIdentifier).toBe("string");
   expect(segment.points instanceof Array).toBe(true);
 };
 
-const testBearing = (bearing) => {
+const testBearing = (bearing: any) => {
   expect(typeof bearing.degrees).toBe("number");
   expect(typeof bearing.degreesClockwise).toBe("number");
   expect(typeof bearing.radians).toBe("number");

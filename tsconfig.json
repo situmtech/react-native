@@ -1,14 +1,14 @@
 {
-    "compilerOptions": {
-      "esModuleInterop": true,
-      "jsx": "react-jsx",
-      "lib": ["esnext"],
-      "moduleResolution": "node",
-      "strict": true,
-      "skipLibCheck": true,
-      "baseUrl": ".",
-      "types": [],
-      "resolveJsonModule": true
-    },
-    "exclude": ["node_modules"]
-  }
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "lib": ["esnext"],
+    "moduleResolution": "node",
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "types": ["jest", "node"],
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules"]
+}

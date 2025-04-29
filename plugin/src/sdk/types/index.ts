@@ -5,7 +5,7 @@ import type {
   InternalCallType,
   LocationStatusName,
   SdkNavigationUpdateType,
-} from "src/sdk";
+} from "./constants";
 
 /**
  * @name Building
@@ -589,7 +589,6 @@ export interface Location {
     degreesClockwise: number;
   };
   hasBearing?: boolean;
-  timestamp?: number;
 }
 
 export interface Position {

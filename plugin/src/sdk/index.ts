@@ -56,7 +56,7 @@ const RNCSitumPlugin =
       get() {
         throw new Error(LINKING_ERROR);
       },
-    }
+    },
   ) as SitumPluginInterface);
 
 const SitumPluginEventEmitter = new NativeEventEmitter(RNCSitumPlugin);
@@ -105,7 +105,7 @@ const _internalLocationCallback = (loc: Location) => {
   DelegatedStateManager.getInstance().updateLocation(loc);
   // MapView internal callback:
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.LOCATION, loc)
+    new InternalCall(InternalCallType.LOCATION, loc),
   );
   // Navigation internal callback: TODO review this, seems to be different to other plugins and candidate for refactoring.
   locationCallbackForNavigation(loc);
@@ -117,7 +117,7 @@ const _internalLocationStatusCallback = (status: LocationStatus) => {
   const mapViewStatusName = locationStatusAdapter(status.statusName);
   DelegatedStateManager.getInstance().updateStatus(mapViewStatusName);
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.LOCATION_STATUS, mapViewStatusName)
+    new InternalCall(InternalCallType.LOCATION_STATUS, mapViewStatusName),
   );
   // TODO: we are delegating different values to the internal and client callbacks. The viewer only understands
   // the states defined in LocationStatusName, but the integrator might be interested in any state from the SDK.
@@ -126,7 +126,7 @@ const _internalLocationStatusCallback = (status: LocationStatus) => {
 
 const _internalLocationStoppedCallback = () => {
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.LOCATION_STOPPED, undefined)
+    new InternalCall(InternalCallType.LOCATION_STOPPED, undefined),
   );
   // TODO: this callback is used only in RN, delete!
   locationStoppedCallback?.();
@@ -138,35 +138,35 @@ const _internalLocationErrorCallback = (error: Error) => {
   if (adaptedError.type === ErrorType.CRITICAL)
     SitumPlugin.removeLocationUpdates();
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.LOCATION_ERROR, adaptedError)
+    new InternalCall(InternalCallType.LOCATION_ERROR, adaptedError),
   );
   locationErrorCallback?.(adaptedError);
 };
 
 const _internalNavigationStartedCallback = (route: Route) => {
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_START, route)
+    new InternalCall(InternalCallType.NAVIGATION_START, route),
   );
   navigationStartedCallback?.(route);
 };
 
 const _internalNavigationProgressCallback = (progress: NavigationProgress) => {
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_PROGRESS, progress)
+    new InternalCall(InternalCallType.NAVIGATION_PROGRESS, progress),
   );
   navigationProgressCallback?.(progress);
 };
 
 const _internalNavigationDestinationReachedCallback = (route: Route) => {
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_DESTINATION_REACHED, route)
+    new InternalCall(InternalCallType.NAVIGATION_DESTINATION_REACHED, route),
   );
   navigationDestinationReachedCallback?.(route);
 };
 
 const _internalNavigationOutOfRouteCallback = () => {
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_OUT_OF_ROUTE, undefined)
+    new InternalCall(InternalCallType.NAVIGATION_OUT_OF_ROUTE, undefined),
   );
   navigationOutOfRouteCallback?.();
 };
@@ -174,35 +174,35 @@ const _internalNavigationOutOfRouteCallback = () => {
 const _internalNavigationFinishedCallback = () => {
   // Deprecated!
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_CANCELLATION, undefined)
+    new InternalCall(InternalCallType.NAVIGATION_CANCELLATION, undefined),
   );
   navigationFinishedCallback?.();
 };
 
 const _internalNavigationCancellationCallback = () => {
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_CANCELLATION, undefined)
+    new InternalCall(InternalCallType.NAVIGATION_CANCELLATION, undefined),
   );
   navigationCancellationCallback?.();
 };
 
 const _internalNavigationErrorCallback = (error: any) => {
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_ERROR, error)
+    new InternalCall(InternalCallType.NAVIGATION_ERROR, error),
   );
   navigationErrorCallback?.(error);
 };
 
 const _internalEnterGeofencesCallback = (data: any) => {
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.GEOFENCES_ENTER, data)
+    new InternalCall(InternalCallType.GEOFENCES_ENTER, data),
   );
   enterGeofencesCallback?.(data);
 };
 
 const _internalExitGeofencesCallback = (data: any) => {
   internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.GEOFENCES_EXIT, data)
+    new InternalCall(InternalCallType.GEOFENCES_EXIT, data),
   );
   exitGeofencesCallback?.(data);
 };
@@ -339,7 +339,7 @@ export default class SitumPlugin {
         useRemoteConfig ? "true" : "false",
         (response) => {
           onCallback(response, "Failed to set remote config");
-        }
+        },
       );
     });
   };
@@ -600,7 +600,7 @@ export default class SitumPlugin {
     building: Building,
     from: Point | Location,
     to: Point | Poi,
-    directionOptions?: DirectionsOptions
+    directionOptions?: DirectionsOptions,
   ) => {
     return promiseWrapper<Directions>(({ onSuccess, onError }) => {
       const params = [building, from, to, directionOptions || {}];
@@ -668,7 +668,7 @@ export default class SitumPlugin {
   static requestRealTimeUpdates = (
     realtimeUpdates: (event: any) => void,
     error?: (event: any) => void,
-    options?: any
+    options?: any,
   ) => {
     return exceptionWrapper<void>(() => {
       RNCSitumPlugin.requestRealTimeUpdates(options || {});
@@ -677,7 +677,7 @@ export default class SitumPlugin {
         error
           ? SitumPluginEventEmitter.addListener(
               "realtimeError",
-              error || logError
+              error || logError,
             )
           : null,
       ]);
@@ -702,9 +702,9 @@ export default class SitumPlugin {
    */
   static checkIfPointInsideGeofence = (
     request: any,
-    callback?: (response: { isInsideGeofence: boolean; geofence: any }) => void
+    callback?: (response: { isInsideGeofence: boolean; geofence: any }) => void,
   ) => {
-    RNCSitumPlugin.checkIfPointInsideGeofence(request, callback);
+    RNCSitumPlugin.checkIfPointInsideGeofence(request, callback || (() => {}));
   };
 
   /**
@@ -746,24 +746,24 @@ export default class SitumPlugin {
    * @param callback
    */
   static internalSetMethodCallMapDelegate = (
-    callback: (internalCall: InternalCall) => void
+    callback: (internalCall: InternalCall) => void,
   ) => {
     internalMethodCallMapDelegate = callback;
     const lastValues = DelegatedStateManager.getInstance().getValues();
     // Forward last received values as soon as possible:
     if (lastValues.location) {
       internalMethodCallMapDelegate(
-        new InternalCall(InternalCallType.LOCATION, lastValues.location)
+        new InternalCall(InternalCallType.LOCATION, lastValues.location),
       );
     }
     if (lastValues.status) {
       internalMethodCallMapDelegate(
-        new InternalCall(InternalCallType.LOCATION_STATUS, lastValues.status)
+        new InternalCall(InternalCallType.LOCATION_STATUS, lastValues.status),
       );
     }
     if (lastValues.error) {
       internalMethodCallMapDelegate(
-        new InternalCall(InternalCallType.LOCATION_ERROR, lastValues.error)
+        new InternalCall(InternalCallType.LOCATION_ERROR, lastValues.error),
       );
     }
   };
@@ -862,7 +862,7 @@ export default class SitumPlugin {
    * @param callback a function that returns the {@link NavigationProgress} by parameters.
    */
   static onNavigationProgress = (
-    callback: (progress: NavigationProgress) => void
+    callback: (progress: NavigationProgress) => void,
   ) => {
     navigationProgressCallback = callback;
   };
@@ -873,7 +873,7 @@ export default class SitumPlugin {
    * @param callback a function that returns the completed {@link Route} by parameters.
    */
   static onNavigationDestinationReached = (
-    callback: (route: Route) => void
+    callback: (route: Route) => void,
   ) => {
     navigationDestinationReachedCallback = callback;
   };

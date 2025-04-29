@@ -18,7 +18,7 @@ export const handleAsyncCallback = (
   response: { success: boolean },
   resolve: PromiseResolve<void>,
   reject: PromiseReject,
-  errorMessage: string
+  errorMessage: string,
 ) => {
   if (response?.success) {
     resolve();
@@ -40,7 +40,7 @@ export const handleAsyncCallback = (
 
 export const handleSyncCallback = (
   r: { success: boolean },
-  errorMessage: string
+  errorMessage: string,
 ) => {
   if (r?.success) {
     return;
@@ -65,9 +65,9 @@ export const exceptionWrapper = <T>(
     onCallback: (r: { success: boolean }, errorMessage: string) => void;
     onSuccess: PromiseResolve<T>;
     onError: PromiseReject;
-  }) => void
-): T => {
-  let returnValue: T;
+  }) => void,
+) => {
+  let returnValue: T | undefined;
   try {
     fn({
       onCallback: handleSyncCallback,
@@ -105,7 +105,7 @@ export const promiseWrapper = <T>(
     onCallback: (r: { success: boolean }, errorMessage: string) => void;
     onSuccess: PromiseResolve<T>;
     onError: PromiseReject;
-  }) => void
+  }) => void,
 ) => {
   return new Promise<T>((resolve, reject) => {
     try {
@@ -124,14 +124,17 @@ export const promiseWrapper = <T>(
       logError(error);
       reject({
         code: ErrorCode.UNKNOWN,
-        message: error?.message || "Unknown error.",
+        message:
+          typeof error === "object" && error !== null && "message" in error
+            ? error?.message
+            : "Unknown error.",
         type: ErrorType.NON_CRITICAL,
       });
     }
   });
 };
 
-export function locationStatusAdapter(statusName): string {
+export function locationStatusAdapter(statusName: any): string {
   // The MapView will only understand status names declared at LocationStatusName and CALCULATING
   // is not one of them.
   // TODO: implement status & error adapter on native SDKs.
@@ -141,7 +144,7 @@ export function locationStatusAdapter(statusName): string {
   return statusName;
 }
 
-export function locationErrorAdapter(error): Error {
+export function locationErrorAdapter(error: any): Error {
   let adaptedCode = ErrorCode.UNKNOWN;
   const adaptedMessage = error.message;
   const adaptedType = ErrorType.CRITICAL;
