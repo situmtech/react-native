@@ -7,7 +7,8 @@
       "strict": true,
       "skipLibCheck": true,
       "baseUrl": ".",
-      "types": []
+      "types": [],
+      "resolveJsonModule": true
     },
     "exclude": ["node_modules"]
   }

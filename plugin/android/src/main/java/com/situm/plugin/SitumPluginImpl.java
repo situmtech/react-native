@@ -115,7 +115,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     public void setDashboardURL(String url, Callback callback) {
         boolean success = false;
 
-        if (!url.isEmpty()) {
+        if (url != null && !url.isEmpty()) {
             success = true;
             SitumSdk.configuration().setDashboardURL(url);
         }
