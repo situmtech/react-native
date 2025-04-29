@@ -37,6 +37,7 @@ import {
   locationStatusAdapter,
   promiseWrapper,
 } from "./utils";
+import { DelegatedStateManager } from "./internaDelegatedState";
 
 export * from "./types";
 export * from "./types/constants";
@@ -65,6 +66,7 @@ let positioningRunning = false;
 let navigationRunning = false;
 let realtimeSubscriptions = [];
 
+// Internal method call (MapView) delegate:
 let internalMethodCallMapDelegate = (_: InternalCall) => {
   // internalMethodCallMapDelegate is an empty function by default.
 };
@@ -100,6 +102,7 @@ let exitGeofencesCallback = (_: any) => {};
 // internal callback.
 
 const _internalLocationCallback = (loc: Location) => {
+  DelegatedStateManager.getInstance().updateLocation(loc);
   // MapView internal callback:
   internalMethodCallMapDelegate(
     new InternalCall(InternalCallType.LOCATION, loc)
@@ -112,6 +115,7 @@ const _internalLocationCallback = (loc: Location) => {
 
 const _internalLocationStatusCallback = (status: LocationStatus) => {
   const mapViewStatusName = locationStatusAdapter(status.statusName);
+  DelegatedStateManager.getInstance().updateStatus(mapViewStatusName);
   internalMethodCallMapDelegate(
     new InternalCall(InternalCallType.LOCATION_STATUS, mapViewStatusName)
   );
@@ -130,6 +134,7 @@ const _internalLocationStoppedCallback = () => {
 
 const _internalLocationErrorCallback = (error: Error) => {
   const adaptedError = locationErrorAdapter(error);
+  DelegatedStateManager.getInstance().updateError(adaptedError);
   if (adaptedError.type === ErrorType.CRITICAL)
     SitumPlugin.removeLocationUpdates();
   internalMethodCallMapDelegate(
@@ -744,6 +749,23 @@ export default class SitumPlugin {
     callback: (internalCall: InternalCall) => void
   ) => {
     internalMethodCallMapDelegate = callback;
+    const lastValues = DelegatedStateManager.getInstance().getValues();
+    // Forward last received values as soon as possible:
+    if (lastValues.location) {
+      internalMethodCallMapDelegate(
+        new InternalCall(InternalCallType.LOCATION, lastValues.location)
+      );
+    }
+    if (lastValues.status) {
+      internalMethodCallMapDelegate(
+        new InternalCall(InternalCallType.LOCATION_STATUS, lastValues.status)
+      );
+    }
+    if (lastValues.error) {
+      internalMethodCallMapDelegate(
+        new InternalCall(InternalCallType.LOCATION_ERROR, lastValues.error)
+      );
+    }
   };
 
   //-----------------------------------------------------------------------------//

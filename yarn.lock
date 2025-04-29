@@ -3637,11 +3637,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 22.15.2
-  resolution: "@types/node@npm:22.15.2"
+  version: 22.15.3
+  resolution: "@types/node@npm:22.15.3"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: e22071571205413518aa3710644ed9603d8f4a417fc59f0e180240e1c05aaf7fb8feecdf553a2da305247b3533d03b58eab6e333115f01f581b9139a6b1dcd47
+  checksum: 6b4ff03c36598432b419980f828281aa16383e2de6eb61f73275495ef8d2cbf8cb5607659b4cae5ff8b2b2ff69913ea07ffcc0be029e4280b6e8bc138dc6629b
   languageName: node
   linkType: hard
 
@@ -6081,9 +6081,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.73":
-  version: 1.5.142
-  resolution: "electron-to-chromium@npm:1.5.142"
-  checksum: 4f473ff5615f97a96e0cd68963a95b4b79b80f2176ffe4d91bea494da3bd7ec70a22896f5bca6f7c23794d5ec33fd76151b50f67c8d7589961aecbffcd2e3f77
+  version: 1.5.143
+  resolution: "electron-to-chromium@npm:1.5.143"
+  checksum: 91a7980f96da5ad33b77e95c7e628f468e6bb53eac41437612882810a7552514132728f7c34ee5c967c599557af491fcc4f75e9138f82d22c1b1cdfc63fb8d6b
   languageName: node
   linkType: hard
 
@@ -12342,8 +12342,8 @@ __metadata:
   linkType: hard
 
 "react-native-paper@npm:^5.13.3":
-  version: 5.13.4
-  resolution: "react-native-paper@npm:5.13.4"
+  version: 5.13.5
+  resolution: "react-native-paper@npm:5.13.5"
   dependencies:
     "@callstack/react-theme-provider": "npm:^3.0.9"
     color: "npm:^3.1.2"
@@ -12353,7 +12353,7 @@ __metadata:
     react-native: "*"
     react-native-safe-area-context: "*"
     react-native-vector-icons: "*"
-  checksum: 69f9420d443a985d3c307a6d887af6fcb9d8c26fb4e1be1c7d23c44f95cf70d24e6cefa7bd1295087193e838aa46a036265dc576ea2933bd7a61a213076ae739
+  checksum: a4e7a051d1ec9ccaa49249d439f650f137aba8f909dd2d0cf2f7526857b37069bab8eeab70d7f1f86b9f724c41fa38948d2f408d9c0d88c91fe5abf51c289b1e
   languageName: node
   linkType: hard
 
