@@ -62,98 +62,96 @@ export const useSitumInternal = () => {
   };
 
   function registerCallbacks() {
-    SitumPlugin.internalSetMethodCallMapDelegate((internalCall: InternalCall) => {
-      switch(internalCall.type) {
-        case InternalCallType.LOCATION:
-          let location = internalCall.get<Location>();
-          dispatch(
-            setLocation({
-              ...location,
-            })
-          );
-          break;
-        case InternalCallType.LOCATION_STATUS:
-          let statusName = internalCall.get<string>();
-          if (statusName in LocationStatusName) {
+    SitumPlugin.internalSetMethodCallMapDelegate(
+      (internalCall: InternalCall) => {
+        switch (internalCall.type) {
+          case InternalCallType.LOCATION:
+            let location = internalCall.get<Location>();
             dispatch(
-              setLocationStatus(statusName)
+              setLocation({
+                ...location,
+              }),
             );
-          }
-          break;
-        case InternalCallType.LOCATION_STOPPED:
-          // TODO: LOCATION_STOPPED exists only in RN, delete!
-          dispatch(resetLocation());
-          break;
-        case InternalCallType.LOCATION_ERROR:
-          let error = internalCall.get<Error>();
-          dispatch(
-            setError(error)
-          );
-          break;
-        case InternalCallType.NAVIGATION_START:
-          dispatch(
-            setNavigation({
-              type: NavigationUpdateType.PROGRESS,
-              status: NavigationStatus.START,
-            })
-          );
-          break;
-        case InternalCallType.NAVIGATION_DESTINATION_REACHED:
-          dispatch(
-            setNavigation({
-              type: NavigationUpdateType.DESTINATION_REACHED,
-              status: NavigationStatus.UPDATE,
-            })
-          );
-          break;
-        case InternalCallType.NAVIGATION_PROGRESS:
-          let progress = internalCall.get<NavigationProgress>();
-          dispatch(
-            setNavigation({
-              currentIndication: progress?.currentIndication,
-              routeStep: progress?.routeStep,
-              distanceToGoal: progress?.distanceToGoal,
-              points: progress?.points,
-              type: NavigationUpdateType.PROGRESS,
-              segments: progress?.segments,
-              status: NavigationStatus.UPDATE,
-            })
-          );
-          break;
-        case InternalCallType.NAVIGATION_OUT_OF_ROUTE:
-          dispatch(
-            setNavigation({
-              type: NavigationUpdateType.OUT_OF_ROUTE,
-              status: NavigationStatus.UPDATE,
-            })
-          );
-          break;
-        case InternalCallType.NAVIGATION_CANCELLATION:
-          dispatch(
-            setNavigation({
-              type: NavigationUpdateType.CANCELLED,
-              status: NavigationStatus.STOP,
-            })
-          );
-          break;
-        case InternalCallType.NAVIGATION_ERROR:
-        case InternalCallType.GEOFENCES_ENTER:
-        case InternalCallType.GEOFENCES_EXIT:
-          // Do nothing.
-          break;
-      }
-    });
+            break;
+          case InternalCallType.LOCATION_STATUS:
+            let statusName = internalCall.get<string>();
+            if (statusName in LocationStatusName) {
+              dispatch(setLocationStatus(statusName));
+            }
+            break;
+          case InternalCallType.LOCATION_STOPPED:
+            // TODO: LOCATION_STOPPED exists only in RN, delete!
+            dispatch(resetLocation());
+            break;
+          case InternalCallType.LOCATION_ERROR:
+            let error = internalCall.get<Error>();
+            dispatch(setError(error));
+            break;
+          case InternalCallType.NAVIGATION_START:
+            dispatch(
+              setNavigation({
+                type: NavigationUpdateType.PROGRESS,
+                status: NavigationStatus.START,
+              }),
+            );
+            break;
+          case InternalCallType.NAVIGATION_DESTINATION_REACHED:
+            dispatch(
+              setNavigation({
+                type: NavigationUpdateType.DESTINATION_REACHED,
+                status: NavigationStatus.UPDATE,
+              }),
+            );
+            break;
+          case InternalCallType.NAVIGATION_PROGRESS:
+            let progress = internalCall.get<NavigationProgress>();
+            dispatch(
+              setNavigation({
+                currentIndication: progress?.currentIndication,
+                routeStep: progress?.routeStep,
+                distanceToGoal: progress?.distanceToGoal,
+                points: progress?.points,
+                type: NavigationUpdateType.PROGRESS,
+                segments: progress?.segments,
+                status: NavigationStatus.UPDATE,
+              }),
+            );
+            break;
+          case InternalCallType.NAVIGATION_OUT_OF_ROUTE:
+            dispatch(
+              setNavigation({
+                type: NavigationUpdateType.OUT_OF_ROUTE,
+                status: NavigationStatus.UPDATE,
+              }),
+            );
+            break;
+          case InternalCallType.NAVIGATION_CANCELLATION:
+            dispatch(
+              setNavigation({
+                type: NavigationUpdateType.CANCELLED,
+                status: NavigationStatus.STOP,
+              }),
+            );
+            break;
+          case InternalCallType.NAVIGATION_ERROR:
+          case InternalCallType.GEOFENCES_ENTER:
+          case InternalCallType.GEOFENCES_EXIT:
+            // Do nothing.
+            break;
+        }
+      },
+    );
   }
 
   const calculateRoute = async (
     payload: any,
     interceptor?: OnDirectionsRequestInterceptor,
-    updateRoute = true
+    updateRoute = true,
   ) => {
     console.debug("Situm > hook > calculating route");
 
     const directionsRequest = createDirectionsRequest(
-      payload.directionsRequest
+      payload.directionsRequest,
     );
     interceptor && interceptor(directionsRequest);
     const {
@@ -170,12 +168,17 @@ export const useSitumInternal = () => {
 
     const _buildings = await SitumPlugin.fetchBuildings();
     const _building = _buildings.find(
-      (b: Building) => b.buildingIdentifier === buildingIdentifier
+      (b: Building) => b.buildingIdentifier === buildingIdentifier,
     );
+
+    if (!_building) {
+      console.debug(`Situm > hook > Could not compute route: missing building`);
+      return;
+    }
 
     if (!to || !from || lockDirections) {
       console.debug(
-        `Situm > hook > Could not compute route (to: ${to}, from: ${from}, lockDirections: ${lockDirections})`
+        `Situm > hook > Could not compute route (to: ${to}, from: ${from}, lockDirections: ${lockDirections})`,
       );
       return;
     }
@@ -213,7 +216,7 @@ export const useSitumInternal = () => {
   // Navigation
   const startNavigation = (
     payload: any,
-    interceptor?: OnDirectionsRequestInterceptor
+    interceptor?: OnDirectionsRequestInterceptor,
   ) => {
     console.debug("Situm > hook > request to start navigation");
     // TODO: we should delegate this to the sdk plugin
@@ -232,11 +235,11 @@ export const useSitumInternal = () => {
             status: NavigationStatus.START,
             type: NavigationUpdateType.PROGRESS,
             ...r,
-          })
+          }),
         );
         try {
           const navigationRequest = createNavigationRequest(
-            payload.navigationRequest
+            payload.navigationRequest,
           );
           SitumPlugin.requestNavigationUpdates({
             ...defaultNavigationRequest,
@@ -250,7 +253,7 @@ export const useSitumInternal = () => {
               message: "Could not update navigation",
               code: ErrorCode.UNKNOWN,
               type: ErrorType.NON_CRITICAL,
-            } as Error)
+            } as Error),
           );
           stopNavigation();
         }
@@ -258,8 +261,8 @@ export const useSitumInternal = () => {
       .catch((e) => {
         console.error(
           `Situm > hook > Could not compute route for navigation ${JSON.stringify(
-            e
-          )}`
+            e,
+          )}`,
         );
       });
   };
@@ -279,8 +282,8 @@ export const useSitumInternal = () => {
       .catch((e) => {
         console.warn(
           `Situm > hook > Could not remove navigation updates ${JSON.stringify(
-            e
-          )}`
+            e,
+          )}`,
         );
       });
   };

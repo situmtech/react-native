@@ -1,17 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Button, View, StyleSheet, Modal, TouchableOpacity, Text, FlatList } from 'react-native';
-import { Card, Icon } from 'react-native-paper';
-import { Colors, SharedStyles } from '../../SharedStyles';
-import SitumPlugin, { Building, Poi } from '@situm/react-native';
-import { SITUM_BUILDING_ID } from '../../situm';
+import React, { useState, useEffect } from "react";
+import {
+  Button,
+  View,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  Text,
+  FlatList,
+} from "react-native";
+import { Card, Icon } from "react-native-paper";
+import { Colors, SharedStyles } from "../../SharedStyles";
+import SitumPlugin, { Building, Poi } from "@situm/react-native";
+import { SITUM_BUILDING_ID } from "../../situm";
 
 interface MapInteractionCardProps {
   onSelectPoi: (identifier: string) => void;
   onNavigateToPoi: (identifier: string) => void;
 }
 
-export const MapInteractionCard: React.FC<MapInteractionCardProps> = ({ 
-  onSelectPoi, 
+export const MapInteractionCard: React.FC<MapInteractionCardProps> = ({
+  onSelectPoi,
   onNavigateToPoi,
 }) => {
   const [pois, setPois] = useState<Poi[]>([]);
@@ -22,19 +30,21 @@ export const MapInteractionCard: React.FC<MapInteractionCardProps> = ({
   useEffect(() => {
     SitumPlugin.fetchBuildings()
       .then((buildings: Building[]) => {
-        const myBuilding = buildings.find(b => b.buildingIdentifier === SITUM_BUILDING_ID);
+        const myBuilding = buildings.find(
+          (b) => b.buildingIdentifier === SITUM_BUILDING_ID
+        );
         if (!myBuilding) return null;
         return myBuilding;
       })
-      .then(building => {
+      .then((building) => {
         if (building) {
           return SitumPlugin.fetchIndoorPOIsFromBuilding(building);
         }
         return [];
       })
       .then(setPois)
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
   }, []);
 
@@ -52,13 +62,13 @@ export const MapInteractionCard: React.FC<MapInteractionCardProps> = ({
       />
       <Card.Content>
         <View style={styles.selectorButtonContainer}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.selectorButton}
             onPress={() => setModalVisible(true)}
           >
             <Text style={styles.selectorButtonText}>
-              {selectedPoi 
-                ? `${selectedPoi.poiName} (floor ${selectedPoi.floorIdentifier})` 
+              {selectedPoi
+                ? `${selectedPoi.poiName} (floor ${selectedPoi.floorIdentifier})`
                 : "Select a POI..."}
             </Text>
             <Icon source="menu-down" size={24} color={Colors.primary} />
@@ -80,17 +90,19 @@ export const MapInteractionCard: React.FC<MapInteractionCardProps> = ({
                   <Icon source="close" size={24} color={Colors.primary} />
                 </TouchableOpacity>
               </View>
-              
+
               <FlatList
                 data={pois}
                 keyExtractor={(item) => item.identifier}
                 renderItem={({ item }) => (
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     style={styles.poiItem}
                     onPress={() => handlePoiSelection(item)}
                   >
                     <Text style={styles.poiName}>{item.poiName}</Text>
-                    <Text style={styles.poiFloor}>Floor {item.floorIdentifier}</Text>
+                    <Text style={styles.poiFloor}>
+                      Floor {item.floorIdentifier}
+                    </Text>
                   </TouchableOpacity>
                 )}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -102,17 +114,19 @@ export const MapInteractionCard: React.FC<MapInteractionCardProps> = ({
         {/* Actions */}
         <View style={SharedStyles.buttonContainer}>
           <View style={SharedStyles.button}>
-            <Button 
-              onPress={() => selectedPoi && onSelectPoi(selectedPoi.identifier)} 
-              title="Select POI" 
+            <Button
+              onPress={() => selectedPoi && onSelectPoi(selectedPoi.identifier)}
+              title="Select POI"
               color={Colors.primary}
               disabled={!selectedPoi}
             />
           </View>
           <View style={SharedStyles.button}>
-            <Button 
-              onPress={() => selectedPoi && onNavigateToPoi(selectedPoi.identifier)} 
-              title="Navigate to POI" 
+            <Button
+              onPress={() =>
+                selectedPoi && onNavigateToPoi(selectedPoi.identifier)
+              }
+              title="Navigate to POI"
               color={Colors.primary}
               disabled={!selectedPoi}
             />
@@ -128,9 +142,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   selectorButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 12,
     borderWidth: 1,
     borderColor: Colors.primary,
@@ -142,15 +156,15 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   modalContainer: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     padding: 16,
-    maxHeight: '60%',
-    shadowColor: '#000',
+    maxHeight: "60%",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -160,14 +174,14 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: Colors.primary,
   },
   poiItem: {
@@ -175,15 +189,15 @@ const styles = StyleSheet.create({
   },
   poiName: {
     fontSize: 16,
-    color: 'black',
+    color: "black",
   },
   poiFloor: {
     fontSize: 14,
-    color: 'gray',
+    color: "gray",
     marginTop: 4,
   },
   separator: {
     height: 1,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: "#e0e0e0",
   },
 });

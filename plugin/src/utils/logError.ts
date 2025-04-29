@@ -11,6 +11,6 @@ export const logError = __DEV__
         console.log(JSON.stringify(response));
       }
     }
-  : function (_response) {
+  : function (_response: any) {
       // do nothing
     };

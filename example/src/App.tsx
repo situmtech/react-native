@@ -5,15 +5,14 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { TabNavigator } from './navigation/TabNavigator';
-import SitumPlugin from '@situm/react-native';
-import { SITUM_API_KEY, SITUM_DASHBOARD_URL } from './situm';
+import React, { useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { TabNavigator } from "./navigation/TabNavigator";
+import SitumPlugin from "@situm/react-native";
+import { SITUM_API_KEY, SITUM_DASHBOARD_URL } from "./situm";
 
 function App(): React.JSX.Element {
-
   useEffect(() => {
     try {
       SitumPlugin.init();
