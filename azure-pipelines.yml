@@ -80,6 +80,12 @@ steps:
             cd react-native
           fi
 
+          # Important: ensure we are working at plugin folder when setting the NPM version.
+          cd plugin
+          echo -e "\n[+] Setting NPM version to $(version)"
+          npm version $(version) --no-git-tag-version
+          cd ..
+
           echo -e "\n[+] Setting git to push NPM version\n"
           git config --global user.email "sistemas@situm.es"
           git config --global user.name "Situmops"
@@ -90,18 +96,8 @@ steps:
           echo -e "\n[+] Changing to $(currentBranch)"
           git checkout $(currentBranch)
 
-          echo -e "\n[+] Ensure TypeDoc will always be up to date"
-          yarn doc
-          git commit -am "[skip ci] Updated TypeDoc"
-
-          # Important: ensure we are working at plugin folder when setting the NPM version.
-          cd plugin
-          echo -e "\n[+] Setting NPM version to $(version) at branch $(currentBranch)"
-          npm version $(version) --no-git-tag-version
-          cd ..
+          echo -e "\n[+] Add, Commit and Push to $(currentBranch)"
           git commit -am "[skip ci] Setting the React Native version to $(version)"
-
-          echo -e "\n[+] Push changes to origin $(currentBranch)"
           git push --set-upstream origin $(currentBranch)
           git push
         displayName: Make changes
