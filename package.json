@@ -15,7 +15,8 @@
   "scripts": {
     "example": "yarn workspace example",
     "typescript": "npx tsc --noEmit",
-    "test": "yarn typescript && yarn test:jest"
+    "test": "yarn typescript && yarn test:jest",
+    "doc": "cd plugin && yarn doc"
   },
   "packageManager": "yarn@4.0.1",
   "devDependencies": {
