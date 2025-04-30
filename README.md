@@ -36,7 +36,6 @@ This plugin has two parts:
   - explore points of interest on your buildings on the map
 
 ![Preview of WYF module](./plugin/docs/assets/preview.png)
-![](./plugin/docs/assets/preview.png)
 
 <!-- ## Table of contents
 

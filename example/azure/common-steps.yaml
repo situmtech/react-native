@@ -7,8 +7,6 @@ parameters:
     type: string
   - name: BUILDINGID
     type: string
-  - name: FLOORID
-    type: string
   - name: DASHBOARD_URL
     type: string
   - name: BUILDNUMBER
@@ -30,14 +28,12 @@ steps:
       echo -e "\n[+] Installing NPM version $(npmVersion)\n"
       npm install -g $(npmVersion)
 
-
       echo -e "\n[+] Install plugin dependencies\n"
-      yarn install
-      
+      yarn
+
       echo -e "\n[+] Install example dependencies\n"
-      cd example
-      rm -rf ios/Podfile.lock
-      yarn install
+      rm -rf example/ios/Podfile.lock
+      yarn example
 
     displayName: Install plugin dependencies
 
@@ -50,7 +46,6 @@ steps:
       echo -e "\n[+] Variables to set:"
       echo -e "\t[+] X-API-EMAIL: ${{ parameters.XAPIEMAIL }}"
       echo -e "\t[+] BUILDINGID: ${{ parameters.BUILDINGID }}"
-      echo -e "\t[+] FLOORID: ${{ parameters.FLOORID }}"
       echo -e "\t[+] DASHBOARD_URL: ${{ parameters.DASHBOARD_URL }}"
       echo -e "\t[+] BUILDNUMBER: ${{ parameters.BUILDNUMBER }}"
       echo -e "\t[+] Plugin Version used: $pluginVersion"
@@ -58,7 +53,6 @@ steps:
       echo "export const SITUM_EMAIL = '${{ parameters.XAPIEMAIL }}';" > example/src/situm.tsx
       echo "export const SITUM_API_KEY = '${{ parameters.XAPIKEY }}';" >> example/src/situm.tsx
       echo "export const SITUM_BUILDING_ID = '${{ parameters.BUILDINGID }}';" >> example/src/situm.tsx
-      echo "export const SITUM_FLOOR_ID = '${{ parameters.FLOORID }}';" >> example/src/situm.tsx
       echo "export const SITUM_DASHBOARD_URL = '${{ parameters.DASHBOARD_URL }}';"  >> example/src/situm.tsx
 
     displayName: Configure credentials
