@@ -63,15 +63,6 @@ export const HomeScreen = () => {
     SitumPlugin.onLocationError((err: Error) => {
       setError(err.message);
     });
-
-    // TODO:
-    // SitumPlugin.onEnterGeofences((items: any) => {
-    //   setGeofences('Inside ' + items.map((item: Geofence) => item?.name).filter(Boolean).join(', '));
-    // });
-
-    // SitumPlugin.onExitGeofences((items: any) => {
-    //   setGeofences('Outside ' + items.map((item: Geofence) => item?.name).filter(Boolean).join(', '));
-    // });
   };
 
   // ////////////////////////////////////////////////////////////////////////

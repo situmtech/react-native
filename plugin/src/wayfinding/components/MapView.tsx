@@ -41,7 +41,7 @@ import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
 import ViewerMapper from "../utils/mapper";
 import { setError, setLocationStatus } from "../store";
-const SITUM_BASE_DOMAIN = "https://map-viewer.situm.com";
+const SITUM_BASE_DOMAIN = "https://maps.situm.com";
 
 const NETWORK_ERROR_CODE = {
   android: -2,
@@ -59,7 +59,7 @@ export type MapViewConfiguration = {
    */
   apiDomain?: string;
   /**
-   * A String parameter that allows you to specify which domain will be displayed inside our webview. Defaults to "https://map-viewer.situm.com/".
+   * A String parameter that allows you to specify which domain will be displayed inside our webview. Defaults to "https://maps.situm.com/".
    * In most cases this parameter shouldn't be changed.
    */
   viewerDomain?: string;
@@ -157,7 +157,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onExternalLinkClicked = undefined,
       onFavoritePoisUpdated = () => {},
     },
-    ref
+    ref,
   ) => {
     const webViewRef = useRef<WebView>(null);
     const [_onDirectionsRequestInterceptor, setInterceptor] =
@@ -166,7 +166,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     // Local states
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
     const [buildingIdentifier, setBuildingIdentifier] = useState<string>(
-      configuration.buildingIdentifier
+      configuration.buildingIdentifier,
     );
     const {
       init,
@@ -198,7 +198,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.navigateToPoi(payload)
+        ViewerMapper.navigateToPoi(payload),
       );
     }, []);
 
@@ -213,7 +213,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.navigateToCar(payload)
+        ViewerMapper.navigateToCar(payload),
       );
     }, []);
 
@@ -226,7 +226,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.navigateToPoint(payload)
+        ViewerMapper.navigateToPoint(payload),
       );
     }, []);
 
@@ -253,13 +253,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
       if (SitumPlugin.navigationIsRunning()) {
         console.error(
-          "Situm > hook > Navigation on course, poi category selection is unavailable"
+          "Situm > hook > Navigation on course, poi category selection is unavailable",
         );
         return;
       }
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.selectPoiCategory(categoryId)
+        ViewerMapper.selectPoiCategory(categoryId),
       );
     }, []);
 
@@ -270,16 +270,16 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         }
         if (SitumPlugin.navigationIsRunning()) {
           console.error(
-            "Situm > hook > Navigation on course, floor selection is unavailable"
+            "Situm > hook > Navigation on course, floor selection is unavailable",
           );
           return;
         }
         sendMessageToViewer(
           webViewRef.current,
-          ViewerMapper.selectFloor(floorId, options)
+          ViewerMapper.selectFloor(floorId, options),
         );
       },
-      []
+      [],
     );
 
     const _search = useCallback((payload: SearchFilter) => {
@@ -293,10 +293,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         }
         sendMessageToViewer(
           webViewRef.current,
-          ViewerMapper.setDirectionsOptions(directionsOptions)
+          ViewerMapper.setDirectionsOptions(directionsOptions),
         );
       },
-      []
+      [],
     );
 
     const _setFavoritePois = useCallback((poiIds: number[]) => {
@@ -305,7 +305,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.setFavoritePois(poiIds)
+        ViewerMapper.setFavoritePois(poiIds),
       );
     }, []);
 
@@ -313,14 +313,14 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (locationStatus) {
         sendMessageToViewer(
           webViewRef.current,
-          ViewerMapper.locationStatus(locationStatus)
+          ViewerMapper.locationStatus(locationStatus),
         );
       }
       if (error) {
         // Right now, status and errors share message on the viewer:
         sendMessageToViewer(
           webViewRef.current,
-          ViewerMapper.locationError(error)
+          ViewerMapper.locationError(error),
         );
       }
     };
@@ -339,81 +339,77 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
      *    onLoad={onLoad} />
      */
 
-    useImperativeHandle(
-      ref,
-      () => {
-        return {
-          followUser() {
-            _followUser(true);
-          },
-          unfollowUser() {
-            _followUser(false);
-          },
-          selectPoi(poiId: number) {
-            _selectPoi(poiId);
-          },
-          selectCar() {
-            _selectCar();
-          },
-          selectPoiCategory(poiId: number) {
-            _selectPoiCategory(poiId);
-          },
-          selectFloor(poiId: number, options?: CartographySelectionOptions) {
-            _selectFloor(poiId, options);
-          },
-          setDirectionsOptions(directionsOptions: MapViewDirectionsOptions) {
-            _setDirectionsOptions(directionsOptions);
-          },
-          setFavoritePois(poiIds: number[]) {
-            _setFavoritePois(poiIds);
-          },
-          deselectPoi() {
-            webViewRef.current &&
-              sendMessageToViewer(
-                webViewRef.current,
-                ViewerMapper.selectPoi(null)
-              );
-          },
-          navigateToPoi(payload): void {
-            _navigateToPoi(payload);
-          },
-          navigateToCar(payload): void {
-            _navigateToCar(payload);
-          },
-          navigateToPoint(payload: NavigateToPointPayload): void {
-            _navigateToPoint(payload);
-          },
-          setOnDirectionsRequestInterceptor(directionRequestInterceptor): void {
-            setInterceptor(() => directionRequestInterceptor);
-          },
-          cancelNavigation(): void {
-            if (!webViewRef.current) return;
-            stopNavigation();
+    useImperativeHandle(ref, () => {
+      return {
+        followUser() {
+          _followUser(true);
+        },
+        unfollowUser() {
+          _followUser(false);
+        },
+        selectPoi(poiId: number) {
+          _selectPoi(poiId);
+        },
+        selectCar() {
+          _selectCar();
+        },
+        selectPoiCategory(poiId: number) {
+          _selectPoiCategory(poiId);
+        },
+        selectFloor(poiId: number, options?: CartographySelectionOptions) {
+          _selectFloor(poiId, options);
+        },
+        setDirectionsOptions(directionsOptions: MapViewDirectionsOptions) {
+          _setDirectionsOptions(directionsOptions);
+        },
+        setFavoritePois(poiIds: number[]) {
+          _setFavoritePois(poiIds);
+        },
+        deselectPoi() {
+          webViewRef.current &&
             sendMessageToViewer(
               webViewRef.current,
-              ViewerMapper.cancelNavigation()
+              ViewerMapper.selectPoi(null),
             );
-          },
-          search(payload): void {
-            _search(payload);
-          },
-        };
-      },
-      [
-        stopNavigation,
-        _navigateToPoi,
-        _followUser,
-        _navigateToCar,
-        _navigateToPoint,
-        _selectPoi,
-        _selectCar,
-        _selectPoiCategory,
-        _selectFloor,
-        _setDirectionsOptions,
-        _setFavoritePois,
-        _search,
-      ]
-    );
+        },
+        navigateToPoi(payload): void {
+          _navigateToPoi(payload);
+        },
+        navigateToCar(payload): void {
+          _navigateToCar(payload);
+        },
+        navigateToPoint(payload: NavigateToPointPayload): void {
+          _navigateToPoint(payload);
+        },
+        setOnDirectionsRequestInterceptor(directionRequestInterceptor): void {
+          setInterceptor(() => directionRequestInterceptor);
+        },
+        cancelNavigation(): void {
+          if (!webViewRef.current) return;
+          stopNavigation();
+          sendMessageToViewer(
+            webViewRef.current,
+            ViewerMapper.cancelNavigation(),
+          );
+        },
+        search(payload): void {
+          _search(payload);
+        },
+      };
+    }, [
+      stopNavigation,
+      _navigateToPoi,
+      _followUser,
+      _navigateToCar,
+      _navigateToPoint,
+      _selectPoi,
+      _selectCar,
+      _selectPoiCategory,
+      _selectFloor,
+      _setDirectionsOptions,
+      _setFavoritePois,
+      _search,
+    ]);
 
     useEffect(() => {
       SitumPlugin.validateMapViewProjectSettings();
@@ -426,7 +422,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       console.error(
         "Error code:",
-        error.code ? error.code : " no code provided"
+        error.code ? error.code : " no code provided",
       );
       console.error("Error detected:", error.message);
     }, [error]);
@@ -444,7 +440,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.locationStatus(locationStatus)
+        ViewerMapper.locationStatus(locationStatus),
       );
       // Callbacks used in `useEffect` won't be invoked if the value of locationStatus
       // is set but hasn't changed. Set locationStatus to null always to avoid missing
@@ -458,7 +454,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.locationError(error)
+        ViewerMapper.locationError(error),
       );
       // Callbacks used in `useEffect` won't be invoked if the value of locationStatus
       // is set but hasn't changed. Set locationStatus to null always to avoid missing
@@ -472,7 +468,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.navigation(navigation)
+        ViewerMapper.navigation(navigation),
       );
     }, [navigation, mapLoaded]);
 
@@ -489,7 +485,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.setLanguage(configuration.language)
+        ViewerMapper.setLanguage(configuration.language),
       );
     }, [configuration.language, mapLoaded]);
 
@@ -498,7 +494,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (webViewRef.current && mapLoaded) {
         sendMessageToViewer(
           webViewRef.current,
-          ViewerMapper.initialConfiguration(style)
+          ViewerMapper.initialConfiguration(style),
         );
       }
     }, [webViewRef, mapLoaded, style]);
@@ -586,23 +582,26 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     const _effectiveProfile = () => {
       let effectiveProfile = configuration.profile;
-      if (configuration.remoteIdentifier && configuration.remoteIdentifier.length > 0) {
-        console.warn('Situm> MapView> [!] "remoteIdentifier" is deprecated. Use "profile" instead.');
+      if (
+        configuration.remoteIdentifier &&
+        configuration.remoteIdentifier.length > 0
+      ) {
+        console.warn(
+          'Situm> MapView> [!] "remoteIdentifier" is deprecated. Use "profile" instead.',
+        );
         if (!configuration.profile || configuration.profile.length == 0) {
           effectiveProfile = configuration.remoteIdentifier;
         }
       }
       return effectiveProfile;
-    }
+    };
 
     return (
       <WebView
         ref={webViewRef}
         source={{
           uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${
-            _effectiveProfile()
-              ? `id/${_effectiveProfile()}`
-              : ""
+            _effectiveProfile() ? `id/${_effectiveProfile()}` : ""
           }?&apikey=${
             configuration.situmApiKey
           }&wl=true&global=true&mode=embed${
@@ -638,7 +637,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         }}
       />
     );
-  }
+  },
 );
 
 export default MapView;
