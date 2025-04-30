@@ -23,7 +23,8 @@ resources:
       type: bitbucket
       endpoint: Bitbucket - sistemas
       name: situm/sys-kubernetes-templates.git
-      ref: master
+      # TODO: return to master!!!
+      ref: feature/PRO-3913-react-native-docs
     - repository: web_developers
       type: bitbucket
       endpoint: Bitbucket - sistemas
