@@ -18,15 +18,20 @@ steps:
     fetchTags: false
     displayName: Clone repository
 
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: "17"
+      jdkArchitectureOption: "x64"
+      jdkSourceOption: "PreInstalled"
+
   - task: NodeTool@0
     inputs:
       versionSource: "spec" # 'spec' | 'fromFile'. Required. Source of version. Default: spec.
-      versionSpec: "22.11.0"
+      versionSpec: "22.15.0"
 
   - bash: |
 
-      echo -e "\n[+] Installing NPM version $(npmVersion)\n"
-      npm install -g $(npmVersion)
+      echo -e "\n[+] Installed NPM version is $(npm --version)\n"
 
       echo -e "\n[+] Setup yarn 4\n"
       npm install -g corepack

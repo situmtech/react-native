@@ -1,0 +1,69 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Build example"
+  lane :beta do
+    #=================================================
+    #Get Latest version and build number
+    #=================================================
+    latest_testflight_build_number(
+      api_key_path:"./fastlane/api_key.json",
+      app_identifier:"com.situm.rnsdkexample",
+    )
+
+    #====================================================
+    #Increment version number and build number
+    #
+    #====================================================
+    #
+    version_number = lane_context[SharedValues::LATEST_TESTFLIGHT_VERSION]
+    increment_version_number(
+      version_number: version_number
+      )
+    increment_build_number(
+      build_number: ENV['BUILDNUMBER']
+    )
+
+
+    #=================================================
+    # Build iOS Example RNSDK
+    # ================================================
+    build_app(
+      workspace: "example.xcworkspace",
+      configuration: "Release",
+      scheme: "example",
+      export_method: "app-store",
+      xcargs: "CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER=\"Situm RN SDK Example\"",
+      export_options: {
+          provisioningProfiles: {
+              "com.situm.rnsdkexample" => "DistributorOnline"
+            },
+        }
+    )
+
+    #=================================================
+    # Upload to Testflight
+    # ================================================
+    upload_to_testflight(
+      api_key_path:"./fastlane/api_key.json",
+      skip_submission: true,
+      skip_waiting_for_build_processing: true,
+      changelog: ENV['WHATS_NEW']
+      )
+  end
+end
