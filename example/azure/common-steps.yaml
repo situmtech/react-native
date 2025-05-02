@@ -34,11 +34,11 @@ steps:
       corepack prepare yarn@4.0.1 --activate
 
       echo -e "\n[+] Install plugin dependencies\n"
-      yarn
+      yarn install
 
       echo -e "\n[+] Install example dependencies\n"
       rm -rf example/ios/Podfile.lock
-      yarn example
+      yarn wordspace example install
 
     displayName: Install plugin dependencies
 
