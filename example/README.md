@@ -47,7 +47,7 @@ And then install the plugin dependencies alongside the example/ app dependecies 
 ```bash
 cd situm-react-native-plugin/
 
-yarn && yarn example
+yarn install && yarn workspace example install
 ```
 
 - **iOS**
@@ -78,7 +78,7 @@ export const SITUM_DASHBOARD_URL = "https://dashboard.situm.com";
 
 - **Run from command line:**
 
-  1. Initialize the metro terminal with `$ cd example && yarn start`.
+  1. Initialize the metro terminal with `$ yarn workspace example start`.
   2. Then (in another terminal) compile and run this app in your device with `$ yarn example android`.
 
 - **Run from Android Studio:** Open `example/android` folder in Android Studio and run project.
@@ -87,7 +87,7 @@ export const SITUM_DASHBOARD_URL = "https://dashboard.situm.com";
 
 - **Run from command line:**
 
-  1. Initialize the metro terminal with `$ cd example && yarn start`
+  1. Initialize the metro terminal with `$ yarn workspace example start`
   2. Then (in another terminal) compile and run this app in your device with `$ yarn example ios`.
 
 - **Run from XCode:** Go to `example/ios` folder and open `SitumReactNativeExample.xcworkspace`.
