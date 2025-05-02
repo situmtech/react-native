@@ -28,8 +28,10 @@ steps:
       echo -e "\n[+] Installing NPM version $(npmVersion)\n"
       npm install -g $(npmVersion)
 
-      echo -e "\n[+] Installing yarn@4.0.1, declared at package.json -> packageManager\n"
-      npm install -g yarn@4.0.1
+      echo -e "\n[+] Setup yarn 4\n"
+      npm install -g corepack
+      corepack enable
+      corepack prepare yarn@4.0.1 --activate
 
       echo -e "\n[+] Install plugin dependencies\n"
       yarn
