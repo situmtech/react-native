@@ -4631,6 +4631,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-plugin-transform-remove-console@npm:^6.9.4":
+  version: 6.9.4
+  resolution: "babel-plugin-transform-remove-console@npm:6.9.4"
+  checksum: 1123c3816c6f89c064752199c8796f30265d937f5d8e1e43d3837f1c0e87ed0e6bbd0afa6117ce021c8b93ec1de7154e158674bb22331c7ed6609d10121359df
+  languageName: node
+  linkType: hard
+
 "babel-preset-current-node-syntax@npm:^1.0.0":
   version: 1.1.0
   resolution: "babel-preset-current-node-syntax@npm:1.1.0"
@@ -6837,6 +6844,7 @@ __metadata:
     "@types/react-native-vector-icons": "npm:^6.4.18"
     "@types/react-test-renderer": "npm:^19.0.0"
     babel-plugin-module-resolver: "npm:^5.0.2"
+    babel-plugin-transform-remove-console: "npm:^6.9.4"
     escape-string-regexp: "npm:^4.0.0"
     eslint: "npm:^8.44.0"
     jest: "npm:^29.6.3"
