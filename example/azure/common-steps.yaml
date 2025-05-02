@@ -38,7 +38,7 @@ steps:
 
       echo -e "\n[+] Install example dependencies\n"
       rm -rf example/ios/Podfile.lock
-      yarn wordspace example install
+      yarn workspace example install
 
     displayName: Install plugin dependencies
 
