@@ -3,6 +3,8 @@ import { Button, View, StyleSheet, ScrollView, Platform } from "react-native";
 import { Card, Icon, Text } from "react-native-paper";
 import { Colors, SharedStyles } from "../../SharedStyles";
 
+const CardTitleIcon = () => <Icon source="cloud-download-outline" size={20} />;
+
 interface FetchResourcesCardProps {
   onFetchBuildingInfo: () => void;
   onFetchPois: () => void;
@@ -24,7 +26,7 @@ export const FetchResourcesCard: React.FC<FetchResourcesCardProps> = ({
     <Card style={SharedStyles.card}>
       <Card.Title
         title="Fetch Resources"
-        left={() => <Icon source="cloud-download-outline" size={20} />}
+        left={CardTitleIcon}
         titleStyle={SharedStyles.title}
       />
       <Card.Content>

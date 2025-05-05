@@ -13,6 +13,8 @@ import { Colors, SharedStyles } from "../../SharedStyles";
 import SitumPlugin, { Building, Poi } from "@situm/react-native";
 import { SITUM_BUILDING_ID } from "../../situm";
 
+const CardTitleIcon = () => <Icon source="code-greater-than" size={20} />;
+
 interface MapInteractionCardProps {
   onSelectPoi: (identifier: string) => void;
   onNavigateToPoi: (identifier: string) => void;
@@ -57,7 +59,7 @@ export const MapInteractionCard: React.FC<MapInteractionCardProps> = ({
     <Card style={SharedStyles.card}>
       <Card.Title
         title="Map Interaction"
-        left={() => <Icon source="code-greater-than" size={20} />}
+        left={CardTitleIcon}
         titleStyle={SharedStyles.title}
       />
       <Card.Content>
