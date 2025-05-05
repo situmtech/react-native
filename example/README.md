@@ -45,6 +45,7 @@ git clone https://github.com/situmtech/react-native.git
 This repository uses [yarn workspaces](https://yarnpkg.com/features/workspaces) and [yarn 4](https://yarnpkg.com/blog/release/4.0), so you will need to install [Corepack](https://github.com/nodejs/corepack#readme) and prepare yarn:
 
 ```bash
+cd react-native/
 npm install -g corepack
 corepack enable
 corepack prepare yarn@4.0.1 --activate
@@ -53,8 +54,6 @@ corepack prepare yarn@4.0.1 --activate
 Then install the plugin dependencies alongside the example/ app dependecies as follows:
 
 ```bash
-cd situm-react-native-plugin/
-
 yarn install && yarn workspace example install
 ```
 
