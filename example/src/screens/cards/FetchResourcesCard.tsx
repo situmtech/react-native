@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, View, StyleSheet, ScrollView } from "react-native";
+import { Button, View, StyleSheet, ScrollView, Platform } from "react-native";
 import { Card, Icon, Text } from "react-native-paper";
 import { Colors, SharedStyles } from "../../SharedStyles";
 
@@ -67,7 +67,11 @@ export const FetchResourcesCard: React.FC<FetchResourcesCardProps> = ({
         </View>
         <Text style={styles.sectionTitle}>Output:</Text>
         <ScrollView horizontal>
-          <Text style={styles.logText}>{output}</Text>
+          <Text style={styles.logText}>
+            {output.length > 5000
+              ? `${output.substring(0, 5000)}\n...[TRUNCATED, SEE LOGS]`
+              : output}
+          </Text>
         </ScrollView>
       </Card.Content>
     </Card>
@@ -81,7 +85,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   logText: {
-    fontFamily: "monospace",
+    fontFamily: Platform.OS === "ios" ? "Courier New" : "monospace",
     fontSize: 12,
     color: "#000",
   },
