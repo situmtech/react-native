@@ -34,35 +34,35 @@ export const FetchResourcesCard: React.FC<FetchResourcesCardProps> = ({
           <View style={SharedStyles.button}>
             <Button
               onPress={onFetchBuildingInfo}
-              title="fetch Building Info"
+              title="Fetch Building Info"
               color={Colors.primary}
             />
           </View>
           <View style={SharedStyles.button}>
             <Button
               onPress={onFetchPois}
-              title="fetch Pois"
+              title="Fetch POIs"
               color={Colors.primary}
             />
           </View>
           <View style={SharedStyles.button}>
             <Button
               onPress={onFetchPoiCategories}
-              title="fetch Poi Categories"
+              title="Fetch POI Categories"
               color={Colors.primary}
             />
           </View>
           <View style={SharedStyles.button}>
             <Button
               onPress={onFetchGeofences}
-              title="fetch Geofences"
+              title="Fetch Geofences"
               color={Colors.primary}
             />
           </View>
           <View style={SharedStyles.button}>
             <Button
               onPress={onInvalidateCache}
-              title="invalidate Cache"
+              title="Invalidate Cache"
               color={Colors.red}
             />
           </View>
