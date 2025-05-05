@@ -4,6 +4,8 @@ import { Card, Icon, Text } from "react-native-paper";
 import { Colors, SharedStyles } from "../../SharedStyles";
 import { Location, LocationStatus } from "@situm/react-native";
 
+const CardTitleIcon = () => <Icon source="crosshairs-gps" size={20} />;
+
 interface PositioningCardProps {
   onStartPositioning: () => void;
   onStopPositioning: () => void;
@@ -34,7 +36,7 @@ export const PositioningCard: React.FC<PositioningCardProps> = ({
     <Card style={SharedStyles.card}>
       <Card.Title
         title="Positioning"
-        left={() => <Icon source="crosshairs-gps" size={20} />}
+        left={CardTitleIcon}
         titleStyle={SharedStyles.title}
       />
       <Card.Content>
