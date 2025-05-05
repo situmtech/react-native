@@ -9,10 +9,10 @@
 <div align="center" style="text-align:center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-![Latest version:](https://img.shields.io/npm/v/@situm/sdk-js/latest)
-![Node compatibility:](https://img.shields.io/node/v/@situm/sdk-js)
+![Latest version:](https://img.shields.io/npm/v/@situm/react-native/latest)
+![Node compatibility:](https://img.shields.io/node/v/@situm/react-native)
 [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
-![React Native](https://img.shields.io/badge/react--native%40lastest-0.68.2-blueviolet)
+![React Native](https://img.shields.io/badge/react--native%40lastest-0.79.1-blueviolet)
 
 </div>
 
