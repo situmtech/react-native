@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, View, StyleSheet } from "react-native";
+import { Button, View, StyleSheet, Platform } from "react-native";
 import { Card, Icon, Text } from "react-native-paper";
 import { Colors, SharedStyles } from "../../SharedStyles";
 import { Location, LocationStatus } from "@situm/react-native";
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   logText: {
-    fontFamily: "monospace",
+    fontFamily: Platform.OS === "ios" ? "Courier New" : "monospace",
     fontSize: 12,
     color: "#000",
   },

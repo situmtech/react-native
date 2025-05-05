@@ -434,6 +434,10 @@ RCT_EXPORT_METHOD(fetchGeofencesFromBuilding:(NSDictionary *)buildingJO withSucc
         if (IS_LOG_ENABLED) {
             NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ results: %@", DEFAULT_SITUM_LOG, operation, array]);
         }
+
+        if ([array objectForKey:@"results"] != nil) {
+          array = [array objectForKey:@"results"];
+        }
         for (SITGeofence *obj in array) {
             NSDictionary *jsonObject = [SitumLocationWrapper.shared geofenceToJsonObject:obj];
             if (IS_LOG_ENABLED) {

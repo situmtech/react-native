@@ -4,7 +4,6 @@ import SitumPlugin, {
   LocationStatus,
   Location,
   Error,
-  Geofence,
   Building,
 } from "@situm/react-native";
 import { PositioningCard } from "./cards/PositioningCard";
@@ -21,7 +20,7 @@ export const HomeScreen = () => {
 
   const [location, setLocation] = useState<Location>();
   const [status, setStatus] = useState<LocationStatus>();
-  const [error, setError] = useState("");
+  const [locationError, setLocationError] = useState("");
 
   useEffect(() => {
     SitumPlugin.setConfiguration({
@@ -48,7 +47,7 @@ export const HomeScreen = () => {
   const clearPositioningData = () => {
     setLocation(undefined);
     setStatus(undefined);
-    setError("");
+    setLocationError("");
   };
 
   const registerCallbacks = () => {
@@ -61,7 +60,7 @@ export const HomeScreen = () => {
     });
 
     SitumPlugin.onLocationError((err: Error) => {
-      setError(err.message);
+      setLocationError(err.message);
     });
   };
 
@@ -159,6 +158,7 @@ export const HomeScreen = () => {
   };
 
   const setJsonFetchOutput = (data: any) => {
+    console.log(data);
     setFetchOutput(JSON.stringify(data, undefined, 2));
   };
 
@@ -174,7 +174,7 @@ export const HomeScreen = () => {
             onStopPositioning={stopPositioning}
             location={location}
             status={status}
-            error={error}
+            error={locationError}
           />
           <MapInteractionCard
             onSelectPoi={selectPoi}
