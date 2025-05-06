@@ -788,13 +788,53 @@ RCT_EXPORT_METHOD(onExitGeofences){
     SITLocationManager.sharedInstance.geofenceDelegate = self;    
 }
 
+RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options
+                  withSuccessCallback:(RCTResponseSenderBlock)successBlock
+                  errorCallback:(RCTResponseSenderBlock)errorBlock)
+{
+    @try {
+        BOOL enabled = NO;
+
+        if (options[@"enabled"]) {
+            enabled = [options[@"enabled"] boolValue];
+        }
+        [[SITUserHelperManager sharedInstance] autoManage:enabled];
+
+        // Configure color scheme if necessary:
+        if (options[@"colorScheme"]) {
+            id colorSchemeValue = options[@"colorScheme"];
+
+            if ([colorSchemeValue isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *colorScheme = options[@"colorScheme"];
+                NSString *primaryColor = colorScheme[@"primaryColor"];
+                NSString *secondaryColor = colorScheme[@"secondaryColor"];
+
+                SITUserHelperColorScheme *helperColorScheme = [[SITUserHelperColorScheme alloc] init];
+
+                if (primaryColor) {
+                    helperColorScheme.primaryColor = primaryColor;
+                }
+                if (secondaryColor) {
+                    helperColorScheme.secondaryColor = secondaryColor;
+                }
+
+                [[SITUserHelperManager sharedInstance] setColorScheme:helperColorScheme];
+            }
+        }
+
+        successBlock(@[@"User helper configured"]);
+    }
+    @catch (NSException *exception) {
+        errorBlock(@[exception.reason]);
+    }
+}
+
 // SITRealtimeDelegate methods
 - (void)realTimeManager:(id <SITRealTimeInterface> _Nonnull)realTimeManager
  didUpdateUserLocations:(SITRealTimeData *  _Nonnull)realTimeData
 {
     // SITRealTimeData to json
     NSDictionary *realtimeInfo = [SitumLocationWrapper.shared jsonFromRealtimeData:realTimeData];
-    NSLog(@"ADDDDDED UPDATESSSS");
     if (_realtimeUpdates) {
         [self sendEventWithName:@"realtimeUpdated" body:realtimeInfo.copy];
     }
