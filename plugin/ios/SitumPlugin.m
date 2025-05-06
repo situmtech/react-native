@@ -363,7 +363,6 @@ RCT_EXPORT_METHOD(stopPositioning:(RCTResponseSenderBlock)callback)
 {
     _positioningUpdates = NO;
     [[SITLocationManager sharedInstance] removeUpdates];
-    [[SITLocationManager sharedInstance] removeDelegate:self];
 
     NSDictionary *response = @{@"success": @YES, @"message": @"Stopped Successfully"};
     callback(@[response]);

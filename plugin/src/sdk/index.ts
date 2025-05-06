@@ -136,8 +136,6 @@ const _internalLocationStoppedCallback = () => {
 const _internalLocationErrorCallback = (error: Error) => {
   const adaptedError = locationErrorAdapter(error);
   DelegatedStateManager.getInstance().updateError(adaptedError);
-  if (adaptedError.type === ErrorType.CRITICAL)
-    SitumPlugin.removeLocationUpdates();
   internalMethodCallMapDelegate(
     new InternalCall(InternalCallType.LOCATION_ERROR, adaptedError),
   );
