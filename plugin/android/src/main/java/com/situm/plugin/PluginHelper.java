@@ -57,6 +57,7 @@ import es.situm.sdk.utils.Handler;
 import es.situm.sdk.v1.SitumEvent;
 import es.situm.sdk.location.GeofenceListener;
 import es.situm.sdk.navigation.ExternalNavigation;
+import es.situm.sdk.userhelper.UserHelperColorScheme;
 
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_CHANGED;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_ERROR;
@@ -1012,5 +1013,31 @@ public class PluginHelper {
                 eventEmitter.emit(EVENT_NAVIGATION_FINISHED, Arguments.createMap());
             }
         };
+    }
+
+    public void configureUserHelper(ReadableMap map, Callback success, Callback error) {
+        try {
+            JSONObject jsonUserHelperOptions = ReactNativeUtils.convertMapToJson(map);
+            boolean enabled = false;
+            if (jsonUserHelperOptions.has("enabled")) {
+                enabled = jsonUserHelperOptions.getBoolean("enabled");
+            }
+            if (jsonUserHelperOptions.has("colorScheme")) {
+                JSONObject jsonColorScheme = jsonUserHelperOptions.getJSONObject("colorScheme");
+                UserHelperColorScheme colorScheme = SitumMapper.jsonObjectToUserHelperColorScheme(jsonColorScheme);
+                SitumSdk.userHelperManager().setColorScheme(colorScheme);
+            }
+            SitumSdk.userHelperManager().autoManage(enabled);
+
+            WritableMap response = Arguments.createMap();
+            invokeCallback(success, response);
+
+          } catch (Exception e) {
+            Log.d(TAG, "exception: " + e);
+
+            WritableMap response = Arguments.createMap();
+            response.putString("error", e.getMessage());
+            invokeCallback(error, response);
+          }
     }
 }

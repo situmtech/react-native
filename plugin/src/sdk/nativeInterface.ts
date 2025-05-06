@@ -19,6 +19,7 @@ import type {
   PoiCategory,
   PoiIcon,
   Point,
+  UserHelperOptions,
 } from "./types";
 
 interface CartographyAPI {
@@ -114,7 +115,11 @@ interface DirectionsAPI {
 }
 
 interface UserHelperManagerAPI {
-  autoManage: (autoManage: boolean) => void;
+  configureUserHelper: (
+    userHelperOptions: UserHelperOptions,
+    success: (response: any) => void,
+    error: (response: any) => void,
+  ) => void;
 }
 
 export interface SitumPluginInterface

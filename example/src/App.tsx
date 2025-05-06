@@ -19,7 +19,7 @@ function App(): React.JSX.Element {
       SitumPlugin.setDashboardURL(SITUM_DASHBOARD_URL);
       SitumPlugin.setApiKey(SITUM_API_KEY);
       // Automatically manage positioning permissions and sensor issues:
-      SitumPlugin.autoManage(true);
+      SitumPlugin.enableUserHelper();
     } catch (e) {
       console.error(`Situm > example > Could not initialize SDK ${e}`);
     }
