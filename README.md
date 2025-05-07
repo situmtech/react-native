@@ -78,11 +78,13 @@ npm install --save @situm/react-native react-native-webview
 
 #### Set up your Situm credentials
 
-Create a new `situm.tsx` file with your Situm credentials. You can use the contents of [example/src/situm.tsx.example](./example/src/situm.tsx.example) as example.
-For security reasons, the file `situm.tsx` is ignored in this repository.
+Follow the [Wayfinding guide](https://situm.com/docs/first-steps-for-wayfinding/) if you haven't set up a Situm account.
+After that, authenticate your app by calling the `setApiKey()` method.
 
-Follow the [Wayfinding guide](https://situm.com/docs/first-steps-for-wayfinding/) if you haven't set
-up a Situm account.
+```TypeScript
+SitumPlugin.init();
+SitumPlugin.setApiKey("YOUR_SITUM_API_KEY");
+```
 
 #### Android
 

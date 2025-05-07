@@ -68,7 +68,7 @@ pod install
 ### Step 2: Set your credentials <a name="config"/>
 
 For this step you must create a situm account, so [setup your account](../README.md#setup-your-account) before continuing.
-After creating your situm account, you can set your credentials on the properties of [`src/situm.tsx`](./src/situm.tsx), like so:
+After creating your situm account, you must set your credentials on the properties of `src/situm.tsx`, like so:
 
 ```js
 export const SITUM_EMAIL = "";
@@ -76,6 +76,9 @@ export const SITUM_API_KEY = "";
 export const SITUM_BUILDING_ID = ""; // Identifier of the building to be loaded using MapView.
 export const SITUM_DASHBOARD_URL = "https://dashboard.situm.com";
 ```
+
+You can use the contents of [`src/situm.tsx.example`](./src/situm.tsx.example) as example.
+For security reasons, the file `situm.tsx` is ignored in this repository.
 
 **NOTE**: You should also fill the [SITUM_BUILDING_ID](https://situm.com/docs/sdk-cartography/#building-identifier) variable so the MapView is able to work as expected. In case you haven't created POIs or paths yet, learn [how to create these cartography elements](https://situm.com/docs/sdk-cartography/#sdk-a-basic-complete-cartography-example).
 
