@@ -23,7 +23,8 @@ resources:
       type: bitbucket
       endpoint: Bitbucket - sistemas
       name: situm/sys-kubernetes-templates.git
-      ref: master
+      # TODO: return to master!!!
+      ref: feature/PRO-3913-react-native-docs
     - repository: web_developers
       type: bitbucket
       endpoint: Bitbucket - sistemas
@@ -79,8 +80,12 @@ steps:
           if [ -d "react-native" ];then
             cd react-native
           fi
+
+          # Important: ensure we are working at plugin folder when setting the NPM version.
+          cd plugin
           echo -e "\n[+] Setting NPM version to $(version)"
           npm version $(version) --no-git-tag-version
+          cd ..
 
           echo -e "\n[+] Setting git to push NPM version\n"
           git config --global user.email "sistemas@situm.es"
@@ -92,7 +97,7 @@ steps:
           echo -e "\n[+] Changing to $(currentBranch)"
           git checkout $(currentBranch)
 
-          echo -e "\n[+] Add,Commit and Push to $(currentBranch)"
+          echo -e "\n[+] Add, Commit and Push to $(currentBranch)"
           git commit -am "[skip ci] Setting the React Native version to $(version)"
           git push --set-upstream origin $(currentBranch)
           git push
@@ -127,6 +132,8 @@ steps:
           echo -e "\n[+] Configure NPM login"
           echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > ~/.npmrc
 
+          # Important: ensure we are working at plugin folder before publishing.
+          cd plugin
           echo -e "\n[+] Publish NPM packages"
           npm publish
 
@@ -142,7 +149,6 @@ steps:
           bitbucket:
             bitbucket_user: $(bitbucket_user)
             bitbucket_pass: $(bitbucket_pass)
-
 
       - bash: |
           if [ -d "react-native" ];then
@@ -162,14 +168,14 @@ steps:
           git checkout master
           git pull origin master
 
-          androidsdk=$(grep -oE '"android": "[0-9]+\.[0-9]+\.[0-9]+@aar"' package.json | awk -F'["@]' '{print $4}')
-          iossdk=$(grep -oE '"ios": "[0-9]+\.[0-9]+\.[0-9]+"' package.json | awk -F'"' '{print $4}')
+          androidsdk=$(grep -oE '"android": "[0-9]+\.[0-9]+\.[0-9]+@aar"' plugin/package.json | awk -F'["@]' '{print $4}')
+          iossdk=$(grep -oE '"ios": "[0-9]+\.[0-9]+\.[0-9]+"' plugin/package.json | awk -F'"' '{print $4}')
 
           echo -e "\n[+] Checkout to previous commit\n"
           git checkout HEAD~1
 
-          androidsdk_old=$(grep -oE '"android": "[0-9]+\.[0-9]+\.[0-9]+@aar"' package.json | awk -F'["@]' '{print $4}')
-          iossdk_old=$(grep -oE '"ios": "[0-9]+\.[0-9]+\.[0-9]+"' package.json | awk -F'"' '{print $4}')
+          androidsdk_old=$(grep -oE '"android": "[0-9]+\.[0-9]+\.[0-9]+@aar"' plugin/package.json | awk -F'["@]' '{print $4}')
+          iossdk_old=$(grep -oE '"ios": "[0-9]+\.[0-9]+\.[0-9]+"' plugin/package.json | awk -F'"' '{print $4}')
 
           echo -e "\n[+] Return repository to master branch\n"
           git checkout master

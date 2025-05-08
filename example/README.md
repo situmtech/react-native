@@ -16,8 +16,8 @@ A sample React-Native application to start learning the power of [Situm's React 
 
 <div align="center" style="display: flex; gap: 1rem;">
     <img src="./docs/assets/home_preview.jpg" width="33%" alt="home_preview">
-    <img src="./docs/assets/positioning_preview.jpg" width="33%" alt="positioning_preview">
     <img src="./docs/assets/map_preview.jpg" width="33%" alt="map_preview">
+    <img src="./docs/assets/navigation_preview.jpg" width="33%" alt="navigation_preview">
 </div>
 
 ## What's in here <a name="whatsinhere"/>
@@ -42,17 +42,23 @@ The first step is to download this repo:
 git clone https://github.com/situmtech/react-native.git
 ```
 
-And then install the plugin dependencies alongside the example/ app dependecies as follows:
+This repository uses [yarn workspaces](https://yarnpkg.com/features/workspaces) and [yarn 4](https://yarnpkg.com/blog/release/4.0), so you will need to install [Corepack](https://github.com/nodejs/corepack#readme) and prepare yarn:
 
 ```bash
-cd situm-react-native-plugin/;
-
-yarn install;
-yarn example install;
+cd react-native/
+npm install -g corepack
+corepack enable
+corepack prepare yarn@4.0.1 --activate
 ```
 
--   **iOS**
-    In case you are using iOS, the last step is to install de dependencies specified in [`example/ios/Podfile`](./ios/Podfile) with:
+Then install the plugin dependencies alongside the example/ app dependecies as follows:
+
+```bash
+yarn install && yarn workspace example install
+```
+
+- **iOS**
+  In case you are using iOS, the last step is to install de dependencies specified in [`example/ios/Podfile`](./ios/Podfile) with:
 
 ```bash
 cd ios/
@@ -62,36 +68,39 @@ pod install
 ### Step 2: Set your credentials <a name="config"/>
 
 For this step you must create a situm account, so [setup your account](../README.md#setup-your-account) before continuing.
-After creating your situm account, you can set your credentials on the properties of [`src/situm.tsx`](./src/situm.tsx), like so:
+After creating your situm account, you must set your credentials on the properties of `src/situm.tsx`, like so:
 
 ```js
-export const SITUM_EMAIL = '';
-export const SITUM_API_KEY = '';
-export const SITUM_BUILDING_ID = ''; // Identifier of the building
-export const SITUM_DASHBOARD_URL = 'https://dashboard.situm.com';
+export const SITUM_EMAIL = "";
+export const SITUM_API_KEY = "";
+export const SITUM_BUILDING_ID = ""; // Identifier of the building to be loaded using MapView.
+export const SITUM_DASHBOARD_URL = "https://dashboard.situm.com";
 ```
 
-**NOTE**: You should also fill the [SITUM_BUILDING_ID](https://situm.com/docs/sdk-cartography/#building-identifier) and [SITUM_FLOOR_ID](https://situm.com/docs/sdk-cartography/#floor-identifier) variables so all the examples are able to work as expected. In case you haven't created POIs or paths yet, learn [how to create these cartography elements](https://situm.com/docs/sdk-cartography/#sdk-a-basic-complete-cartography-example).
+You can use the contents of [`src/situm.tsx.example`](./src/situm.tsx.example) as example.
+For security reasons, the file `situm.tsx` is ignored in this repository.
+
+**NOTE**: You should also fill the [SITUM_BUILDING_ID](https://situm.com/docs/sdk-cartography/#building-identifier) variable so the MapView is able to work as expected. In case you haven't created POIs or paths yet, learn [how to create these cartography elements](https://situm.com/docs/sdk-cartography/#sdk-a-basic-complete-cartography-example).
 
 ### Step 3: Run the app <a name="runapplication"></a>
 
 #### Android
 
--   **Run from command line:**
+- **Run from command line:**
 
-    1. Initialize the metro terminal with `$ react-native start`
-    2. Then (in another terminal) compile and run this app in your device with `$ react-native run-android`.
+  1. Initialize the metro terminal with `$ yarn workspace example start`.
+  2. Then (in another terminal) compile and run this app in your device with `$ yarn example android`.
 
--   **Run from Android Studio:** Open `root/android` folder in Android Studio and run project.
+- **Run from Android Studio:** Open `example/android` folder in Android Studio and run project.
 
 #### iOS
 
--   **Run from command line:**
+- **Run from command line:**
 
-    1. Initialize the metro terminal with `$ react-native start`
-    2. Then (in another terminal) compile and run this app in your device with `$ react-native run-ios`.
+  1. Initialize the metro terminal with `$ yarn workspace example start`
+  2. Then (in another terminal) compile and run this app in your device with `$ yarn example ios`.
 
--   **Run from XCode:** Go to `example/ios` folder and open `example.xcworkspace` or run command `xed ios` from root directory.
+- **Run from XCode:** Go to `example/ios` folder and open `SitumReactNativeExample.xcworkspace`.
 
 ## Documentation <a name="documentation"/>
 
@@ -101,17 +110,14 @@ More information on how to use the official React Native plugin and the set of A
 
 In case you want to learn how to use our plugin, you may want to take a look at our code samples of the basics functionalities:
 
--   **Showcasing our SDK**
-    1. [**Positioning**](./src/examples/sdk/Positioning.tsx): Learn how to start positioning and get the user location by using our listener with the specified positioning configuration inside [`src/settings.tsx`](./src/settings.tsx) file.
-    2. [**Positioning with Remote Configuration**](./src/examples/sdk/RemoteConfig.tsx): Learn how to start positioning with the [remote configuration](https://situm.com/docs/sdk-remote-configuration/) defined in the settings section inside our [dashboard](https://dashboard.situm.com/settings). This way you can manage your positioning parameters with ease and avoid doing several code changes to test different configurations.
-    3. [**Show buildings basic info**](./src/examples/sdk/BuildingBasicInfo.tsx): Learn how to retrieve the basic info of a building. (e.g. buildingIdentifier, name, creation date, ...)
-    4. [**Show a building full info from different calls**](./src/examples/sdk/InfoFromBuilding.tsx): Learn how to retrive all the information related to a building in different calls. (e.g. floors, pois, geofences, custom fields, ...)
-    6. [**Show a building's full info**](./src/examples/sdk/BuildingFullInfo.tsx): Learn how to fetch all the information related to a building with just one call.
-    7. [**Show the route between pois**](./src/examples/sdk/RouteBetweenPOIs.tsx): Learn how to retrieve all the info of a route between 2 pois.
--   **Showcasing our Wayfinding module**:
-    1. [**Complete Wayfinding Experience**](./src/examples/wayfinding/Wayfinding.tsx): An integrated wayfinding experience powered by Situm, designed for ease of integration.
-    2. [**Navigate to POI**](./src/examples/wayfinding/NavigateToPoi.tsx): Learn how to trigger the navigation to a concrete POI and display it on the map.
-    3. [**Select POI**](./src/examples/wayfinding/SelectPoi.tsx): Learn how to set a POI as selected on the map.
+- **Showcasing our SDK**
+  - [**HomeScreen**](./src/screens/HomeScreen.tsx)
+    - **Positioning**: Learn how to start positioning and get the user location by using our listener.
+    - **Map Interaction**: Learn how to interact with `MapView` from a different screen.
+    - **Fetch Resources**: Learn how to fetch information about Situm cartography elements, such as buildings, POIs, and geofences.
+  - [**WayfindingScreen**](./src/screens/WayfindingScreen.tsx)
+    - **MapView**: Learn how to integrate `MapView` for a complete wayfinding experience.
+    - Learn how to interact with the map, such as selecting a POI or starting navigation.
 
 ## Versioning
 
