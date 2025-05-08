@@ -722,8 +722,6 @@ export default class SitumPlugin {
    * Call {@link disableUserHelper} as a shortcut to disable the user helper.
    *
    * @param {UserHelperOptions} userHelperOptions - Options for the user helper.
-   * @param {function} cb - Cordova native callback to receive data.
-   * @param {function} error - Cordova native callback to receive errors.
    */
   static configureUserHelper = (userHelperOptions: UserHelperOptions) => {
     _registerCallbacks();
@@ -736,9 +734,6 @@ export default class SitumPlugin {
    * Enables the user helper.
    *
    * Shortcut for {@link configureUserHelper} with <code>{enabled: true}</code>.
-   *
-   * @param {function} cb - Cordova native callback to receive data.
-   * @param {function} error - Cordova native callback to receive errors.
    */
   static enableUserHelper = () => {
     SitumPlugin.configureUserHelper({ enabled: true, colorScheme: undefined });
@@ -749,8 +744,6 @@ export default class SitumPlugin {
    *
    * Shortcut for {@link configureUserHelper} with <code>{enabled: false}</code>.
    *
-   * @param {function} cb - Cordova native callback to receive data.
-   * @param {function} error - Cordova native callback to receive errors.
    */
   static disableUserHelper = () => {
     SitumPlugin.configureUserHelper({ enabled: false, colorScheme: undefined });

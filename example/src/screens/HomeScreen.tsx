@@ -7,7 +7,7 @@ import SitumPlugin, {
   Building,
 } from "@situm/react-native";
 import { PositioningCard } from "./cards/PositioningCard";
-import { ScrollView, StyleSheet } from "react-native";
+import { Alert, ScrollView, StyleSheet } from "react-native";
 import { FetchResourcesCard } from "./cards/FetchResourcesCard";
 import { SITUM_BUILDING_ID } from "../situm";
 import { MapInteractionCard } from "./cards/MapInteractionCard";
@@ -78,6 +78,13 @@ export const HomeScreen = () => {
   };
 
   const navigateToPoi = (identifier: string) => {
+    if (!location) {
+      Alert.alert(
+        "Location required",
+        "User location is required to start navigation."
+      );
+      return;
+    }
     navigation.navigate("Wayfinding", {
       poiIdentifier: identifier,
       action: "navigate",
