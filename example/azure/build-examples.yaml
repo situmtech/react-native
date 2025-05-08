@@ -12,7 +12,7 @@ parameters:
     default: "202430015"
 
 steps:
-    - ${{ if contains(parameters.system, 'macOS') }}:
+  - ${{ if contains(parameters.system, 'macOS') }}:
       - task: DownloadSecureFile@1
         name: api_key
         inputs:
@@ -28,13 +28,13 @@ steps:
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
-          provisioningProfileLocation: 'secureFiles'
+          provisioningProfileLocation: "secureFiles"
           provProfileSecureFile: Situm_RN_SDK_Example.mobileprovision
           removeProfile: true
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
-          provisioningProfileLocation: 'secureFiles'
+          provisioningProfileLocation: "secureFiles"
           provProfileSecureFile: DistributorOnline.mobileprovision
           removeProfile: true
 
@@ -44,7 +44,12 @@ steps:
 
           sudo xcode-select -switch $(xcodeVersion)
 
-          cd example/ios/fastlane
+          echo -e "\n[+] NEW! Install pods"
+          cd example/ios
+          pod install
+
+          echo -e "\n[+] Ok, let's continue doing things as usually"
+          cd fastlane
 
           echo -e "\n[+] Setting Apple connection options"
 
@@ -65,8 +70,7 @@ steps:
 
         displayName: Build iOS example
 
-    - ${{ if contains(parameters.system, 'ubuntu') }}:
-
+  - ${{ if contains(parameters.system, 'ubuntu') }}:
       - bash: |
           echo -e "\n[+] Build Android example \n"
 
@@ -81,7 +85,6 @@ steps:
           ./gradlew assembleDebug
 
         displayName: Build Android dependencies
-
 
       - bash: |
           if [[ "$(Build.Reason)" == "Manual" ]];then

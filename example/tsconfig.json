@@ -1,6 +1,15 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "jsx": "react"
+    "jsx": "react",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "types": ["jest", "node", "react-native"],
+    "paths": {
+      "@situm/react-native": ["../plugin/src"],
+      "@situm/react-native-wayfinding": ["../plugin/src/wayfinding"]
+    }
   },
-  "extends": "@tsconfig/react-native/tsconfig.json"
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
