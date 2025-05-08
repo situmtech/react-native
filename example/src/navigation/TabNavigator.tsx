@@ -5,6 +5,7 @@ import { HomeScreen } from "../screens/HomeScreen";
 import { WayfindingScreen } from "../screens/WayfindingScreen";
 import { Colors } from "../SharedStyles";
 import { RootTabsParamsList } from "./types";
+import { Image } from "react-native";
 
 const Tab = createBottomTabNavigator<RootTabsParamsList>(); // See types.tsx.
 
@@ -39,11 +40,9 @@ export const TabNavigator = () => {
           title: "Home",
           headerTitle: "@situm/react-native",
           headerLeft: () => (
-            <MaterialCommunityIcons
-              name="navigation-variant-outline"
-              size={24}
-              color={Colors.primary}
-              style={{ marginLeft: 15 }}
+            <Image
+              source={require("../../assets/images/situm-logo-whitebg.png")}
+              style={{ width: 24, height: 24, marginLeft: 24, marginRight: 8 }}
             />
           ),
           tabBarIcon: ({ color, size }) => (
