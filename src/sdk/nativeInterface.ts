@@ -19,6 +19,7 @@ import type {
   PoiCategory,
   PoiIcon,
   Point,
+  UserHelperOptions,
 } from "./types";
 
 interface CartographyAPI {
@@ -147,6 +148,11 @@ export interface SitumPluginInterface
   requestRealTimeUpdates: (options: any) => void;
   removeRealTimeUpdates: () => void;
   validateMapViewProjectSettings: () => void;
+  configureUserHelper: (
+    userHelperOptions: UserHelperOptions,
+    success: (response: any) => void,
+    error: (response: any) => void
+  ) => void;
 }
 
 const { RNCSitumPlugin } = NativeModules;

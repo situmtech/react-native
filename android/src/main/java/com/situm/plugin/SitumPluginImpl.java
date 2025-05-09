@@ -292,54 +292,6 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
-    public void requestAuthorization() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            final PermissionsModule perms = getReactApplicationContext().getNativeModule(PermissionsModule.class);
-
-            final Callback onPermissionGranted = new Callback() {
-                @Override
-                public void invoke(Object... args) {
-                    String result = (String) args[0];
-                    if (!result.equals("granted")) {
-                        Log.e(TAG, "Location permission was not granted.");
-                    }
-                }
-            };
-
-            final Callback onPermissionDenied = new Callback() {
-                @Override
-                public void invoke(Object... args) {
-                    Log.e(TAG, "Failed to request location permission.");
-                }
-            };
-
-            Callback onPermissionCheckFailed = new Callback() {
-                @Override
-                public void invoke(Object... args) {
-
-                    Log.e(TAG, "Failed to check location permission.");
-                }
-            };
-
-            Callback onPermissionChecked = new Callback() {
-                @Override
-                public void invoke(Object... args) {
-                    boolean hasPermission = (boolean) args[0];
-
-                    if (!hasPermission) {
-                        perms.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION,
-                                new PromiseImpl(onPermissionGranted, onPermissionDenied));
-                    }
-                }
-            };
-
-            perms.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,
-                    new PromiseImpl(onPermissionChecked, onPermissionCheckFailed));
-        }
-    }
-
-    @Override
-    @ReactMethod
     public void onEnterGeofences() {
         getPluginInstance().onEnterGeofences(
                 getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
@@ -350,5 +302,10 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     public void onExitGeofences() {
         getPluginInstance().onExitGeofences(
                 getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
+    }
+
+    @ReactMethod
+    public void configureUserHelper(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().configureUserHelper(map, success, error);
     }
 }

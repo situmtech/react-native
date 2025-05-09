@@ -29,6 +29,7 @@ import {
   type Point,
   type Route,
   type SdkVersion,
+  type UserHelperOptions,
 } from "./types";
 import { InternalCallType, SdkNavigationUpdateType } from "./types/constants";
 import {
@@ -713,6 +714,56 @@ export default class SitumPlugin {
     return exceptionWrapper<void>(() => {
       RNCSitumPlugin.updateNavigationState(externalNavigation);
     });
+  };
+
+  /**
+   * Automatically assists users in resolving app-related permission and sensor issues.
+   *
+   * This method tells the native SDKs to present a user interface that explains detected 
+   * configuration issues and guides users through the required steps to resolve them, 
+   * following best practices for runtime permission requests.
+   *
+   * Issues addressed include:
+   * - Missing permissions for Location or Bluetooth.
+   * - Disabled Location or Bluetooth sensors.
+   *
+   * Use the <code>userHelperOptions</code> parameter to configure the available options.
+   * Call {@link enableUserHelper} as a shortcut to enable the user helper with default configuration.
+   * Call {@link disableUserHelper} as a shortcut to disable the user helper.
+   *
+   * @param {UserHelperOptions} userHelperOptions - Options for the user helper.
+   * @param {function} cb - Cordova native callback to receive data.
+   * @param {function} error - Cordova native callback to receive errors.
+   */
+  static configureUserHelper = (userHelperOptions: UserHelperOptions) => {
+    _registerCallbacks();
+    return exceptionWrapper<void>(({onSuccess, onError}) => {
+      RNCSitumPlugin.configureUserHelper(userHelperOptions, onSuccess, onError);
+    });
+  };
+
+  /**
+   * Enables the user helper.
+   *
+   * Shortcut for {@link configureUserHelper} with <code>{enabled: true}</code>.
+   *
+   * @param {function} cb - Cordova native callback to receive data.
+   * @param {function} error - Cordova native callback to receive errors.
+   */
+  static enableUserHelper = () => {
+    SitumPlugin.configureUserHelper({enabled: true, colorScheme: undefined});
+  };
+
+  /**
+   * Disables the user helper.
+   *
+   * Shortcut for {@link configureUserHelper} with <code>{enabled: false}</code>.
+   *
+   * @param {function} cb - Cordova native callback to receive data.
+   * @param {function} error - Cordova native callback to receive errors.
+   */
+  static disableUserHelper = () => {
+    SitumPlugin.configureUserHelper({enabled: false, colorScheme: undefined});
   };
 
   /**

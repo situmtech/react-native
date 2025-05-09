@@ -7,7 +7,6 @@ import type {MapViewRef} from '@situm/react-native';
 import type {OnFavoritePoisUpdatedResult} from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID} from '../../situm';
 import {Button, TextInput} from 'react-native-paper';
-import requestPermission from '../Utils/requestPermission';
 
 const styles = StyleSheet.create({
   viewer_container: {
@@ -41,18 +40,13 @@ const Screen: React.FC = () => {
    * Helper function that sets up the system to start positioning
    */
   const initializeSitum = async () => {
-    try {
-      // Define your own configuration if needed
-      SitumPlugin.setConfiguration({useRemoteConfig: true});
-      // Request permissions and start positioning
-      await requestPermission()
-        .then(() => {
-          SitumPlugin.requestLocationUpdates();
-        })
-        .catch(console.debug);
-    } catch (e) {
-      console.log(`Situm > example > Could not start positioning ${e}`);
-    }
+    // Define your own configuration if needed
+    SitumPlugin.setConfiguration({useRemoteConfig: true});
+    // Tells the underlying native SDKs to automatically manage permissions
+    // and sensor related issues.
+    SitumPlugin.enableUserHelper();
+    // Start positioning: 
+    SitumPlugin.requestLocationUpdates();
   };
 
   /**
