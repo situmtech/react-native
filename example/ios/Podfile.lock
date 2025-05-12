@@ -75,7 +75,7 @@ PODS:
   - hermes-engine/Pre-built (0.72.12)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
-  - Protobuf (3.29.2)
+  - Protobuf (3.29.4)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -491,18 +491,18 @@ PODS:
     - React-jsi (= 0.72.12)
     - React-logger (= 0.72.12)
     - React-perflogger (= 0.72.12)
-  - ReactNativeSitumPlugin (3.12.5):
+  - ReactNativeSitumPlugin (3.14.14):
     - RCT-Folly (= 2021.07.22.00)
     - React
     - React-Core
-    - SitumSDK (= 3.21.1)
+    - SitumSDK (= 3.28.1)
   - RNPermissions (3.10.1):
     - React-Core
   - RNScreens (3.32.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - React-RCTImage
-  - SitumSDK (3.21.1):
+  - SitumSDK (3.28.1):
     - Protobuf (~> 3.7)
     - SSZipArchive (~> 2.4)
   - SocketRocket (0.6.1)
@@ -710,7 +710,7 @@ SPEC CHECKSUMS:
   hermes-engine: e89344b9e9e54351c3c5cac075e0275148fb37ba
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  Protobuf: ba5d83b2201386fec27d484c099cac510ea5c169
+  Protobuf: 2e6de032ba12b9efb390ae550d1a243a5b19ddfc
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: b6cea797b684c6d8d82ba0107cef58cbb679afdb
   RCTTypeSafety: d2eb5e0e8af9181b24034f5171f9b659994b4678
@@ -745,10 +745,10 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 8aea338c561b2175f47018124c076d89d3808d30
   React-utils: 9a24cb88f950d1020ee55bddacbc8c16a611e2dc
   ReactCommon: 76843a9bb140596351ac2786257ac9fe60cafabb
-  ReactNativeSitumPlugin: 389ee181d434a2c57d9598ee99103ab0ba5ea474
+  ReactNativeSitumPlugin: 354a112a0a92d92dc1c67d55d235fe7e7a268b80
   RNPermissions: 4377d1d869b3b32308932b8c11ba47880933d7c6
   RNScreens: ad1c105ac9107cf1a613bf80889485458eb20bd7
-  SitumSDK: dcc8e963d0d80c260786c3f76ea8160714a87d26
+  SitumSDK: 974f20680e13f115caaa818b48bcc2340b768ffc
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   Yoga: 87e59f6d458e5061d2421086c5de994b3f7cd151
@@ -756,4 +756,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 5bbd3e6d4ded92b8497ea5f670af0806207e3ee6
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
