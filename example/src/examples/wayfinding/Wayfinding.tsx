@@ -16,7 +16,6 @@ import type {
   MapViewRef,
 } from '@situm/react-native';
 import {SITUM_API_KEY, SITUM_BUILDING_ID, SITUM_PROFILE} from '../../situm';
-import requestPermission from '../Utils/requestPermission';
 
 const styles = StyleSheet.create({
   container: {
@@ -58,23 +57,15 @@ const Screen: React.FC = () => {
 
     // Set positioning configuration
     SitumPlugin.setConfiguration({useRemoteConfig: true});
-    //Request permissions and start positioning
-    requestPermission()
-      .then(() => {
-        if (!SitumPlugin.positioningIsRunning()) {
-          SitumPlugin.requestLocationUpdates();
-          console.log('Situm > example > Starting positioning');
-        }
-      })
-      .catch(e => {
-        console.log(`Situm > example > Permissions rejected: ${e}`);
-      })
-      .finally(() => {
-        //Register listener to react to the app comming from the background
-        appStateListener = registerAppStateListener();
-        //Register callbacks
-        registerCallbacks();
-      });
+    // Register listener to react to the app comming from the background
+    appStateListener = registerAppStateListener();
+    // Register callbacks
+    registerCallbacks();
+    // Tells the underlying native SDKs to automatically manage permissions
+    // and sensor related issues.
+    SitumPlugin.enableUserHelper();
+    // Start positioning: 
+    SitumPlugin.requestLocationUpdates();
 
     // When unmounting make sure to stop positioning and remove listeners
     return () => {
