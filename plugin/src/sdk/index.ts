@@ -3,7 +3,6 @@
 
 import { NativeEventEmitter, NativeModules, Platform } from "react-native";
 
-import packageJson from "../../package.json";
 import { logError } from "../utils/logError";
 import type { SitumPluginInterface } from "./nativeInterface";
 import {
@@ -391,25 +390,16 @@ export default class SitumPlugin {
   };
 
   /**
+   * @deprecated
+   * DEPRECATED: this method will not work anymore.
+   *
    * Gets the list of versions for the current plugin and environment
    *
    * @returns void
    * @throw Exception
    */
   static sdkVersion = () => {
-    return exceptionWrapper<SdkVersion>(({ onSuccess }) => {
-      const versions: { react_native: string; ios?: string; android?: string } =
-        {
-          react_native: packageJson.version,
-        };
-
-      if (Platform.OS === "ios") {
-        versions.ios = packageJson.sdkVersions.ios;
-      } else {
-        versions.android = packageJson.sdkVersions.android;
-      }
-      onSuccess(versions);
-    });
+    return "";
   };
 
   /**
