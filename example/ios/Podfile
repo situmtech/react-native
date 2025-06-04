@@ -1,3 +1,5 @@
+project './SitumReactNativeExample.xcodeproj'
+
 # Disable new architecture:
 ENV['RCT_NEW_ARCH_ENABLED'] = '0'
 

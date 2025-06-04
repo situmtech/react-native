@@ -8,7 +8,7 @@ PODS:
   - hermes-engine (0.79.1):
     - hermes-engine/Pre-built (= 0.79.1)
   - hermes-engine/Pre-built (0.79.1)
-  - Protobuf (3.29.4)
+  - Protobuf (3.29.5)
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -1705,7 +1705,7 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - SitumSDK (= 3.29.0)
+    - SitumSDK (= 3.32.1)
     - Yoga
   - RNScreens (4.10.0):
     - DoubleConversion
@@ -1756,8 +1756,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - SitumSDK (3.29.0):
-    - Protobuf (~> 3.7)
+  - SitumSDK (3.32.1):
+    - Protobuf (~> 3.18)
     - SSZipArchive (~> 2.4)
   - SocketRocket (0.7.1)
   - SSZipArchive (2.4.3)
@@ -2010,7 +2010,7 @@ SPEC CHECKSUMS:
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: c32f2e405098bc1ebe30630a051ddce6f21d3c2e
-  Protobuf: 2e6de032ba12b9efb390ae550d1a243a5b19ddfc
+  Protobuf: 164aea2ae380c3951abdc3e195220c01d17400e0
   RCT-Folly: 36fe2295e44b10d831836cc0d1daec5f8abcf809
   RCTDeprecation: 0ada4fb1e5c5637bff940dc40b94e2d3bf96b0ab
   RCTRequired: 76ca80ff10acb3834ed0dacba9645645009578a2
@@ -2075,14 +2075,14 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: f3426eaf6dabae0baec543cd7bac588b6f59210c
   ReactCodegen: 3288d61658273d72fbd348a74b59710b9790615f
   ReactCommon: 9f975582dc535de1de110bdb46d4553140a77541
-  ReactNativeSitumPlugin: c7e6a649a9f939230d5e5042c62f2b7598c43785
+  ReactNativeSitumPlugin: c150d16f6904f949705171e55c4a0f1e6934d43d
   RNScreens: 4561eef339c3ebe8176b27e01af7ac494780f678
   RNVectorIcons: ae8e1b95f3468a360896c6242d61885efcc64241
-  SitumSDK: 50852d5a959c0852a4f8b43e61bccf88fd89e53f
+  SitumSDK: affae579fc33fe696831872dc536677386deb49f
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   Yoga: d15f5aa644c466e917569ac43b19cbf17975239a
 
-PODFILE CHECKSUM: c85633ad3596778562a4f3b8d5a8c44a43c7b15d
+PODFILE CHECKSUM: ccf256bddbc5dbd001d4f827bde93b65c59ad8ed
 
 COCOAPODS: 1.16.2

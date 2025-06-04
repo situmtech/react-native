@@ -1,10 +1,11 @@
 trigger:
   - release/*
+  - develop
 
 pr: none
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: $(ubuntuVersion)
 
 parameters:
   - name: RNVersion
@@ -16,6 +17,7 @@ variables:
   - group: Passwords
   - group: ConfluencePages
   - group: ChangelogIds
+  - group: SoftwareVersions
 
 resources:
   repositories:
@@ -32,6 +34,11 @@ resources:
       ref: master
 
 steps:
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/develop/') }}:
+      - template: azure-templates/static-analyse.yml@sys_kubernetes_templates
+        parameters:
+          repoFolder: .
+          teams: mobile
   - ${{ if contains(variables['Build.SourceBranch'], 'release/') }}:
       - checkout: self
         fetchDepth: 1
