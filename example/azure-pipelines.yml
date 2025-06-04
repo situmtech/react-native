@@ -20,9 +20,6 @@ parameters:
   - name: BUILDINGID
     type: string
     default: "1"
-  - name: FLOORID
-    type: string
-    default: "1"
   - name: DASHBOARD_URL
     type: string
     default: "https://dashboard.situm.com"
@@ -34,10 +31,10 @@ variables:
 
 resources:
   repositories:
-  - repository: sys_kubernetes_templates
-    type: bitbucket
-    endpoint: Bitbucket - sistemas
-    name: situm/sys-kubernetes-templates.git
+    - repository: sys_kubernetes_templates
+      type: bitbucket
+      endpoint: Bitbucket - sistemas
+      name: situm/sys-kubernetes-templates.git
 
 jobs:
   #===============================================================
@@ -48,54 +45,50 @@ jobs:
     pool:
       vmImage: $(ubuntuVersion)
     steps:
-    - ${{ if ne(variables['Build.Reason'],'manual') }}:
-      - bash: |
-           echo "##vso[task.setvariable variable=XAPIKEY]$(echo $(XAPIKEY_EXAMPLES))"
-           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo $(XAPIEMAIL_EXAMPLES))"
-           echo "##vso[task.setvariable variable=BUILDINGID]$(echo $(BUILDING_ID_EXAMPLES))"
-           echo "##vso[task.setvariable variable=FLOORID]$(echo $(FLOOR_ID_EXAMPLES))"
-           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo 'https://dashboard.situm.com')"
-           echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
+      - ${{ if ne(variables['Build.Reason'],'manual') }}:
+          - bash: |
+              echo "##vso[task.setvariable variable=XAPIKEY]$(echo $(XAPIKEY_EXAMPLES))"
+              echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo $(XAPIEMAIL_EXAMPLES))"
+              echo "##vso[task.setvariable variable=BUILDINGID]$(echo $(BUILDING_ID_EXAMPLES))"
+              echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo 'https://dashboard.situm.com')"
+              echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
 
-           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
-        displayName: Configure Automatic run Vars
+              echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+            displayName: Configure Automatic run Vars
 
-    - ${{ if eq(variables['Build.Reason'],'manual') }}:
-      - bash: |
-           echo "##vso[task.setvariable variable=XAPIKEY]$(echo ${{parameters.XAPIKEY}})"
-           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
-           echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
-           echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}})"
-           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
-           echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
+      - ${{ if eq(variables['Build.Reason'],'manual') }}:
+          - bash: |
+              echo "##vso[task.setvariable variable=XAPIKEY]$(echo ${{parameters.XAPIKEY}})"
+              echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
+              echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
+              echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
+              echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
 
-           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
-        displayName: Configure Manual run Vars
+              echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+            displayName: Configure Manual run Vars
 
-    - template: azure/common-steps.yaml
-      parameters:
-        XAPIKEY: $(XAPIKEY)
-        XAPIEMAIL: $(XAPIEMAIL)
-        BUILDINGID: $(BUILDINGID)
-        FLOORID: $(FLOORID)
-        DASHBOARD_URL: $(DASHBOARD_URL)
-        system: $(ubuntuVersion)
-
-    - template: azure/build-examples.yaml
-      parameters:
-        DASHBOARD_URL: $(DASHBOARD_URL)
-        system: $(ubuntuVersion)
-        BUILDINGID: $(BUILDINGID)
-        XAPIEMAIL: $(XAPIEMAIL)
-        BUILDNUMBER: $(BUILDNUMBER)
-    - ${{ if ne(variables['Build.Reason'],'manual') }}:
-      - template: azure-templates/teams-notifier.yml@sys_kubernetes_templates
+      - template: azure/common-steps.yaml
         parameters:
-          channelId: $(releasesMobileChannelId)
-          teamID: $(releasesMobileTeamId)
-          messageType: "error"
-          message: "Hey Team, 🚨 our <strong>React Native Android Example App auto build</strong> just took a dive off the high board and belly-flopped! 🚨 Let's put on our lifeguard hats and dive in for a rescue mission! 🚑 Time to debug and bring that pipeline back to smooth sailing! 🛠️⚓ Alert level: High! Let's fix it! 🚨"
+          XAPIKEY: $(XAPIKEY)
+          XAPIEMAIL: $(XAPIEMAIL)
+          BUILDINGID: $(BUILDINGID)
+          DASHBOARD_URL: $(DASHBOARD_URL)
+          system: $(ubuntuVersion)
 
+      - template: azure/build-examples.yaml
+        parameters:
+          DASHBOARD_URL: $(DASHBOARD_URL)
+          system: $(ubuntuVersion)
+          BUILDINGID: $(BUILDINGID)
+          XAPIEMAIL: $(XAPIEMAIL)
+          BUILDNUMBER: $(BUILDNUMBER)
+      - ${{ if ne(variables['Build.Reason'],'manual') }}:
+          - template: azure-templates/teams-notifier.yml@sys_kubernetes_templates
+            parameters:
+              channelId: $(releasesMobileChannelId)
+              teamID: $(releasesMobileTeamId)
+              messageType: "error"
+              message: "Hey Team, 🚨 our <strong>React Native Android Example App auto build</strong> just took a dive off the high board and belly-flopped! 🚨 Let's put on our lifeguard hats and dive in for a rescue mission! 🚑 Time to debug and bring that pipeline back to smooth sailing! 🛠️⚓ Alert level: High! Let's fix it! 🚨"
 
   #===============================================================
   # Job for iOS app
@@ -105,61 +98,56 @@ jobs:
     pool:
       vmImage: $(macOSVersion)
     steps:
-    - ${{ if ne(variables['Build.Reason'],'manual') }}:
+      - ${{ if ne(variables['Build.Reason'],'manual') }}:
+          - bash: |
+              echo "##vso[task.setvariable variable=XAPIKEY]$(echo $(XAPIKEY_EXAMPLES))"
+              echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo $(XAPIEMAIL_EXAMPLES))"
+              echo "##vso[task.setvariable variable=BUILDINGID]$(echo $(BUILDING_ID_EXAMPLES))"
+              echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo 'https://dashboard.situm.com')"
+              echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
+
+              echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+            displayName: Configure Automatic run Vars
+
+      - ${{ if eq(variables['Build.Reason'],'manual') }}:
+          - bash: |
+              echo "##vso[task.setvariable variable=XAPIKEY]$(echo ${{parameters.XAPIKEY}})"
+              echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
+              echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
+              echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
+              echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
+
+              echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
+            displayName: Configure Manual run Vars
+
       - bash: |
-           echo "##vso[task.setvariable variable=XAPIKEY]$(echo $(XAPIKEY_EXAMPLES))"
-           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo $(XAPIEMAIL_EXAMPLES))"
-           echo "##vso[task.setvariable variable=BUILDINGID]$(echo $(BUILDING_ID_EXAMPLES))"
-           echo "##vso[task.setvariable variable=FLOORID]$(echo $(FLOOR_ID_EXAMPLES))"
-           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo 'https://dashboard.situm.com')"
-           echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
+          echo -e "\n[+] Install cocoapods \n"
+          sudo gem install cocoapods -v $(cocoapodsVersion)
+          echo -e "\n[+] Install gnu-sed\n"
+          brew install gnu-sed
+        displayName: Install gnu-sed
 
-           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
-        displayName: Configure Automatic run Vars
-
-    - ${{ if eq(variables['Build.Reason'],'manual') }}:
-      - bash: |
-           echo "##vso[task.setvariable variable=XAPIKEY]$(echo ${{parameters.XAPIKEY}})"
-           echo "##vso[task.setvariable variable=XAPIEMAIL]$(echo ${{ parameters.XAPIEMAIL}})"
-           echo "##vso[task.setvariable variable=BUILDINGID]$(echo ${{ parameters.BUILDINGID}})"
-           echo "##vso[task.setvariable variable=FLOORID]$(echo ${{ parameters.FLOORID}})"
-           echo "##vso[task.setvariable variable=DASHBOARD_URL]$(echo ${{ parameters.DASHBOARD_URL }})"
-           echo "##vso[task.setvariable variable=BUILDNUMBER]$(echo $(Build.BuildNumber) | awk -F"." '{if ($2 < 10) print $1"0"$2; else print $1$2}')"
-
-           echo -e "\n[!] I'm a shy step so I don't show any information. You'll see my work in the Configure Credentials step"
-        displayName: Configure Manual run Vars
-
-    - bash: |
-        echo -e "\n[+] Install cocoapods \n"
-        sudo gem install cocoapods -v $(cocoapodsVersion)
-        echo -e "\n[+] Install gnu-sed\n"
-        brew install gnu-sed
-      displayName: Install gnu-sed
-
-    - template: azure/common-steps.yaml
-      parameters:
-        XAPIKEY: $(XAPIKEY)
-        XAPIEMAIL: $(XAPIEMAIL)
-        BUILDINGID: $(BUILDINGID)
-        FLOORID: $(FLOORID)
-        DASHBOARD_URL: $(DASHBOARD_URL)
-        system: $(macOSVersion)
-        BUILDNUMBER: $(BUILDNUMBER)
-
-    - template: azure/build-examples.yaml
-      parameters:
-        DASHBOARD_URL: $(DASHBOARD_URL)
-        system: $(macOSVersion)
-        XAPIEMAIL: $(XAPIEMAIL)
-        BUILDINGID: $(BUILDINGID)
-        BUILDNUMBER: $(BUILDNUMBER)
-
-    - ${{ if ne(variables['Build.Reason'],'manual') }}:
-      - template: azure-templates/teams-notifier.yml@sys_kubernetes_templates
+      - template: azure/common-steps.yaml
         parameters:
-          channelId: $(releasesMobileChannelId)
-          teamID: $(releasesMobileTeamId)
-          messageType: "error"
-          message: "Hey Team, 🚨 our <strong>React Native iOS Example App auto build</strong> just took a dive off the high board and belly-flopped! 🚨 Let's put on our lifeguard hats and dive in for a rescue mission! 🚑 Time to debug and bring that pipeline back to smooth sailing! 🛠️⚓ Alert level: High! Let's fix it! 🚨"
+          XAPIKEY: $(XAPIKEY)
+          XAPIEMAIL: $(XAPIEMAIL)
+          BUILDINGID: $(BUILDINGID)
+          DASHBOARD_URL: $(DASHBOARD_URL)
+          system: $(macOSVersion)
+          BUILDNUMBER: $(BUILDNUMBER)
 
+      - template: azure/build-examples.yaml
+        parameters:
+          DASHBOARD_URL: $(DASHBOARD_URL)
+          system: $(macOSVersion)
+          XAPIEMAIL: $(XAPIEMAIL)
+          BUILDINGID: $(BUILDINGID)
+          BUILDNUMBER: $(BUILDNUMBER)
 
+      - ${{ if ne(variables['Build.Reason'],'manual') }}:
+          - template: azure-templates/teams-notifier.yml@sys_kubernetes_templates
+            parameters:
+              channelId: $(releasesMobileChannelId)
+              teamID: $(releasesMobileTeamId)
+              messageType: "error"
+              message: "Hey Team, 🚨 our <strong>React Native iOS Example App auto build</strong> just took a dive off the high board and belly-flopped! 🚨 Let's put on our lifeguard hats and dive in for a rescue mission! 🚑 Time to debug and bring that pipeline back to smooth sailing! 🛠️⚓ Alert level: High! Let's fix it! 🚨"
