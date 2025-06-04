@@ -51,7 +51,7 @@
     "test": "yarn typescript && yarn lint && yarn test:jest",
     "test:jest": "jest",
     "typescript": "tsc --noEmit",
-    "prepare": "bob build; yarn doc",
+    "prepare": "yarn bob build; yarn doc",
     "doc": "typedoc --out ./docs/types ./src  --tsconfig ./tsconfig.json && mkdir -p ./docs/types/docs/assets && cp -r ./docs/assets/* ./docs/types/docs/assets/",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build"
   },

@@ -1,6 +1,7 @@
 trigger:
   - release/*
   - develop
+  - feature/*
 
 pr: none
 
@@ -33,11 +34,44 @@ resources:
       ref: master
 
 steps:
-  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/develop/') }}:
+  - bash: |
+
+      if [ -d "react-native" ];then
+        cd react-native
+      fi
+      echo -e "\n[+] Fetch all branches\n"
+      git fetch
+
+      echo -e "\n[+] Checkout and Pull to master branch\n"
+      git checkout master
+      git pull origin master
+
+      echo -e "\n[+] Setting up yarn\n"
+      npm install -g corepack
+      corepack enable
+
+      echo -e "\n[+] Installing yarn dependencies\n"
+      yarn install
+
+      echo -e "\n[+] Configure NPM login"
+      echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > ~/.npmrc
+
+      echo -e "\n[+] Copy README.MD to plugin folder to display it at npm.js\n"
+      cp README.md plugin/
+
+      # Important: ensure we are working at plugin folder before publishing.
+      cd plugin
+      echo -e "\n[+] Publish NPM packages"
+      npm publish --dry-run
+
+    displayName: NPM publish Dry Run
+
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
       - template: azure-templates/static-analyse.yml@sys_kubernetes_templates
         parameters:
           repoFolder: .
           teams: mobile
+
   - ${{ if contains(variables['Build.SourceBranch'], 'release/') }}:
       - checkout: self
         fetchDepth: 1
@@ -132,11 +166,18 @@ steps:
           git checkout master
           git pull origin master
 
+          echo -e "\n[+] Setting up yarn\n"
+          npm install -g corepack
+          corepack enable
+
           echo -e "\n[+] Installing yarn dependencies\n"
           yarn install
 
           echo -e "\n[+] Configure NPM login"
           echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > ~/.npmrc
+
+          echo -e "\n[+] Copy README.MD to plugin folder to display it at npm.js\n"
+          cp README.md plugin/
 
           # Important: ensure we are working at plugin folder before publishing.
           cd plugin
