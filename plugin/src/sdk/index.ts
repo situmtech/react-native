@@ -4,6 +4,7 @@
 import { NativeEventEmitter, NativeModules, Platform } from "react-native";
 
 import { logError } from "../utils/logError";
+import { DelegatedStateManager } from "./internaDelegatedState";
 import type { SitumPluginInterface } from "./nativeInterface";
 import {
   type Building,
@@ -37,7 +38,6 @@ import {
   locationStatusAdapter,
   promiseWrapper,
 } from "./utils";
-import { DelegatedStateManager } from "./internaDelegatedState";
 
 export * from "./types";
 export * from "./types/constants";
@@ -399,7 +399,15 @@ export default class SitumPlugin {
    * @throw Exception
    */
   static sdkVersion = () => {
-    return "";
+    return exceptionWrapper<SdkVersion>(({ onSuccess }) => {
+      const versions: { react_native: string; ios?: string; android?: string } =
+        {
+          react_native: "",
+          ios: "",
+          android: "",
+        };
+      onSuccess(versions);
+    });
   };
 
   /**
@@ -693,7 +701,8 @@ export default class SitumPlugin {
     request: any,
     callback?: (response: { isInsideGeofence: boolean; geofence: any }) => void,
   ) => {
-    RNCSitumPlugin.checkIfPointInsideGeofence(request, callback || (() => {}));
+    const noop = () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
+    RNCSitumPlugin.checkIfPointInsideGeofence(request, callback || noop);
   };
 
   /**

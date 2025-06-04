@@ -13,6 +13,10 @@
 - We also updated the example application to align it with the structure used in other Situm plugins.
 - The development environment setup for this plugin has changed significantly with the adoption of workspaces and Yarn 4, but this change should not affect end users of the plugin.
 
+### Deprecated
+
+- Deprecated the method `sdkVersion()`. This method will not work anymore and will be deleted in future versions.
+
 ### Fixed
 
 - Fixed a crash in iOS when calling `fetchGeofences()` under some circumstances.
