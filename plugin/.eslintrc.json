@@ -1,0 +1,97 @@
+{
+  "root": true,
+  "parserOptions": { "project": "./tsconfig.json" },
+  "env": { "es6": true },
+  "ignorePatterns": ["node_modules", "build", "coverage"],
+  "plugins": [
+    "react",
+    "react-native",
+    "@typescript-eslint",
+    "simple-import-sort",
+    "import",
+    "eslint-comments",
+    "functional"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:eslint-comments/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/typescript",
+    "@react-native-community",
+    "prettier"
+  ],
+  "globals": { "BigInt": true, "console": true, "WebAssembly": true },
+  "rules": {
+    //   "@typescript-eslint/explicit-module-boundary-types": "off",
+    "eslint-comments/disable-enable-pair": [
+      "error",
+      { "allowWholeFile": true }
+    ],
+    "no-unused-vars": "off",
+    // TODO please, remove this two lines when the time finally comes
+    "@typescript-eslint/ban-ts-ignore": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_" }
+    ],
+    // Disable <Fragment> => <> replacement. Feel free to change
+    "react/jsx-fragments": "off",
+    // Set simple-import-sorts lints as errors
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "react-native/no-unused-styles": 2,
+    "react-native/split-platform-components": 2,
+    "react-native/no-inline-styles": 2,
+    "react-native/no-color-literals": 2,
+    "react-native/no-raw-text": 2
+  },
+  "overrides": [
+    {
+      // Rules for simple-import-sort
+      "files": ["*.tsx", "*.ts", "*.jsx", "*.js"],
+      "rules": {
+        "simple-import-sort/imports": [
+          "error",
+          {
+            "groups": [
+              // Packages group
+              [
+                // React
+                "^react$",
+                // Node.js builtins
+                "^node:",
+                // Packages (starting with @ or a word)
+                "^@?\\w",
+                // Packages-specific css styles
+                "\\w.*\\.css$"
+              ],
+
+              // Project: slices
+              ["^@/\\wSlice$", "^\\./.*Slice$", "^\\.\\./.*Slice$"],
+
+              // Project: components
+              ["^@/.*components/"],
+
+              // Project: all other imports
+              [
+                // Alias imports
+                "^@/?",
+                // Relative imports. (../anotherfolder)
+                "^\\.\\.",
+                // Current folder imports. (./component)
+                "^\\."
+              ],
+
+              // Project: Side effect imports. They all start with the \u0000 character
+              ["^\\u0000"],
+
+              // Anything not matched in another group.
+              ["^"]
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
