@@ -61,7 +61,7 @@ steps:
       # Important: ensure we are working at plugin folder before publishing.
       cd plugin
       echo -e "\n[+] Publish NPM packages"
-      npm publish --dry-run
+      npm publish --tag beta
 
     displayName: NPM publish Dry Run
 
