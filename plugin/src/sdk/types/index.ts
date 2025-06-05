@@ -63,9 +63,9 @@ export type Bounds = {
   northEast: Coordinate;
   /** The coordinate of the north-west corner of the bound. */
   northWest: Coordinate;
-  /** The coordinate of the south-west corner of the bound. */
-  southEast: Coordinate;
   /** The coordinate of the south-east corner of the bound. */
+  southEast: Coordinate;
+  /** The coordinate of the south-west corner of the bound. */
   southWest: Coordinate;
 };
 
