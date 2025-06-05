@@ -148,8 +148,13 @@ steps:
 
           # Important: ensure we are working at plugin folder before publishing.
           cd plugin
+
+          # Publish!
           echo -e "\n[+] Publish NPM packages"
           npm publish
+
+          echo -e "\n[+] Delete README.MD from plugin folder\n"
+          rm -rf README.md
 
         displayName: NPM publish
 
