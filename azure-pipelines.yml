@@ -33,11 +33,12 @@ resources:
       ref: master
 
 steps:
-  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/develop/') }}:
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
       - template: azure-templates/static-analyse.yml@sys_kubernetes_templates
         parameters:
           repoFolder: .
           teams: mobile
+
   - ${{ if contains(variables['Build.SourceBranch'], 'release/') }}:
       - checkout: self
         fetchDepth: 1
@@ -132,16 +133,28 @@ steps:
           git checkout master
           git pull origin master
 
+          echo -e "\n[+] Setting up yarn\n"
+          npm install -g corepack
+          corepack enable
+
           echo -e "\n[+] Installing yarn dependencies\n"
           yarn install
 
           echo -e "\n[+] Configure NPM login"
           echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > ~/.npmrc
 
+          echo -e "\n[+] Copy README.MD to plugin folder to display it at npm.js\n"
+          cp README.md plugin/
+
           # Important: ensure we are working at plugin folder before publishing.
           cd plugin
+
+          # Publish!
           echo -e "\n[+] Publish NPM packages"
           npm publish
+
+          echo -e "\n[+] Delete README.MD from plugin folder\n"
+          rm -rf README.md
 
         displayName: NPM publish
 
