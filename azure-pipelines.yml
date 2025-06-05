@@ -43,8 +43,7 @@ steps:
       git fetch
 
       echo -e "\n[+] Checkout and Pull to master branch\n"
-      git checkout master
-      git pull origin master
+      echo -e "... No! Testing feature/fix-pipelines-publish"
 
       echo -e "\n[+] Setting up yarn\n"
       npm install -g corepack
