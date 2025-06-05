@@ -90,7 +90,7 @@ SitumPlugin.setApiKey("YOUR_SITUM_API_KEY");
 
 1. Add the `ACCESS_FINE_LOCATION` permission to your `AndroidManifest.xml` file if you have configured Situm SDK to [use GPS](<https://developers.situm.com/sdk_documentation/android/javadoc/latest/es/situm/sdk/location/locationrequest#useGps()>):
 
-```xml
+```
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 ```
 
@@ -100,7 +100,7 @@ SitumPlugin.setApiKey("YOUR_SITUM_API_KEY");
 
 1. Add depedency in `PodFile`
 
-```ruby
+```
   target 'YourApp' do
 
     pod 'ReactNativeSitumPlugin', :path => '../node_modules/@situm/react-native/ReactNativeSitumPlugin.podspec'
@@ -116,7 +116,7 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
 
 2. Declare the following permissions in your app's `Info.plist` file to successfully start positioning:
 
-```xml
+```
 <key>NSLocationWhenInUseUsageDescription</key>
 <string>Location is required to find out where you are</string>
 <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -127,7 +127,7 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
 
 3. For offline support you will have to add the underlying web application's domain inside the entry `WKAppBoundDomains` on `Info.plist` as follows:
 
-```xml
+```
 <key>WKAppBoundDomains</key>
 <array>
   <string>maps.situm.com</string>
