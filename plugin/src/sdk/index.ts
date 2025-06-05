@@ -256,7 +256,7 @@ export default class SitumPlugin {
    * if it is not already initialised.
    *
    * @returns void
-   * @throw Exception
+   * @throws Exception
    */
   static init = () => {
     _registerCallbacks();
@@ -274,7 +274,7 @@ export default class SitumPlugin {
    * @param apiKey user's apikey.
    *
    * @returns void
-   * @throw Exception
+   * @throws Exception
    */
   static setApiKey = (apiKey: string) => {
     return exceptionWrapper<void>(({ onCallback }) => {
@@ -294,7 +294,7 @@ export default class SitumPlugin {
    * @param password user's password.
    *
    * @returns void
-   * @throw Exception
+   * @throws Exception
    */
   static setUserPass = (email: string, password: string) => {
     return exceptionWrapper<void>(({ onCallback }) => {
@@ -310,7 +310,7 @@ export default class SitumPlugin {
    * @param url user's email.
    *
    * @returns void
-   * @throw Exception
+   * @throws Exception
    */
 
   static setDashboardURL = (url: string) => {
@@ -329,7 +329,7 @@ export default class SitumPlugin {
    * @param useRemoteConfig
    *
    * @returns void
-   * @throw Exception
+   * @throws Exception
    */
   static setUseRemoteConfig = (useRemoteConfig: boolean) => {
     return exceptionWrapper<void>(({ onCallback }) => {
@@ -346,7 +346,7 @@ export default class SitumPlugin {
    * Sets the max seconds the cache is valid
    *
    * @returns void
-   * @throw Exception
+   * @throws Exception
    */
   private static setMaxCacheAge = (cacheAge: number) => {
     return exceptionWrapper<void>(({ onCallback }) => {
@@ -362,7 +362,7 @@ export default class SitumPlugin {
    * @param options {@link ConfigurationOptions}
    *
    * @returns void
-   * @throw Exception
+   * @throws Exception
    */
   static setConfiguration = (options: ConfigurationOptions) => {
     return exceptionWrapper<void>(() => {
@@ -381,7 +381,7 @@ export default class SitumPlugin {
    * Invalidate all the resources in the cache
    *
    * @returns void
-   * @throw Exception
+   * @throws Exception
    */
   static invalidateCache = () => {
     return exceptionWrapper<void>(() => {
@@ -396,7 +396,7 @@ export default class SitumPlugin {
    * Gets the list of versions for the current plugin and environment
    *
    * @returns void
-   * @throw Exception
+   * @throws Exception
    */
   static sdkVersion = () => {
     return exceptionWrapper<SdkVersion>(({ onSuccess }) => {

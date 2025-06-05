@@ -64,7 +64,7 @@ export type MapViewConfiguration = {
    */
   viewerDomain?: string;
   /**
-   * @required
+   * ** Required **
    * Your Situm API key. Find your API key at your [situm profile](https://dashboard.situm.com/accounts/profile)
    */
   situmApiKey: string;
@@ -78,7 +78,7 @@ export type MapViewConfiguration = {
    */
   profile?: string;
   /**
-   * @required
+   * ** Required **
    * The building that will be loaded on the map.
    * In case you set a buildingIdentifier in your remote configuration, it will be prioritized over {@link MapViewConfiguration.buildingIdentifier} parameter.
    */
