@@ -54,7 +54,7 @@ const NETWORK_ERROR_CODE = {
 
 export type MapViewConfiguration = {
   /**
-   * A String parameter that allows you to choose the API you will be retrieving our cartography from. Default is "dashboard.situm.com".
+   * A String parameter that allows you to choose the API you will be retrieving our cartography from. Default is "api.situm.com".
    * In most cases this parameter shouldn't be changed.
    */
   apiDomain?: string;
