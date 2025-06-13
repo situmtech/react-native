@@ -74,7 +74,7 @@ After creating your situm account, you must set your credentials on the properti
 export const SITUM_EMAIL = "";
 export const SITUM_API_KEY = "";
 export const SITUM_BUILDING_ID = ""; // Identifier of the building to be loaded using MapView.
-export const SITUM_DASHBOARD_URL = "https://dashboard.situm.com";
+export const SITUM_DASHBOARD_URL = "https://api.situm.com";
 ```
 
 You can use the contents of [`src/situm.tsx.example`](./src/situm.tsx.example) as example.
