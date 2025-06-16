@@ -187,7 +187,7 @@ RCT_EXPORT_METHOD(fetchBuildings: (RCTResponseSenderBlock)successBlock errorCall
                 NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ No buildings were retrieved", DEFAULT_SITUM_LOG, operation]);
             }
             if(errorBlock)
-                errorBlock(@[@"There are no buildings on the account. Please go to dashboard http://api.situm.com and learn more about the first step with Situm technology"]);
+                errorBlock(@[@"There are no buildings on the account. Please go to dashboard http://dashboard.situm.com and learn more about the first step with Situm technology"]);
         }
         else {
             NSMutableArray *ja = [[NSMutableArray alloc] init];
@@ -316,7 +316,7 @@ RCT_EXPORT_METHOD(fetchFloorsFromBuilding:(NSDictionary *)buildingJO withSuccess
                 NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ no floors on building: %@", DEFAULT_SITUM_LOG, operation, buildingJO]);
             }
             if(errorBlock)
-                errorBlock(@[@"The selected building does not have floors. Correct that on http://api.situm.com"]);
+                errorBlock(@[@"The selected building does not have floors. Correct that on http://dashboard.situm.com"]);
         } else {
             if (IS_LOG_ENABLED) {
                 NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ retrieved floors: %@ on building: %@", DEFAULT_SITUM_LOG, operation, floors, buildingJO]);
