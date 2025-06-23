@@ -131,7 +131,7 @@
     "identifier": 2120,
     "name": "VISITA LA WEB DE SITUM",
     "floorIdentifier": 5762,
-    "infoHtml": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><a href=\"http://www.situm.es\" rel=\"nofollow\">http://www.situm.es</a></p>\n<p><img class=\"fr-fin fr-dib\" alt=\"Image title\" src=\"https://dashboard.situm.es/uploads/rtf/906/e6d33424-58f1-4fcc-b457-6f6f41275d08.png\" width=\"300\" title=\"Image title\"></p>\n<p><br></p>\n</body></html>\n",
+    "infoHtml": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><a href=\"http://www.situm.es\" rel=\"nofollow\">http://www.situm.es</a></p>\n<p><img class=\"fr-fin fr-dib\" alt=\"Image title\" src=\"https://api.situm.com/uploads/rtf/906/e6d33424-58f1-4fcc-b457-6f6f41275d08.png\" width=\"300\" title=\"Image title\"></p>\n<p><br></p>\n</body></html>\n",
     "conversionArea": {
       "floorIdentifier": 0,
       "topLeft": "Point2f{ x=0.0, y=0.0}",
@@ -185,7 +185,7 @@
     "identifier": 2117,
     "name": "Evento con imaxe",
     "floorIdentifier": 5762,
-    "infoHtml": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><img class=\"fr-fin fr-dib\" alt=\"Image title\" src=\"https://dashboard.situm.es/uploads/rtf/8680/0c95db1c-8772-4d08-89e9-3779d0196237.png\" width=\"300\" title=\"Image title\"></p>\n<p><br></p>\n</body></html>\n",
+    "infoHtml": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><img class=\"fr-fin fr-dib\" alt=\"Image title\" src=\"https://api.situm.com/uploads/rtf/8680/0c95db1c-8772-4d08-89e9-3779d0196237.png\" width=\"300\" title=\"Image title\"></p>\n<p><br></p>\n</body></html>\n",
     "conversionArea": {
       "floorIdentifier": 5762,
       "topLeft": "Point2f{ x=7.5667120540507495, y=23.20767040283435}",
