@@ -124,6 +124,7 @@ export const WayfindingScreen: React.FC = () => {
                 situmApiKey: SITUM_API_KEY,
                 buildingIdentifier: SITUM_BUILDING_ID,
                 profile: SITUM_PROFILE,
+                persistOnUnmount: true,
               }}
               onLoad={onLoad}
               onLoadError={onMapError}

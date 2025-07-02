@@ -7,7 +7,7 @@ import SitumPlugin, {
   Building,
 } from "@situm/react-native";
 import { PositioningCard } from "./cards/PositioningCard";
-import { Alert, ScrollView, StyleSheet } from "react-native";
+import { Alert, Button, ScrollView, StyleSheet } from "react-native";
 import { FetchResourcesCard } from "./cards/FetchResourcesCard";
 import { SITUM_BUILDING_ID } from "../situm";
 import { MapInteractionCard } from "./cards/MapInteractionCard";
@@ -176,6 +176,12 @@ export const HomeScreen = () => {
           contentContainerStyle={styles.scrollContainer}
           showsVerticalScrollIndicator={true}
         >
+          <Button
+            title="SHOW MAP"
+            onPress={() => {
+              navigation.navigate("Wayfinding", undefined, { merge: true });
+            }}
+          />
           <PositioningCard
             onStartPositioning={startPositioning}
             onStopPositioning={stopPositioning}
