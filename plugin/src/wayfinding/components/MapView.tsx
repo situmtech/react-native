@@ -19,8 +19,11 @@ import type {
   WebViewErrorEvent,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
+
 import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
+import { setError, setLocationStatus } from "../store";
+import { PersistentWebView } from "../store/PersistentWebView";
 import {
   type CartographySelectionOptions,
   type MapViewDirectionsOptions,
@@ -40,7 +43,7 @@ import {
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
 import ViewerMapper from "../utils/mapper";
-import { setError, setLocationStatus } from "../store";
+
 const SITUM_BASE_DOMAIN = "https://maps.situm.com";
 
 const NETWORK_ERROR_CODE = {
@@ -91,6 +94,10 @@ export type MapViewConfiguration = {
    * Sets the UI language based on the given ISO 639-1 code. Checkout the [Situm docs](https://situm.com/docs/query-params/) to see the list of supported languages.
    */
   language?: string;
+  /**
+   * Persist over unmount events
+   */
+  persistOnUnmount?: boolean;
 };
 
 const viewerStyles = StyleSheet.create({
@@ -596,7 +603,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       return effectiveProfile;
     };
 
-    return (
+    const webViewComponent = (
       <WebView
         ref={webViewRef}
         source={{
@@ -636,6 +643,26 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           }
         }}
       />
+    );
+
+    const { showPersistentWebView, hidePersistentWebView } = PersistentWebView({
+      webViewComponent: webViewComponent,
+      // TODO: find a better way to fit inside integrations this 'absolute singleton viewer'.
+      // Ideally PersistentWebView should adjust to the MapView limits
+      style: { height: "90%", width: "100%" },
+    });
+
+    useEffect(() => {
+      configuration.persistOnUnmount && showPersistentWebView();
+      return () => {
+        configuration.persistOnUnmount && hidePersistentWebView();
+      };
+    }, []);
+
+    return configuration.persistOnUnmount ? (
+      <>{/* WebView is rendered through showPersistentWebView() */}</>
+    ) : (
+      webViewComponent
     );
   },
 );
