@@ -9,8 +9,10 @@ import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { TabNavigator } from "./navigation/TabNavigator";
+import { StackNavigator } from "./navigation/StackNavigator";
 import SitumPlugin from "@situm/react-native";
 import { SITUM_API_KEY, SITUM_DASHBOARD_URL } from "./situm";
+import { WebViewProvider } from "@situm/react-native";
 
 function App(): React.JSX.Element {
   useEffect(() => {
@@ -27,9 +29,11 @@ function App(): React.JSX.Element {
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <TabNavigator />
-      </NavigationContainer>
+      <WebViewProvider>
+        <NavigationContainer>
+          <StackNavigator />
+        </NavigationContainer>
+      </WebViewProvider>
     </SafeAreaProvider>
   );
 }
