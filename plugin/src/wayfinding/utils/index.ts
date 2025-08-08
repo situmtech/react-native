@@ -1,6 +1,7 @@
-import WebView from "react-native-webview";
+import {WebView} from "../../webview/WebView";
 
-export const sendMessageToViewer = (viewer: WebView | null, message: string) => {
+export const sendMessageToViewer = (viewer: any | null, message: string) => {
   if (!viewer) return;
-  viewer.injectJavaScript(`window.postMessage(${message})`);
+  // TODO: engadir método.
+  // viewer.injectJavaScript(`window.postMessage(${message})`);
 };

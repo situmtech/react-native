@@ -14,11 +14,7 @@ import {
   StyleSheet,
   type ViewStyle,
 } from "react-native";
-import WebView from "react-native-webview";
-import type {
-  WebViewErrorEvent,
-  WebViewMessageEvent,
-} from "react-native-webview/lib/WebViewTypes";
+import {WebView} from "../../webview/WebView";
 import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
 import {
@@ -159,7 +155,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     },
     ref,
   ) => {
-    const webViewRef = useRef<WebView>(null);
+    const webViewRef = useRef<React.ElementRef<typeof WebView>>(null);
     const [_onDirectionsRequestInterceptor, setInterceptor] =
       useState<OnDirectionsRequestInterceptor>();
 
@@ -505,7 +501,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mapLoaded]);
 
-    const handleRequestFromViewer = (event: WebViewMessageEvent) => {
+    // TODO: restaurar aquí o que faga falta, seguramente sobrarán cousas. Ou non, vaite saber.
+    const handleRequestFromViewer = (event: any) => {
       const eventParsed = JSON.parse(event.nativeEvent.data);
       switch (eventParsed.type) {
         case "app.map_is_ready":
@@ -599,7 +596,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     return (
       <WebView
         ref={webViewRef}
-        source={{
+        // TODO: forwardear a configuración.
+        // Expoñer MapViewConfiguration.
+
+        /* source={{
           uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${
             _effectiveProfile() ? `id/${_effectiveProfile()}` : ""
           }?&apikey=${
@@ -609,16 +609,16 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
               ? `&buildingid=${configuration.buildingIdentifier}`
               : ""
           }&show=rts`,
-        }}
+        }} */
         style={StyleSheet.flatten([viewerStyles.webview, style])}
-        limitsNavigationsToAppBoundDomains={true}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        startInLoadingState={true}
-        cacheEnabled
-        onMessage={handleRequestFromViewer}
-        onShouldStartLoadWithRequest={_onShouldStartLoadWithRequest}
-        onError={(evt: WebViewErrorEvent) => {
+        //limitsNavigationsToAppBoundDomains={true}
+        //javaScriptEnabled={true}
+        //domStorageEnabled={true}
+        //startInLoadingState={true}
+        //cacheEnabled
+        //onMessage={handleRequestFromViewer}
+        //onShouldStartLoadWithRequest={_onShouldStartLoadWithRequest}
+        /* onError={(evt: any) => {
           if (!onLoadError) return;
           const { nativeEvent } = evt;
           // TODO: on render error should probably still try to render an html
@@ -633,8 +633,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
               name: ErrorName.ERR_INTERNAL_SERVER_ERROR,
               description: nativeEvent.description,
             });
-          }
-        }}
+          } 
+        }} */
       />
     );
   },
