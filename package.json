@@ -7,7 +7,10 @@
   },
   "resolutions": {
     "@react-native/gradle-plugin": "0.79.1",
-    "eslint-plugin-prettier": "^5.4.1"
+    "eslint-plugin-prettier": "^5.4.1",
+    "hermes-parser": "^0.31.0",
+    "@react-native/codegen": "^0.80.2",
+    "@react-native/js-polyfills": "^0.80.2"
   },
   "description": "Situm React Native plugin monorepo.",
   "private": true,
