@@ -1333,32 +1333,8 @@ PODS:
     - React-jsiexecutor
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
-  - react-native-safe-area-context (5.4.0):
+  - react-native-safe-area-context (5.4.1):
     - React-Core
-  - react-native-webview (13.13.5):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-hermes
-    - React-ImageManager
-    - React-jsi
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-renderercss
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - React-NativeModulesApple (0.79.1):
     - glog
     - hermes-engine
@@ -1681,7 +1657,7 @@ PODS:
     - React-logger (= 0.79.1)
     - React-perflogger (= 0.79.1)
     - React-utils (= 0.79.1)
-  - ReactNativeSitumPlugin (3.14.10):
+  - ReactNativeSitumPlugin (3.15.11):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1705,9 +1681,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - SitumSDK (= 3.32.1)
+    - SitumSDK (= 3.34.2)
     - Yoga
-  - RNScreens (4.10.0):
+  - RNScreens (4.11.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1756,7 +1732,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - SitumSDK (3.32.1):
+  - SitumSDK (3.34.2):
     - Protobuf (~> 3.18)
     - SSZipArchive (~> 2.4)
   - SocketRocket (0.7.1)
@@ -1805,7 +1781,6 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-oscompat (from `../node_modules/react-native/ReactCommon/oscompat`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1929,8 +1904,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
-  react-native-webview:
-    :path: "../node_modules/react-native-webview"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-oscompat:
@@ -2042,8 +2015,7 @@ SPEC CHECKSUMS:
   React-logger: 34debb54489c4c02e5de4cc057a0943e97d2038a
   React-Mapbuffer: 206115a22168bd42d6ef21acfe5eb5b39589ed53
   React-microtasksnativemodule: 32f7f13d65525e981e9a5b28cebad7d10e0ff711
-  react-native-safe-area-context: 8870dc3e45c8d241336cd8ee3fa3fc76f3a040ac
-  react-native-webview: bfc7322cc9f570bc5b5b2251fb38a08da718d00a
+  react-native-safe-area-context: 583e6d44b8500e4d4738119118d1fc01d754bfc0
   React-NativeModulesApple: 6d750bb9829fdf0f02c56e9a68cbb390e1f5de25
   React-oscompat: 74eb4badd12e93899f37a5dbb03d8a638011a292
   React-perflogger: 53be4c46645bbccec870dd82a24764aca9bae4c2
@@ -2075,10 +2047,10 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: f3426eaf6dabae0baec543cd7bac588b6f59210c
   ReactCodegen: 3288d61658273d72fbd348a74b59710b9790615f
   ReactCommon: 9f975582dc535de1de110bdb46d4553140a77541
-  ReactNativeSitumPlugin: c150d16f6904f949705171e55c4a0f1e6934d43d
-  RNScreens: 4561eef339c3ebe8176b27e01af7ac494780f678
+  ReactNativeSitumPlugin: 1369a65c71c435ee5aba79d2cd3b4bd48f1e0bd8
+  RNScreens: 3dbce61975990754e4eadd42e9155d327c3445e7
   RNVectorIcons: ae8e1b95f3468a360896c6242d61885efcc64241
-  SitumSDK: affae579fc33fe696831872dc536677386deb49f
+  SitumSDK: 31a8c53c5949e7add0bbc182fff70349ec1b027f
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   Yoga: d15f5aa644c466e917569ac43b19cbf17975239a

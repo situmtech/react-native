@@ -11,6 +11,7 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
+import com.situm.plugin.WebViewReactPackage
 
 class MainApplication : Application(), ReactApplication {
 
@@ -20,6 +21,16 @@ class MainApplication : Application(), ReactApplication {
             PackageList(this).packages.apply {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
+
+              // Desgraciadamente este paso non fun quen de saltalo. Quizais usando a nova arquitectura
+              // sexa posible, pero polo menos está funcionando sin a dependencia react-native-webview
+              // e co noso MapView nativo.
+              // O plugin react-native-webview non require este paso, así que quero pensar que nós tampouco
+              // o necesitaremos.
+              // Ademais este caso é moi especial: temos un monorepo e RN non parece comportarse igual cando 
+              // a instalación do paquete é convencional (vía npm).
+              // TODO: https://github.com/react-native-community/cli/blob/main/docs/autolinking.md
+              add(WebViewReactPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"
