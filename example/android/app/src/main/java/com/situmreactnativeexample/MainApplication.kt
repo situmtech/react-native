@@ -29,6 +29,7 @@ class MainApplication : Application(), ReactApplication {
               // o necesitaremos.
               // Ademais este caso é moi especial: temos un monorepo e RN non parece comportarse igual cando 
               // a instalación do paquete é convencional (vía npm).
+              // TODO: https://github.com/react-native-community/cli/blob/main/docs/autolinking.md
               add(WebViewReactPackage())
             }
 
