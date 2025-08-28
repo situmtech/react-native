@@ -2,10 +2,12 @@
 
 export type RootTabsParamsList = {
   Home: undefined;
-  Wayfinding: {
-    poiIdentifier: string;
-    action: "select" | "navigate";
-  };
+  Wayfinding:
+    | {
+        poiIdentifier: string;
+        action: "select" | "navigate";
+      }
+    | undefined;
 };
 
 declare global {
