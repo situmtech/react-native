@@ -998,4 +998,8 @@ destinationReachedOnRoute:(SITRoute *)route {
 RCT_EXPORT_METHOD(autoManage:(BOOL)autoManage) {
     [[SITUserHelperManager sharedInstance] autoManage:autoManage];
 }
+
+RCT_EXPORT_METHOD(speakAloudText:(NSDictionary *)arguments) {
+    NSLog(@"SitumPlugin.speakAloudText: Only for Android, TTS is already managed by React-Native MapView internal web view.");
+}
 @end
