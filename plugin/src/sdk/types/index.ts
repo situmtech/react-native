@@ -641,3 +641,21 @@ export type UserHelperOptions = {
   /** Color scheme for the user helper UI */
   colorScheme: UserHelperColorScheme | undefined;
 };
+
+/**
+ * This class represents the object that contains the message passed from
+ * the viewer to the application. This message represents the requirement to
+ * read aloud a text with some parameters like language, volume, etc.
+ */
+export type TextToSpeechMessage = {
+  /** A String message that will be read aloud using TTS */
+  text: string;
+  /** A String that represents the language code, i.e. es-ES */
+  lang: string | undefined;
+  /** A decimal number that represents the volume from 0.0 to 1.0 */
+  volume: number | undefined;
+  /** A decimal number that represents the speech pitch from 0.0 to 1.0 */
+  pitch: number | undefined;
+  /** A decimal number that represents the speech rate from 0.0 to 1.0 */
+  rate: number | undefined;
+};

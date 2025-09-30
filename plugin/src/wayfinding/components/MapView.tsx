@@ -556,6 +556,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "viewer.navigation.stopped":
           SitumPlugin.updateNavigationState(eventParsed.payload);
           break;
+        case "ui.speak_aloud_text":
+          SitumPlugin.speakAloudText(eventParsed.payload);
+          break;
         default:
           break;
       }
