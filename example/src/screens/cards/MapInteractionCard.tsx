@@ -14,6 +14,7 @@ import SitumPlugin, { Building, Poi } from "@situm/react-native";
 import { SITUM_BUILDING_ID } from "../../situm";
 
 const CardTitleIcon = () => <Icon source="code-greater-than" size={20} />;
+const SeparatorComponent = () => <View style={styles.separator} />;
 
 interface MapInteractionCardProps {
   onSelectPoi: (identifier: string) => void;
@@ -107,7 +108,7 @@ export const MapInteractionCard: React.FC<MapInteractionCardProps> = ({
                     </Text>
                   </TouchableOpacity>
                 )}
-                ItemSeparatorComponent={() => <View style={styles.separator} />}
+                ItemSeparatorComponent={SeparatorComponent}
               />
             </View>
           </View>
