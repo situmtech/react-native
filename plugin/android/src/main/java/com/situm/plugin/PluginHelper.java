@@ -1044,6 +1044,7 @@ public class PluginHelper {
     }
 
     public void setContext(ReactApplicationContext context) {
+        System.out.println("ATAG >> new ttsManager");
         ttsManager = new TextToSpeechManager(context);
     }
 
@@ -1080,9 +1081,5 @@ public class PluginHelper {
 
     public void onHostPause() {
         ttsManager.onVisibilityChange(false);
-    }
-
-    public void onHostDestroy() {
-        ttsManager.shutdown();
     }
 }
