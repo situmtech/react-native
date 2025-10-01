@@ -965,6 +965,7 @@ public class PluginHelper {
         Context context
     ) {
         navigationListener = _buildNavigationListener(eventEmitter, context);
+        ttsManager = new TextToSpeechManager(context);
         SitumSdk.navigationManager().addNavigationListener(navigationListener);
     }
 
@@ -1043,11 +1044,6 @@ public class PluginHelper {
           }
     }
 
-    public void setContext(ReactApplicationContext context) {
-        System.out.println("ATAG >> new ttsManager");
-        ttsManager = new TextToSpeechManager(context);
-    }
-
     public void speakAloudText(ReadableMap map) {
         String text = "";
         String language = "";
@@ -1071,7 +1067,7 @@ public class PluginHelper {
 
             ttsManager.speak(text, language, pitch, rate);
         } catch (Exception e) {
-            Log.d(TAG, "exception: " + e);
+            Log.d(TAG, "speakAloudText() exception: " + e);
         }
     }
 
@@ -1081,5 +1077,9 @@ public class PluginHelper {
 
     public void onHostPause() {
         ttsManager.onVisibilityChange(false);
+    }
+
+    public void onHostDestroy() {
+        ttsManager.shutdown();
     }
 }

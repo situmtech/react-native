@@ -106,7 +106,7 @@ export const HomeScreen = () => {
         );
         setBuilding(myBuilding);
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(`Situm > example > Failed to fetch buildings: ${error}`);
       });
   }, []);
@@ -116,7 +116,7 @@ export const HomeScreen = () => {
     if (!building) return;
     SitumPlugin.fetchBuildingInfo(building)
       .then(setJsonFetchOutput)
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(
           `Situm > example > Failed to fetch building info: ${error}`
         );
@@ -128,7 +128,7 @@ export const HomeScreen = () => {
     if (!building) return;
     SitumPlugin.fetchIndoorPOIsFromBuilding(building)
       .then(setJsonFetchOutput)
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(
           `Situm > example > Failed to fetch building info: ${error}`
         );
@@ -139,7 +139,7 @@ export const HomeScreen = () => {
     setFetchOutput("...");
     SitumPlugin.fetchPoiCategories()
       .then(setJsonFetchOutput)
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(
           `Situm > example > Failed to fetch building info: ${error}`
         );
@@ -151,7 +151,7 @@ export const HomeScreen = () => {
     if (!building) return;
     SitumPlugin.fetchGeofencesFromBuilding(building)
       .then(setJsonFetchOutput)
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(
           `Situm > example > Failed to fetch building info: ${error}`
         );
