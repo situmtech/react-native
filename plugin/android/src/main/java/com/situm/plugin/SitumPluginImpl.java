@@ -330,7 +330,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
             @Override
             public void onHostDestroy() {
-                getPluginInstance().onHostDestroy();
+                // Do nothing
             }
         });
     }
