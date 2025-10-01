@@ -1,5 +1,6 @@
 #import "SitumPlugin.h"
 #import "SitumLocationWrapper.h"
+#import "SitumTextToSpeechSpeaker.h"
 
 #import <React/RCTAssert.h>
 #import <React/RCTBridge.h>
@@ -74,6 +75,7 @@ BOOL _positioningUpdates, _realtimeUpdates;
 CLLocationManager *_locationManager;
 RNCSitumConfiguration _locationConfiguration;
 RNCSitumRequest *routeRequest;
+SitumTextToSpeechSpeaker *_ttsSpeaker;
 
 RCT_EXPORT_MODULE(RNCSitumPlugin);
 
@@ -93,6 +95,9 @@ RCT_EXPORT_MODULE(RNCSitumPlugin);
 RCT_EXPORT_METHOD(initSitumSDK)
 {
     [[SITNavigationManager sharedManager]  addDelegate:self];
+    _ttsSpeaker = [[SitumTextToSpeechSpeaker alloc] init];
+    [_ttsSpeaker onVisibilityChanged:true];
+    [self registerAppLifecycleCallbacks];
 }
 
 RCT_EXPORT_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig withCallback:(RCTResponseSenderBlock)callback) {
@@ -1000,6 +1005,44 @@ RCT_EXPORT_METHOD(autoManage:(BOOL)autoManage) {
 }
 
 RCT_EXPORT_METHOD(speakAloudText:(NSDictionary *)arguments) {
-    NSLog(@"SitumPlugin.speakAloudText: Only for Android, TTS is already managed by React-Native MapView internal web view.");
+    [_ttsSpeaker speakWithPayload: arguments];
 }
+
+#pragma mark Lifecycle Changes logic
+
+- (void) registerAppLifecycleCallbacks {
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+
+    [center addObserver:self
+               selector:@selector(appWillEnterForeground:)
+                   name:UIApplicationWillEnterForegroundNotification
+                 object:nil];
+
+    [center addObserver:self
+               selector:@selector(appDidEnterBackground:)
+                   name:UIApplicationDidEnterBackgroundNotification
+                 object:nil];
+    
+    [center addObserver:self
+               selector:@selector(appWillTerminate:)
+                   name:UIApplicationWillTerminateNotification
+                 object:nil];
+}
+
+// App is about to enter foreground
+- (void)appWillEnterForeground:(NSNotification *)notification {
+    [_ttsSpeaker onVisibilityChanged:true];
+}
+
+// App is now in background
+- (void)appDidEnterBackground:(NSNotification *)notification {
+    [_ttsSpeaker onVisibilityChanged:false];
+}
+
+// App is about to terminate
+- (void)appWillTerminate:(NSNotification *)notification {
+    [_ttsSpeaker onVisibilityChanged:false];
+    _ttsSpeaker = nil;
+}
+
 @end
