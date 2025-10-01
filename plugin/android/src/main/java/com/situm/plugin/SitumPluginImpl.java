@@ -25,8 +25,6 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     SitumPluginImpl(ReactApplicationContext context) {
         super(context);
         reactContext = context;
-        getPluginInstance().setContext(context);
-        registerLifecycleListener(context);
     }
 
     private static PluginHelper getPluginInstance() {
@@ -53,6 +51,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
             getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class),
             getReactApplicationContext()
         );
+        registerLifecycleListener(reactContext);
     }
 
     // Required for rn built in EventEmitter Calls.
@@ -330,7 +329,8 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
             @Override
             public void onHostDestroy() {
-                // Do nothing
+                getPluginInstance().onHostDestroy();
+                context.removeLifecycleEventListener(this);
             }
         });
     }

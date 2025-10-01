@@ -38,14 +38,14 @@ export const MapInteractionCard: React.FC<MapInteractionCardProps> = ({
         if (!myBuilding) return null;
         return myBuilding;
       })
-      .then((building) => {
+      .then((building: Building | null) => {
         if (building) {
           return SitumPlugin.fetchIndoorPOIsFromBuilding(building);
         }
         return [];
       })
       .then(setPois)
-      .catch((error) => {
+      .catch((error: any) => {
         console.error("Error fetching data:", error);
       });
   }, []);

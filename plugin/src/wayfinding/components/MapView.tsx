@@ -19,8 +19,10 @@ import type {
   WebViewErrorEvent,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
+
 import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
+import { setError, setLocationStatus } from "../store";
 import {
   type CartographySelectionOptions,
   type MapViewDirectionsOptions,
@@ -40,7 +42,6 @@ import {
 import { ErrorName } from "../types/constants";
 import { DISABLE_SPEECH_SYNTHESIS_SCRIPT, sendMessageToViewer } from "../utils";
 import ViewerMapper from "../utils/mapper";
-import { setError, setLocationStatus } from "../store";
 const SITUM_BASE_DOMAIN = "https://maps.situm.com";
 
 const NETWORK_ERROR_CODE = {
@@ -592,7 +593,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         console.warn(
           'Situm> MapView> [!] "remoteIdentifier" is deprecated. Use "profile" instead.',
         );
-        if (!configuration.profile || configuration.profile.length == 0) {
+        if (!configuration.profile || configuration.profile.length === 0) {
           effectiveProfile = configuration.remoteIdentifier;
         }
       }
@@ -602,7 +603,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     return (
       <WebView
         ref={webViewRef}
-        // Disable the internal TTS engine web view
+        // Disable the webview's internal TTS engine
         injectedJavaScriptBeforeContentLoaded={DISABLE_SPEECH_SYNTHESIS_SCRIPT}
         source={{
           uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${
