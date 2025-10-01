@@ -10,6 +10,7 @@
 		7E0E2A732473EC7C00F8FFCC /* SitumLocationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E2A6D2473EC7C00F8FFCC /* SitumLocationWrapper.m */; };
 		7E0E2A742473EC7C00F8FFCC /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E2A6F2473EC7C00F8FFCC /* Constants.m */; };
 		7E0E2A752473EC7C00F8FFCC /* SitumPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E2A722473EC7C00F8FFCC /* SitumPlugin.m */; };
+		95529AF62E8D4D2A00B02F82 /* SitumTextToSpeechSpeaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 95529AF52E8D4D2A00B02F82 /* SitumTextToSpeechSpeaker.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,6 +33,8 @@
 		7E0E2A702473EC7C00F8FFCC /* SitumPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SitumPlugin.h; sourceTree = "<group>"; };
 		7E0E2A712473EC7C00F8FFCC /* SitumLocationWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SitumLocationWrapper.h; sourceTree = "<group>"; };
 		7E0E2A722473EC7C00F8FFCC /* SitumPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SitumPlugin.m; sourceTree = "<group>"; };
+		95529AF42E8D4D2A00B02F82 /* SitumTextToSpeechSpeaker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SitumTextToSpeechSpeaker.h; sourceTree = "<group>"; };
+		95529AF52E8D4D2A00B02F82 /* SitumTextToSpeechSpeaker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SitumTextToSpeechSpeaker.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +59,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				95529AF42E8D4D2A00B02F82 /* SitumTextToSpeechSpeaker.h */,
+				95529AF52E8D4D2A00B02F82 /* SitumTextToSpeechSpeaker.m */,
 				7E0E2A6E2473EC7C00F8FFCC /* Constants.h */,
 				7E0E2A6F2473EC7C00F8FFCC /* Constants.m */,
 				7E0E2A712473EC7C00F8FFCC /* SitumLocationWrapper.h */,
@@ -125,6 +130,7 @@
 			files = (
 				7E0E2A752473EC7C00F8FFCC /* SitumPlugin.m in Sources */,
 				7E0E2A732473EC7C00F8FFCC /* SitumLocationWrapper.m in Sources */,
+				95529AF62E8D4D2A00B02F82 /* SitumTextToSpeechSpeaker.m in Sources */,
 				7E0E2A742473EC7C00F8FFCC /* Constants.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
