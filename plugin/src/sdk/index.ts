@@ -815,7 +815,7 @@ export default class SitumPlugin {
    *
    * Internal method that handles the required logic to speak aloud MapView messages.
    *
-   * @param message
+   * @param message The message that will be spoken aloud. See {@link TextToSpeechMessage}
    */
   static speakAloudText = (message: TextToSpeechMessage) => {
     return exceptionWrapper<void>(() => {

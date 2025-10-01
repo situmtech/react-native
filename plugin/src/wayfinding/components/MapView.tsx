@@ -38,7 +38,7 @@ import {
   type SearchFilter,
 } from "../types";
 import { ErrorName } from "../types/constants";
-import { sendMessageToViewer } from "../utils";
+import { DISABLE_SPEECH_SYNTHESIS_SCRIPT, sendMessageToViewer } from "../utils";
 import ViewerMapper from "../utils/mapper";
 import { setError, setLocationStatus } from "../store";
 const SITUM_BASE_DOMAIN = "https://maps.situm.com";
@@ -602,6 +602,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     return (
       <WebView
         ref={webViewRef}
+        // Disable the internal TTS engine web view
+        injectedJavaScriptBeforeContentLoaded={DISABLE_SPEECH_SYNTHESIS_SCRIPT}
         source={{
           uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${
             _effectiveProfile() ? `id/${_effectiveProfile()}` : ""
