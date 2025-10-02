@@ -12,7 +12,7 @@
 
 @interface SitumTextToSpeechSpeaker () <AVSpeechSynthesizerDelegate>
 @property (nonatomic, strong) AVSpeechSynthesizer *synthesizer;
-@property (nonatomic) bool shouldSpeak;
+@property (nonatomic) bool canSpeak;
 @end
 
 @implementation SitumTextToSpeechSpeaker
@@ -64,15 +64,15 @@
         if ([self.synthesizer isSpeaking]) {
             [self.synthesizer stopSpeakingAtBoundary:AVSpeechBoundaryImmediate];
         }
-        if (self.shouldSpeak) {
+        if (self.canSpeak) {
             [self.synthesizer speakUtterance:utt];
         }
     });
 }
 
-- (void)onVisibilityChanged:(bool) isVisible {
-    _shouldSpeak = isVisible;
-    if (!_shouldSpeak) {
+- (void)setCanSpeak:(bool) value {
+    _canSpeak = value;
+    if (!_canSpeak) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.synthesizer stopSpeakingAtBoundary:AVSpeechBoundaryImmediate];
         });

@@ -96,7 +96,7 @@ RCT_EXPORT_METHOD(initSitumSDK)
 {
     [[SITNavigationManager sharedManager]  addDelegate:self];
     _ttsSpeaker = [[SitumTextToSpeechSpeaker alloc] init];
-    [_ttsSpeaker onVisibilityChanged:true];
+    [_ttsSpeaker setCanSpeak:true];
     [self registerAppLifecycleCallbacks];
 }
 
@@ -1031,17 +1031,17 @@ RCT_EXPORT_METHOD(speakAloudText:(NSDictionary *)arguments) {
 
 // App is about to enter foreground
 - (void)appWillEnterForeground:(NSNotification *)notification {
-    [_ttsSpeaker onVisibilityChanged:true];
+    [_ttsSpeaker setCanSpeak:true];
 }
 
 // App is now in background
 - (void)appDidEnterBackground:(NSNotification *)notification {
-    [_ttsSpeaker onVisibilityChanged:false];
+    [_ttsSpeaker setCanSpeak:false];
 }
 
 // App is about to terminate
 - (void)appWillTerminate:(NSNotification *)notification {
-    [_ttsSpeaker onVisibilityChanged:false];
+    [_ttsSpeaker setCanSpeak:false];
     _ttsSpeaker = nil;
 }
 

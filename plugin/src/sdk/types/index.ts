@@ -626,9 +626,15 @@ export class InternalCall<T = any> {
  * Color scheme for the user helper UI.
  */
 export type UserHelperColorScheme = {
-  /** Primary color for the user helper UI. Use HEX color code (e.g. "#ff5733") */
+  /**
+   * Primary color for the user helper UI. Use a 6-digit HEX color code in the form #RRGGBB (e.g. #ff5733).
+   *  Do not use 8-digit formats like #AARRGGBB or #RRGGBBAA.
+   */
   primaryColor: string;
-  /** Secondary color for the user helper UI. Use HEX color code (e.g. "#ff5733") */
+  /**
+   * Secondary color for the user helper UI. Use HEX color code (e.g. "#ff5733")
+   * Do not use 8-digit formats like #AARRGGBB or #RRGGBBAA.
+   */
   secondaryColor: string;
 };
 
