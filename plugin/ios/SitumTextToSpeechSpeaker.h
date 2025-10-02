@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)speakWithPayload:(NSDictionary<id, id> * _Nullable)payload;
 
-- (void)onVisibilityChanged:(bool)isVisible;
+- (void)setCanSpeak:(bool)value;
 @end
 
 NS_ASSUME_NONNULL_END
