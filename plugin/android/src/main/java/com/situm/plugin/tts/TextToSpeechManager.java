@@ -9,7 +9,7 @@ import java.util.Locale;
 public class TextToSpeechManager implements TextToSpeech.OnInitListener {
 
     private final TextToSpeech textToSpeech;
-    private boolean shouldSpeak = true;
+    private boolean canSpeak = true;
 
     public TextToSpeechManager(Context context) {
         String enginePackage = getPreferredTtsEnginePackage(context);
@@ -28,7 +28,7 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
     }
 
     public void speak(String text, String language, float pitch, float rate) {
-        if (!shouldSpeak) {
+        if (!canSpeak) {
             return;
         }
 
@@ -44,16 +44,15 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
         return 2 * value;
     }
 
-    public void onVisibilityChange(boolean mapIsVisible) {
+    public void setCanSpeak(boolean value) {
         // TTS is paused when screen is off,
         // app goes background and MapView gets destroyed
-        if (!mapIsVisible) {
-            shouldSpeak = false;
+        canSpeak = value;
+
+        if (!canSpeak) {
             if (textToSpeech != null) {
                 textToSpeech.stop();
             }
-        } else {
-            shouldSpeak = true;
         }
     }
 

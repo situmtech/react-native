@@ -1072,11 +1072,11 @@ public class PluginHelper {
     }
 
     public void onHostResume() {
-        ttsManager.onVisibilityChange(true);
+        ttsManager.setCanSpeak(true);
     }
 
     public void onHostPause() {
-        ttsManager.onVisibilityChange(false);
+        ttsManager.setCanSpeak(false);
     }
 
     public void onHostDestroy() {
