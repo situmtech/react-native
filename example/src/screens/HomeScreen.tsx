@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import SitumPlugin, {
   LocationStatus,
   Location,
@@ -170,34 +170,32 @@ export const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView edges={["top"]} style={styles.container}>
-        <ScrollView
-          contentContainerStyle={styles.scrollContainer}
-          showsVerticalScrollIndicator={true}
-        >
-          <PositioningCard
-            onStartPositioning={startPositioning}
-            onStopPositioning={stopPositioning}
-            location={location}
-            status={status}
-            error={locationError}
-          />
-          <MapInteractionCard
-            onSelectPoi={selectPoi}
-            onNavigateToPoi={navigateToPoi}
-          />
-          <FetchResourcesCard
-            onFetchBuildingInfo={fetchBuildingInfo}
-            onFetchPois={fetchPois}
-            onFetchPoiCategories={fetchPoiCategories}
-            onFetchGeofences={fetchGeofences}
-            onInvalidateCache={invalidateCache}
-            output={fetchOutput}
-          />
-        </ScrollView>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <SafeAreaView edges={["top"]} style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={true}
+      >
+        <PositioningCard
+          onStartPositioning={startPositioning}
+          onStopPositioning={stopPositioning}
+          location={location}
+          status={status}
+          error={locationError}
+        />
+        <MapInteractionCard
+          onSelectPoi={selectPoi}
+          onNavigateToPoi={navigateToPoi}
+        />
+        <FetchResourcesCard
+          onFetchBuildingInfo={fetchBuildingInfo}
+          onFetchPois={fetchPois}
+          onFetchPoiCategories={fetchPoiCategories}
+          onFetchGeofences={fetchGeofences}
+          onInvalidateCache={invalidateCache}
+          output={fetchOutput}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
