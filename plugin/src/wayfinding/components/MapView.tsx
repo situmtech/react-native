@@ -497,6 +497,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           webViewRef.current,
           ViewerMapper.initialConfiguration(style),
         );
+
+        _disableInternalWebViewTTSEngine();
       }
     }, [webViewRef, mapLoaded, style]);
 
@@ -598,6 +600,15 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         }
       }
       return effectiveProfile;
+    };
+
+    const _disableInternalWebViewTTSEngine = () => {
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.setConfigItems([
+          { key: "internal.tts.engine", value: "mobile" },
+        ]),
+      );
     };
 
     return (
