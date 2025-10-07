@@ -128,6 +128,7 @@ export const WayfindingScreen: React.FC = () => {
                 situmApiKey: SITUM_API_KEY,
                 buildingIdentifier: SITUM_BUILDING_ID,
                 profile: SITUM_PROFILE,
+                viewerDomain: "https://pro-4194.map-viewer.situm.com",
               }}
               onLoad={onLoad}
               onLoadError={onMapError}
