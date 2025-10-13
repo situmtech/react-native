@@ -1,0 +1,27 @@
+rules:
+  - id: exported_activity_improved
+    patterns:
+      - pattern: |
+          <activity
+            ...
+            android:exported="true"
+            ...
+          >
+            ...
+          </activity>
+      - pattern-not: |
+          <activity
+            ...
+            android:exported="true"
+            ...
+          >
+            ...
+            <intent-filter>
+              <action android:name="android.intent.action.MAIN"/>
+              <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            ...
+          </activity>
+    message: Non-launcher activity is exported. Review if this needs to be accessible from other apps.
+    languages: [xml]
+    severity: WARNING
