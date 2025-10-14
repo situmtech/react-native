@@ -1,6 +1,5 @@
-import { AccessibilityMode } from "../../sdk/types/constants";
-
 import type { DirectionsRequest, Point } from "../../sdk/types";
+import { AccessibilityMode } from "../../sdk/types/constants";
 export type { MapViewConfiguration, MapViewProps } from "../components/MapView";
 import { ErrorName } from "./constants";
 
@@ -33,7 +32,7 @@ export interface MapViewRef {
    */
   selectFloor: (
     floorIdentifier: number,
-    options?: CartographySelectionOptions
+    options?: CartographySelectionOptions,
   ) => void;
   /**
    * Define the {@link MapViewDirectionsOptions} that the routes calculated by the MapView will use.
@@ -220,4 +219,16 @@ export interface SearchFilter {
 
 export interface CartographySelectionOptions {
   fitCamera?: boolean;
+}
+
+export interface ViewerConfigItem {
+  /**
+   * A dot notation key referring to all the keys related to internal ConfigState of the viewer.
+   */
+  key: string;
+
+  /**
+   * The value that we want to set for the corresponding ConfigState key.
+   */
+  value: any;
 }

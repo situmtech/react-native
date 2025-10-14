@@ -12,6 +12,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.situm.plugin.tts.TextToSpeechManager;
 import com.situm.plugin.utils.ReactNativeUtils;
 
 import org.json.JSONArray;
@@ -99,6 +100,7 @@ public class PluginHelper {
     private volatile NavigationManager nmInstance;
     private RealTimeListener realtimeListener;
     private volatile RealTimeManager rmInstance;
+    private TextToSpeechManager ttsManager;
 
     private Route computedRoute;
     private Location computedLocation;
@@ -963,6 +965,7 @@ public class PluginHelper {
         Context context
     ) {
         navigationListener = _buildNavigationListener(eventEmitter, context);
+        ttsManager = new TextToSpeechManager(context);
         SitumSdk.navigationManager().addNavigationListener(navigationListener);
     }
 
@@ -1039,5 +1042,44 @@ public class PluginHelper {
             response.putString("error", e.getMessage());
             invokeCallback(error, response);
           }
+    }
+
+    public void speakAloudText(ReadableMap map) {
+        String text = "";
+        String language = "";
+        float pitch = 0.0F;
+        float rate = 0.0F;
+
+        try {
+            JSONObject jsonTextToSpeechMessage = ReactNativeUtils.convertMapToJson(map);
+            if (jsonTextToSpeechMessage.has(SitumMapper.TTS_TEXT)) {
+              text = jsonTextToSpeechMessage.getString(SitumMapper.TTS_TEXT);
+            }
+            if (jsonTextToSpeechMessage.has(SitumMapper.TTS_LANGUAGE)) {
+              language = jsonTextToSpeechMessage.getString(SitumMapper.TTS_LANGUAGE);
+            }
+            if (jsonTextToSpeechMessage.has(SitumMapper.TTS_PITCH)) {
+              pitch = Float.parseFloat(jsonTextToSpeechMessage.getString(SitumMapper.TTS_PITCH));
+            }
+            if (jsonTextToSpeechMessage.has(SitumMapper.TTS_RATE)) {
+              rate = Float.parseFloat(jsonTextToSpeechMessage.getString(SitumMapper.TTS_RATE));
+            }
+
+            ttsManager.speak(text, language, pitch, rate);
+        } catch (Exception e) {
+            Log.d(TAG, "speakAloudText() exception: " + e);
+        }
+    }
+
+    public void onHostResume() {
+        ttsManager.setCanSpeak(true);
+    }
+
+    public void onHostPause() {
+        ttsManager.setCanSpeak(false);
+    }
+
+    public void onHostDestroy() {
+        ttsManager.shutdown();
     }
 }

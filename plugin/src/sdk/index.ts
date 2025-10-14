@@ -29,6 +29,7 @@ import {
   type Point,
   type Route,
   type SdkVersion,
+  TextToSpeechMessage,
   type UserHelperOptions,
 } from "./types";
 import { InternalCallType, SdkNavigationUpdateType } from "./types/constants";
@@ -807,6 +808,19 @@ export default class SitumPlugin {
         new InternalCall(InternalCallType.LOCATION_ERROR, lastValues.error),
       );
     }
+  };
+
+  /**
+   * INTERNAL METHOD.
+   *
+   * Internal method that handles the required logic to speak aloud MapView messages.
+   *
+   * @param message The message that will be spoken aloud. See {@link TextToSpeechMessage}
+   */
+  static speakAloudText = (message: TextToSpeechMessage) => {
+    return exceptionWrapper<void>(() => {
+      RNCSitumPlugin.speakAloudText(message);
+    });
   };
 
   //-----------------------------------------------------------------------------//

@@ -18,6 +18,7 @@ import type {
   Navigation,
   OnNavigationResult,
   SearchFilter,
+  ViewerConfigItem,
 } from "../types";
 
 export const createPoint = (payload: any): Point => {
@@ -72,8 +73,8 @@ export const createNavigationRequest = (payload: any): NavigationRequest => {
 
   return Object.fromEntries(
     Object.entries(navigationRequest || {}).filter(
-      ([_, value]) => value !== undefined
-    )
+      ([_, value]) => value !== undefined,
+    ),
   );
 };
 
@@ -113,7 +114,7 @@ const ViewerMapper = {
   },
   selectFloor: (
     floorIdentifier: number,
-    options?: CartographySelectionOptions
+    options?: CartographySelectionOptions,
   ) => {
     return mapperWrapper(`cartography.select_floor`, {
       identifier: floorIdentifier,
@@ -212,6 +213,9 @@ const ViewerMapper = {
       text: searchFilter.text,
       poiCategoryIdentifier: searchFilter.poiCategoryIdentifier,
     });
+  },
+  setConfigItems: (configItems: ViewerConfigItem[]) => {
+    return mapperWrapper(`app.set_config_item`, configItems);
   },
 };
 
