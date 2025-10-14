@@ -255,6 +255,11 @@ class SitumMapper {
   public static final String STOP_ACTION_TEXT = "stopActionText";
   public static final String TAP_ACTION = "tapAction";
 
+    public static final String TTS_TEXT = "text";
+    public static final String TTS_LANGUAGE = "lang";
+    public static final String TTS_PITCH = "pitch";
+    public static final String TTS_RATE = "rate";
+
     public static final DateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy", Locale.US);
 
     private static final String TAG = "PluginHelper";
