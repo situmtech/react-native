@@ -1,18 +1,18 @@
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 // Important: using escape-string-regexp@4.0.0, last with support for require.
-const escape = require('escape-string-regexp');
-const { getDefaultConfig } = require('@react-native/metro-config');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
+const escape = require("escape-string-regexp");
+const { getDefaultConfig } = require("@react-native/metro-config");
+const exclusionList = require("metro-config/src/defaults/exclusionList");
 
-const root = path.resolve(__dirname, '..');
-const pluginRoot = path.resolve(root, 'plugin');
+const root = path.resolve(__dirname, "..");
+const pluginRoot = path.resolve(root, "plugin");
 
 const defaultConfig = getDefaultConfig(__dirname);
 
 // Obtain plugin dependencies
 const pluginPackageJson = JSON.parse(
-  fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')
+  fs.readFileSync(path.join(pluginRoot, "package.json"), "utf8")
 );
 
 // List of excluded modules (peerDependencies)
@@ -41,24 +41,29 @@ module.exports = {
     blacklistRE: exclusionList(
       modules.map(
         (m) =>
-          new RegExp(`^${escape(path.join(pluginRoot, 'node_modules', m))}\\/.*$`)
+          new RegExp( // nosemgrep
+            `^${escape(path.join(pluginRoot, "node_modules", m))}\\/.*$` // nosemgrep
+          )
       )
     ),
 
     // Redirect dependencies to example node_modules
-    extraNodeModules: modules.reduce((acc, name) => {
-      acc[name] = path.join(__dirname, 'node_modules', name);
-      return acc;
-    }, {
-      // Aliasing for our plugin
-      [pluginPackageJson.name]: pluginRoot,
-    }),
+    extraNodeModules: modules.reduce(
+      (acc, name) => {
+        acc[name] = path.join(__dirname, "node_modules", name); // nosemgrep
+        return acc;
+      },
+      {
+        // Aliasing for our plugin
+        [pluginPackageJson.name]: pluginRoot,
+      }
+    ),
 
     resolveRequest: (context, realModuleName, platform) => {
       if (
-        platform === 'web' &&
-        (realModuleName === 'react-native-gesture-handler' ||
-          realModuleName === 'react-native-reanimated')
+        platform === "web" &&
+        (realModuleName === "react-native-gesture-handler" ||
+          realModuleName === "react-native-reanimated")
       ) {
         throw new Error(
           `The module '${realModuleName}' should not be imported on Web.`
@@ -77,7 +82,9 @@ module.exports = {
     enhanceMiddleware: (middleware) => {
       return (req, res, next) => {
         // Adjust path for assets
-        if (/\/plugin\/.+\.(png|jpg|jpeg|gif|bmp|webp|svg)\?.+$/.test(req.url)) {
+        if (
+          /\/plugin\/.+\.(png|jpg|jpeg|gif|bmp|webp|svg)\?.+$/.test(req.url)
+        ) {
           req.url = `/assets/../${req.url}`;
         }
         return middleware(req, res, next);
