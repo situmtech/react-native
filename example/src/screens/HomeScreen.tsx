@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import SitumPlugin, {
   LocationStatus,
   Location,
@@ -106,7 +106,7 @@ export const HomeScreen = () => {
         );
         setBuilding(myBuilding);
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(`Situm > example > Failed to fetch buildings: ${error}`);
       });
   }, []);
@@ -116,7 +116,7 @@ export const HomeScreen = () => {
     if (!building) return;
     SitumPlugin.fetchBuildingInfo(building)
       .then(setJsonFetchOutput)
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(
           `Situm > example > Failed to fetch building info: ${error}`
         );
@@ -128,7 +128,7 @@ export const HomeScreen = () => {
     if (!building) return;
     SitumPlugin.fetchIndoorPOIsFromBuilding(building)
       .then(setJsonFetchOutput)
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(
           `Situm > example > Failed to fetch building info: ${error}`
         );
@@ -139,7 +139,7 @@ export const HomeScreen = () => {
     setFetchOutput("...");
     SitumPlugin.fetchPoiCategories()
       .then(setJsonFetchOutput)
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(
           `Situm > example > Failed to fetch building info: ${error}`
         );
@@ -151,7 +151,7 @@ export const HomeScreen = () => {
     if (!building) return;
     SitumPlugin.fetchGeofencesFromBuilding(building)
       .then(setJsonFetchOutput)
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(
           `Situm > example > Failed to fetch building info: ${error}`
         );
@@ -170,34 +170,32 @@ export const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView edges={["top"]} style={styles.container}>
-        <ScrollView
-          contentContainerStyle={styles.scrollContainer}
-          showsVerticalScrollIndicator={true}
-        >
-          <PositioningCard
-            onStartPositioning={startPositioning}
-            onStopPositioning={stopPositioning}
-            location={location}
-            status={status}
-            error={locationError}
-          />
-          <MapInteractionCard
-            onSelectPoi={selectPoi}
-            onNavigateToPoi={navigateToPoi}
-          />
-          <FetchResourcesCard
-            onFetchBuildingInfo={fetchBuildingInfo}
-            onFetchPois={fetchPois}
-            onFetchPoiCategories={fetchPoiCategories}
-            onFetchGeofences={fetchGeofences}
-            onInvalidateCache={invalidateCache}
-            output={fetchOutput}
-          />
-        </ScrollView>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <SafeAreaView edges={["top"]} style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={true}
+      >
+        <PositioningCard
+          onStartPositioning={startPositioning}
+          onStopPositioning={stopPositioning}
+          location={location}
+          status={status}
+          error={locationError}
+        />
+        <MapInteractionCard
+          onSelectPoi={selectPoi}
+          onNavigateToPoi={navigateToPoi}
+        />
+        <FetchResourcesCard
+          onFetchBuildingInfo={fetchBuildingInfo}
+          onFetchPois={fetchPois}
+          onFetchPoiCategories={fetchPoiCategories}
+          onFetchGeofences={fetchGeofences}
+          onInvalidateCache={invalidateCache}
+          output={fetchOutput}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
