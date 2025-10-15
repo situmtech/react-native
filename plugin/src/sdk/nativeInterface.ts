@@ -19,6 +19,7 @@ import type {
   PoiCategory,
   PoiIcon,
   Point,
+  TextToSpeechMessage,
   UserHelperOptions,
 } from "./types";
 
@@ -122,13 +123,18 @@ interface UserHelperManagerAPI {
   ) => void;
 }
 
+interface TextToSpeechAPI {
+  speakAloudText: (message: TextToSpeechMessage) => void;
+}
+
 export interface SitumPluginInterface
   extends NativeModule,
     CartographyAPI,
     LocationAPI,
     NavigationAPI,
     DirectionsAPI,
-    UserHelperManagerAPI {
+    UserHelperManagerAPI,
+    TextToSpeechAPI {
   initSitumSDK: () => void;
   setApiKey: (
     email: string,

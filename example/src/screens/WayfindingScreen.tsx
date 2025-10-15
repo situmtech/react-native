@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import {
   type OnPoiDeselectedResult,
@@ -14,6 +14,7 @@ import { SITUM_API_KEY, SITUM_BUILDING_ID, SITUM_PROFILE } from "../situm";
 import { PaperProvider } from "react-native-paper";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootTabsParamsList } from "../navigation/types";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const WayfindingScreen: React.FC = () => {
   // ////////////////////////////////////////////////////////////////////////
@@ -99,12 +100,15 @@ export const WayfindingScreen: React.FC = () => {
       poiIdentifier: undefined,
       action: undefined,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poiIdentifier, action, mapViewLoaded]);
 
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const selectPoi = (poiIdentifier: string) => {
     controller?.selectPoi(Number(poiIdentifier));
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const navigateToPoi = (poiIdentifier: string) => {
     controller?.navigateToPoi({
       identifier: Number(poiIdentifier),
@@ -115,7 +119,7 @@ export const WayfindingScreen: React.FC = () => {
     <PaperProvider>
       {/* Add a SitumProvider with a valid API KEY */}
       <SitumProvider apiKey={SITUM_API_KEY}>
-        <SafeAreaView style={{ ...styles.container }}>
+        <SafeAreaView edges={["top"]} style={{ ...styles.container }}>
           <View style={styles.screenWrapper}>
             {/* Add your MapView with a MapViewConfiguration */}
             <MapView

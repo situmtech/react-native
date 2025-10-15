@@ -19,8 +19,10 @@ import type {
   WebViewErrorEvent,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
+
 import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
+import { setError, setLocationStatus } from "../store";
 import {
   type CartographySelectionOptions,
   type MapViewDirectionsOptions,
@@ -40,7 +42,6 @@ import {
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
 import ViewerMapper from "../utils/mapper";
-import { setError, setLocationStatus } from "../store";
 const SITUM_BASE_DOMAIN = "https://maps.situm.com";
 
 const NETWORK_ERROR_CODE = {
@@ -496,6 +497,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           webViewRef.current,
           ViewerMapper.initialConfiguration(style),
         );
+
+        _disableInternalWebViewTTSEngine();
       }
     }, [webViewRef, mapLoaded, style]);
 
@@ -556,6 +559,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "viewer.navigation.stopped":
           SitumPlugin.updateNavigationState(eventParsed.payload);
           break;
+        case "ui.speak_aloud_text":
+          SitumPlugin.speakAloudText(eventParsed.payload);
+          break;
         default:
           break;
       }
@@ -589,11 +595,20 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         console.warn(
           'Situm> MapView> [!] "remoteIdentifier" is deprecated. Use "profile" instead.',
         );
-        if (!configuration.profile || configuration.profile.length == 0) {
+        if (!configuration.profile || configuration.profile.length === 0) {
           effectiveProfile = configuration.remoteIdentifier;
         }
       }
       return effectiveProfile;
+    };
+
+    const _disableInternalWebViewTTSEngine = () => {
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.setConfigItems([
+          { key: "internal.tts.engine", value: "mobile" },
+        ]),
+      );
     };
 
     return (

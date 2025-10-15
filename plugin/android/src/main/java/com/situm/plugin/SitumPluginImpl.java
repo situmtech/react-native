@@ -1,13 +1,8 @@
 package com.situm.plugin;
 
-import android.Manifest;
-import android.os.Build;
-import android.telecom.Call;
-import android.util.Log;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
-import com.facebook.react.bridge.PromiseImpl;
+import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -15,7 +10,6 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.facebook.react.modules.permissions.PermissionsModule;
 
 import java.util.concurrent.TimeUnit;
 
@@ -57,6 +51,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
             getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class),
             getReactApplicationContext()
         );
+        registerLifecycleListener(reactContext);
     }
 
     // Required for rn built in EventEmitter Calls.
@@ -304,8 +299,39 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
                 getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
     }
 
+    @Override
     @ReactMethod
     public void configureUserHelper(ReadableMap map, Callback success, Callback error) {
         getPluginInstance().configureUserHelper(map, success, error);
+    }
+
+    @Override
+    @ReactMethod
+    public void speakAloudText(ReadableMap map) {
+        getPluginInstance().speakAloudText(map);
+    }
+
+    //--------------------------------------------------------------------------------------------//
+    //                                    PRIVATE METHODS                                         //
+    //--------------------------------------------------------------------------------------------//
+
+    private void registerLifecycleListener(ReactApplicationContext context) {
+        context.addLifecycleEventListener(new LifecycleEventListener() {
+            @Override
+            public void onHostResume() {
+                getPluginInstance().onHostResume();
+            }
+
+            @Override
+            public void onHostPause() {
+                getPluginInstance().onHostPause();
+            }
+
+            @Override
+            public void onHostDestroy() {
+                getPluginInstance().onHostDestroy();
+                context.removeLifecycleEventListener(this);
+            }
+        });
     }
 }
