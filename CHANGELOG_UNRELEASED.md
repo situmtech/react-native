@@ -1,11 +1,5 @@
 ## Unreleased
 
-### Added
+### Changed
 
-- Added TextToSpeech feature for Android. Now MapView component will speak aloud any indication in case this feature is enabled.
-
-### Fixed
-
-- TTS on iOS will stop speaking aloud indications once the app goes to background or screen goes off. This is possible because the automatic TTS from internal MapView engine was replaced by the @situm/react-native TTS native engine.
-
-- Example app: fixed minor UI issues related to the status bar in the repo example/ app.
+- We have simplified the autenthication process of our plugin. Use SitumProvider at the root of your app to initialize & set your apiKey. Now this step will prevent you from calling SitumPlugin.init() and setApiKey() methods, and from specifying the MapViewConfiguration.situmApiKey to display our map.

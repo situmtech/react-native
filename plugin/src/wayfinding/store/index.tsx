@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { createContext, type MutableRefObject, useReducer } from "react";
+import React, {
+  createContext,
+  type MutableRefObject,
+  useReducer,
+  useRef,
+} from "react";
 
+import SitumPlugin from "../../sdk";
 import {
   type Building,
   type Directions,
@@ -101,7 +107,7 @@ const store = createStore<State>({
     },
     setBuildingIdentifier: (
       state: State,
-      payload: State["buildingIdentifier"]
+      payload: State["buildingIdentifier"],
     ) => {
       return { ...state, buildingIdentifier: payload };
     },
@@ -181,7 +187,7 @@ export const {
  * Context specifically to store the only instance of our hook.
  */
 export const UseSitumContext = createContext<{ useSitum: any } | undefined>(
-  undefined
+  undefined,
 );
 
 const UseSitumProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -205,12 +211,28 @@ const SitumProvider: React.FC<
   React.PropsWithChildren<{
     email?: string;
     apiKey?: string;
+    dashboardUrl?: string;
   }>
-> = ({ email, apiKey, children }) => {
+> = ({ email, apiKey, dashboardUrl, children }) => {
   const [state, dispatch] = useReducer(store.reducer, {
     ...store.initialState,
     user: { email, apiKey },
   });
+
+  // We must use here useRef() hook to make sure the integrator is able to call SitumPlugin methods
+  // right before declaring SitumProvider.
+  // With a useEffect() hook we cannot asure this.
+  const ref = useRef<boolean | null>(null);
+  if (!ref.current && apiKey) {
+    try {
+      SitumPlugin.init();
+      dashboardUrl && SitumPlugin.setDashboardURL(dashboardUrl);
+      SitumPlugin.setApiKey(apiKey);
+      ref.current = true;
+    } catch (e) {
+      console.error(`Situm > example > Could not initialize SDK ${e}`);
+    }
+  }
 
   return (
     <SitumContext.Provider
