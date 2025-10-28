@@ -22,7 +22,8 @@ import type {
 
 import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
-import { setError, setLocationStatus } from "../store";
+import { selectUser, setError, setLocationStatus } from "../store";
+import { useSelector } from "../store/utils";
 import {
   type CartographySelectionOptions,
   type MapViewDirectionsOptions,
@@ -65,10 +66,14 @@ export type MapViewConfiguration = {
    */
   viewerDomain?: string;
   /**
-   * ** Required **
-   * Your Situm API key. Find your API key at your [situm profile](https://dashboard.situm.com/accounts/profile)
+   * Your Situm API key. Find your API key at your [situm dashboard's profile](https://dashboard.situm.com/accounts/profile)
+   *
+   * Since X.YY.ZZ version this parameter is not required. Instead, you should specify your apiKey
+   * at the root of your app with `SitumProvider.apiKey` for the correct usage of the plugin.
+   * If {@param situmApiKey} is specified, `SitumProvider.apiKey` will be ignored.
    */
-  situmApiKey: string;
+  // TODO: set the version on the doc right before releasing this version.
+  situmApiKey?: string;
   /**
    * @deprecated Use `profile` instead.
    * A String identifier that allows you to remotely configure all map settings.
@@ -169,6 +174,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const [buildingIdentifier, setBuildingIdentifier] = useState<string>(
       configuration.buildingIdentifier,
     );
+
+    // Situm states & useSitum() hook
+    const user = useSelector(selectUser);
     const {
       init,
       location,
@@ -586,6 +594,19 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       return true;
     };
 
+    const _effectiveApiKey = () => {
+      const internalApiKey = user?.apiKey;
+      const configApiKey = configuration.situmApiKey;
+
+      if (!configApiKey && !internalApiKey) {
+        console.error(
+          "No apiKey was specified. Make sure to be authenticated either by specifying the SitumProvider.apiKey or by specifying the MapViewConfiguration.situmApiKey.",
+        );
+      }
+
+      return configApiKey ?? internalApiKey;
+    };
+
     const _effectiveProfile = () => {
       let effectiveProfile = configuration.profile;
       if (
@@ -617,9 +638,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         source={{
           uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${
             _effectiveProfile() ? `id/${_effectiveProfile()}` : ""
-          }?&apikey=${
-            configuration.situmApiKey
-          }&wl=true&global=true&mode=embed${
+          }?&apikey=${_effectiveApiKey()}&wl=true&global=true&mode=embed${
             configuration.buildingIdentifier
               ? `&buildingid=${configuration.buildingIdentifier}`
               : ""

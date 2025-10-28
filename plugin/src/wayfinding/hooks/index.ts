@@ -24,6 +24,7 @@ import {
   selectLocation,
   selectLocationStatus,
   selectNavigation,
+  selectUser,
   setDirections,
   setError,
   setLocation,
@@ -47,6 +48,7 @@ const defaultNavigationRequest = {
 export const useSitumInternal = () => {
   const dispatch = useDispatch();
 
+  const user = useSelector(selectUser);
   const location = useSelector(selectLocation);
   const locationStatus = useSelector(selectLocationStatus);
 
@@ -290,6 +292,7 @@ export const useSitumInternal = () => {
 
   return {
     // States
+    user,
     location,
     locationStatus,
 

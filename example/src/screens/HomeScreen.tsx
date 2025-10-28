@@ -23,9 +23,6 @@ export const HomeScreen = () => {
   const [locationError, setLocationError] = useState("");
 
   useEffect(() => {
-    SitumPlugin.setConfiguration({
-      useRemoteConfig: true,
-    });
     registerCallbacks();
 
     return () => {

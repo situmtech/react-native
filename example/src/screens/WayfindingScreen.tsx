@@ -6,15 +6,15 @@ import {
   type OnPoiSelectedResult,
   type OnExternalLinkClickedResult,
   type MapViewRef,
-  SitumProvider,
   MapView,
 } from "@situm/react-native";
 
-import { SITUM_API_KEY, SITUM_BUILDING_ID, SITUM_PROFILE } from "../situm";
+import { SITUM_BUILDING_ID, SITUM_PROFILE } from "../situm";
 import { PaperProvider } from "react-native-paper";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootTabsParamsList } from "../navigation/types";
 import { SafeAreaView } from "react-native-safe-area-context";
+import SitumPlugin from "@situm/react-native";
 
 export const WayfindingScreen: React.FC = () => {
   // ////////////////////////////////////////////////////////////////////////
@@ -24,6 +24,16 @@ export const WayfindingScreen: React.FC = () => {
   const mapViewRef = useRef<MapViewRef>(null);
   const [controller, setController] = useState<MapViewRef | null>();
   const [mapViewLoaded, setMapViewLoaded] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Automatically manage positioning permissions and sensor issues:
+    SitumPlugin.enableUserHelper();
+
+    return () => {
+      // Make sure to not display anywhere in your app
+      SitumPlugin.disableUserHelper();
+    };
+  });
 
   useEffect(() => {
     if (!mapViewRef) {
@@ -117,29 +127,23 @@ export const WayfindingScreen: React.FC = () => {
 
   return (
     <PaperProvider>
-      {/* Add a SitumProvider with a valid API KEY */}
-      <SitumProvider apiKey={SITUM_API_KEY}>
-        <SafeAreaView edges={["top"]} style={{ ...styles.container }}>
-          <View style={styles.screenWrapper}>
-            {/* Add your MapView with a MapViewConfiguration */}
-            <MapView
-              ref={mapViewRef}
-              configuration={{
-                situmApiKey: SITUM_API_KEY,
-                buildingIdentifier: SITUM_BUILDING_ID,
-                profile: SITUM_PROFILE,
-              }}
-              onLoad={onLoad}
-              onLoadError={onMapError}
-              onPoiSelected={onPoiSelected}
-              onPoiDeselected={onPoiDeselected}
-              onFloorChanged={onFloorChanged}
-              onExternalLinkClicked={onExternalLinkClicked}
-              onFavoritePoisUpdated={onFavoritePoisUpdated}
-            />
-          </View>
-        </SafeAreaView>
-      </SitumProvider>
+      <SafeAreaView edges={["top"]} style={{ ...styles.container }}>
+        {/* Add your MapView with a MapViewConfiguration */}
+        <MapView
+          ref={mapViewRef}
+          configuration={{
+            buildingIdentifier: SITUM_BUILDING_ID,
+            profile: SITUM_PROFILE,
+          }}
+          onLoad={onLoad}
+          onLoadError={onMapError}
+          onPoiSelected={onPoiSelected}
+          onPoiDeselected={onPoiDeselected}
+          onFloorChanged={onFloorChanged}
+          onExternalLinkClicked={onExternalLinkClicked}
+          onFavoritePoisUpdated={onFavoritePoisUpdated}
+        />
+      </SafeAreaView>
     </PaperProvider>
   );
 };
@@ -147,26 +151,9 @@ export const WayfindingScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: "100%",
   },
   mapview: {
     width: "100%",
     height: "100%",
-  },
-  screenWrapper: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: "100%",
-  },
-  fab: {
-    position: "absolute",
-    margin: 16,
-    right: 0,
-    top: 64,
   },
 });
