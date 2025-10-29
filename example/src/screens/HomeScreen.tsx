@@ -25,9 +25,8 @@ export const HomeScreen = () => {
   useEffect(() => {
     registerCallbacks();
 
-    return () => {
-      stopPositioning();
-    };
+    // Automatically manage positioning permissions and sensor issues:
+    SitumPlugin.enableUserHelper();
   }, []);
 
   const startPositioning = async () => {
