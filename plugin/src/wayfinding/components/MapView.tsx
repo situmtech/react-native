@@ -606,7 +606,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
 
       return configApiKey ?? internalApiKey;
-    }, [user, configuration.situmApiKey]);
+    }, [user?.apiKey, configuration.situmApiKey]);
 
     const _effectiveProfile = useMemo(() => {
       let effectiveProfile: any = "";
@@ -633,7 +633,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
 
       return effectiveProfile;
-    }, [configuration]);
+    }, [configuration.profile, configuration.remoteIdentifier]);
 
     const _disableInternalWebViewTTSEngine = () => {
       sendMessageToViewer(
@@ -648,8 +648,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       <WebView
         ref={webViewRef}
         source={{
-          uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile()}?&apikey=${_effectiveApiKey()}
+          uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile}?&apikey=${_effectiveApiKey}
           ${
+            configuration.buildingIdentifier &&
             configuration.buildingIdentifier.length > 0
               ? `&buildingid=${configuration.buildingIdentifier}`
               : ""
