@@ -1,6 +1,6 @@
 ### Added
 
-- We have added `SitumProvider.dashboardUrl`. This parameter is useful only in certain scenarios where configuring the situm's environment is neccessary.
+- We have added `SitumProvider.dashboardUrl`. This parameter is useful only in certain scenarios where configuring the Situm's environment is neccessary.
 
 ### Changed
 

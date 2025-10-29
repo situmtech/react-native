@@ -210,12 +210,11 @@ const UseSitumProvider: React.FC<{ children: React.ReactNode }> = ({
 const SitumProvider: React.FC<
   React.PropsWithChildren<{
     /**
-     * (Optional)
      * Your Situm email account.
      */
     email?: string;
     /**
-     * Your Situm API key. Find your API key at your [situm dashboard's profile](https://dashboard.situm.com/accounts/profile)
+     * Your Situm API key. Find your API key at your [Situm dashboard's profile](https://dashboard.situm.com/accounts/profile)
      *
      * When specifying a valid situm API key in this parameter, you won't need to call `SitumPlugin.init()` & `SitumPlugin.setApiKey()`,
      * and also you won't need to specify `MapViewConfiguration.situmApiKey`.
