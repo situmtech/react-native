@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 import {
   type OnPoiDeselectedResult,
@@ -14,7 +14,6 @@ import { PaperProvider } from "react-native-paper";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootTabsParamsList } from "../navigation/types";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SitumPlugin from "@situm/react-native";
 
 export const WayfindingScreen: React.FC = () => {
   // ////////////////////////////////////////////////////////////////////////
@@ -24,16 +23,6 @@ export const WayfindingScreen: React.FC = () => {
   const mapViewRef = useRef<MapViewRef>(null);
   const [controller, setController] = useState<MapViewRef | null>();
   const [mapViewLoaded, setMapViewLoaded] = useState<boolean>(false);
-
-  useEffect(() => {
-    // Automatically manage positioning permissions and sensor issues:
-    SitumPlugin.enableUserHelper();
-
-    return () => {
-      // Make sure to not display anywhere in your app
-      SitumPlugin.disableUserHelper();
-    };
-  });
 
   useEffect(() => {
     if (!mapViewRef) {
