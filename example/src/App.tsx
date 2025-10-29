@@ -17,7 +17,7 @@ function App(): React.JSX.Element {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        {/** Make sure to authenticate with SitumProvider.apiKey at the root of your app */}
+        {/** Make sure to authenticate with `SitumProvider.apiKey` at the root of your app */}
         <SitumProvider
           apiKey={SITUM_API_KEY}
           dashboardUrl={SITUM_DASHBOARD_URL}
