@@ -315,6 +315,13 @@ export default class SitumPlugin {
    */
 
   static setDashboardURL = (url: string) => {
+    if (!url.startsWith("https://")) {
+      url = "https://" + url;
+    }
+    if (url.endsWith("/")) {
+      url = url.substring(0, url.length - 1);
+    }
+
     return exceptionWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setDashboardURL(url, (response: { success: boolean }) => {
         onCallback(response, "Failed to set dashboard URL.");
