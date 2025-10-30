@@ -28,6 +28,7 @@ export interface State {
   webViewRef: MutableRefObject<undefined> | undefined;
   sdkInitialized: boolean;
   user?: User;
+  apiDomain?: string;
   location?: Location;
   locationStatus?: LocationStatusName;
   buildings: Building[] | null;
@@ -44,6 +45,7 @@ export const initialState: State = {
   webViewRef: undefined,
   sdkInitialized: false,
   user: undefined,
+  apiDomain: undefined,
   location: undefined,
   locationStatus: undefined,
   buildings: null,
@@ -126,6 +128,10 @@ export const selectUser = (state: State) => {
   return state.user;
 };
 
+export const selectApiDomain = (state: State) => {
+  return state.apiDomain;
+};
+
 export const selectLocation = (state: State) => {
   return state.location;
 };
@@ -206,6 +212,7 @@ const UseSitumProvider: React.FC<{ children: React.ReactNode }> = ({
 
 /**
  * Main context of the application, stores the plugins' state.
+ * Make sure to declare this component at the very root of your application, otherwise unexpected behaviours may occur.
  */
 const SitumProvider: React.FC<
   React.PropsWithChildren<{
@@ -219,23 +226,24 @@ const SitumProvider: React.FC<
      * When specifying a valid situm API key in this parameter, you won't need to call `SitumPlugin.init()` & `SitumPlugin.setApiKey()`,
      * and also you won't need to specify `MapViewConfiguration.situmApiKey`.
      */
-    apiKey?: string;
+    apiKey: string;
     /**
-     * Set the Dashboard URL used by the SDKs
+     * Set the API domain that will be used by the native SDKs and MapView to obtain the situm's data.
      * Defaults to "api.situm.com"
      */
-    dashboardUrl?: string;
+    apiDomain?: string;
   }>
-> = ({ email, apiKey, dashboardUrl, children }) => {
+> = ({ email, apiKey, apiDomain, children }) => {
   const [state, dispatch] = useReducer(store.reducer, {
     ...store.initialState,
     user: { email, apiKey },
+    apiDomain: apiDomain,
   });
 
   useEffect(() => {
     try {
       SitumPlugin.init();
-      dashboardUrl && SitumPlugin.setDashboardURL(dashboardUrl);
+      apiDomain && SitumPlugin.setDashboardURL(apiDomain);
       if (!apiKey) {
         throw new Error(
           "Please specify SitumProvider.apiKey to be able to successfully use SitumPlugin and MapView.",
@@ -245,7 +253,7 @@ const SitumProvider: React.FC<
     } catch (e) {
       console.error(`SitumProvider > Could not initialize ${e}`);
     }
-  }, [apiKey, dashboardUrl]);
+  }, [apiKey, apiDomain]);
 
   return (
     <SitumContext.Provider
