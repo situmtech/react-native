@@ -212,8 +212,7 @@ const UseSitumProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 /**
- * Main context of the application, stores the plugins' state.
- * Make sure to declare this component at the very root of your application, otherwise unexpected behaviours may occur.
+ * Main context of the application, stores the plugin's state.
  */
 const SitumProvider: React.FC<
   React.PropsWithChildren<{
@@ -274,9 +273,10 @@ const SitumProvider: React.FC<
        * Make sure to execute first SitumProvider's initialization & authentication,
        * before rendering MapView or calling SitumPlugin methods.
        *
-       * If we directly let render the `children` before SitumProvider's useEffect executes,
-       * then subsequent SitumPlugin method calls or MapView initialization process may occur,
-       * without authentication process being done yet.
+       * If we directly let the `children` render, some race conditions may occur
+       * as the code logic of the children executes before the code logic of SitumProvider.
+       *
+       * This causes a crash when the children wants to access SitumPlugin before it is initialized.
        */}
       <UseSitumProvider>{isInitialized ? children : <></>}</UseSitumProvider>
     </SitumContext.Provider>
