@@ -643,6 +643,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const _effectiveApiDomain = useMemo(() => {
       let finalApiDomain = configuration.apiDomain ?? apiDomain;
 
+      if (!finalApiDomain) return "";
+
       finalApiDomain = finalApiDomain.replace("https://", "");
       finalApiDomain = finalApiDomain.replace("/", "");
 
