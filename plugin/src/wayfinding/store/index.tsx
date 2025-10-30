@@ -4,6 +4,7 @@ import React, {
   type MutableRefObject,
   useEffect,
   useReducer,
+  useState,
 } from "react";
 
 import SitumPlugin from "../../sdk";
@@ -244,6 +245,8 @@ const SitumProvider: React.FC<
     apiDomain: apiDomain,
   });
 
+  const [isInitialized, setIsInitialized] = useState(false);
+
   useEffect(() => {
     try {
       SitumPlugin.init();
@@ -257,6 +260,7 @@ const SitumProvider: React.FC<
     } catch (e) {
       console.error(`SitumProvider > Could not initialize ${e}`);
     }
+    setIsInitialized(true);
   }, [apiKey, apiDomain]);
 
   return (
@@ -266,7 +270,15 @@ const SitumProvider: React.FC<
         dispatch,
       }}
     >
-      <UseSitumProvider>{children}</UseSitumProvider>
+      {/**
+       * Make sure to execute first SitumProvider's initialization & authentication,
+       * before rendering MapView or calling SitumPlugin methods.
+       *
+       * If we directly let render the `children` before SitumProvider's useEffect executes,
+       * then subsequent SitumPlugin method calls or MapView initialization process may occur,
+       * without authentication process being done yet.
+       */}
+      <UseSitumProvider>{isInitialized ? children : <></>}</UseSitumProvider>
     </SitumContext.Provider>
   );
 };
