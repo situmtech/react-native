@@ -23,7 +23,12 @@ import type {
 
 import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
-import { selectUser, setError, setLocationStatus } from "../store";
+import {
+  selectApiDomain,
+  selectUser,
+  setError,
+  setLocationStatus,
+} from "../store";
 import { useSelector } from "../store/utils";
 import {
   type CartographySelectionOptions,
@@ -177,6 +182,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     );
 
     const user = useSelector(selectUser);
+    const apiDomain = useSelector(selectApiDomain);
     const {
       init,
       location,
@@ -634,6 +640,26 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       return effectiveProfile;
     }, [configuration.profile, configuration.remoteIdentifier]);
 
+    const _effectiveApiDomain = useMemo(() => {
+      let finalApiDomain = configuration.apiDomain ?? apiDomain;
+
+      finalApiDomain = finalApiDomain.replace("https://", "");
+      finalApiDomain = finalApiDomain.replace("/", "");
+
+      return `&domain=${finalApiDomain}`;
+    }, [apiDomain, configuration.apiDomain]);
+
+    const _effectiveBuildingId = useMemo(() => {
+      let finalBuildingIdentifier = "";
+      const buildingId = configuration.buildingIdentifier;
+
+      if (buildingId && buildingId.length > 0) {
+        finalBuildingIdentifier = `&buildingid=${buildingId}`;
+      }
+
+      return finalBuildingIdentifier;
+    }, [configuration.buildingIdentifier]);
+
     const _disableInternalWebViewTTSEngine = () => {
       sendMessageToViewer(
         webViewRef.current,
@@ -647,12 +673,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       <WebView
         ref={webViewRef}
         source={{
-          uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile}?&apikey=${_effectiveApiKey}
-          ${
-            configuration.buildingIdentifier &&
-            configuration.buildingIdentifier.length > 0
-              ? `&buildingid=${configuration.buildingIdentifier}`
-              : ""
+          uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile}?apikey=${
+            _effectiveApiKey
+          }${_effectiveApiDomain}${
+            _effectiveBuildingId
           }&wl=true&global=true&mode=embed&show=rts`,
         }}
         style={StyleSheet.flatten([viewerStyles.webview, style])}
