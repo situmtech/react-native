@@ -176,7 +176,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       configuration.buildingIdentifier,
     );
 
-    // Situm states & useSitum() hook
     const user = useSelector(selectUser);
     const {
       init,
