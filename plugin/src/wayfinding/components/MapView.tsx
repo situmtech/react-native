@@ -677,9 +677,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         source={{
           uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile}?apikey=${
             _effectiveApiKey
-          }${_effectiveApiDomain}${
-            _effectiveBuildingId
-          }&wl=true&global=true&mode=embed&show=rts`,
+          }${_effectiveApiDomain}${_effectiveBuildingId}&mode=embed`,
         }}
         style={StyleSheet.flatten([viewerStyles.webview, style])}
         limitsNavigationsToAppBoundDomains={true}
