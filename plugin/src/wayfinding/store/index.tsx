@@ -223,12 +223,16 @@ const SitumProvider: React.FC<
     /**
      * Your Situm API key. Find your API key at your [Situm dashboard's profile](https://dashboard.situm.com/accounts/profile)
      *
-     * When specifying a valid situm API key in this parameter, you won't need to call `SitumPlugin.init()` & `SitumPlugin.setApiKey()`,
-     * and also you won't need to specify `MapViewConfiguration.situmApiKey`.
+     * When specifying a valid situm API key in this parameter, you won't need to call later on the `SitumPlugin.init()` & `SitumPlugin.setApiKey()` methods,
+     * and also you won't need to specify `MapViewConfiguration.situmApiKey` when configuring your MapView.
      */
     apiKey: string;
     /**
      * Set the API domain that will be used by the native SDKs and MapView to obtain the situm's data.
+     *
+     * When specifying a valid domain in this parameter, you won't need to call later on the `SitumPlugin.setDashboardURL()` method,
+     * and also you won't need to specify `MapViewConfiguration.apiDomain` when configuring your MapView.
+     *
      * Defaults to "api.situm.com"
      */
     apiDomain?: string;
