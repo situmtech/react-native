@@ -16,16 +16,13 @@ import { SITUM_API_KEY, SITUM_DASHBOARD_URL } from "./situm";
 function App(): React.JSX.Element {
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        {/** Make sure to authenticate with `SitumProvider.apiKey` at the root of your app */}
-        <SitumProvider
-          apiKey={SITUM_API_KEY}
-          dashboardUrl={SITUM_DASHBOARD_URL}
-        >
+      {/** Make sure to authenticate with `SitumProvider.apiKey` at the root of your app */}
+      <SitumProvider apiKey={SITUM_API_KEY} dashboardUrl={SITUM_DASHBOARD_URL}>
+        <NavigationContainer>
           <StatusBar barStyle="dark-content" />
           <TabNavigator />
-        </SitumProvider>
-      </NavigationContainer>
+        </NavigationContainer>
+      </SitumProvider>
     </SafeAreaProvider>
   );
 }

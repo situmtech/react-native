@@ -2,8 +2,8 @@
 import React, {
   createContext,
   type MutableRefObject,
+  useEffect,
   useReducer,
-  useRef,
 } from "react";
 
 import SitumPlugin from "../../sdk";
@@ -232,20 +232,20 @@ const SitumProvider: React.FC<
     user: { email, apiKey },
   });
 
-  // We must use here useRef() hook to make sure the integrator is able to call SitumPlugin methods
-  // right before declaring SitumProvider.
-  // With a useEffect() hook we cannot asure this.
-  const ref = useRef<boolean | null>(null);
-  if (!ref.current && apiKey) {
+  useEffect(() => {
     try {
       SitumPlugin.init();
       dashboardUrl && SitumPlugin.setDashboardURL(dashboardUrl);
+      if (!apiKey) {
+        throw new Error(
+          "Please specify SitumProvider.apiKey to be able to successfully use SitumPlugin and MapView.",
+        );
+      }
       SitumPlugin.setApiKey(apiKey);
-      ref.current = true;
     } catch (e) {
-      console.error(`Situm > example > Could not initialize SDK ${e}`);
+      console.error(`SitumProvider > Could not initialize ${e}`);
     }
-  }
+  }, [apiKey, dashboardUrl]);
 
   return (
     <SitumContext.Provider

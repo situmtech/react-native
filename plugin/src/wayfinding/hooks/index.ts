@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext, useState } from "react";
 
@@ -24,7 +25,6 @@ import {
   selectLocation,
   selectLocationStatus,
   selectNavigation,
-  selectUser,
   setDirections,
   setError,
   setLocation,
@@ -48,7 +48,6 @@ const defaultNavigationRequest = {
 export const useSitumInternal = () => {
   const dispatch = useDispatch();
 
-  const user = useSelector(selectUser);
   const location = useSelector(selectLocation);
   const locationStatus = useSelector(selectLocationStatus);
 
@@ -68,15 +67,15 @@ export const useSitumInternal = () => {
       (internalCall: InternalCall) => {
         switch (internalCall.type) {
           case InternalCallType.LOCATION:
-            let location = internalCall.get<Location>();
+            const receivedLocation = internalCall.get<Location>();
             dispatch(
               setLocation({
-                ...location,
+                ...receivedLocation,
               }),
             );
             break;
           case InternalCallType.LOCATION_STATUS:
-            let statusName = internalCall.get<string>();
+            const statusName = internalCall.get<string>();
             if (statusName in LocationStatusName) {
               dispatch(setLocationStatus(statusName));
             }
@@ -86,8 +85,8 @@ export const useSitumInternal = () => {
             dispatch(resetLocation());
             break;
           case InternalCallType.LOCATION_ERROR:
-            let error = internalCall.get<Error>();
-            dispatch(setError(error));
+            const receivedError = internalCall.get<Error>();
+            dispatch(setError(receivedError));
             break;
           case InternalCallType.NAVIGATION_START:
             dispatch(
@@ -106,7 +105,7 @@ export const useSitumInternal = () => {
             );
             break;
           case InternalCallType.NAVIGATION_PROGRESS:
-            let progress = internalCall.get<NavigationProgress>();
+            const progress = internalCall.get<NavigationProgress>();
             dispatch(
               setNavigation({
                 currentIndication: progress?.currentIndication,
@@ -292,7 +291,6 @@ export const useSitumInternal = () => {
 
   return {
     // States
-    user,
     location,
     locationStatus,
 
