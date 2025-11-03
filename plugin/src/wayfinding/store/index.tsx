@@ -270,12 +270,10 @@ const SitumProvider: React.FC<
       }}
     >
       {/**
-       * Make sure to execute first SitumProvider's initialization & authentication,
-       * before rendering MapView or calling SitumPlugin methods.
+       * Make sure to execute first SitumProvider's initialization & authentication useEffect(),
+       * before letting children components rendering MapView or calling SitumPlugin methods.
        *
-       * If we directly let the `children` render, some race conditions may occur
-       * as the code logic of the children executes before the code logic of SitumProvider.
-       *
+       * If we directly let the `children` render, the children's useEffect() will execute before SitumProvider's useEffect().
        * This causes a crash when the children wants to access SitumPlugin before it is initialized.
        */}
       <UseSitumProvider>{isInitialized ? children : <></>}</UseSitumProvider>
