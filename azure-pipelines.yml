@@ -33,7 +33,7 @@ resources:
       ref: master
 
 steps:
-  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/feature/SIS-957') }}:
       - template: azure-templates/static-analyse.yml@sys_kubernetes_templates
         parameters:
           repoFolder: .
