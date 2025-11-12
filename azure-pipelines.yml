@@ -38,6 +38,13 @@ steps:
         parameters:
           repoFolder: .
           teams: mobile
+          phase: semgrep
+
+      - template: azure-templates/static-analyse.yml@sys_kubernetes_templates
+        parameters:
+          repoFolder: .
+          teams: mobile
+          phase: trivy
 
   - ${{ if contains(variables['Build.SourceBranch'], 'release/') }}:
       - checkout: self
