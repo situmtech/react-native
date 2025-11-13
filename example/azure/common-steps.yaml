@@ -63,6 +63,6 @@ steps:
       echo "export const SITUM_EMAIL = '${{ parameters.XAPIEMAIL }}';" > example/src/situm.tsx
       echo "export const SITUM_API_KEY = '${{ parameters.XAPIKEY }}';" >> example/src/situm.tsx
       echo "export const SITUM_BUILDING_ID = '${{ parameters.BUILDINGID }}';" >> example/src/situm.tsx
-      echo "export const SITUM_DASHBOARD_URL = '${{ parameters.DASHBOARD_URL }}';"  >> example/src/situm.tsx
+      echo "export const SITUM_API_DOMAIN = '${{ parameters.DASHBOARD_URL }}';"  >> example/src/situm.tsx
 
     displayName: Configure credentials
