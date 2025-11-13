@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -22,7 +23,13 @@ import type {
 
 import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
-import { setError, setLocationStatus } from "../store";
+import {
+  selectApiDomain,
+  selectUser,
+  setError,
+  setLocationStatus,
+} from "../store";
+import { useSelector } from "../store/utils";
 import {
   type CartographySelectionOptions,
   type MapViewDirectionsOptions,
@@ -65,10 +72,14 @@ export type MapViewConfiguration = {
    */
   viewerDomain?: string;
   /**
-   * ** Required **
-   * Your Situm API key. Find your API key at your [situm profile](https://dashboard.situm.com/accounts/profile)
+   * Your Situm API key. Find your API key at your [Situm dashboard's profile](https://dashboard.situm.com/accounts/profile)
+   *
+   * Since X.YY.ZZ version this parameter is not required. Instead, you should specify your apiKey
+   * at the root of your app with `SitumProvider.apiKey` for the correct usage of the plugin.
+   * If {@param situmApiKey} is specified, `SitumProvider.apiKey` will be ignored.
    */
-  situmApiKey: string;
+  // TODO: set the version on the doc right before releasing this version.
+  situmApiKey?: string;
   /**
    * @deprecated Use `profile` instead.
    * A String identifier that allows you to remotely configure all map settings.
@@ -169,6 +180,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const [buildingIdentifier, setBuildingIdentifier] = useState<string>(
       configuration.buildingIdentifier,
     );
+
+    const user = useSelector(selectUser);
+    const apiDomain = useSelector(selectApiDomain);
     const {
       init,
       location,
@@ -586,8 +600,31 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       return true;
     };
 
-    const _effectiveProfile = () => {
-      let effectiveProfile = configuration.profile;
+    const _effectiveApiKey = useMemo(() => {
+      const internalApiKey = user?.apiKey;
+      const configApiKey = configuration.situmApiKey;
+
+      if (!configApiKey && !internalApiKey) {
+        console.error(
+          "No apiKey was specified. Make sure to be authenticated either by specifying the SitumProvider.apiKey or by specifying the MapViewConfiguration.situmApiKey.",
+        );
+      }
+
+      return configApiKey ?? internalApiKey;
+    }, [user?.apiKey, configuration.situmApiKey]);
+
+    const _effectiveProfile = useMemo(() => {
+      let effectiveProfile: any = "";
+
+      if (
+        configuration.profile?.length === 0 &&
+        configuration.remoteIdentifier?.length === 0
+      ) {
+        effectiveProfile = "";
+      }
+
+      effectiveProfile = configuration.profile;
+
       if (
         configuration.remoteIdentifier &&
         configuration.remoteIdentifier.length > 0
@@ -599,8 +636,31 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           effectiveProfile = configuration.remoteIdentifier;
         }
       }
+
       return effectiveProfile;
-    };
+    }, [configuration.profile, configuration.remoteIdentifier]);
+
+    const _effectiveApiDomain = useMemo(() => {
+      let finalApiDomain = configuration.apiDomain ?? apiDomain;
+
+      if (!finalApiDomain) return "";
+
+      finalApiDomain = finalApiDomain.replace("https://", "");
+      finalApiDomain = finalApiDomain.replace("/", "");
+
+      return `&domain=${finalApiDomain}`;
+    }, [apiDomain, configuration.apiDomain]);
+
+    const _effectiveBuildingId = useMemo(() => {
+      let finalBuildingIdentifier = "";
+      const buildingId = configuration.buildingIdentifier;
+
+      if (buildingId && buildingId.length > 0) {
+        finalBuildingIdentifier = `&buildingid=${buildingId}`;
+      }
+
+      return finalBuildingIdentifier;
+    }, [configuration.buildingIdentifier]);
 
     const _disableInternalWebViewTTSEngine = () => {
       sendMessageToViewer(
@@ -615,15 +675,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       <WebView
         ref={webViewRef}
         source={{
-          uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${
-            _effectiveProfile() ? `id/${_effectiveProfile()}` : ""
-          }?&apikey=${
-            configuration.situmApiKey
-          }&wl=true&global=true&mode=embed${
-            configuration.buildingIdentifier
-              ? `&buildingid=${configuration.buildingIdentifier}`
-              : ""
-          }&show=rts`,
+          uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile}?apikey=${
+            _effectiveApiKey
+          }${_effectiveApiDomain}${_effectiveBuildingId}&mode=embed`,
         }}
         style={StyleSheet.flatten([viewerStyles.webview, style])}
         limitsNavigationsToAppBoundDomains={true}

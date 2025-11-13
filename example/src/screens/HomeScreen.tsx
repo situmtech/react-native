@@ -23,10 +23,10 @@ export const HomeScreen = () => {
   const [locationError, setLocationError] = useState("");
 
   useEffect(() => {
-    SitumPlugin.setConfiguration({
-      useRemoteConfig: true,
-    });
     registerCallbacks();
+
+    // Automatically manage positioning permissions and sensor issues:
+    SitumPlugin.enableUserHelper();
 
     return () => {
       stopPositioning();

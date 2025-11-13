@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { createContext, type MutableRefObject, useReducer } from "react";
+import React, {
+  createContext,
+  type MutableRefObject,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 
+import SitumPlugin from "../../sdk";
 import {
   type Building,
   type Directions,
@@ -22,6 +29,7 @@ export interface State {
   webViewRef: MutableRefObject<undefined> | undefined;
   sdkInitialized: boolean;
   user?: User;
+  apiDomain?: string;
   location?: Location;
   locationStatus?: LocationStatusName;
   buildings: Building[] | null;
@@ -38,6 +46,7 @@ export const initialState: State = {
   webViewRef: undefined,
   sdkInitialized: false,
   user: undefined,
+  apiDomain: undefined,
   location: undefined,
   locationStatus: undefined,
   buildings: null,
@@ -101,7 +110,7 @@ const store = createStore<State>({
     },
     setBuildingIdentifier: (
       state: State,
-      payload: State["buildingIdentifier"]
+      payload: State["buildingIdentifier"],
     ) => {
       return { ...state, buildingIdentifier: payload };
     },
@@ -118,6 +127,10 @@ export const selectIsSDKInitialized = (state: State) => {
 
 export const selectUser = (state: State) => {
   return state.user;
+};
+
+export const selectApiDomain = (state: State) => {
+  return state.apiDomain;
 };
 
 export const selectLocation = (state: State) => {
@@ -181,7 +194,7 @@ export const {
  * Context specifically to store the only instance of our hook.
  */
 export const UseSitumContext = createContext<{ useSitum: any } | undefined>(
-  undefined
+  undefined,
 );
 
 const UseSitumProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -199,18 +212,55 @@ const UseSitumProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 /**
- * Main context of the application, stores the plugins' state.
+ * Main context of the application, stores the plugin's state.
  */
 const SitumProvider: React.FC<
   React.PropsWithChildren<{
+    /**
+     * Your Situm email account.
+     */
     email?: string;
-    apiKey?: string;
+    /**
+     * Your Situm API key. Find your API key at your [Situm dashboard's profile](https://dashboard.situm.com/accounts/profile)
+     *
+     * When specifying a valid situm API key in this parameter, you won't need to call later on the `SitumPlugin.init()` & `SitumPlugin.setApiKey()` methods,
+     * and also you won't need to specify `MapViewConfiguration.situmApiKey` when configuring your MapView.
+     */
+    apiKey: string;
+    /**
+     * Set the API domain that will be used by the native SDKs and MapView to obtain the situm's data.
+     *
+     * When specifying a valid domain in this parameter, you won't need to call later on the `SitumPlugin.setDashboardURL()` method,
+     * and also you won't need to specify `MapViewConfiguration.apiDomain` when configuring your MapView.
+     *
+     * Defaults to "api.situm.com"
+     */
+    apiDomain?: string;
   }>
-> = ({ email, apiKey, children }) => {
+> = ({ email, apiKey, apiDomain, children }) => {
   const [state, dispatch] = useReducer(store.reducer, {
     ...store.initialState,
     user: { email, apiKey },
+    apiDomain: apiDomain,
   });
+
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    try {
+      SitumPlugin.init();
+      apiDomain && SitumPlugin.setDashboardURL(apiDomain);
+      if (!apiKey) {
+        throw new Error(
+          "Please specify SitumProvider.apiKey to be able to successfully use SitumPlugin and MapView.",
+        );
+      }
+      SitumPlugin.setApiKey(apiKey);
+    } catch (e) {
+      console.error(`SitumProvider > Could not initialize ${e}`);
+    }
+    setIsInitialized(true);
+  }, [apiKey, apiDomain]);
 
   return (
     <SitumContext.Provider
@@ -219,7 +269,14 @@ const SitumProvider: React.FC<
         dispatch,
       }}
     >
-      <UseSitumProvider>{children}</UseSitumProvider>
+      {/**
+       * Make sure to execute first SitumProvider's initialization & authentication useEffect(),
+       * before letting children components rendering MapView or calling SitumPlugin methods.
+       *
+       * If we directly let the `children` render, the children's useEffect() will execute before SitumProvider's useEffect().
+       * This causes a crash when the children wants to access SitumPlugin before it is initialized.
+       */}
+      <UseSitumProvider>{isInitialized ? children : <></>}</UseSitumProvider>
     </SitumContext.Provider>
   );
 };
