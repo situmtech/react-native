@@ -154,6 +154,10 @@ export interface MapViewProps {
    * @param event {@link OnFavoritePoisUpdatedResult} object.
    */
   onFavoritePoisUpdated?: (event: OnFavoritePoisUpdatedResult) => void;
+  /**
+   * Internal callback invoked with every MapView message.
+   */
+  onInternalMapViewMessageDelegate?: (type: string, payload: any) => void;
 }
 
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
@@ -168,6 +172,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onFloorChanged = () => {},
       onExternalLinkClicked = undefined,
       onFavoritePoisUpdated = () => {},
+      onInternalMapViewMessageDelegate = () => {},
     },
     ref,
   ) => {
@@ -523,8 +528,15 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     }, [mapLoaded]);
 
     const handleRequestFromViewer = (event: WebViewMessageEvent) => {
-      const eventParsed = JSON.parse(event.nativeEvent.data);
-      switch (eventParsed.type) {
+      let eventParsed: any = {};
+      try {
+        eventParsed = JSON.parse(event.nativeEvent.data);
+      } catch (err) {
+        console.warn("Invalid JSON from viewer:", err);
+      }
+      const type = eventParsed?.type ?? "message.unknown";
+      const payload = eventParsed?.payload ?? {};
+      switch (type) {
         case "app.map_is_ready":
           init();
           setMapLoaded(true);
@@ -532,52 +544,62 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           onLoad && onLoad("");
           break;
         case "directions.requested":
-          calculateRoute(eventParsed.payload, _onDirectionsRequestInterceptor);
+          calculateRoute(payload, _onDirectionsRequestInterceptor);
           break;
         case "navigation.requested":
-          startNavigation(eventParsed.payload, _onDirectionsRequestInterceptor);
+          startNavigation(payload, _onDirectionsRequestInterceptor);
           break;
         case "navigation.stopped":
           stopNavigation();
           break;
         case "cartography.poi_selected":
-          onPoiSelected(eventParsed?.payload);
+          onPoiSelected(payload);
           break;
         case "cartography.poi_deselected":
-          onPoiDeselected(eventParsed?.payload);
+          onPoiDeselected(payload);
           break;
         case "ui.favorite_pois_updated": {
           const favoritePoisIds = {
-            currentPoisIdentifiers: eventParsed.payload.favoritePois
-              ? [...eventParsed.payload.favoritePois]
+            currentPoisIdentifiers: payload.favoritePois
+              ? [...payload.favoritePois]
               : [],
           };
           onFavoritePoisUpdated(favoritePoisIds);
           break;
         }
         case "cartography.floor_selected":
-          onFloorChanged(eventParsed?.payload);
+          onFloorChanged(payload);
           break;
         case "cartography.building_selected":
           if (
-            !eventParsed.payload.identifier ||
-            eventParsed.payload.identifier.toString() === buildingIdentifier
+            !payload.identifier ||
+            payload.identifier.toString() === buildingIdentifier
           ) {
             return;
           } else {
-            setBuildingIdentifier(eventParsed.payload.identifier.toString());
+            setBuildingIdentifier(payload.identifier.toString());
           }
           break;
         case "viewer.navigation.started":
         case "viewer.navigation.updated":
         case "viewer.navigation.stopped":
-          SitumPlugin.updateNavigationState(eventParsed.payload);
+          SitumPlugin.updateNavigationState(payload);
           break;
         case "ui.speak_aloud_text":
-          SitumPlugin.speakAloudText(eventParsed.payload);
+          SitumPlugin.speakAloudText(payload);
           break;
         default:
           break;
+      }
+      // Internal callback that will receive every MapView message. This callback
+      // has been introduced to enable communication between MapView and the new AR
+      // module, serving as a direct and extensible mode that avoids the
+      // intermediation of this plugin.
+      try {
+        typeof onInternalMapViewMessageDelegate === "function" &&
+          onInternalMapViewMessageDelegate(type, payload);
+      } catch (error) {
+        console.error(`Error delegating ${type}:`, error);
       }
     };
 
