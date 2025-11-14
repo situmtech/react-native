@@ -1,8 +1,9 @@
 ### Added
 
-- We have added `SitumProvider.apiDomain`. This parameter is useful only in certain scenarios where configuring the Situm's environment is neccessary.
+- Added a new callback `onInternalMapViewMessageDelegate` invoked with every MapView message.
+  It is used internally — no action is required on your side.
 
 ### Changed
 
-- We have simplified the autenthication process of our plugin. Use SitumProvider at the root of your app to initialize & set your `SitumProvider.apiKey`. Now this step will prevent you from calling `SitumPlugin.init()` and `SitumPlugin.setApiKey()` methods, and from specifying the `MapViewConfiguration.situmApiKey` to display our map.
-- Example app: we have now simplified the authentication process in our example app, using the new `SitumProvider.apiKey`.
+- Made WebView message handling more robust with guarded JSON parsing and default fallbacks for
+  type and payload. This is also an internal change that requires no action on your side.
