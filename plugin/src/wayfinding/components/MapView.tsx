@@ -31,6 +31,7 @@ import {
 } from "../store";
 import { useSelector } from "../store/utils";
 import {
+  OnInternalMapViewMessageDelegate,
   type CartographySelectionOptions,
   type MapViewDirectionsOptions,
   type MapViewError,
@@ -154,10 +155,6 @@ export interface MapViewProps {
    * @param event {@link OnFavoritePoisUpdatedResult} object.
    */
   onFavoritePoisUpdated?: (event: OnFavoritePoisUpdatedResult) => void;
-  /**
-   * Internal callback invoked with every MapView message.
-   */
-  onInternalMapViewMessageDelegate?: (type: string, payload: any) => void;
 }
 
 const MapView = React.forwardRef<MapViewRef, MapViewProps>(
@@ -172,13 +169,14 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       onFloorChanged = () => {},
       onExternalLinkClicked = undefined,
       onFavoritePoisUpdated = () => {},
-      onInternalMapViewMessageDelegate = () => {},
     },
     ref,
   ) => {
     const webViewRef = useRef<WebView>(null);
     const [_onDirectionsRequestInterceptor, setInterceptor] =
       useState<OnDirectionsRequestInterceptor>();
+    const internalMessageDelegateRef =
+      useRef<OnInternalMapViewMessageDelegate>();
 
     // Local states
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
@@ -415,6 +413,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         search(payload): void {
           _search(payload);
         },
+        onInternalMapViewMessageDelegate(
+          delegate: OnInternalMapViewMessageDelegate,
+        ): void {
+          internalMessageDelegateRef.current = delegate;
+        },
       };
     }, [
       stopNavigation,
@@ -596,8 +599,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       // module, serving as a direct and extensible mode that avoids the
       // intermediation of this plugin.
       try {
-        typeof onInternalMapViewMessageDelegate === "function" &&
-          onInternalMapViewMessageDelegate(type, payload);
+        internalMessageDelegateRef.current?.(type, payload);
       } catch (error) {
         console.error(`Error delegating ${type}:`, error);
       }

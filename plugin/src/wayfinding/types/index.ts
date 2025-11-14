@@ -100,6 +100,12 @@ export interface MapViewRef {
    * To use it, the feature 'Find My Car' must be enabled.
    */
   navigateToCar: (params?: NavigateToCarPayload) => void;
+  /**
+   * Internal callback invoked with every MapView message.
+   */
+  onInternalMapViewMessageDelegate: (
+    delegate: OnInternalMapViewMessageDelegate,
+  ) => void;
 }
 
 export interface WayfindingResult {
@@ -143,6 +149,13 @@ export interface MapViewDirectionsOptions {
  */
 export interface OnDirectionsRequestInterceptor {
   (directionRequest: DirectionsRequest): void;
+}
+
+/**
+ * Represents a message from the map viewer.
+ */
+export interface OnInternalMapViewMessageDelegate {
+  (type: string, payload: any): void;
 }
 
 export interface OnExternalLinkClickedResult {
