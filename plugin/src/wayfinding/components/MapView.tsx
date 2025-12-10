@@ -75,11 +75,10 @@ export type MapViewConfiguration = {
   /**
    * Your Situm API key. Find your API key at your [Situm dashboard's profile](https://dashboard.situm.com/accounts/profile)
    *
-   * Since X.YY.ZZ version this parameter is not required. Instead, you should specify your apiKey
+   * Since 3.17.0 version this parameter is not required. Instead, you should specify your apiKey
    * at the root of your app with `SitumProvider.apiKey` for the correct usage of the plugin.
-   * If {@param situmApiKey} is specified, `SitumProvider.apiKey` will be ignored.
+   * If {@link MapViewConfiguration.situmApiKey} is specified, `SitumProvider.apiKey` will be ignored.
    */
-  // TODO: set the version on the doc right before releasing this version.
   situmApiKey?: string;
   /**
    * @deprecated Use `profile` instead.
