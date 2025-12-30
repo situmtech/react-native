@@ -7,3 +7,4 @@
 
 - Made WebView message handling more robust with guarded JSON parsing and default fallbacks for
   type and payload. This is also an internal change that requires no action on your side.
+- Now the MapView receives the `deviceId` from the underlying SDK.
