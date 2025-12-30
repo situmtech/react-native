@@ -31,7 +31,7 @@ import {
 } from "../store";
 import { useSelector } from "../store/utils";
 import {
-  OnInternalMapViewMessageDelegate,
+  type OnInternalMapViewMessageCallback,
   type CartographySelectionOptions,
   type MapViewDirectionsOptions,
   type MapViewError,
@@ -174,8 +174,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const webViewRef = useRef<WebView>(null);
     const [_onDirectionsRequestInterceptor, setInterceptor] =
       useState<OnDirectionsRequestInterceptor>();
-    const internalMessageDelegateRef =
-      useRef<OnInternalMapViewMessageDelegate>();
+    const internalMessageCallbackRef =
+      useRef<OnInternalMapViewMessageCallback>();
 
     // Local states
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
@@ -413,9 +413,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           _search(payload);
         },
         onInternalMapViewMessageDelegate(
-          delegate: OnInternalMapViewMessageDelegate,
+          delegate: OnInternalMapViewMessageCallback,
         ): void {
-          internalMessageDelegateRef.current = delegate;
+          internalMessageCallbackRef.current = delegate;
         },
       };
     }, [
@@ -598,7 +598,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       // module, serving as a direct and extensible mode that avoids the
       // intermediation of this plugin.
       try {
-        internalMessageDelegateRef.current?.(type, payload);
+        internalMessageCallbackRef.current?.(type, payload);
       } catch (error) {
         console.error(`Error delegating ${type}:`, error);
       }

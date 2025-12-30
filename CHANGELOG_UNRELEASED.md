@@ -1,6 +1,6 @@
 ### Added
 
-- Added a new callback `onInternalMapViewMessageDelegate` invoked with every MapView message.
+- Added a new callback `onInternalMapViewMessageCallback` invoked with every MapView message.
   It is used internally — no action is required on your side.
 
 ### Changed
