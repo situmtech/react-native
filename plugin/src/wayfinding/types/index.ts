@@ -103,8 +103,8 @@ export interface MapViewRef {
   /**
    * Internal callback invoked with every MapView message.
    */
-  onInternalMapViewMessageDelegate: (
-    delegate: OnInternalMapViewMessageDelegate,
+  onInternalMapViewMessageCallback: (
+    delegate: OnInternalMapViewMessageCallback,
   ) => void;
 }
 
@@ -152,9 +152,10 @@ export interface OnDirectionsRequestInterceptor {
 }
 
 /**
- * Represents a message from the map viewer.
+ * Represents an internal callback that will receive messages from the MapView.
+ * For internal use only.
  */
-export interface OnInternalMapViewMessageDelegate {
+export interface OnInternalMapViewMessageCallback {
   (type: string, payload: any): void;
 }
 
