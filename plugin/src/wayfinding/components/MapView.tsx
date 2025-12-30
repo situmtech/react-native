@@ -46,6 +46,7 @@ import {
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
   type SearchFilter,
+  type InternalMapViewRef,
 } from "../types";
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
@@ -356,7 +357,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
      *    onLoad={onLoad} />
      */
 
-    useImperativeHandle(ref, () => {
+    useImperativeHandle(ref, (): InternalMapViewRef => {
       return {
         followUser() {
           _followUser(true);
@@ -412,10 +413,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         search(payload): void {
           _search(payload);
         },
-        onInternalMapViewMessageDelegate(
-          delegate: OnInternalMapViewMessageCallback,
+        onInternalMapViewMessageCallback(
+          callback: OnInternalMapViewMessageCallback,
         ): void {
-          internalMessageCallbackRef.current = delegate;
+          internalMessageCallbackRef.current = callback;
         },
       };
     }, [
