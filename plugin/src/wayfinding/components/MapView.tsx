@@ -519,7 +519,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           ViewerMapper.initialConfiguration(style),
         );
 
-        _disableInternalWebViewTTSEngine();
+        _sendViewerConfigItems();
       }
     }, [webViewRef, mapLoaded, style]);
 
@@ -685,11 +685,15 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       return finalBuildingIdentifier;
     }, [configuration.buildingIdentifier]);
 
-    const _disableInternalWebViewTTSEngine = () => {
+    const _sendViewerConfigItems = async () => {
+      const deviceId = await SitumPlugin.getDeviceId();
       sendMessageToViewer(
         webViewRef.current,
         ViewerMapper.setConfigItems([
+          // Disable webview TTS in embed mode:
           { key: "internal.tts.engine", value: "mobile" },
+          // Device ID:
+          { key: "internal.deviceId", value: deviceId || "" },
         ]),
       );
     };
