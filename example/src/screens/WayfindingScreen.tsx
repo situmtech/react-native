@@ -28,7 +28,6 @@ export const WayfindingScreen: React.FC = () => {
     if (!mapViewRef) {
       return;
     }
-
     setController(mapViewRef.current);
   }, [mapViewRef]);
 
@@ -36,7 +35,7 @@ export const WayfindingScreen: React.FC = () => {
     // The "onLoad" callback indicates that the map has been loaded and is
     // ready to receive calls to perform actions (e.g., selectPoi, navigateToPoi).
     setMapViewLoaded(true);
-    console.log("Situm > example > Map is ready, received event: ", event);
+    console.log("Situm> example> Map is ready, received event: ", event);
   };
 
   // ////////////////////////////////////////////////////////////////////////
@@ -45,33 +44,33 @@ export const WayfindingScreen: React.FC = () => {
 
   const onPoiSelected = (event: OnPoiSelectedResult) => {
     console.log(
-      "Situm > example > on poi selected detected: " + JSON.stringify(event)
+      "Situm> example> on poi selected detected: " + JSON.stringify(event)
     );
   };
 
   const onPoiDeselected = (event: OnPoiDeselectedResult) => {
     console.log(
-      "Situm > example > on poi deselected detected: " + JSON.stringify(event)
+      "Situm> example> on poi deselected detected: " + JSON.stringify(event)
     );
   };
 
   const onExternalLinkClicked = (event: OnExternalLinkClickedResult) => {
     // MapView will open the external link in the system's default browser if this callback is not set.
-    console.log("Situm > example > click on external link: " + event.url);
+    console.log("Situm> example> click on external link: " + event.url);
   };
 
   const onFloorChanged = (event: any) => {
-    console.log("Situm > example > floor changed to: " + event.identifier);
+    console.log("Situm> example> floor changed to: " + event.identifier);
   };
 
   const onFavoritePoisUpdated = (event: any) => {
     console.log(
-      "Situm > example > favorite pois updated: " + JSON.stringify(event.pois)
+      "Situm> example> favorite pois updated: " + JSON.stringify(event.pois)
     );
   };
 
   const onMapError = (error: any) => {
-    console.error("Situm > example > map error: " + error.message);
+    console.error("Situm> example> map error: " + error.message);
   };
 
   // ////////////////////////////////////////////////////////////////////////
