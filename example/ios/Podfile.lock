@@ -1681,7 +1681,7 @@ PODS:
     - React-logger (= 0.79.1)
     - React-perflogger (= 0.79.1)
     - React-utils (= 0.79.1)
-  - ReactNativeSitumPlugin (3.15.19):
+  - ReactNativeSitumPlugin (3.17.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1705,7 +1705,7 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - SitumSDK (= 3.34.6)
+    - SitumSDK (= 3.34.10)
     - Yoga
   - RNScreens (4.11.1):
     - DoubleConversion
@@ -1756,7 +1756,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - SitumSDK (3.34.6):
+  - SitumSDK (3.34.10):
     - Protobuf (~> 3.18)
     - SSZipArchive (~> 2.4)
   - SocketRocket (0.7.1)
@@ -2075,10 +2075,10 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: f3426eaf6dabae0baec543cd7bac588b6f59210c
   ReactCodegen: 3288d61658273d72fbd348a74b59710b9790615f
   ReactCommon: 9f975582dc535de1de110bdb46d4553140a77541
-  ReactNativeSitumPlugin: 9919bc4478237cf3d704bd4ca958d9baa403fd37
+  ReactNativeSitumPlugin: c0f365b20d0368473061abf31fa649417a98a647
   RNScreens: 3dbce61975990754e4eadd42e9155d327c3445e7
   RNVectorIcons: ae8e1b95f3468a360896c6242d61885efcc64241
-  SitumSDK: 218abb3562cc500e638c90e68c4db7e8212c13ef
+  SitumSDK: de58cad6f48b83451f820452e57f1586ab8b9d2a
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   Yoga: d15f5aa644c466e917569ac43b19cbf17975239a
