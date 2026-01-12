@@ -31,6 +31,7 @@ import {
 } from "../store";
 import { useSelector } from "../store/utils";
 import {
+  type OnInternalMapViewMessageCallback,
   type CartographySelectionOptions,
   type MapViewDirectionsOptions,
   type MapViewError,
@@ -45,6 +46,7 @@ import {
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
   type SearchFilter,
+  type InternalMapViewRef,
 } from "../types";
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
@@ -173,6 +175,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const webViewRef = useRef<WebView>(null);
     const [_onDirectionsRequestInterceptor, setInterceptor] =
       useState<OnDirectionsRequestInterceptor>();
+    const internalMessageCallbackRef =
+      useRef<OnInternalMapViewMessageCallback>();
 
     // Local states
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
@@ -353,7 +357,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
      *    onLoad={onLoad} />
      */
 
-    useImperativeHandle(ref, () => {
+    useImperativeHandle(ref, (): InternalMapViewRef => {
       return {
         followUser() {
           _followUser(true);
@@ -408,6 +412,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         },
         search(payload): void {
           _search(payload);
+        },
+        onInternalMapViewMessageCallback(
+          callback: OnInternalMapViewMessageCallback,
+        ): void {
+          internalMessageCallbackRef.current = callback;
         },
       };
     }, [
@@ -511,7 +520,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           ViewerMapper.initialConfiguration(style),
         );
 
-        _disableInternalWebViewTTSEngine();
+        _sendViewerConfigItems();
       }
     }, [webViewRef, mapLoaded, style]);
 
@@ -522,8 +531,15 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     }, [mapLoaded]);
 
     const handleRequestFromViewer = (event: WebViewMessageEvent) => {
-      const eventParsed = JSON.parse(event.nativeEvent.data);
-      switch (eventParsed.type) {
+      let eventParsed: any = {};
+      try {
+        eventParsed = JSON.parse(event.nativeEvent.data);
+      } catch (err) {
+        console.warn("Invalid JSON from viewer:", err);
+      }
+      const type = eventParsed?.type ?? "message.unknown";
+      const payload = eventParsed?.payload ?? {};
+      switch (type) {
         case "app.map_is_ready":
           init();
           setMapLoaded(true);
@@ -531,52 +547,61 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           onLoad && onLoad("");
           break;
         case "directions.requested":
-          calculateRoute(eventParsed.payload, _onDirectionsRequestInterceptor);
+          calculateRoute(payload, _onDirectionsRequestInterceptor);
           break;
         case "navigation.requested":
-          startNavigation(eventParsed.payload, _onDirectionsRequestInterceptor);
+          startNavigation(payload, _onDirectionsRequestInterceptor);
           break;
         case "navigation.stopped":
           stopNavigation();
           break;
         case "cartography.poi_selected":
-          onPoiSelected(eventParsed?.payload);
+          onPoiSelected(payload);
           break;
         case "cartography.poi_deselected":
-          onPoiDeselected(eventParsed?.payload);
+          onPoiDeselected(payload);
           break;
         case "ui.favorite_pois_updated": {
           const favoritePoisIds = {
-            currentPoisIdentifiers: eventParsed.payload.favoritePois
-              ? [...eventParsed.payload.favoritePois]
+            currentPoisIdentifiers: payload.favoritePois
+              ? [...payload.favoritePois]
               : [],
           };
           onFavoritePoisUpdated(favoritePoisIds);
           break;
         }
         case "cartography.floor_selected":
-          onFloorChanged(eventParsed?.payload);
+          onFloorChanged(payload);
           break;
         case "cartography.building_selected":
           if (
-            !eventParsed.payload.identifier ||
-            eventParsed.payload.identifier.toString() === buildingIdentifier
+            !payload.identifier ||
+            payload.identifier.toString() === buildingIdentifier
           ) {
             return;
           } else {
-            setBuildingIdentifier(eventParsed.payload.identifier.toString());
+            setBuildingIdentifier(payload.identifier.toString());
           }
           break;
         case "viewer.navigation.started":
         case "viewer.navigation.updated":
         case "viewer.navigation.stopped":
-          SitumPlugin.updateNavigationState(eventParsed.payload);
+          SitumPlugin.updateNavigationState(payload);
           break;
         case "ui.speak_aloud_text":
-          SitumPlugin.speakAloudText(eventParsed.payload);
+          SitumPlugin.speakAloudText(payload);
           break;
         default:
           break;
+      }
+      // Internal callback that will receive every MapView message. This callback
+      // has been introduced to enable communication between MapView and the new AR
+      // module, serving as a direct and extensible mode that avoids the
+      // intermediation of this plugin.
+      try {
+        internalMessageCallbackRef.current?.(type, payload);
+      } catch (error) {
+        console.error(`Error delegating ${type}:`, error);
       }
     };
 
@@ -661,11 +686,15 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       return finalBuildingIdentifier;
     }, [configuration.buildingIdentifier]);
 
-    const _disableInternalWebViewTTSEngine = () => {
+    const _sendViewerConfigItems = async () => {
+      const deviceId = await SitumPlugin.getDeviceId();
       sendMessageToViewer(
         webViewRef.current,
         ViewerMapper.setConfigItems([
+          // Disable webview TTS in embed mode:
           { key: "internal.tts.engine", value: "mobile" },
+          // Device ID:
+          { key: "internal.deviceId", value: deviceId || "" },
         ]),
       );
     };
