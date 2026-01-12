@@ -20,6 +20,10 @@ export interface MapViewRef {
    */
   selectPoi: (poiId: number) => void;
   /**
+   * Deselects any selected POI in the MapView's UI.
+   */
+  deselectPoi: () => void;
+  /**
    * Selects the given POI category and displays the list of POIs that belong to the given category.
    * Also, the POIs that do not belong to this category will be hidden in the map.
    * @param categoryId You can obtain the identifiers of your POI categories by retrieving them with [SitumPlugin.fetchPoiCategories()](https://developers.situm.com/sdk_documentation/react-native/typedoc/classes/default.html#fetchPoiCategories).
@@ -102,6 +106,20 @@ export interface MapViewRef {
   navigateToCar: (params?: NavigateToCarPayload) => void;
 }
 
+/**
+ * For internal use only.
+ * @internal
+ */
+export interface InternalMapViewRef extends MapViewRef {
+  /**
+   * Internal callback invoked with every MapView message.
+   * @internal
+   */
+  onInternalMapViewMessageCallback: (
+    delegate: OnInternalMapViewMessageCallback,
+  ) => void;
+}
+
 export interface WayfindingResult {
   status: string;
   message: string;
@@ -143,6 +161,14 @@ export interface MapViewDirectionsOptions {
  */
 export interface OnDirectionsRequestInterceptor {
   (directionRequest: DirectionsRequest): void;
+}
+
+/**
+ * Represents an internal callback that will receive messages from the MapView.
+ * For internal use only.
+ */
+export interface OnInternalMapViewMessageCallback {
+  (type: string, payload: any): void;
 }
 
 export interface OnExternalLinkClickedResult {
