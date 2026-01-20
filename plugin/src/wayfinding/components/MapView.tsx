@@ -601,7 +601,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       try {
         internalMessageCallbackRef.current?.(type, payload);
       } catch (error) {
-        console.error(`Error delegating ${type}:`, error);
+        console.error("Error delegating:", type, error);
       }
     };
 
