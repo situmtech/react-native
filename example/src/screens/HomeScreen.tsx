@@ -11,6 +11,7 @@ import { Alert, ScrollView, StyleSheet } from "react-native";
 import { FetchResourcesCard } from "./cards/FetchResourcesCard";
 import { SITUM_BUILDING_ID } from "../situm";
 import { MapInteractionCard } from "./cards/MapInteractionCard";
+import { ShareLiveLocationCard } from "./cards/ShareLiveLocationCard";
 import { useNavigation } from "@react-navigation/native";
 
 export const HomeScreen = () => {
@@ -72,7 +73,7 @@ export const HomeScreen = () => {
 
   const selectPoi = (identifier: string) => {
     navigation.navigate("Wayfinding", {
-      poiIdentifier: identifier,
+      elementIdentifier: identifier,
       action: "select",
     });
   };
@@ -86,7 +87,7 @@ export const HomeScreen = () => {
       return;
     }
     navigation.navigate("Wayfinding", {
-      poiIdentifier: identifier,
+      elementIdentifier: identifier,
       action: "navigate",
     });
   };
@@ -158,6 +159,16 @@ export const HomeScreen = () => {
       });
   };
 
+  // ////////////////////////////////////////////////////////////////////////
+  // SHARE LIVE LOCATION:
+  // ////////////////////////////////////////////////////////////////////////
+  const setShareLiveLocationSession = (identifier: string) => {
+    navigation.navigate("Wayfinding", {
+      elementIdentifier: identifier,
+      action: "shareLiveLocation",
+    });
+  };
+
   const invalidateCache = () => {
     setFetchOutput("invalidateCache...");
     SitumPlugin.invalidateCache();
@@ -193,6 +204,9 @@ export const HomeScreen = () => {
           onFetchGeofences={fetchGeofences}
           onInvalidateCache={invalidateCache}
           output={fetchOutput}
+        />
+        <ShareLiveLocationCard
+          onSetShareLiveLocationSession={setShareLiveLocationSession}
         />
       </ScrollView>
     </SafeAreaView>

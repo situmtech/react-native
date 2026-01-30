@@ -774,6 +774,31 @@ export default class SitumPlugin {
   /**
    * INTERNAL METHOD.
    *
+   * Ask sdk to start sharing its location.
+   * Do not use this method as it is intended for internal use
+   * by the map viewer module.
+   *
+   * @param startLiveLocationSharing
+   */
+  static startShareLiveLocation = (options: any) => {
+    RNCSitumPlugin.startShareLiveLocation(options);
+  };
+
+  /**
+   * INTERNAL METHOD.
+   *
+   * Ask sdk to stop sharing its location.
+   * Do not use this method as it is intended for internal use
+   * by the map viewer module.
+   *
+   */
+  static stopShareLiveLocation = () => {
+    RNCSitumPlugin.stopShareLiveLocation();
+  };
+
+  /**
+   * INTERNAL METHOD.
+   *
    * Validate if the mapView internal settings have been properly configured
    * Do not use this method as it is intended for internal use
    * by the map viewer module.

@@ -19,6 +19,7 @@ import type {
   OnNavigationResult,
   SearchFilter,
   ViewerConfigItem,
+  ShareLiveLocationSessionPayload,
 } from "../types";
 
 export const createPoint = (payload: any): Point => {
@@ -216,6 +217,13 @@ const ViewerMapper = {
   },
   setConfigItems: (configItems: ViewerConfigItem[]) => {
     return mapperWrapper(`app.set_config_item`, configItems);
+  },
+  // Share Live Lovation
+  setShareLiveLocationSession: (session: ShareLiveLocationSessionPayload) => {
+    return mapperWrapper(
+      "share_location.set_shared_session_identifier",
+      session,
+    );
   },
 };
 

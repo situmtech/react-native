@@ -104,6 +104,15 @@ export interface MapViewRef {
    * To use it, the feature 'Find My Car' must be enabled.
    */
   navigateToCar: (params?: NavigateToCarPayload) => void;
+
+  /**
+   * Establishes the share live location session the mapView should display.
+   * A share live location session allows the mapView to display the real-time location of another user.
+   * @param params.sessionIdentifier The identifier of the live location sharing session that the mapView should display.
+   */
+  setShareLiveLocationSession: (
+    params: ShareLiveLocationSessionPayload,
+  ) => void;
 }
 
 /**
@@ -217,6 +226,10 @@ export type NavigateToPointPayload = {
   floorIdentifier: string;
   navigationName?: string;
   accessibilityMode?: AccessibilityMode;
+};
+
+export type ShareLiveLocationSessionPayload = {
+  identifier: string;
 };
 
 export type DirectionsMessage = {
