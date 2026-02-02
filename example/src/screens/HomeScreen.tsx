@@ -93,6 +93,27 @@ export const HomeScreen = () => {
   };
 
   // ////////////////////////////////////////////////////////////////////////
+  // SHARE LIVE LOCATION:
+  // ////////////////////////////////////////////////////////////////////////
+  const setShareLiveLocationSession = (identifier: string) => {
+    navigation.navigate("Wayfinding", {
+      elementIdentifier: identifier,
+      action: "shareLiveLocation",
+    });
+  };
+
+  const invalidateCache = () => {
+    setFetchOutput("invalidateCache...");
+    SitumPlugin.invalidateCache();
+    setFetchOutput("Cache invalidated");
+  };
+
+  const setJsonFetchOutput = (data: any) => {
+    console.log(data);
+    setFetchOutput(JSON.stringify(data, undefined, 2));
+  };
+
+  // ////////////////////////////////////////////////////////////////////////
   // FETCH RESOURCES:
   // ////////////////////////////////////////////////////////////////////////
 
@@ -159,27 +180,6 @@ export const HomeScreen = () => {
       });
   };
 
-  // ////////////////////////////////////////////////////////////////////////
-  // SHARE LIVE LOCATION:
-  // ////////////////////////////////////////////////////////////////////////
-  const setShareLiveLocationSession = (identifier: string) => {
-    navigation.navigate("Wayfinding", {
-      elementIdentifier: identifier,
-      action: "shareLiveLocation",
-    });
-  };
-
-  const invalidateCache = () => {
-    setFetchOutput("invalidateCache...");
-    SitumPlugin.invalidateCache();
-    setFetchOutput("Cache invalidated");
-  };
-
-  const setJsonFetchOutput = (data: any) => {
-    console.log(data);
-    setFetchOutput(JSON.stringify(data, undefined, 2));
-  };
-
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
       <ScrollView
@@ -197,6 +197,9 @@ export const HomeScreen = () => {
           onSelectPoi={selectPoi}
           onNavigateToPoi={navigateToPoi}
         />
+        <ShareLiveLocationCard
+          onSetShareLiveLocationSession={setShareLiveLocationSession}
+        />
         <FetchResourcesCard
           onFetchBuildingInfo={fetchBuildingInfo}
           onFetchPois={fetchPois}
@@ -204,9 +207,6 @@ export const HomeScreen = () => {
           onFetchGeofences={fetchGeofences}
           onInvalidateCache={invalidateCache}
           output={fetchOutput}
-        />
-        <ShareLiveLocationCard
-          onSetShareLiveLocationSession={setShareLiveLocationSession}
         />
       </ScrollView>
     </SafeAreaView>

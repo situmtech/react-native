@@ -1,0 +1,2 @@
+- Added new method MapViewRef.setShareLiveLocationSession to set the session identifier of the Share Live Location Session the MapView should display.
+- Added the internal functionality that allows to share the user location (a Share Live Location Session) with another user.
