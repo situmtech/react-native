@@ -1,2 +1,2 @@
-- Added new method MapViewRef.setShareLiveLocationSession to set the session identifier of the Share Live Location Session the MapView should display.
+- Added new method MapViewRef.setShareLiveLocationSession to set the session identifier of the Share Live Location Session the MapView should display. When enabled in the [Map Viewer Configuration Settings](https://situm.com/docs/map-viewer-configuration-settings/), Share Live Location functionality allows a user to share their real-time location with another user.
 - Added the internal functionality that allows to share the user location (a Share Live Location Session) with another user.
