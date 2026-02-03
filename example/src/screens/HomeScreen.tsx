@@ -102,17 +102,6 @@ export const HomeScreen = () => {
     });
   };
 
-  const invalidateCache = () => {
-    setFetchOutput("invalidateCache...");
-    SitumPlugin.invalidateCache();
-    setFetchOutput("Cache invalidated");
-  };
-
-  const setJsonFetchOutput = (data: any) => {
-    console.log(data);
-    setFetchOutput(JSON.stringify(data, undefined, 2));
-  };
-
   // ////////////////////////////////////////////////////////////////////////
   // FETCH RESOURCES:
   // ////////////////////////////////////////////////////////////////////////
@@ -178,6 +167,17 @@ export const HomeScreen = () => {
           `Situm > example > Failed to fetch building info: ${error}`
         );
       });
+  };
+
+  const invalidateCache = () => {
+    setFetchOutput("invalidateCache...");
+    SitumPlugin.invalidateCache();
+    setFetchOutput("Cache invalidated");
+  };
+
+  const setJsonFetchOutput = (data: any) => {
+    console.log(data);
+    setFetchOutput(JSON.stringify(data, undefined, 2));
   };
 
   return (

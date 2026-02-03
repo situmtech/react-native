@@ -103,19 +103,16 @@ export const WayfindingScreen: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elementIdentifier, action, mapViewLoaded]);
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   const selectPoi = (poiIdentifier: string) => {
     controller?.selectPoi(Number(poiIdentifier));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   const navigateToPoi = (poiIdentifier: string) => {
     controller?.navigateToPoi({
       identifier: Number(poiIdentifier),
     });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   const setShareLiveLocationSession = (sessionIdentifier: string) => {
     controller?.setShareLiveLocationSession({
       identifier: sessionIdentifier,
