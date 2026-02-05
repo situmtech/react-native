@@ -59,6 +59,8 @@ import es.situm.sdk.v1.SitumEvent;
 import es.situm.sdk.location.GeofenceListener;
 import es.situm.sdk.navigation.ExternalNavigation;
 import es.situm.sdk.userhelper.UserHelperColorScheme;
+import es.situm.sdk.location.InternalLocationManager;
+import es.situm.sdk.location.ShareLiveLocationOptions;
 
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_CHANGED;
 import static com.situm.plugin.SitumPlugin.EVENT_LOCATION_ERROR;
@@ -853,6 +855,15 @@ public class PluginHelper {
     public void removeRealTimeUpdates() {
         Log.i(TAG, "Remove realtime updates");
         getRealtimeManagerInstance().removeRealTimeUpdates();
+    }
+
+    public void startShareLiveLocation(ReadableMap payload) {
+        Map<String, Object> shareLiveLocationOptionsMap = convertReadableMapToMap(payload);
+         ((InternalLocationManager)SitumSdk.locationManager()).startShareLiveLocation(ShareLiveLocationOptions.fromMap(shareLiveLocationOptionsMap));
+    }
+
+    public void stopShareLiveLocation() {
+         ((InternalLocationManager)SitumSdk.locationManager()).stopShareLiveLocation();
     }
 
     public void checkIfPointIsInsideGeoFence(ReadableMap map, Callback callback) {
