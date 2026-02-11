@@ -77,39 +77,45 @@ export const WayfindingScreen: React.FC = () => {
   // ACTIONS:
   // ////////////////////////////////////////////////////////////////////////
 
-  // Get the POI identifier from react-navigation route params.
+  // Get the Element identifier from react-navigation route params.
   const navigation = useNavigation();
   const route = useRoute<RouteProp<RootTabsParamsList, "Wayfinding">>();
-  const { poiIdentifier, action } = route.params || {};
+  const { elementIdentifier, action } = route.params || {};
 
   useEffect(() => {
     // The MapView must be loaded to perform actions.
     if (!mapViewLoaded) return;
-    if (!poiIdentifier || !action) return;
+    if (!elementIdentifier || !action) return;
 
     if (action === "select") {
-      selectPoi(poiIdentifier);
+      selectPoi(elementIdentifier);
     } else if (action === "navigate") {
-      navigateToPoi(poiIdentifier);
+      navigateToPoi(elementIdentifier);
+    } else if (action === "shareLiveLocation") {
+      setShareLiveLocationSession(elementIdentifier);
     }
 
     // Reset params to make the useEffect execute even with the same values.
     navigation.setParams({
-      poiIdentifier: undefined,
+      elementIdentifier: undefined,
       action: undefined,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poiIdentifier, action, mapViewLoaded]);
+  }, [elementIdentifier, action, mapViewLoaded]);
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   const selectPoi = (poiIdentifier: string) => {
     controller?.selectPoi(Number(poiIdentifier));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   const navigateToPoi = (poiIdentifier: string) => {
     controller?.navigateToPoi({
       identifier: Number(poiIdentifier),
+    });
+  };
+
+  const setShareLiveLocationSession = (sessionIdentifier: string) => {
+    controller?.setShareLiveLocationSession({
+      identifier: sessionIdentifier,
     });
   };
 
