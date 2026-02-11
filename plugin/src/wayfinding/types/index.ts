@@ -104,6 +104,26 @@ export interface MapViewRef {
    * To use it, the feature 'Find My Car' must be enabled.
    */
   navigateToCar: (params?: NavigateToCarPayload) => void;
+
+  /**
+   * Sets the live location sharing session to be displayed on the mapView.
+   *
+   * When enabled in the [Map Viewer Configuration Settings](https://situm.com/docs/map-viewer-configuration-settings/),
+   * Share Live Location allows a user to share their real-time location with another user.
+   *
+   * The sharing user receives a link that can be sent to their friends. If deep
+   * linking is correctly configured, the receiving user can open the link and
+   * see the shared location in their own app.
+   *
+   * The deep link includes a parameter called `shared_session_id`, which must be
+   * passed to this method so the mapView can display the sender’s location.
+   *
+   * For more information check [Situm Documentation](https://situm.com/docs)
+   * @param params.sessionIdentifier The identifier of the live location sharing session that the mapView should display.
+   */
+  setShareLiveLocationSession: (
+    params: ShareLiveLocationSessionPayload,
+  ) => void;
 }
 
 /**
@@ -217,6 +237,10 @@ export type NavigateToPointPayload = {
   floorIdentifier: string;
   navigationName?: string;
   accessibilityMode?: AccessibilityMode;
+};
+
+export type ShareLiveLocationSessionPayload = {
+  identifier: string;
 };
 
 export type DirectionsMessage = {

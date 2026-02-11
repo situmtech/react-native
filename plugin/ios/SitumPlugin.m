@@ -1004,6 +1004,20 @@ RCT_EXPORT_METHOD(autoManage:(BOOL)autoManage) {
     [[SITUserHelperManager sharedInstance] autoManage:autoManage];
 }
 
+
+RCT_EXPORT_METHOD(startShareLiveLocation:(NSDictionary *)arguments)
+{
+    if (arguments.count > 0) {
+      SITShareLiveLocationOptions *shareLiveLocationOptions = [SITShareLiveLocationOptions fromDictionary:arguments];
+      [((id<SITLocationInterface_Internal>)[SITLocationManager sharedInstance]) startShareLiveLocationWithOptions:shareLiveLocationOptions];
+    }
+}
+
+RCT_EXPORT_METHOD(stopShareLiveLocation)
+{
+  [((id<SITLocationInterface_Internal>)[SITLocationManager sharedInstance]) stopShareLiveLocation];
+}
+
 RCT_EXPORT_METHOD(speakAloudText:(NSDictionary *)arguments) {
     [_ttsSpeaker speakWithPayload: arguments];
 }
