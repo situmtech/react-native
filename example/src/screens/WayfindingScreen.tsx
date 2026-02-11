@@ -9,13 +9,15 @@ import {
   MapView,
 } from "@situm/react-native";
 
-import { SITUM_BUILDING_ID, SITUM_PROFILE } from "../situm";
 import { PaperProvider } from "react-native-paper";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootTabsParamsList } from "../navigation/types";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useSitumConfig } from "../config/SitumConfigContext";
 
 export const WayfindingScreen: React.FC = () => {
+  const { buildingId, profile, mapViewerDomain } = useSitumConfig();
+
   // ////////////////////////////////////////////////////////////////////////
   // INITIALIZATION
   // ////////////////////////////////////////////////////////////////////////
@@ -120,8 +122,9 @@ export const WayfindingScreen: React.FC = () => {
         <MapView
           ref={mapViewRef}
           configuration={{
-            buildingIdentifier: SITUM_BUILDING_ID,
-            profile: SITUM_PROFILE,
+            buildingIdentifier: buildingId,
+            profile,
+            viewerDomain: mapViewerDomain,
           }}
           onLoad={onLoad}
           onLoadError={onMapError}
