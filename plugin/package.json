@@ -156,7 +156,7 @@
     "lib/"
   ],
   "sdkVersions": {
-    "android": "3.34.1@aar",
+    "android": "3.35.0@aar",
     "ios": "3.35.0"
   }
 }
