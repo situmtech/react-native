@@ -7,13 +7,75 @@ import SitumPlugin, {
   Building,
 } from "@situm/react-native";
 import { PositioningCard } from "./cards/PositioningCard";
-import { Alert, ScrollView, StyleSheet } from "react-native";
+import {
+  Alert,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { FetchResourcesCard } from "./cards/FetchResourcesCard";
-import { SITUM_BUILDING_ID } from "../situm";
 import { MapInteractionCard } from "./cards/MapInteractionCard";
 import { useNavigation } from "@react-navigation/native";
+import {
+  useSitumConfig,
+  DEFAULT_SITUM_CONFIG,
+} from "../config/SitumConfigContext";
 
 export const HomeScreen = () => {
+  const { apiKey, buildingId, profile, apiDomain, mapViewerDomain, updateConfig } =
+    useSitumConfig();
+
+  const [draftApiKey, setDraftApiKey] = useState(apiKey);
+  const [draftBuildingId, setDraftBuildingId] = useState(buildingId);
+  const [draftProfile, setDraftProfile] = useState(profile);
+  const [draftApiDomain, setDraftApiDomain] = useState(apiDomain);
+  const [draftMapViewerDomain, setDraftMapViewerDomain] =
+    useState(mapViewerDomain);
+
+  useEffect(() => {
+    setDraftApiKey(apiKey);
+    setDraftBuildingId(buildingId);
+    setDraftProfile(profile);
+    setDraftApiDomain(apiDomain);
+    setDraftMapViewerDomain(mapViewerDomain);
+  }, [apiKey, buildingId, profile, apiDomain, mapViewerDomain]);
+
+  const applySitumConfiguration = () => {
+    const nextApiKey = draftApiKey.trim();
+    const nextBuildingId = draftBuildingId.trim();
+    const nextProfile = draftProfile.trim();
+    const nextApiDomain = draftApiDomain.trim();
+    const nextMapViewerDomain = draftMapViewerDomain.trim();
+
+    if (
+      !nextApiKey ||
+      !nextBuildingId ||
+      !nextProfile ||
+      !nextApiDomain ||
+      !nextMapViewerDomain
+    ) {
+      Alert.alert("Invalid configuration", "All Situm fields are required.");
+      return;
+    }
+
+    updateConfig({
+      apiKey: nextApiKey,
+      buildingId: nextBuildingId,
+      profile: nextProfile,
+      apiDomain: nextApiDomain,
+      mapViewerDomain: nextMapViewerDomain,
+    });
+    setFetchOutput("Situm configuration applied.");
+  };
+
+  const resetSitumConfiguration = () => {
+    updateConfig(DEFAULT_SITUM_CONFIG);
+    setFetchOutput("Situm configuration reset to defaults.");
+  };
+
   // ////////////////////////////////////////////////////////////////////////
   // POSITIONING:
   // ////////////////////////////////////////////////////////////////////////
@@ -24,6 +86,7 @@ export const HomeScreen = () => {
 
   useEffect(() => {
     registerCallbacks();
+    SitumPlugin.setConfiguration({ useRemoteConfig: true });
 
     // Automatically manage positioning permissions and sensor issues:
     SitumPlugin.enableUserHelper();
@@ -102,14 +165,14 @@ export const HomeScreen = () => {
     SitumPlugin.fetchBuildings()
       .then((buildings: Building[]) => {
         const myBuilding = buildings.find(
-          (b) => b.buildingIdentifier === SITUM_BUILDING_ID
+          (b) => b.buildingIdentifier === buildingId
         );
         setBuilding(myBuilding);
       })
       .catch((error: any) => {
         console.error(`Situm > example > Failed to fetch buildings: ${error}`);
       });
-  }, []);
+  }, [buildingId]);
 
   const fetchBuildingInfo = () => {
     setFetchOutput("fetchBuildingInfo...");
@@ -175,6 +238,53 @@ export const HomeScreen = () => {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={true}
       >
+        <View style={styles.configCard}>
+          <Text style={styles.configTitle}>Situm configuration</Text>
+          <TextInput
+            style={styles.configInput}
+            value={draftApiKey}
+            onChangeText={setDraftApiKey}
+            placeholder="API key"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          <TextInput
+            style={styles.configInput}
+            value={draftBuildingId}
+            onChangeText={setDraftBuildingId}
+            placeholder="Building ID"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          <TextInput
+            style={styles.configInput}
+            value={draftApiDomain}
+            onChangeText={setDraftApiDomain}
+            placeholder="API domain"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          <TextInput
+            style={styles.configInput}
+            value={draftProfile}
+            onChangeText={setDraftProfile}
+            placeholder="Profile"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          <TextInput
+            style={styles.configInput}
+            value={draftMapViewerDomain}
+            onChangeText={setDraftMapViewerDomain}
+            placeholder="Map viewer domain"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          <View style={styles.configActions}>
+            <Button title="Apply config" onPress={applySitumConfiguration} />
+            <Button title="Reset defaults" onPress={resetSitumConfiguration} />
+          </View>
+        </View>
         <PositioningCard
           onStartPositioning={startPositioning}
           onStopPositioning={stopPositioning}
@@ -207,5 +317,31 @@ const styles = StyleSheet.create({
   scrollContainer: {
     padding: 4,
     paddingBottom: 0,
+  },
+  configCard: {
+    marginBottom: 12,
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#d8d8d8",
+    backgroundColor: "#ffffff",
+  },
+  configTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  configInput: {
+    borderWidth: 1,
+    borderColor: "#cccccc",
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    marginBottom: 8,
+  },
+  configActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 8,
   },
 });
