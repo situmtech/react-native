@@ -119,7 +119,7 @@ export interface MapViewRef {
    * passed to this method so the mapView can display the sender’s location.
    *
    * For more information check [Situm Documentation](https://situm.com/docs)
-   * @param params.sessionIdentifier The identifier of the live location sharing session that the mapView should display.
+   * @param params.identifier The identifier of the live location sharing session that the mapView should display.
    */
   setShareLiveLocationSession: (
     params: ShareLiveLocationSessionPayload,
