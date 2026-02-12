@@ -16,7 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useSitumConfig } from "../config/SitumConfigContext";
 
 export const WayfindingScreen: React.FC = () => {
-  const { buildingId, profile, mapViewerDomain } = useSitumConfig();
+  const { buildingId, profile, mapViewerDomain, apiDomain } = useSitumConfig();
 
   // ////////////////////////////////////////////////////////////////////////
   // INITIALIZATION
@@ -128,6 +128,7 @@ export const WayfindingScreen: React.FC = () => {
         <MapView
           ref={mapViewRef}
           configuration={{
+            apiDomain, 
             buildingIdentifier: buildingId,
             profile,
             viewerDomain: mapViewerDomain,
