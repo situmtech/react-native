@@ -3,8 +3,8 @@
 export type RootTabsParamsList = {
   Home: undefined;
   Wayfinding: {
-    poiIdentifier: string;
-    action: "select" | "navigate";
+    elementIdentifier: string;
+    action: "select" | "navigate" | "shareLiveLocation";
   };
 };
 

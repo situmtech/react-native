@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import { FetchResourcesCard } from "./cards/FetchResourcesCard";
 import { MapInteractionCard } from "./cards/MapInteractionCard";
+import { ShareLiveLocationCard } from "./cards/ShareLiveLocationCard";
 import { useNavigation } from "@react-navigation/native";
 import {
   useSitumConfig,
@@ -135,7 +136,7 @@ export const HomeScreen = () => {
 
   const selectPoi = (identifier: string) => {
     navigation.navigate("Wayfinding", {
-      poiIdentifier: identifier,
+      elementIdentifier: identifier,
       action: "select",
     });
   };
@@ -149,8 +150,18 @@ export const HomeScreen = () => {
       return;
     }
     navigation.navigate("Wayfinding", {
-      poiIdentifier: identifier,
+      elementIdentifier: identifier,
       action: "navigate",
+    });
+  };
+
+  // ////////////////////////////////////////////////////////////////////////
+  // SHARE LIVE LOCATION:
+  // ////////////////////////////////////////////////////////////////////////
+  const setShareLiveLocationSession = (identifier: string) => {
+    navigation.navigate("Wayfinding", {
+      elementIdentifier: identifier,
+      action: "shareLiveLocation",
     });
   };
 
@@ -295,6 +306,9 @@ export const HomeScreen = () => {
         <MapInteractionCard
           onSelectPoi={selectPoi}
           onNavigateToPoi={navigateToPoi}
+        />
+        <ShareLiveLocationCard
+          onSetShareLiveLocationSession={setShareLiveLocationSession}
         />
         <FetchResourcesCard
           onFetchBuildingInfo={fetchBuildingInfo}
