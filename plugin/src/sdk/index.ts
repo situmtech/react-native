@@ -778,7 +778,6 @@ export default class SitumPlugin {
    * Do not use this method as it is intended for internal use
    * by the map viewer module.
    *
-   * @param startLiveLocationSharing
    */
   static startShareLiveLocation = (options: any) => {
     RNCSitumPlugin.startShareLiveLocation(options);
