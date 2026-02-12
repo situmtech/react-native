@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useMemo, useState } from "react";
-import { SITUM_API_KEY, SITUM_BUILDING_ID, SITUM_PROFILE, SITUM_API_DOMAIN } from "../situm";
+import { SITUM_API_KEY, SITUM_BUILDING_ID, SITUM_PROFILE } from "../situm";
 
 type SitumConfig = {
   apiKey: string;
@@ -17,8 +17,8 @@ export const DEFAULT_SITUM_CONFIG: SitumConfig = {
   apiKey: SITUM_API_KEY,
   buildingId: SITUM_BUILDING_ID,
   profile: SITUM_PROFILE,
-  apiDomain: SITUM_API_DOMAIN,
-  mapViewerDomain: "https://maps.situm.com",
+  apiDomain: "https://maps-cms-uat.hoi.in",
+  mapViewerDomain: "https://maps-uat.hoi.in",
 };
 
 const SitumConfigContext = createContext<SitumConfigContextType | undefined>(
