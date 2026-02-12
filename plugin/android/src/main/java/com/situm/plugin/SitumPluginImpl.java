@@ -266,6 +266,18 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
+    public void startShareLiveLocation(ReadableMap map) {
+        getPluginInstance().startShareLiveLocation(map);
+    }
+
+    @Override
+    @ReactMethod
+    public void stopShareLiveLocation() {
+        getPluginInstance().stopShareLiveLocation();
+    }
+
+    @Override
+    @ReactMethod
     public void checkIfPointInsideGeofence(ReadableMap map, Callback callback) {
         getPluginInstance().checkIfPointIsInsideGeoFence(map, callback);
     }

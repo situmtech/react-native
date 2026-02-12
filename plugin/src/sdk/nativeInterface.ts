@@ -88,6 +88,8 @@ interface CartographyAPI {
 interface LocationAPI {
   startPositioning: (locationRequest?: LocationRequest) => void;
   stopPositioning: (callback: (response: { success: boolean }) => void) => void;
+  startShareLiveLocation: (options: any) => void;
+  stopShareLiveLocation: () => void;
 }
 
 interface NavigationAPI {
