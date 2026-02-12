@@ -78,6 +78,10 @@ public interface SitumPlugin {
 
     void removeRealTimeUpdates();
 
+    void startShareLiveLocation(ReadableMap map);
+
+    void stopShareLiveLocation();
+
     void checkIfPointInsideGeofence(ReadableMap map, Callback callback);
 
     void invalidateCache();

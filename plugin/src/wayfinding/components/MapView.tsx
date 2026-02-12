@@ -39,6 +39,7 @@ import {
   type NavigateToCarPayload,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
+  type ShareLiveLocationSessionPayload,
   type OnDirectionsRequestInterceptor,
   type OnExternalLinkClickedResult,
   type OnFavoritePoisUpdatedResult,
@@ -327,6 +328,18 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     }, []);
 
+    //Share Live Location
+    const _setShareLiveLocationSession = useCallback(
+      (payload: ShareLiveLocationSessionPayload) => {
+        if (!webViewRef.current || !payload?.identifier) return;
+        sendMessageToViewer(
+          webViewRef.current,
+          ViewerMapper.setShareLiveLocationSession(payload),
+        );
+      },
+      [],
+    );
+
     const _onMapIsReady = () => {
       if (locationStatus) {
         sendMessageToViewer(
@@ -410,6 +423,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
             ViewerMapper.cancelNavigation(),
           );
         },
+        setShareLiveLocationSession(
+          payload: ShareLiveLocationSessionPayload,
+        ): void {
+          _setShareLiveLocationSession(payload);
+        },
         search(payload): void {
           _search(payload);
         },
@@ -431,6 +449,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       _selectFloor,
       _setDirectionsOptions,
       _setFavoritePois,
+      _setShareLiveLocationSession,
       _search,
     ]);
 
@@ -587,6 +606,12 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "viewer.navigation.updated":
         case "viewer.navigation.stopped":
           SitumPlugin.updateNavigationState(payload);
+          break;
+        case "share_location.uploading_locations_started":
+          SitumPlugin.startShareLiveLocation(payload);
+          break;
+        case "share_location.uploading_locations_stopped":
+          SitumPlugin.stopShareLiveLocation();
           break;
         case "ui.speak_aloud_text":
           SitumPlugin.speakAloudText(payload);
