@@ -11,6 +11,7 @@ import React, {
 import {
   Linking,
   Platform,
+  Share,
   type StyleProp,
   StyleSheet,
   type ViewStyle,
@@ -31,23 +32,23 @@ import {
 } from "../store";
 import { useSelector } from "../store/utils";
 import {
-  type OnInternalMapViewMessageCallback,
   type CartographySelectionOptions,
+  type InternalMapViewRef,
   type MapViewDirectionsOptions,
   type MapViewError,
   type MapViewRef,
   type NavigateToCarPayload,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
-  type ShareLiveLocationSessionPayload,
   type OnDirectionsRequestInterceptor,
   type OnExternalLinkClickedResult,
   type OnFavoritePoisUpdatedResult,
   type OnFloorChangedResult,
+  type OnInternalMapViewMessageCallback,
   type OnPoiDeselectedResult,
   type OnPoiSelectedResult,
   type SearchFilter,
-  type InternalMapViewRef,
+  type ShareLiveLocationSessionPayload,
 } from "../types";
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
@@ -106,6 +107,12 @@ export type MapViewConfiguration = {
    */
   language?: string;
 };
+
+// ref https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
+interface WebShareAPIParam {
+  title?: string;
+  url?: string;
+}
 
 const viewerStyles = StyleSheet.create({
   webview: {
@@ -616,6 +623,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "ui.speak_aloud_text":
           SitumPlugin.speakAloudText(payload);
           break;
+        case "native.share":
+          if (Platform.OS !== "android") return;
+          _onWebShareMessage(payload);
+          break;
         default:
           break;
       }
@@ -625,10 +636,29 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       // intermediation of this plugin.
       try {
         internalMessageCallbackRef.current?.(type, payload);
-      } catch (error) {
-        console.error("Error delegating:", type, error);
+      } catch (e) {
+        console.error("Error delegating:", type, e);
       }
     };
+
+    const _onWebShareMessage = useCallback(async (param: WebShareAPIParam) => {
+      try {
+        if (param.url == null) {
+          return;
+        }
+        await Share.share(
+          {
+            title: param.title,
+            message: param.url,
+          },
+          {
+            dialogTitle: param.title,
+          },
+        );
+      } catch (e) {
+        console.error(e);
+      }
+    }, []);
 
     const _onShouldStartLoadWithRequest = (request: any) => {
       if (
@@ -724,6 +754,48 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     };
 
+    // Override the Web Share API as it is not supported on Android WebView
+    // See https://github.com/react-native-webview/react-native-webview/issues/1262#issuecomment-933315821
+    const _androidShareInjection = useMemo(() => {
+      // Path share behavior only on Android
+      if (Platform.OS !== "android") return undefined;
+
+      return `
+        // Polyfill the check of being able to share for the webview
+        if (navigator.canShare == null) {
+          navigator.canShare = (param) => {
+            if (param == null || typeof param !== "object") {
+              return false;
+            }
+            if (Array.isArray(param.files) && param.files.length > 0) {
+              return false;
+            }
+            return param.url != null || param.title != null;
+          };
+        }
+        // Polyfill the share API for the webview
+        if (navigator.share == null) {
+          navigator.share = (param) => {
+            // Return a promise same as the native share API
+            return new Promise((resolve, reject) => {
+              try {
+                window.ReactNativeWebView.postMessage(
+                  JSON.stringify({
+                    type: "native.share",
+                    payload: param,
+                  })
+                );
+                resolve();
+              } catch (error) {
+                reject(error);
+              }
+            });
+          };
+        }
+        true;
+      `;
+    }, []);
+
     return (
       <WebView
         ref={webViewRef}
@@ -736,6 +808,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         limitsNavigationsToAppBoundDomains={true}
         javaScriptEnabled={true}
         domStorageEnabled={true}
+        injectedJavaScriptBeforeContentLoaded={_androidShareInjection}
         startInLoadingState={true}
         cacheEnabled
         onMessage={handleRequestFromViewer}
