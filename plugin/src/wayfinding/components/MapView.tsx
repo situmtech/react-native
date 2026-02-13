@@ -110,9 +110,8 @@ export type MapViewConfiguration = {
 
 // ref https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
 interface WebShareAPIParam {
-  url?: string;
-  text?: string;
   title?: string;
+  url?: string;
 }
 
 const viewerStyles = StyleSheet.create({
@@ -644,18 +643,16 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     const _onWebShareMessage = useCallback(async (param: WebShareAPIParam) => {
       try {
-        if (param.url == null && param.text == null) {
+        if (param.url == null) {
           return;
         }
         await Share.share(
           {
             title: param.title,
-            message: [param.text, param.url].filter(Boolean).join(" "),
-            url: param.url,
+            message: param.url,
           },
           {
             dialogTitle: param.title,
-            subject: param.title,
           },
         );
       } catch (e) {
@@ -757,13 +754,14 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       );
     };
 
-    // As the share API is not available in the webview, we need to override it to use the native share API.
+    // Override the Web Share API as it is not supported on Android WebView
     // See https://github.com/react-native-webview/react-native-webview/issues/1262#issuecomment-933315821
     const _androidShareInjection = useMemo(() => {
       // Path share behavior only on Android
       if (Platform.OS !== "android") return undefined;
 
       return `
+        // Polyfill the check of being able to share for the webview
         if (navigator.canShare == null) {
           navigator.canShare = (param) => {
             if (param == null || typeof param !== "object") {
@@ -772,11 +770,13 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
             if (Array.isArray(param.files) && param.files.length > 0) {
               return false;
             }
-            return param.url != null || param.text != null || param.title != null;
+            return param.url != null || param.title != null;
           };
         }
+        // Polyfill the share API for the webview
         if (navigator.share == null) {
           navigator.share = (param) => {
+            // Return a promise same as the native share API
             return new Promise((resolve, reject) => {
               try {
                 window.ReactNativeWebView.postMessage(
