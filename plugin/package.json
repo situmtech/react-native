@@ -157,6 +157,6 @@
   ],
   "sdkVersions": {
     "android": "3.36.0@aar",
-    "ios": "3.36.0"
+    "ios": "3.36.1"
   }
 }
