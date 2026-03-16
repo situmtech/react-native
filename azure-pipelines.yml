@@ -1,6 +1,7 @@
 trigger:
   - release/*
   - develop
+  - feature/*
 
 pr: none
 
@@ -25,7 +26,7 @@ resources:
       type: bitbucket
       endpoint: Bitbucket - sistemas
       name: situm/sys-kubernetes-templates.git
-      ref: master
+      ref: feature/trivy-no-severity-filter
     - repository: web_developers
       type: bitbucket
       endpoint: Bitbucket - sistemas
@@ -33,7 +34,7 @@ resources:
       ref: master
 
 steps:
-  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
+  - ${{ if contains(variables['Build.SourceBranch'], 'feature/') }}:
       - template: azure-templates/static-analyse.yml@sys_kubernetes_templates
         parameters:
           repoFolder: .
