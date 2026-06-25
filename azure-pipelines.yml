@@ -98,7 +98,7 @@ steps:
           # Important: ensure we are working at plugin folder when setting the NPM version.
           cd plugin
           echo -e "\n[+] Setting NPM version to $(version)"
-          npm version $(version) --no-git-tag-version
+          YARN_VERSION_GIT_TAG=false YARN_VERSION_GIT_SIGN=false YARN_VERSION_COMMIT_HOOKS=false yarn version $(version)
           cd ..
 
           echo -e "\n[+] Setting git to push NPM version\n"
@@ -141,11 +141,10 @@ steps:
           git pull origin master
 
           echo -e "\n[+] Setting up yarn\n"
-          npm install -g corepack
           corepack enable
 
           echo -e "\n[+] Installing yarn dependencies\n"
-          yarn install
+          yarn install --immutable
 
           echo -e "\n[+] Configure NPM login"
           echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > ~/.npmrc
@@ -158,7 +157,7 @@ steps:
 
           # Publish!
           echo -e "\n[+] Publish NPM packages"
-          npm publish
+          yarn npm publish
 
           echo -e "\n[+] Delete README.MD from plugin folder\n"
           rm -rf README.md

@@ -106,7 +106,8 @@ steps:
 
           echo -e "\n[+] Install $(office365Cli) cli\n"
 
-          npm i -g $(office365Cli)
+          corepack enable
+          yarn global add $(office365Cli)
 
           echo -e "\n[+] Login in Sharepoint \n"
           m365 login --authType password --userName $(sharepoint_user)  --password $(sharepoint_pass) --appId $(sharepoint_appId)
