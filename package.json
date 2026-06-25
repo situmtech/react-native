@@ -19,7 +19,7 @@
     "test": "yarn typescript && yarn test:jest",
     "doc": "cd plugin && yarn doc"
   },
-  "packageManager": "yarn@4.0.1",
+  "packageManager": "yarn@4.15.0",
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.7",
     "@types/jest": "^29.5.14",
