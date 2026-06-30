@@ -103,7 +103,7 @@
   "engines": {
     "node": ">= 16.0.0"
   },
-  "packageManager": "yarn@1.22.15",
+  "packageManager": "yarn@4.15.0",
   "jest": {
     "preset": "react-native",
     "setupFilesAfterEnv": [
@@ -156,7 +156,7 @@
     "lib/"
   ],
   "sdkVersions": {
-    "android": "3.36.7@aar",
+    "android": "3.37.0@aar",
     "ios": "3.39.4"
   }
 }

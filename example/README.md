@@ -48,7 +48,7 @@ This repository uses [yarn workspaces](https://yarnpkg.com/features/workspaces) 
 cd react-native/
 npm install -g corepack
 corepack enable
-corepack prepare yarn@4.0.1 --activate
+corepack prepare yarn@4.15.0 --activate
 ```
 
 Then install the plugin dependencies alongside the example/ app dependecies as follows:

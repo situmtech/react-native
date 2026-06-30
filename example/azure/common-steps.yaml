@@ -34,16 +34,15 @@ steps:
       echo -e "\n[+] Installed NPM version is $(npm --version)\n"
 
       echo -e "\n[+] Setup yarn 4\n"
-      npm install -g corepack
       corepack enable
-      corepack prepare yarn@4.0.1 --activate
+      corepack prepare yarn@$(yarnVersion) --activate
 
       echo -e "\n[+] Install plugin dependencies\n"
-      yarn install
+      yarn install --immutable
 
       echo -e "\n[+] Install example dependencies\n"
       rm -rf example/ios/Podfile.lock
-      yarn workspace example install
+      yarn workspace example install --immutable
 
     displayName: Install plugin dependencies
 
