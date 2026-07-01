@@ -95,10 +95,14 @@ steps:
             cd react-native
           fi
 
+          echo -e "\n[+] Setup yarn 4\n"
+          corepack enable
+          corepack prepare yarn@$(yarnVersion) --activate
+
           # Important: ensure we are working at plugin folder when setting the NPM version.
           cd plugin
           echo -e "\n[+] Setting NPM version to $(version)"
-          YARN_VERSION_GIT_TAG=false YARN_VERSION_GIT_SIGN=false YARN_VERSION_COMMIT_HOOKS=false yarn version $(version)
+          yarn version $(version)
           cd ..
 
           echo -e "\n[+] Setting git to push NPM version\n"
@@ -157,7 +161,7 @@ steps:
 
           # Publish!
           echo -e "\n[+] Publish NPM packages"
-          yarn npm publish
+          YARN_NPM_AUTH_TOKEN=$NPM_TOKEN yarn npm publish --access public
 
           echo -e "\n[+] Delete README.MD from plugin folder\n"
           rm -rf README.md
