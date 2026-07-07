@@ -39,6 +39,7 @@ import {
   locationStatusAdapter,
   promiseWrapper,
 } from "./utils";
+import { authStore } from "./authStore";
 
 export * from "./types";
 export * from "./types/constants";
@@ -281,6 +282,26 @@ export default class SitumPlugin {
     return exceptionWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setApiKey("email@email.com", apiKey, (response) => {
         onCallback(response, "Failed to set API key.");
+        authStore.setAuth({ type: "apiKey", value: apiKey });
+      });
+    });
+  };
+
+  /**
+   * Provides your token to the Situm SDK.
+   *
+   * Old credentials will be replaced.
+   *
+   * @param token JWT token used for authentication.
+   *
+   * @returns void
+   * @throws Exception
+   */
+  static setToken = (token: string) => {
+    return exceptionWrapper(({ onCallback }) => {
+      RNCSitumPlugin.setToken(token, (response) => {
+        onCallback(response, "Failed to set JWT token.");
+        authStore.setAuth({ type: "jwt", value: token });
       });
     });
   };
@@ -409,11 +430,11 @@ export default class SitumPlugin {
   static sdkVersion = () => {
     return exceptionWrapper<SdkVersion>(({ onSuccess }) => {
       const versions: { react_native: string; ios?: string; android?: string } =
-        {
-          react_native: "",
-          ios: "",
-          android: "",
-        };
+      {
+        react_native: "",
+        ios: "",
+        android: "",
+      };
       onSuccess(versions);
     });
   };
@@ -681,9 +702,9 @@ export default class SitumPlugin {
         SitumPluginEventEmitter.addListener("realtimeUpdated", realtimeUpdates),
         error
           ? SitumPluginEventEmitter.addListener(
-              "realtimeError",
-              error || logError,
-            )
+            "realtimeError",
+            error || logError,
+          )
           : null,
       ]);
     });

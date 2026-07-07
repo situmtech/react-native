@@ -53,6 +53,7 @@ import {
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
 import ViewerMapper from "../utils/mapper";
+import { authStore, SitumAuth } from "../../sdk/authStore";
 const SITUM_BASE_DOMAIN = "https://maps.situm.com";
 
 const NETWORK_ERROR_CODE = {
@@ -192,6 +193,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       configuration.buildingIdentifier,
     );
 
+    const [auth, setAuth] = useState<SitumAuth | undefined>(authStore.getAuth());
+    const [acceptingAuthUpdates, setAcceptingAuthUpdates] = useState(false);
+
+    useEffect(() => authStore.subscribe(setAuth), []);
+
     const user = useSelector(selectUser);
     const apiDomain = useSelector(selectApiDomain);
     const {
@@ -211,7 +217,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         webViewRef.current &&
         mapLoaded &&
         location?.position?.buildingIdentifier ===
-          configuration.buildingIdentifier
+        configuration.buildingIdentifier
       ) {
         _followUser(true);
       }
@@ -572,6 +578,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           _onMapIsReady();
           onLoad && onLoad("");
           break;
+        case "app.ready_for_auth":
+          setAcceptingAuthUpdates(true);
+          break;
         case "directions.requested":
           calculateRoute(payload, _onDirectionsRequestInterceptor);
           break;
@@ -679,18 +688,33 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       return true;
     };
 
-    const _effectiveApiKey = useMemo(() => {
-      const internalApiKey = user?.apiKey;
-      const configApiKey = configuration.situmApiKey;
-
-      if (!configApiKey && !internalApiKey) {
-        console.error(
-          "No apiKey was specified. Make sure to be authenticated either by specifying the SitumProvider.apiKey or by specifying the MapViewConfiguration.situmApiKey.",
-        );
+    const effectiveAuth = useMemo<SitumAuth | undefined>(() => {
+      if (configuration.situmApiKey) {
+        return {
+          type: "apiKey",
+          value: configuration.situmApiKey,
+        };
       }
+      if (auth) {
+        return auth;
+      }
+      return undefined;
+    }, [auth, configuration.situmApiKey]);
 
-      return configApiKey ?? internalApiKey;
-    }, [user?.apiKey, configuration.situmApiKey]);
+    const authQueryParam =
+      effectiveAuth?.type === "apiKey"
+        ? `apikey=${encodeURIComponent(effectiveAuth.value)}`
+        : "wait_for_auth=true";
+
+    useEffect(() => {
+      if (!webViewRef.current || !acceptingAuthUpdates || !effectiveAuth) {
+        return;
+      }
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.setAuth(effectiveAuth)
+      );
+    }, [acceptingAuthUpdates, effectiveAuth]);
 
     const _effectiveProfile = useMemo(() => {
       let effectiveProfile: any = "";
@@ -800,9 +824,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       <WebView
         ref={webViewRef}
         source={{
-          uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile}?apikey=${
-            _effectiveApiKey
-          }${_effectiveApiDomain}${_effectiveBuildingId}&mode=embed`,
+          uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile}?${authQueryParam}${_effectiveApiDomain}${_effectiveBuildingId}&mode=embed`
         }}
         style={StyleSheet.flatten([viewerStyles.webview, style])}
         limitsNavigationsToAppBoundDomains={true}

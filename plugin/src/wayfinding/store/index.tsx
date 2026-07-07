@@ -23,6 +23,7 @@ import { createStore } from "./utils";
 interface User {
   email?: string;
   apiKey?: string;
+  token?: string;
 }
 
 export interface State {
@@ -226,7 +227,7 @@ const SitumProvider: React.FC<
      * When specifying a valid situm API key in this parameter, you won't need to call later on the `SitumPlugin.init()` & `SitumPlugin.setApiKey()` methods,
      * and also you won't need to specify `MapViewConfiguration.situmApiKey` when configuring your MapView.
      */
-    apiKey: string;
+    apiKey?: string;
     /**
      * Set the API domain that will be used by the native SDKs and MapView to obtain the situm's data.
      *
@@ -236,11 +237,13 @@ const SitumProvider: React.FC<
      * Defaults to "api.situm.com"
      */
     apiDomain?: string;
+
+    token?: string;
   }>
-> = ({ email, apiKey, apiDomain, children }) => {
+> = ({ email, apiKey, token, apiDomain, children }) => {
   const [state, dispatch] = useReducer(store.reducer, {
     ...store.initialState,
-    user: { email, apiKey },
+    user: { email, apiKey, token } as User,
     apiDomain: apiDomain,
   });
 
@@ -249,18 +252,20 @@ const SitumProvider: React.FC<
   useEffect(() => {
     try {
       SitumPlugin.init();
-      apiDomain && SitumPlugin.setDashboardURL(apiDomain);
-      if (!apiKey) {
-        throw new Error(
-          "Please specify SitumProvider.apiKey to be able to successfully use SitumPlugin and MapView.",
-        );
+      if (apiDomain) {
+        SitumPlugin.setDashboardURL(apiDomain);
       }
-      SitumPlugin.setApiKey(apiKey);
+      if (token) {
+        SitumPlugin.setToken(token);
+      } else if (apiKey) {
+        SitumPlugin.setApiKey(apiKey);
+      }
     } catch (e) {
       console.error(`SitumProvider > Could not initialize ${e}`);
     }
+
     setIsInitialized(true);
-  }, [apiKey, apiDomain]);
+  }, [apiKey, token, apiDomain]);
 
   return (
     <SitumContext.Provider
