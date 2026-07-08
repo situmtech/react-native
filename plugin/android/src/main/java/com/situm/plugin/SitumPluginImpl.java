@@ -81,6 +81,26 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
+    public void setToken(String token, Callback callback) {
+        boolean isSuccess = false;
+        try {
+            if (token != null && !token.isEmpty()) {
+            isSuccess = SitumSdk.configuration().setToken(token);
+            }
+        } catch (Exception e) {
+            isSuccess = false;
+        }
+
+        WritableMap response = Arguments.createMap();
+        response.putBoolean("success", isSuccess);
+
+        if (callback != null) {
+            callback.invoke(response);
+        }
+    }
+
+    @Override
+    @ReactMethod
     public void setUseRemoteConfig(String useRemoteConfig, Callback callback) {
         SitumSdk.configuration().setUseRemoteConfig(useRemoteConfig.equalsIgnoreCase("true") ? true : false);
         if (callback != null) {

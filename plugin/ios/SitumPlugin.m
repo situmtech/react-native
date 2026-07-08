@@ -126,6 +126,21 @@ RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCall
     }
 }
 
+RCT_EXPORT_METHOD(setToken:(NSString *)token withCallback:(RCTResponseSenderBlock)callback)
+{
+    BOOL success = NO;
+
+    if (token && token.length > 0) {
+        success = [SITServices setToken:token];
+    }
+
+    NSDictionary *response = @{@"success": @(success)};
+
+    if (callback) {
+        callback(@[response]);
+    }
+}
+
 RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass withCallback:(RCTResponseSenderBlock)callback)
 {
     BOOL success =[SITServices provideUser:email password:pass];
