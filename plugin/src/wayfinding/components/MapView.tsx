@@ -195,7 +195,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     const [auth, setAuth] = useState<SitumAuth | undefined>(authStore.getAuth());
     const lastDeliveredAuth = useRef<SitumAuth | undefined>(undefined);
-    const authQueryParam = useRef<String | undefined>(undefined);
     const [acceptingAuthUpdates, setAcceptingAuthUpdates] = useState(false);
 
     useEffect(() => authStore.subscribe(setAuth), []);
@@ -577,12 +576,11 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "app.map_is_ready":
           init();
           setMapLoaded(true);
-          setAcceptingAuthUpdates(true);
           _onMapIsReady();
           onLoad && onLoad("");
           break;
         case "app.ready_for_auth":
-          console.log("READY FOR AUTH");
+          sendEffectiveAuth();
           setAcceptingAuthUpdates(true);
           break;
         case "directions.requested":
@@ -705,33 +703,31 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       return undefined;
     }, [auth, configuration.situmApiKey]);
 
-    if (!authQueryParam.current) {
-      authQueryParam.current =
-        effectiveAuth?.type === "apiKey"
-          ? `apikey=${encodeURIComponent(effectiveAuth.value)}`
-          : "wait_for_auth=true";
+    const _authQueryParam = useMemo<string>(() => {
+      return effectiveAuth?.type === "apiKey"
+        ? `apikey=${encodeURIComponent(effectiveAuth.value)}`
+        : "wait_for_auth=true";
+    }, [effectiveAuth])
 
-      if (effectiveAuth && effectiveAuth.type === "apiKey") {
-        lastDeliveredAuth.current = effectiveAuth;
-      }
-    }
-
-    useEffect(() => {
-      console.log("CHEKING IF AUTH CAN BE SENT");
+    const sendEffectiveAuth = useCallback(() => {
       if (
         !webViewRef.current ||
         !acceptingAuthUpdates ||
-        !effectiveAuth ||
-        areSameAuth(effectiveAuth, lastDeliveredAuth.current)
+        !effectiveAuth
       ) {
         return;
       }
 
-      console.log("SENDING EFFECTIVE AUTH TO VIEWER");
       sendMessageToViewer(
         webViewRef.current,
         ViewerMapper.setAuth(effectiveAuth)
       );
+    }, [acceptingAuthUpdates, effectiveAuth]);
+
+    useEffect(() => {
+      if (!areSameAuth(effectiveAuth, lastDeliveredAuth.current)) {
+        sendEffectiveAuth();
+      }
     }, [acceptingAuthUpdates, effectiveAuth]);
 
     const _effectiveProfile = useMemo(() => {
@@ -838,13 +834,12 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       `;
     }, []);
 
-    console.log(`${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile}?${authQueryParam.current}${_effectiveApiDomain}${_effectiveBuildingId}&mode=embed`);
-
     return (
       <WebView
         ref={webViewRef}
         source={{
-          uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile}?${authQueryParam.current}${_effectiveApiDomain}${_effectiveBuildingId}&mode=embed`
+          uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile}?${
+            _authQueryParam}${_effectiveApiDomain}${_effectiveBuildingId}&mode=embed`
         }}
         style={StyleSheet.flatten([viewerStyles.webview, style])}
         limitsNavigationsToAppBoundDomains={true}
