@@ -78,10 +78,11 @@ export type MapViewConfiguration = {
   viewerDomain?: string;
   /**
    * Your Situm API key. Find your API key at your [Situm dashboard's profile](https://dashboard.situm.com/accounts/profile)
-   *
+   * 
    * Since 3.17.0 version this parameter is not required. Instead, you should specify your apiKey
    * at the root of your app with `SitumProvider.apiKey` for the correct usage of the plugin.
-   * If {@link MapViewConfiguration.situmApiKey} is specified, `SitumProvider.apiKey` will be ignored.
+   * If {@link MapViewConfiguration.situmApiKey} is specified, this API key takes precedence over
+   * authentication provided through `SitumProvider` or `SitumPlugin`.
    */
   situmApiKey?: string;
   /**
@@ -194,7 +195,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     );
 
     const [auth, setAuth] = useState<SitumAuth | undefined>(authStore.getAuth());
-    const lastDeliveredAuth = useRef<SitumAuth | undefined>(undefined);
 
     useEffect(() => authStore.subscribe(setAuth), []);
 
@@ -717,14 +717,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         webViewRef.current,
         ViewerMapper.setAuth(effectiveAuth)
       );
-
-      lastDeliveredAuth.current = effectiveAuth;
     }, [effectiveAuth]);
 
     useEffect(() => {
-      if (!areSameAuth(effectiveAuth, lastDeliveredAuth.current)) {
-        sendEffectiveAuth();
-      }
+      sendEffectiveAuth();
     }, [effectiveAuth]);
 
     const _effectiveProfile = useMemo(() => {

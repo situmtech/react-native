@@ -291,6 +291,9 @@ export default class SitumPlugin {
    * Provides your token to the Situm SDK.
    *
    * Old credentials will be replaced.
+   * 
+   * The plugin does not renew expired tokens. Clients must obtain a new token
+   * and call this method again when necessary.
    *
    * @param token JWT token used for authentication.
    *

@@ -226,8 +226,20 @@ const SitumProvider: React.FC<
      *
      * When specifying a valid situm API key in this parameter, you won't need to call later on the `SitumPlugin.init()` & `SitumPlugin.setApiKey()` methods,
      * and also you won't need to specify `MapViewConfiguration.situmApiKey` when configuring your MapView.
+     * 
+     * If both `token` and `apiKey` are specified, `token` takes precedence.
      */
     apiKey?: string;
+    /**
+     * JWT token used to authenticate the Situm native SDKs and MapView.
+     *
+     * When specified, you don't need to call `SitumPlugin.init()` or `SitumPlugin.setToken()` manually.
+     * Token renewal is the client's responsibility: update this property or call
+     * `SitumPlugin.setToken()` when a new token is available.
+     *
+     * If both `token` and `apiKey` are specified, `token` takes precedence.
+     */
+    token?: string;
     /**
      * Set the API domain that will be used by the native SDKs and MapView to obtain the situm's data.
      *
@@ -237,8 +249,6 @@ const SitumProvider: React.FC<
      * Defaults to "api.situm.com"
      */
     apiDomain?: string;
-
-    token?: string;
   }>
 > = ({ email, apiKey, token, apiDomain, children }) => {
   const [state, dispatch] = useReducer(store.reducer, {
