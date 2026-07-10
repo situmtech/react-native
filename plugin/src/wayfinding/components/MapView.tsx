@@ -195,11 +195,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     const [auth, setAuth] = useState<SitumAuth | undefined>(authStore.getAuth());
     const lastDeliveredAuth = useRef<SitumAuth | undefined>(undefined);
-    const [acceptingAuthUpdates, setAcceptingAuthUpdates] = useState(false);
 
     useEffect(() => authStore.subscribe(setAuth), []);
 
-    const user = useSelector(selectUser);
     const apiDomain = useSelector(selectApiDomain);
     const {
       init,
@@ -581,7 +579,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           break;
         case "app.ready_for_auth":
           sendEffectiveAuth();
-          setAcceptingAuthUpdates(true);
           break;
         case "directions.requested":
           calculateRoute(payload, _onDirectionsRequestInterceptor);
@@ -711,9 +708,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     const sendEffectiveAuth = useCallback(() => {
       if (
-        !webViewRef.current ||
-        !acceptingAuthUpdates ||
-        !effectiveAuth
+        !webViewRef.current || !effectiveAuth
       ) {
         return;
       }
@@ -722,13 +717,15 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         webViewRef.current,
         ViewerMapper.setAuth(effectiveAuth)
       );
-    }, [acceptingAuthUpdates, effectiveAuth]);
+
+      lastDeliveredAuth.current = effectiveAuth;
+    }, [effectiveAuth]);
 
     useEffect(() => {
       if (!areSameAuth(effectiveAuth, lastDeliveredAuth.current)) {
         sendEffectiveAuth();
       }
-    }, [acceptingAuthUpdates, effectiveAuth]);
+    }, [effectiveAuth]);
 
     const _effectiveProfile = useMemo(() => {
       let effectiveProfile: any = "";
