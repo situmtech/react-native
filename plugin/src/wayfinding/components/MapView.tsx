@@ -649,6 +649,37 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
     };
 
+    const effectiveAuth = useMemo<SitumAuth | undefined>(() => {
+      if (configuration.situmApiKey) {
+        return {
+          type: "apiKey",
+          value: configuration.situmApiKey,
+        };
+      }
+      if (auth) {
+        return auth;
+      }
+      return undefined;
+    }, [auth, configuration.situmApiKey]);
+
+    const sendEffectiveAuth = useCallback(() => {
+      if (
+        !webViewRef.current || !effectiveAuth
+      ) {
+        return;
+      }
+
+      sendMessageToViewer(
+        webViewRef.current,
+        ViewerMapper.setAuth(effectiveAuth)
+      );
+    }, [effectiveAuth]);
+
+    useEffect(() => {
+      // When the auth method changes, send a message to the viewer
+      sendEffectiveAuth();
+    }, [sendEffectiveAuth]);
+
     const _onWebShareMessage = useCallback(async (param: WebShareAPIParam) => {
       try {
         if (param.url == null) {
@@ -687,42 +718,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       return true;
     };
 
-    const effectiveAuth = useMemo<SitumAuth | undefined>(() => {
-      if (configuration.situmApiKey) {
-        return {
-          type: "apiKey",
-          value: configuration.situmApiKey,
-        };
-      }
-      if (auth) {
-        return auth;
-      }
-      return undefined;
-    }, [auth, configuration.situmApiKey]);
-
-    const _authQueryParam = useMemo<string>(() => {
-      return effectiveAuth?.type === "apiKey"
-        ? `apikey=${encodeURIComponent(effectiveAuth.value)}`
-        : "wait_for_auth=true";
-    }, [effectiveAuth])
-
-    const sendEffectiveAuth = useCallback(() => {
-      if (
-        !webViewRef.current || !effectiveAuth
-      ) {
-        return;
-      }
-
-      sendMessageToViewer(
-        webViewRef.current,
-        ViewerMapper.setAuth(effectiveAuth)
-      );
-    }, [effectiveAuth]);
-
-    useEffect(() => {
-      sendEffectiveAuth();
-    }, [effectiveAuth]);
-
     const _effectiveProfile = useMemo(() => {
       let effectiveProfile: any = "";
 
@@ -749,6 +744,12 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
       return effectiveProfile;
     }, [configuration.profile, configuration.remoteIdentifier]);
+
+    const _authQueryParam = useMemo<string>(() => {
+      return effectiveAuth?.type === "apiKey"
+        ? `apikey=${encodeURIComponent(effectiveAuth.value)}`
+        : "wait_for_auth=true";
+    }, [effectiveAuth])
 
     const _effectiveApiDomain = useMemo(() => {
       let finalApiDomain = configuration.apiDomain ?? apiDomain;
