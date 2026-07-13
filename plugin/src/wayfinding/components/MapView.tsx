@@ -663,12 +663,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     }, [auth, configuration.situmApiKey]);
 
     const sendEffectiveAuth = useCallback(() => {
-      if (
-        !webViewRef.current || !effectiveAuth
-      ) {
+      if (!webViewRef.current || !effectiveAuth) {
         return;
       }
-
       sendMessageToViewer(
         webViewRef.current,
         ViewerMapper.setAuth(effectiveAuth)

@@ -85,7 +85,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         boolean isSuccess = false;
         try {
             if (token != null && !token.isEmpty()) {
-            isSuccess = SitumSdk.configuration().setToken(token);
+                isSuccess = SitumSdk.configuration().setToken(token);
             }
         } catch (Exception e) {
             isSuccess = false;

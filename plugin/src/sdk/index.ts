@@ -289,13 +289,12 @@ export default class SitumPlugin {
 
   /**
    * Provides your token to the Situm SDK.
-   *
-   * Old credentials will be replaced.
    * 
-   * The plugin does not renew expired tokens. Clients must obtain a new token
-   * and call this method again when necessary.
+   * Any previously configured credentials will be replaced.
    *
    * @param token JWT token used for authentication.
+   * The expected format is a base64-encoded JWT with header, payload and signature sections.
+   * This token can be retrieved from [a REST endpoint](https://developers.situm.com/pages/rest/openapi/#tag/jwt/POST/api/v1/auth/access_tokens).
    *
    * @returns void
    * @throws Exception

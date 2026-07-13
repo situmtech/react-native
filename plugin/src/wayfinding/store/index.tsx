@@ -70,12 +70,6 @@ const store = createStore<State>({
     setWebViewRef: (state: State, payload: State["webViewRef"]) => {
       return { ...state, webViewRef: payload };
     },
-    setSdkInitialized: (state: State, payload: State["sdkInitialized"]) => {
-      return { ...state, sdkInitialized: payload };
-    },
-    setAuth: (state: State, payload: State["user"]) => {
-      return { ...state, user: payload };
-    },
     setLocation: (state: State, payload: State["location"]) => {
       return { ...state, location: payload };
     },
@@ -114,6 +108,18 @@ const store = createStore<State>({
       payload: State["buildingIdentifier"],
     ) => {
       return { ...state, buildingIdentifier: payload };
+    },
+
+    /* Internal use only */
+    _setSdkInitialized: (state: State, payload: State["sdkInitialized"]) => {
+      return { ...state, sdkInitialized: payload };
+    },
+    /*  Users are intended to change these variables through SitumProvider's props  */
+    _setAuth: (state: State, payload: State["user"]) => {
+      return { ...state, user: payload };
+    },
+    _setApiDomain: (state: State, payload: State["apiDomain"]) => {
+      return { ...state, apiDomain: payload };
     },
   },
 });
@@ -176,8 +182,6 @@ export const selectBuildingIdentifier = (state: State) => {
 
 export const {
   setWebViewRef,
-  setSdkInitialized,
-  setAuth,
   setLocation,
   setLocationStatus,
   resetLocation,
@@ -226,8 +230,6 @@ const SitumProvider: React.FC<
      *
      * When specifying a valid situm API key in this parameter, you won't need to call later on the `SitumPlugin.init()` & `SitumPlugin.setApiKey()` methods,
      * and also you won't need to specify `MapViewConfiguration.situmApiKey` when configuring your MapView.
-     * 
-     * If both `token` and `apiKey` are specified, `token` takes precedence.
      */
     apiKey?: string;
     /**
@@ -236,8 +238,6 @@ const SitumProvider: React.FC<
      * When specified, you don't need to call `SitumPlugin.init()` or `SitumPlugin.setToken()` manually.
      * Token renewal is the client's responsibility: update this property or call
      * `SitumPlugin.setToken()` when a new token is available.
-     *
-     * If both `token` and `apiKey` are specified, `token` takes precedence.
      */
     token?: string;
     /**
@@ -252,30 +252,57 @@ const SitumProvider: React.FC<
   }>
 > = ({ email, apiKey, token, apiDomain, children }) => {
   const [state, dispatch] = useReducer(store.reducer, {
-    ...store.initialState,
-    user: { email, apiKey, token } as User,
-    apiDomain: apiDomain,
+    ...store.initialState
   });
 
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isApiDomainInitialized, setIsApiDomainInitialized] = useState(false);
+  const [isAuthInitialized, setIsAuthInitialized] = useState(false);
+  const isReady = (state.sdkInitialized && isApiDomainInitialized && isAuthInitialized);
 
   useEffect(() => {
     try {
       SitumPlugin.init();
-      if (apiDomain) {
-        SitumPlugin.setDashboardURL(apiDomain);
-      }
-      if (token) {
-        SitumPlugin.setToken(token);
-      } else if (apiKey) {
-        SitumPlugin.setApiKey(apiKey);
-      }
+      dispatch(store.actions._setSdkInitialized(true));
     } catch (e) {
       console.error(`SitumProvider > Could not initialize ${e}`);
     }
+  }, []);
 
-    setIsInitialized(true);
-  }, [apiKey, token, apiDomain]);
+  useEffect(() => {
+    try {
+      if (apiDomain) {
+        SitumPlugin.setDashboardURL(apiDomain);
+        dispatch(store.actions._setApiDomain(apiDomain));
+      }
+      setIsApiDomainInitialized(true);
+    } catch (e) {
+      console.error(`SitumProvider > Could not update API domain ${e}`);
+    }
+  }, [apiDomain, dispatch]);
+
+  useEffect(() => {
+    if (token) {
+      try {
+        SitumPlugin.setToken(token);
+        setIsAuthInitialized(true);
+        dispatch(store.actions._setAuth({ email, token } as User))
+      } catch (e) {
+        console.error(`SitumProvider > Could not authenticate ${e}`);
+      }
+    }
+  }, [token, email])
+
+  useEffect(() => {
+    if (apiKey) {
+      try {
+        SitumPlugin.setApiKey(apiKey);
+        setIsAuthInitialized(true);
+        dispatch(store.actions._setAuth({ email, apiKey } as User))
+      } catch (e) {
+        console.error(`SitumProvider > Could not authenticate ${e}`);
+      }
+    }
+  }, [apiKey, email])
 
   return (
     <SitumContext.Provider
@@ -289,9 +316,9 @@ const SitumProvider: React.FC<
        * before letting children components rendering MapView or calling SitumPlugin methods.
        *
        * If we directly let the `children` render, the children's useEffect() will execute before SitumProvider's useEffect().
-       * This causes a crash when the children wants to access SitumPlugin before it is initialized.
+       * This causes a crash when the children wants to access SitumPlugin before it is ready.
        */}
-      <UseSitumProvider>{isInitialized ? children : <></>}</UseSitumProvider>
+      <UseSitumProvider>{isReady ? children : <></>}</UseSitumProvider>
     </SitumContext.Provider>
   );
 };
