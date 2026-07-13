@@ -252,7 +252,8 @@ const SitumProvider: React.FC<
   }>
 > = ({ email, apiKey, token, apiDomain, children }) => {
   const [state, dispatch] = useReducer(store.reducer, {
-    ...store.initialState
+    ...store.initialState,
+    user: { email }
   });
 
   const [isApiDomainInitialized, setIsApiDomainInitialized] = useState(false);
@@ -290,7 +291,7 @@ const SitumProvider: React.FC<
         console.error(`SitumProvider > Could not authenticate ${e}`);
       }
     }
-  }, [token, email])
+  }, [token, email, dispatch])
 
   useEffect(() => {
     if (apiKey) {
@@ -302,7 +303,7 @@ const SitumProvider: React.FC<
         console.error(`SitumProvider > Could not authenticate ${e}`);
       }
     }
-  }, [apiKey, email])
+  }, [apiKey, email, dispatch])
 
   return (
     <SitumContext.Provider
