@@ -1,1 +1,3 @@
-- Patched the Web Share API on Android by overriding `navigator.canShare` and `navigator.share` in the WebView and forwarding share events via `postMessage` to be handled natively using the React Native Share API.
+## Unreleased
+
+- Updated Android example app targetSdkVersion from 35 to 37
