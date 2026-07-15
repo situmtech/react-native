@@ -7,4 +7,5 @@
 ### Changed
 
 - `SitumProvider.apiKey` is now optional. If no credentials are available when the MapView loads, it waits until authentication is provided.
-- Updated the example application to React Native 0.83.10 and Android API level 37.
+- Updated the example application React Native from 0.79.1 to 0.83.10 to fix an issue that prevented the app from compiling on iOS.
+- Updated Android example application targetSdkVersion from 35 to 37.
