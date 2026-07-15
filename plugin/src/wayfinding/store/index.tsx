@@ -270,38 +270,26 @@ const SitumProvider: React.FC<
   }, []);
 
   useEffect(() => {
-    try {
-      if (apiDomain) {
-        SitumPlugin.setDashboardURL(apiDomain);
-        dispatch(store.actions._setApiDomain(apiDomain));
-      }
-      setIsApiDomainInitialized(true);
-    } catch (e) {
-      console.error(`SitumProvider > Could not update API domain ${e}`);
+    if (apiDomain) {
+      SitumPlugin.setDashboardURL(apiDomain);
+      dispatch(store.actions._setApiDomain(apiDomain));
     }
+    setIsApiDomainInitialized(true);
   }, [apiDomain, dispatch]);
 
   useEffect(() => {
     if (token) {
-      try {
-        SitumPlugin.setToken(token);
-        setIsAuthInitialized(true);
-        dispatch(store.actions._setAuth({ email, token } as User))
-      } catch (e) {
-        console.error(`SitumProvider > Could not authenticate ${e}`);
-      }
+      SitumPlugin.setToken(token);
+      setIsAuthInitialized(true);
+      dispatch(store.actions._setAuth({ email, token } as User))
     }
   }, [token, email, dispatch])
 
   useEffect(() => {
     if (apiKey) {
-      try {
-        SitumPlugin.setApiKey(apiKey);
-        setIsAuthInitialized(true);
-        dispatch(store.actions._setAuth({ email, apiKey } as User))
-      } catch (e) {
-        console.error(`SitumProvider > Could not authenticate ${e}`);
-      }
+      SitumPlugin.setApiKey(apiKey);
+      setIsAuthInitialized(true);
+      dispatch(store.actions._setAuth({ email, apiKey } as User))
     }
   }, [apiKey, email, dispatch])
 
