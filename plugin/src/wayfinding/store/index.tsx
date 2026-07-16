@@ -4,6 +4,7 @@ import React, {
   type MutableRefObject,
   useEffect,
   useReducer,
+  useRef,
   useState,
 } from "react";
 
@@ -19,6 +20,7 @@ import {
 import { LocationStatusName } from "../../sdk/types/constants";
 import { useSitumInternal } from "../hooks";
 import { createStore } from "./utils";
+import { SitumAuth } from "../../sdk/authStore";
 
 interface User {
   email?: string;
@@ -259,6 +261,7 @@ const SitumProvider: React.FC<
   const [isApiDomainInitialized, setIsApiDomainInitialized] = useState(false);
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
   const isReady = (state.sdkInitialized && isApiDomainInitialized && isAuthInitialized);
+  const lastAuthProp = useRef<SitumAuth | undefined>(undefined);
 
   useEffect(() => {
     try {
@@ -281,17 +284,28 @@ const SitumProvider: React.FC<
     if (token) {
       SitumPlugin.setToken(token);
       setIsAuthInitialized(true);
-      dispatch(store.actions._setAuth({ email, token } as User))
+      lastAuthProp.current = { type: "jwt", value: token };
     }
-  }, [token, email, dispatch])
+  }, [token])
 
   useEffect(() => {
     if (apiKey) {
       SitumPlugin.setApiKey(apiKey);
       setIsAuthInitialized(true);
-      dispatch(store.actions._setAuth({ email, apiKey } as User))
+      lastAuthProp.current = { type: "apiKey", value: apiKey };
     }
-  }, [apiKey, email, dispatch])
+  }, [apiKey])
+
+  useEffect(() => {
+    const lastAuth = lastAuthProp.current;
+    const auth: User = !lastAuth
+      ? { email }
+      : lastAuth.type === "apiKey"
+        ? { email, apiKey: lastAuth.value }
+        : { email, token: lastAuth.value };
+
+    dispatch(store.actions._setAuth(auth));
+  }, [email, token, apiKey, dispatch]);
 
   return (
     <SitumContext.Provider

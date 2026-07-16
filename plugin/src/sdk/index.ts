@@ -288,9 +288,19 @@ export default class SitumPlugin {
   };
 
   /**
-   * Provides your token to the Situm SDK.
+   * Provides your token to the Situm SDK. Any previously configured credentials will be replaced.
+   * The SDK does not cryptographically validate the token signature, nor does it verify the
+   * token against Situm servers when this method is called. The token is parsed locally only to
+   * obtain the account information needed by the SDK, and it will be sent as a Bearer token in
+   * subsequent authenticated network requests.
    * 
-   * Any previously configured credentials will be replaced.
+   * If the provided token is expired, has an invalid signature, or is otherwise rejected by
+   * Situm servers, network operations that require server authentication will fail. However,
+   * features that can operate with already cached local data may continue to work, such as
+   * visualizing cached resources or positioning with previously downloaded positioning data.
+   * 
+   * User-provided tokens cannot be renewed automatically by the SDK. To recover from an
+   * expired or rejected token, provide a new token by calling this method again.
    *
    * @param token JWT token used for authentication.
    * The expected format is a base64-encoded JWT with header, payload and signature sections.
