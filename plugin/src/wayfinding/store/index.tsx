@@ -38,8 +38,6 @@ export interface State {
   buildings: Building[] | null;
   currentBuilding: Building | undefined;
   pois: Poi[];
-  directions?: Directions;
-  navigation?: NavigationProgress;
   destinationPoiID?: number;
   error?: Error;
   buildingIdentifier: string;
@@ -55,8 +53,6 @@ export const initialState: State = {
   buildings: null,
   currentBuilding: undefined,
   pois: [],
-  directions: undefined,
-  navigation: undefined,
   destinationPoiID: undefined,
   error: undefined,
   buildingIdentifier: "-1",
@@ -92,12 +88,6 @@ const store = createStore<State>({
     },
     setPois: (state: State, payload: State["pois"]) => {
       return { ...state, pois: payload };
-    },
-    setDirections: (state: State, payload: State["directions"]) => {
-      return { ...state, directions: payload };
-    },
-    setNavigation: (state: State, payload: State["navigation"]) => {
-      return { ...state, navigation: payload };
     },
     setDestinationPoiID: (state: State, payload: State["destinationPoiID"]) => {
       return { ...state, destinationPoiID: payload };
@@ -160,14 +150,6 @@ export const selectCurrentBuilding = (state: State) => {
 
 export const selectPois = (state: State) => {
   return state.pois;
-};
-
-export const selectDirections = (state: State) => {
-  return state.directions;
-};
-
-export const selectNavigation = (state: State) => {
-  return state.navigation;
 };
 
 export const selectDestinationPoiID = (state: State) => {

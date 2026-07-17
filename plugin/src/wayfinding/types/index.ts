@@ -1,4 +1,4 @@
-import type { DirectionsRequest, Point } from "../../sdk/types";
+import type { Point } from "../../sdk/types";
 import { AccessibilityMode } from "../../sdk/types/constants";
 export type { MapViewConfiguration, MapViewProps } from "../components/MapView";
 import { ErrorName } from "./constants";
@@ -79,9 +79,6 @@ export interface MapViewRef {
    * Cancels the current navigation, if any.
    */
   cancelNavigation: () => void;
-  setOnDirectionsRequestInterceptor: (params: {
-    onDirectionsRequestInterceptor: OnDirectionsRequestInterceptor;
-  }) => void;
 
   /**
    * Performs a search with the given SearchFilter.
@@ -173,14 +170,6 @@ export interface OnFloorChangedResult {
 export interface MapViewDirectionsOptions {
   includedTags?: string[];
   excludedTags?: string[];
-}
-
-/**
- * This interface allows you to modify all the parameters in the DirectionRequest used by the MapViewer to calculate the route.
- * To use this you will need to load the MapView and once it ends loading use the MapViewRef that you obtain an call setOnDirectionsRequestInterceptor(interceptor)
- */
-export interface OnDirectionsRequestInterceptor {
-  (directionRequest: DirectionsRequest): void;
 }
 
 /**

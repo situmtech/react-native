@@ -40,7 +40,6 @@ import {
   type NavigateToCarPayload,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
-  type OnDirectionsRequestInterceptor,
   type OnExternalLinkClickedResult,
   type OnFavoritePoisUpdatedResult,
   type OnFloorChangedResult,
@@ -183,8 +182,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     ref,
   ) => {
     const webViewRef = useRef<WebView>(null);
-    const [_onDirectionsRequestInterceptor, setInterceptor] =
-      useState<OnDirectionsRequestInterceptor>();
     const internalMessageCallbackRef =
       useRef<OnInternalMapViewMessageCallback>();
 
@@ -203,11 +200,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       init,
       location,
       locationStatus,
-      directions,
-      navigation,
-      calculateRoute,
-      startNavigation,
-      stopNavigation,
       error,
     } = useSitum();
 
@@ -424,12 +416,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         navigateToPoint(payload: NavigateToPointPayload): void {
           _navigateToPoint(payload);
         },
-        setOnDirectionsRequestInterceptor(directionRequestInterceptor): void {
-          setInterceptor(() => directionRequestInterceptor);
-        },
         cancelNavigation(): void {
           if (!webViewRef.current) return;
-          stopNavigation();
           sendMessageToViewer(
             webViewRef.current,
             ViewerMapper.cancelNavigation(),
@@ -450,7 +438,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         },
       };
     }, [
-      stopNavigation,
       _navigateToPoi,
       _followUser,
       _navigateToCar,
@@ -516,23 +503,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       setError(null);
     }, [error, mapLoaded]);
 
-    // Updated SDK navigation
-    useEffect(() => {
-      if (!webViewRef.current || !navigation || !mapLoaded) return;
-
-      sendMessageToViewer(
-        webViewRef.current,
-        ViewerMapper.navigation(navigation),
-      );
-    }, [navigation, mapLoaded]);
-
-    // Updated SDK route
-    useEffect(() => {
-      if (!webViewRef.current || !directions || !mapLoaded) return;
-
-      sendMessageToViewer(webViewRef.current, ViewerMapper.route(directions));
-    }, [directions, mapLoaded]);
-
     // Update language
     useEffect(() => {
       if (!webViewRef.current || !configuration.language || !mapLoaded) return;
@@ -579,15 +549,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           break;
         case "app.ready_for_auth":
           sendEffectiveAuth();
-          break;
-        case "directions.requested":
-          calculateRoute(payload, _onDirectionsRequestInterceptor);
-          break;
-        case "navigation.requested":
-          startNavigation(payload, _onDirectionsRequestInterceptor);
-          break;
-        case "navigation.stopped":
-          stopNavigation();
           break;
         case "cartography.poi_selected":
           onPoiSelected(payload);

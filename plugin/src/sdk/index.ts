@@ -144,52 +144,30 @@ const _internalLocationErrorCallback = (error: Error) => {
 };
 
 const _internalNavigationStartedCallback = (route: Route) => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_START, route),
-  );
   navigationStartedCallback?.(route);
 };
 
 const _internalNavigationProgressCallback = (progress: NavigationProgress) => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_PROGRESS, progress),
-  );
   navigationProgressCallback?.(progress);
 };
 
 const _internalNavigationDestinationReachedCallback = (route: Route) => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_DESTINATION_REACHED, route),
-  );
   navigationDestinationReachedCallback?.(route);
 };
 
 const _internalNavigationOutOfRouteCallback = () => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_OUT_OF_ROUTE, undefined),
-  );
   navigationOutOfRouteCallback?.();
 };
 
 const _internalNavigationFinishedCallback = () => {
-  // Deprecated!
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_CANCELLATION, undefined),
-  );
   navigationFinishedCallback?.();
 };
 
 const _internalNavigationCancellationCallback = () => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_CANCELLATION, undefined),
-  );
   navigationCancellationCallback?.();
 };
 
 const _internalNavigationErrorCallback = (error: any) => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_ERROR, error),
-  );
   navigationErrorCallback?.(error);
 };
 
@@ -675,23 +653,6 @@ export default class SitumPlugin {
       }
 
       RNCSitumPlugin.updateNavigationWithLocation(location, onSuccess, onError);
-    });
-  };
-
-  /**
-   * Removes all location updates. This removes the internal state of the manager,
-   * including the listener provided in requestNavigationUpdates(NavigationRequest,
-   * NavigationListener), so it won't receive more progress updates.
-   *
-   */
-  static removeNavigationUpdates = () => {
-    return promiseWrapper<void>(({ onCallback }) => {
-      if (!SitumPlugin.navigationIsRunning()) return;
-
-      navigationRunning = false;
-      RNCSitumPlugin.removeNavigationUpdates((response) => {
-        onCallback(response, "Failed to remove navigation updates");
-      });
     });
   };
 
