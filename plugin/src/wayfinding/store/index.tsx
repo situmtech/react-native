@@ -219,12 +219,11 @@ const UseSitumProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 /**
- * Main context of the application. Initializes the Situm plugin and stores
- * its state, so SitumPlugin.init() does not need to be called manually.
+ * Main context of the application. Initializes the Situm plugin and stores its state,
+ * so SitumPlugin.init() does not need to be called manually.
  *
- * An API key or JWT token must be provided before the provider mounts and
- * renders its children. API key authentication is the primary and recommended
- * method, while JWT authentication is available as an alternative.
+ * An API key or JWT token must be provided before the provider mounts and renders its children.
+ * API key authentication is the primary and recommended method, while JWT authentication is available as an alternative. 
  */
 const SitumProvider: React.FC<
   React.PropsWithChildren<{
