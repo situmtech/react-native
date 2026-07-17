@@ -219,7 +219,12 @@ const UseSitumProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 /**
- * Main context of the application, stores the plugin's state.
+ * Main context of the application. Initializes the Situm plugin and stores
+ * its state, so SitumPlugin.init() does not need to be called manually.
+ *
+ * An API key or JWT token must be provided before the provider mounts and
+ * renders its children. API key authentication is the primary and recommended
+ * method, while JWT authentication is available as an alternative.
  */
 const SitumProvider: React.FC<
   React.PropsWithChildren<{
@@ -230,14 +235,14 @@ const SitumProvider: React.FC<
     /**
      * Your Situm API key. Find your API key at your [Situm dashboard's profile](https://dashboard.situm.com/accounts/profile)
      *
-     * When specifying a valid situm API key in this parameter, you won't need to call later on the `SitumPlugin.init()` & `SitumPlugin.setApiKey()` methods,
+     * When specifying a valid situm API key in this parameter, you won't need to call later on the `SitumPlugin.setApiKey()` method,
      * and also you won't need to specify `MapViewConfiguration.situmApiKey` when configuring your MapView.
      */
     apiKey?: string;
     /**
      * JWT token used to authenticate the Situm native SDKs and MapView.
      *
-     * When specified, you don't need to call `SitumPlugin.init()` or `SitumPlugin.setToken()` manually.
+     * When specified, you don't need to call `SitumPlugin.setToken()` manually.
      * Token renewal is the client's responsibility: update this property or call
      * `SitumPlugin.setToken()` when a new token is available.
      */
