@@ -657,6 +657,23 @@ export default class SitumPlugin {
   };
 
   /**
+   * Removes all location updates. This removes the internal state of the manager,
+   * including the listener provided in requestNavigationUpdates(NavigationRequest,
+   * NavigationListener), so it won't receive more progress updates.
+   *
+   */
+  static removeNavigationUpdates = () => {
+    return promiseWrapper<void>(({ onCallback }) => {
+      if (!SitumPlugin.navigationIsRunning()) return;
+
+      navigationRunning = false;
+      RNCSitumPlugin.removeNavigationUpdates((response) => {
+        onCallback(response, "Failed to remove navigation updates");
+      });
+    });
+  };
+
+  /**
    * Requests a real time devices positions
    *
    * @param realtimeUpdates callback to use when new device positions are updated

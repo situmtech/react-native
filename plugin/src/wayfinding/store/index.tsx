@@ -172,8 +172,6 @@ export const {
   setBuildings,
   setCurrentBuilding,
   setPois,
-  setDirections,
-  setNavigation,
   setDestinationPoiID,
   setError,
   setBuildingIdentifier,
