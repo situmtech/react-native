@@ -26,7 +26,6 @@ import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
 import {
   selectApiDomain,
-  selectUser,
   setError,
   setLocationStatus,
 } from "../store";
@@ -52,7 +51,7 @@ import {
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
 import ViewerMapper from "../utils/mapper";
-import { areSameAuth, authStore, SitumAuth } from "../../sdk/authStore";
+import { authStore, SitumAuth } from "../../sdk/authStore";
 const SITUM_BASE_DOMAIN = "https://maps.situm.com";
 
 const NETWORK_ERROR_CODE = {
@@ -283,12 +282,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const _selectFloor = useCallback(
       (floorId: number, options?: CartographySelectionOptions) => {
         if (!webViewRef.current) {
-          return;
-        }
-        if (SitumPlugin.navigationIsRunning()) {
-          console.error(
-            "Situm > hook > Navigation on course, floor selection is unavailable",
-          );
           return;
         }
         sendMessageToViewer(
