@@ -131,16 +131,20 @@ interface TextToSpeechAPI {
 
 export interface SitumPluginInterface
   extends NativeModule,
-    CartographyAPI,
-    LocationAPI,
-    NavigationAPI,
-    DirectionsAPI,
-    UserHelperManagerAPI,
-    TextToSpeechAPI {
+  CartographyAPI,
+  LocationAPI,
+  NavigationAPI,
+  DirectionsAPI,
+  UserHelperManagerAPI,
+  TextToSpeechAPI {
   initSitumSDK: () => void;
   setApiKey: (
     email: string,
     apiKey: string,
+    callback: (response: { success: boolean }) => void,
+  ) => void;
+  setToken: (
+    token: string,
     callback: (response: { success: boolean }) => void,
   ) => void;
   setUserPass: (

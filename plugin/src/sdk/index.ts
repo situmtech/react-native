@@ -39,6 +39,7 @@ import {
   locationStatusAdapter,
   promiseWrapper,
 } from "./utils";
+import { authStore } from "./authStore";
 
 export * from "./types";
 export * from "./types/constants";
@@ -281,6 +282,38 @@ export default class SitumPlugin {
     return exceptionWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setApiKey("email@email.com", apiKey, (response) => {
         onCallback(response, "Failed to set API key.");
+        authStore.setAuth({ type: "apiKey", value: apiKey });
+      });
+    });
+  };
+
+  /**
+   * Provides your token to the Situm SDK. Any previously configured credentials will be replaced.
+   * The SDK does not cryptographically validate the token signature, nor does it verify the
+   * token against Situm servers when this method is called. The token is parsed locally only to
+   * obtain the account information needed by the SDK, and it will be sent as a Bearer token in
+   * subsequent authenticated network requests.
+   * 
+   * If the provided token is expired, has an invalid signature, or is otherwise rejected by
+   * Situm servers, network operations that require server authentication will fail. However,
+   * features that can operate with already cached local data may continue to work, such as
+   * visualizing cached resources or positioning with previously downloaded positioning data.
+   * 
+   * User-provided tokens cannot be renewed automatically by the SDK. To recover from an
+   * expired or rejected token, provide a new token by calling this method again.
+   *
+   * @param token JWT token used for authentication.
+   * The expected format is a base64-encoded JWT with header, payload and signature sections.
+   * This token can be retrieved from [a REST endpoint](https://developers.situm.com/pages/rest/openapi/#tag/jwt/POST/api/v1/auth/access_tokens).
+   *
+   * @returns void
+   * @throws Exception
+   */
+  static setToken = (token: string) => {
+    return exceptionWrapper(({ onCallback }) => {
+      RNCSitumPlugin.setToken(token, (response) => {
+        onCallback(response, "Failed to set JWT token.");
+        authStore.setAuth({ type: "jwt", value: token });
       });
     });
   };
@@ -409,11 +442,11 @@ export default class SitumPlugin {
   static sdkVersion = () => {
     return exceptionWrapper<SdkVersion>(({ onSuccess }) => {
       const versions: { react_native: string; ios?: string; android?: string } =
-        {
-          react_native: "",
-          ios: "",
-          android: "",
-        };
+      {
+        react_native: "",
+        ios: "",
+        android: "",
+      };
       onSuccess(versions);
     });
   };
@@ -681,9 +714,9 @@ export default class SitumPlugin {
         SitumPluginEventEmitter.addListener("realtimeUpdated", realtimeUpdates),
         error
           ? SitumPluginEventEmitter.addListener(
-              "realtimeError",
-              error || logError,
-            )
+            "realtimeError",
+            error || logError,
+          )
           : null,
       ]);
     });

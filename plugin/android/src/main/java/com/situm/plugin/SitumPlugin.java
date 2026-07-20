@@ -30,6 +30,8 @@ public interface SitumPlugin {
 
     void setApiKey(String email, String apiKey, Callback callback);
 
+    void setToken(String token, Callback callback);
+
     void setUserPass(String email, String password, Callback callback);
 
     void setDashboardURL(String url, Callback callback);
