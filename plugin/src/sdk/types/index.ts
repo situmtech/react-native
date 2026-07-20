@@ -426,17 +426,6 @@ export type NavigationRequest = {
 };
 
 /**
- * A data object that contains the request for directions.
- */
-export type DirectionsRequest = {
-  buildingIdentifier: string;
-  /** Current user's position as the starting point of the route */
-  from: Point | Location;
-  /** Point to, where the route should end */
-  to: Point | Poi;
-} & DirectionsOptions;
-
-/**
  * A data object that contains the directions options.
  */
 export type DirectionsOptions = {
