@@ -100,8 +100,8 @@ let exitGeofencesCallback = (_: any) => {};
 
 // Internal callbacks:
 // These callback functions will be added as listeners to SitumPluginEventEmitter as soon as possible and will be
-// listening events for all the plugin lifecycle. They will forward calls to both client callbacks and the MapView
-// internal callback.
+// listening events for all the plugin lifecycle. Location and geofence events will forward calls to both client
+// callbacks and the MapView internal callback. Navigation events are forwarded only to the client callbacks.
 
 const _internalLocationCallback = (loc: Location) => {
   DelegatedStateManager.getInstance().updateLocation(loc);

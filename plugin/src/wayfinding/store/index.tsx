@@ -11,10 +11,8 @@ import React, {
 import SitumPlugin from "../../sdk";
 import {
   type Building,
-  type Directions,
   type Error,
   type Location,
-  type NavigationProgress,
   type Poi,
 } from "../../sdk/types";
 import { LocationStatusName } from "../../sdk/types/constants";

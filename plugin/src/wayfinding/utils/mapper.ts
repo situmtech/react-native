@@ -3,8 +3,6 @@ import { SitumAuth } from "../../sdk/authStore";
 import { LocationStatusName } from "../../sdk";
 import type {
   Location,
-  NavigationProgress,
-  Point,
 } from "../../sdk/types";
 import type {
   CartographySelectionOptions,
@@ -12,20 +10,10 @@ import type {
   NavigateToCarPayload,
   NavigateToPointPayload,
   NavigateToPoiPayload,
-  OnNavigationResult,
   SearchFilter,
   ViewerConfigItem,
   ShareLiveLocationSessionPayload,
 } from "../types";
-
-export const createPoint = (payload: any): Point => {
-  return {
-    buildingIdentifier: payload.buildingIdentifier,
-    floorIdentifier: payload.floorIdentifier,
-    cartesianCoordinate: payload.cartesianCoordinate,
-    coordinate: payload.coordinate,
-  };
-};
 
 const mapperWrapper = (type: string, payload?: unknown) => {
   return JSON.stringify({ type, payload: payload ?? {} });
@@ -100,20 +88,6 @@ const ViewerMapper = {
   locationError: (errorCode: string) => {
     return mapperWrapper("location.update_status", { status: errorCode });
   },
-  // Directions
-  routeToResult: (route: any): OnNavigationResult => {
-    return {
-      navigation: {
-        status: route.status,
-        destination: {
-          category: route?.destinationId ? "POI" : "COORDINATE",
-          identifier: route?.destinationId,
-          //name:, //TODO
-          point: route.to ? createPoint(route.to) : createPoint(route.TO),
-        },
-      },
-    };
-  },
   // Navigation
   navigateToPoi: (navigate: NavigateToPoiPayload) => {
     return mapperWrapper(`navigation.start`, {
@@ -143,13 +117,6 @@ const ViewerMapper = {
   },
   cancelNavigation: () => {
     return mapperWrapper(`navigation.cancel`, {});
-  },
-  navigationToResult: (navigation: NavigationProgress): OnNavigationResult => {
-    return {
-      navigation: {
-        status: navigation?.type,
-      },
-    };
   },
   search: (searchFilter: SearchFilter) => {
     return mapperWrapper(`ui.set_search_filter`, {

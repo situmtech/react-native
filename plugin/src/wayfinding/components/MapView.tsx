@@ -274,12 +274,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (!webViewRef.current) {
         return;
       }
-      if (SitumPlugin.navigationIsRunning()) {
-        console.error(
-          "Situm > hook > Navigation on course, poi category selection is unavailable",
-        );
-        return;
-      }
       sendMessageToViewer(
         webViewRef.current,
         ViewerMapper.selectPoiCategory(categoryId),

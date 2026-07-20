@@ -1,4 +1,3 @@
-import type { Point } from "../../sdk/types";
 import { AccessibilityMode } from "../../sdk/types/constants";
 export type { MapViewConfiguration, MapViewProps } from "../components/MapView";
 import { ErrorName } from "./constants";
@@ -194,23 +193,6 @@ export interface OnFavoritePoisUpdatedResult {
   currentPoisIdentifiers: number[];
 }
 
-export interface Destination {
-  category: string;
-  identifier?: string;
-  name?: string;
-  point: Point;
-}
-
-export interface Navigation {
-  status: string;
-  destination?: Destination;
-}
-
-export interface OnNavigationResult {
-  navigation?: Navigation;
-  error?: Error;
-}
-
 export type NavigateToPoiPayload = {
   identifier: number;
   accessibilityMode?: AccessibilityMode;
@@ -229,15 +211,6 @@ export type NavigateToPointPayload = {
 };
 
 export type ShareLiveLocationSessionPayload = {
-  identifier: string;
-};
-
-export type DirectionsMessage = {
-  buildingIdentifier: string;
-  originIdentifier: string;
-  originCategory: string;
-  destinationIdentifier: string;
-  destinationCategory: string;
   identifier: string;
 };
 

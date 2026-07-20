@@ -1,17 +1,3 @@
-export enum NavigationStatus {
-  START = "start",
-  STOP = "stop",
-  OUT_OF_ROUTE = "outOfRoute",
-  UPDATE = "update",
-}
-
-export enum NavigationUpdateType {
-  PROGRESS = "PROGRESS",
-  OUT_OF_ROUTE = "OUT_OF_ROUTE",
-  DESTINATION_REACHED = "DESTINATION_REACHED",
-  CANCELLED = "CANCELLED",
-}
-
 export enum SdkNavigationUpdateType {
   START = "onNavigationStart",
   PROGRESS = "onNavigationProgress",
@@ -33,7 +19,7 @@ export enum LocationStatusName {
 }
 
 /**
- * Available accessibility modes used in the {@link DirectionsRequest}.
+ * Available accessibility modes used when calculating routes.
  *
  * @property CHOOSE_SHORTEST The route should choose the best route, without taking into account if it is accessible or not.
  * This option is the default so you don't have to do anything in order to use it
