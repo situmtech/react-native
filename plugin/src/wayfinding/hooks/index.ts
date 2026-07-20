@@ -63,7 +63,6 @@ export const useSitumInternal = () => {
             const receivedError = internalCall.get<Error>();
             dispatch(setError(receivedError));
             break;
-          case InternalCallType.NAVIGATION_ERROR:
           case InternalCallType.GEOFENCES_ENTER:
           case InternalCallType.GEOFENCES_EXIT:
             // Do nothing.
