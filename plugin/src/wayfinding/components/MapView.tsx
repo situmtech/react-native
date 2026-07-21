@@ -391,7 +391,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           webViewRef.current &&
             sendMessageToViewer(
               webViewRef.current,
-              ViewerMapper.selectPoi(null),
+              ViewerMapper.deselectPoi(),
             );
         },
         navigateToPoi(payload): void {

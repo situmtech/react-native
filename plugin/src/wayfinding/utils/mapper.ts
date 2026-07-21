@@ -41,6 +41,9 @@ const ViewerMapper = {
   selectPoi: (poiId: number | null) => {
     return mapperWrapper(`cartography.select_poi`, { identifier: poiId });
   },
+  deselectPoi: () => {
+    return mapperWrapper("cartography.deselect_poi");
+  },
   selectCar: () => {
     return mapperWrapper(`cartography.select_car`);
   },
