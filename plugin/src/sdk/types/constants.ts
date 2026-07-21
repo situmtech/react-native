@@ -19,7 +19,7 @@ export enum LocationStatusName {
 }
 
 /**
- * Available accessibility modes used when calculating routes.
+ * Available accessibility modes used in the {@link DirectionsOptions}.
  *
  * @property CHOOSE_SHORTEST The route should choose the best route, without taking into account if it is accessible or not.
  * This option is the default so you don't have to do anything in order to use it

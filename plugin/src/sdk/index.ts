@@ -143,34 +143,6 @@ const _internalLocationErrorCallback = (error: Error) => {
   locationErrorCallback?.(adaptedError);
 };
 
-const _internalNavigationStartedCallback = (route: Route) => {
-  navigationStartedCallback?.(route);
-};
-
-const _internalNavigationProgressCallback = (progress: NavigationProgress) => {
-  navigationProgressCallback?.(progress);
-};
-
-const _internalNavigationDestinationReachedCallback = (route: Route) => {
-  navigationDestinationReachedCallback?.(route);
-};
-
-const _internalNavigationOutOfRouteCallback = () => {
-  navigationOutOfRouteCallback?.();
-};
-
-const _internalNavigationFinishedCallback = () => {
-  navigationFinishedCallback?.();
-};
-
-const _internalNavigationCancellationCallback = () => {
-  navigationCancellationCallback?.();
-};
-
-const _internalNavigationErrorCallback = (error: any) => {
-  navigationErrorCallback?.(error);
-};
-
 const _internalEnterGeofencesCallback = (data: any) => {
   internalMethodCallMapDelegate(
     new InternalCall(InternalCallType.GEOFENCES_ENTER, data),
@@ -191,16 +163,27 @@ const _registerCallbacks = () => {
     statusChanged: _internalLocationStatusCallback,
     locationStopped: _internalLocationStoppedCallback,
     locationError: _internalLocationErrorCallback,
-    [SdkNavigationUpdateType.START]: _internalNavigationStartedCallback,
-    [SdkNavigationUpdateType.PROGRESS]: _internalNavigationProgressCallback,
-    [SdkNavigationUpdateType.DESTINATION_REACHED]:
-      _internalNavigationDestinationReachedCallback,
-    [SdkNavigationUpdateType.OUTSIDE_ROUTE]:
-      _internalNavigationOutOfRouteCallback,
-    [SdkNavigationUpdateType.FINISHED]: _internalNavigationFinishedCallback,
-    [SdkNavigationUpdateType.CANCELLATION]:
-      _internalNavigationCancellationCallback,
-    [SdkNavigationUpdateType.ERROR]: _internalNavigationErrorCallback,
+    [SdkNavigationUpdateType.START]: (route: Route) => {
+      navigationStartedCallback(route);
+    },
+    [SdkNavigationUpdateType.PROGRESS]: (progress: NavigationProgress) => {
+      navigationProgressCallback(progress);
+    },
+    [SdkNavigationUpdateType.DESTINATION_REACHED]: (route: Route) => {
+      navigationDestinationReachedCallback(route);
+    },
+    [SdkNavigationUpdateType.OUTSIDE_ROUTE]: () => {
+      navigationOutOfRouteCallback();
+    },
+    [SdkNavigationUpdateType.FINISHED]: () => {
+      navigationFinishedCallback();
+    },
+    [SdkNavigationUpdateType.CANCELLATION]: () => {
+      navigationCancellationCallback();
+    },
+    [SdkNavigationUpdateType.ERROR]: (error: any) => {
+      navigationErrorCallback(error);
+    },
     onEnterGeofences: _internalEnterGeofencesCallback,
     onExitGeofences: _internalExitGeofencesCallback,
   };
