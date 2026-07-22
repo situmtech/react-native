@@ -9,3 +9,13 @@
 - `SitumProvider.apiKey` is now optional. If no credentials are available when the MapView loads, it waits until authentication is provided.
 - Updated the example application React Native from 0.79.1 to 0.83.10 to fix an issue that prevented the app from compiling on iOS.
 - Updated Android example application targetSdkVersion from 35 to 37.
+
+### Removed
+
+- Removed routing and navigation bridge between MapView and native SDK.
+
+### Fixed
+
+- AccessibilityMode documentation now mentions DirectionsOptions instead of DirectionsRequest.
+- Fixed removeNavigationUpdates never resolving when navigation was not running.
+- Fixed navigationRunning remaining active after reaching the destination.
