@@ -1,3 +1,4 @@
+import type { DirectionsRequest, Point } from "../../sdk/types";
 import { AccessibilityMode } from "../../sdk/types/constants";
 export type { MapViewConfiguration, MapViewProps } from "../components/MapView";
 import { ErrorName } from "./constants";
@@ -78,6 +79,14 @@ export interface MapViewRef {
    * Cancels the current navigation, if any.
    */
   cancelNavigation: () => void;
+
+  /**
+   * @deprecated Routes are now calculated and managed by the MapView, so direction requests are no longer intercepted by the plugin.
+   * This method is kept for backward compatibility and has no effect.
+   */
+  setOnDirectionsRequestInterceptor: (params: {
+    onDirectionsRequestInterceptor: OnDirectionsRequestInterceptor;
+  }) => void;
 
   /**
    * Performs a search with the given SearchFilter.
@@ -172,6 +181,14 @@ export interface MapViewDirectionsOptions {
 }
 
 /**
+ * @deprecated Routes are now calculated and managed by the MapView, so direction requests are no longer intercepted by the plugin.
+ * This interface is kept for backward compatibility and is no longer used internally.
+ */
+export interface OnDirectionsRequestInterceptor {
+  (directionRequest: DirectionsRequest): void;
+}
+
+/**
  * Represents an internal callback that will receive messages from the MapView.
  * For internal use only.
  */
@@ -193,6 +210,35 @@ export interface OnFavoritePoisUpdatedResult {
   currentPoisIdentifiers: number[];
 }
 
+/**
+ * @deprecated Navigation is now calculated and managed by the MapView.
+ * This interface is kept for backward compatibility and is no longer used internally.
+ */
+export interface Destination {
+  category: string;
+  identifier?: string;
+  name?: string;
+  point: Point;
+}
+
+/**
+ * @deprecated Navigation is now calculated and managed by the MapView.
+ * This interface is kept for backward compatibility and is no longer used internally.
+ */
+export interface Navigation {
+  status: string;
+  destination?: Destination;
+}
+
+/**
+ * @deprecated Navigation results are no longer produced by the native SDK bridge.
+ * This interface is kept for backward compatibility and is no longer used internally.
+ */
+export interface OnNavigationResult {
+  navigation?: Navigation;
+  error?: Error;
+}
+
 export type NavigateToPoiPayload = {
   identifier: number;
   accessibilityMode?: AccessibilityMode;
@@ -211,6 +257,19 @@ export type NavigateToPointPayload = {
 };
 
 export type ShareLiveLocationSessionPayload = {
+  identifier: string;
+};
+
+/**
+ * @deprecated Direction requests are no longer forwarded from the MapView to the native SDK.
+ * This type is kept for backward compatibility and is no longer used internally.
+ */
+export type DirectionsMessage = {
+  buildingIdentifier: string;
+  originIdentifier: string;
+  originCategory: string;
+  destinationIdentifier: string;
+  destinationCategory: string;
   identifier: string;
 };
 

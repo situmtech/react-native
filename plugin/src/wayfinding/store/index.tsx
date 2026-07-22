@@ -11,8 +11,10 @@ import React, {
 import SitumPlugin from "../../sdk";
 import {
   type Building,
+  type Directions,
   type Error,
   type Location,
+  type NavigationProgress,
   type Poi,
 } from "../../sdk/types";
 import { LocationStatusName } from "../../sdk/types/constants";
@@ -36,6 +38,16 @@ export interface State {
   buildings: Building[] | null;
   currentBuilding: Building | undefined;
   pois: Poi[];
+  /**
+   * @deprecated Routes are now calculated and managed by the MapView.
+   * This property is kept for backward compatibility and will always be undefined.
+   */
+  directions?: Directions;
+  /**
+   * @deprecated Navigation is now calculated and managed by the MapView.
+   * This property is kept for backward compatibility and will always be undefined.
+   */
+  navigation?: NavigationProgress;
   destinationPoiID?: number;
   error?: Error;
   buildingIdentifier: string;
@@ -51,6 +63,8 @@ export const initialState: State = {
   buildings: null,
   currentBuilding: undefined,
   pois: [],
+  directions: undefined,
+  navigation: undefined,
   destinationPoiID: undefined,
   error: undefined,
   buildingIdentifier: "-1",
@@ -148,6 +162,22 @@ export const selectCurrentBuilding = (state: State) => {
 
 export const selectPois = (state: State) => {
   return state.pois;
+};
+
+/**
+ * @deprecated Routes are now calculated and managed by the MapView.
+ * This selector is kept for backward compatibility and will always return undefined.
+ */
+export const selectDirections = (state: State) => {
+  return state.directions;
+};
+
+/**
+ * @deprecated Navigation is now calculated and managed by the MapView.
+ * This selector is kept for backward compatibility and will always return undefined.
+ */
+export const selectNavigation = (state: State) => {
+  return state.navigation;
 };
 
 export const selectDestinationPoiID = (state: State) => {

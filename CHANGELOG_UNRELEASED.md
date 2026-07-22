@@ -12,7 +12,7 @@
 
 ### Removed
 
-- Removed routing and navigation bridge between MapView and native SDK.
+- Removed routing and navigation bridge between MapView and native SDK as the MapView now always uses its own routing and navigation library.
 
 ### Fixed
 
