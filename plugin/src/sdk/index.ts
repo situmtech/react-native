@@ -646,8 +646,11 @@ export default class SitumPlugin {
    *
    */
   static removeNavigationUpdates = () => {
-    return promiseWrapper<void>(({ onCallback }) => {
-      if (!SitumPlugin.navigationIsRunning()) return;
+    return promiseWrapper<void>(({ resolve, onCallback }) => {
+      if (!SitumPlugin.navigationIsRunning()) {
+        resolve();
+        return;
+      }
 
       navigationRunning = false;
       RNCSitumPlugin.removeNavigationUpdates((response) => {
