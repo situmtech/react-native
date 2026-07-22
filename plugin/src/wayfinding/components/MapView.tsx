@@ -568,6 +568,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "viewer.navigation.started":
         case "viewer.navigation.updated":
         case "viewer.navigation.stopped":
+          // Forward Viewer navigation events to the existing SDK callbacks.
+          // This avoids introducing a separate set of callbacks just for the Viewer.
+          // Warning: running SDK and MapView navigations at the same time may mix
+          // events because both navigations use the same public SDK callbacks.
           SitumPlugin.updateNavigationState(payload);
           break;
         case "share_location.uploading_locations_started":

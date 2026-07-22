@@ -171,15 +171,18 @@ const _registerCallbacks = () => {
     },
     [SdkNavigationUpdateType.DESTINATION_REACHED]: (route: Route) => {
       navigationDestinationReachedCallback(route);
+      navigationRunning = false;
     },
     [SdkNavigationUpdateType.OUTSIDE_ROUTE]: () => {
       navigationOutOfRouteCallback();
     },
     [SdkNavigationUpdateType.FINISHED]: () => {
       navigationFinishedCallback();
+      navigationRunning = false;
     },
     [SdkNavigationUpdateType.CANCELLATION]: () => {
       navigationCancellationCallback();
+      navigationRunning = false;
     },
     [SdkNavigationUpdateType.ERROR]: (error: any) => {
       navigationErrorCallback(error);
