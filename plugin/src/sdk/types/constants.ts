@@ -10,6 +10,18 @@ export enum NavigationStatus {
   UPDATE = "update",
 }
 
+/**
+ * @deprecated This enum was used by the legacy navigation bridge between the native SDK and the MapView.
+ * That bridge has been removed.
+ * It is kept for backward compatibility and is no longer used or emitted by the plugin.
+ */
+export enum NavigationUpdateType {
+  PROGRESS = "PROGRESS",
+  OUT_OF_ROUTE = "OUT_OF_ROUTE",
+  DESTINATION_REACHED = "DESTINATION_REACHED",
+  CANCELLED = "CANCELLED",
+}
+
 export enum SdkNavigationUpdateType {
   START = "onNavigationStart",
   PROGRESS = "onNavigationProgress",
