@@ -6,7 +6,7 @@
     ]
   },
   "resolutions": {
-    "@react-native/gradle-plugin": "0.79.1",
+    "@react-native/gradle-plugin": "0.83.10",
     "eslint-plugin-prettier": "^5.4.1"
   },
   "description": "Situm React Native plugin monorepo.",

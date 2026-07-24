@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { SitumAuth } from "../../sdk/authStore";
 import { AccessibilityMode, LocationStatusName } from "../../sdk";
 import type {
   Directions,
@@ -224,6 +225,15 @@ const ViewerMapper = {
       "share_location.set_shared_session_identifier",
       session,
     );
+  },
+  // Auth
+  setAuth: (auth: SitumAuth) => {
+    return mapperWrapper(
+      "app.set_auth",
+      auth.type === "jwt"
+        ? { jwt: auth.value }
+        : { apikey: auth.value }
+    )
   },
 };
 
