@@ -19,3 +19,4 @@
 - AccessibilityMode documentation now mentions DirectionsOptions instead of DirectionsRequest.
 - Fixed removeNavigationUpdates never resolving when navigation was not running.
 - Fixed navigationRunning remaining active after reaching the destination.
+- Added workaround to TS regression at react-native-webview (https://github.com/react-native-webview/react-native-webview/issues/3977).

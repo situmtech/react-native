@@ -257,12 +257,12 @@ export default class SitumPlugin {
    * token against Situm servers when this method is called. The token is parsed locally only to
    * obtain the account information needed by the SDK, and it will be sent as a Bearer token in
    * subsequent authenticated network requests.
-   * 
+   *
    * If the provided token is expired, has an invalid signature, or is otherwise rejected by
    * Situm servers, network operations that require server authentication will fail. However,
    * features that can operate with already cached local data may continue to work, such as
    * visualizing cached resources or positioning with previously downloaded positioning data.
-   * 
+   *
    * User-provided tokens cannot be renewed automatically by the SDK. To recover from an
    * expired or rejected token, provide a new token by calling this method again.
    *
@@ -406,11 +406,11 @@ export default class SitumPlugin {
   static sdkVersion = () => {
     return exceptionWrapper<SdkVersion>(({ onSuccess }) => {
       const versions: { react_native: string; ios?: string; android?: string } =
-      {
-        react_native: "",
-        ios: "",
-        android: "",
-      };
+        {
+          react_native: "",
+          ios: "",
+          android: "",
+        };
       onSuccess(versions);
     });
   };
@@ -681,9 +681,9 @@ export default class SitumPlugin {
         SitumPluginEventEmitter.addListener("realtimeUpdated", realtimeUpdates),
         error
           ? SitumPluginEventEmitter.addListener(
-            "realtimeError",
-            error || logError,
-          )
+              "realtimeError",
+              error || logError,
+            )
           : null,
       ]);
     });
@@ -802,7 +802,6 @@ export default class SitumPlugin {
    * Do not use this method as it is intended for internal use
    * by the map viewer module.
    *
-   * @param validateMapViewProjectSettings
    */
   static validateMapViewProjectSettings = () => {
     if (Platform.OS === "ios") {
