@@ -18,17 +18,15 @@ import {
 } from "react-native";
 import WebView from "react-native-webview";
 import type {
+  AndroidWebViewProps,
+  IOSWebViewProps,
   WebViewErrorEvent,
   WebViewMessageEvent,
 } from "react-native-webview/lib/WebViewTypes";
 
 import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
-import {
-  selectApiDomain,
-  setError,
-  setLocationStatus,
-} from "../store";
+import { selectApiDomain, setError, setLocationStatus } from "../store";
 import { useSelector } from "../store/utils";
 import {
   type CartographySelectionOptions,
@@ -63,6 +61,15 @@ const NETWORK_ERROR_CODE = {
   web: 0,
 };
 
+// Workaround to "Type 'RefObject<WebView<undefined>>' is not assignable to type 'never'".
+// See https://github.com/react-native-webview/react-native-webview/issues/3977.
+type TypedWebViewProps = IOSWebViewProps & AndroidWebViewProps;
+// Some WebView declarations default their generic props to `undefined`.
+// This proxy retains the declared props without relying on that default.
+const TypedWebView = WebView as unknown as React.ComponentType<
+  TypedWebViewProps & React.RefAttributes<WebView>
+>;
+
 export type MapViewConfiguration = {
   /**
    * A String parameter that allows you to choose the API you will be retrieving our cartography from. Default is "api.situm.com".
@@ -76,7 +83,7 @@ export type MapViewConfiguration = {
   viewerDomain?: string;
   /**
    * Your Situm API key. Find your API key at your [Situm dashboard's profile](https://dashboard.situm.com/accounts/profile)
-   * 
+   *
    * Since 3.17.0 version this parameter is not required. Instead, you should specify your apiKey
    * at the root of your app with `SitumProvider.apiKey` for the correct usage of the plugin.
    * If {@link MapViewConfiguration.situmApiKey} is specified, this API key takes precedence over
@@ -190,24 +197,21 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       configuration.buildingIdentifier,
     );
 
-    const [auth, setAuth] = useState<SitumAuth | undefined>(authStore.getAuth());
+    const [auth, setAuth] = useState<SitumAuth | undefined>(
+      authStore.getAuth(),
+    );
 
     useEffect(() => authStore.subscribe(setAuth), []);
 
     const apiDomain = useSelector(selectApiDomain);
-    const {
-      init,
-      location,
-      locationStatus,
-      error,
-    } = useSitum();
+    const { init, location, locationStatus, error } = useSitum();
 
     const sendFollowUser = () => {
       if (
         webViewRef.current &&
         mapLoaded &&
         location?.position?.buildingIdentifier ===
-        configuration.buildingIdentifier
+          configuration.buildingIdentifier
       ) {
         _followUser(true);
       }
@@ -363,6 +367,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
 
     useImperativeHandle(ref, (): InternalMapViewRef => {
       return {
+        setOnDirectionsRequestInterceptor() {
+          // DEPRECATED
+        },
         followUser() {
           _followUser(true);
         },
@@ -389,10 +396,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         },
         deselectPoi() {
           webViewRef.current &&
-            sendMessageToViewer(
-              webViewRef.current,
-              ViewerMapper.deselectPoi(),
-            );
+            sendMessageToViewer(webViewRef.current, ViewerMapper.deselectPoi());
         },
         navigateToPoi(payload): void {
           _navigateToPoi(payload);
@@ -620,7 +624,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       }
       sendMessageToViewer(
         webViewRef.current,
-        ViewerMapper.setAuth(effectiveAuth)
+        ViewerMapper.setAuth(effectiveAuth),
       );
     }, [effectiveAuth]);
 
@@ -698,7 +702,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       return effectiveAuth?.type === "apiKey"
         ? `apikey=${encodeURIComponent(effectiveAuth.value)}`
         : "wait_for_auth=true";
-    }, [effectiveAuth])
+    }, [effectiveAuth]);
 
     const _effectiveApiDomain = useMemo(() => {
       let finalApiDomain = configuration.apiDomain ?? apiDomain;
@@ -778,11 +782,12 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     }, []);
 
     return (
-      <WebView
+      <TypedWebView
         ref={webViewRef}
         source={{
           uri: `${configuration.viewerDomain || SITUM_BASE_DOMAIN}/${_effectiveProfile}?${
-            _authQueryParam}${_effectiveApiDomain}${_effectiveBuildingId}&mode=embed`
+            _authQueryParam
+          }${_effectiveApiDomain}${_effectiveBuildingId}&mode=embed`,
         }}
         style={StyleSheet.flatten([viewerStyles.webview, style])}
         limitsNavigationsToAppBoundDomains={true}
