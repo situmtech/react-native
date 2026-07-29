@@ -26,7 +26,6 @@ import SitumPlugin from "../../sdk";
 import useSitum from "../hooks";
 import {
   selectApiDomain,
-  selectUser,
   setError,
   setLocationStatus,
 } from "../store";
@@ -40,7 +39,6 @@ import {
   type NavigateToCarPayload,
   type NavigateToPointPayload,
   type NavigateToPoiPayload,
-  type OnDirectionsRequestInterceptor,
   type OnExternalLinkClickedResult,
   type OnFavoritePoisUpdatedResult,
   type OnFloorChangedResult,
@@ -53,7 +51,7 @@ import {
 import { ErrorName } from "../types/constants";
 import { sendMessageToViewer } from "../utils";
 import ViewerMapper from "../utils/mapper";
-import { areSameAuth, authStore, SitumAuth } from "../../sdk/authStore";
+import { authStore, SitumAuth } from "../../sdk/authStore";
 const SITUM_BASE_DOMAIN = "https://maps.situm.com";
 
 const NETWORK_ERROR_CODE = {
@@ -183,8 +181,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     ref,
   ) => {
     const webViewRef = useRef<WebView>(null);
-    const [_onDirectionsRequestInterceptor, setInterceptor] =
-      useState<OnDirectionsRequestInterceptor>();
     const internalMessageCallbackRef =
       useRef<OnInternalMapViewMessageCallback>();
 
@@ -203,11 +199,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       init,
       location,
       locationStatus,
-      directions,
-      navigation,
-      calculateRoute,
-      startNavigation,
-      stopNavigation,
       error,
     } = useSitum();
 
@@ -282,12 +273,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       if (!webViewRef.current) {
         return;
       }
-      if (SitumPlugin.navigationIsRunning()) {
-        console.error(
-          "Situm > hook > Navigation on course, poi category selection is unavailable",
-        );
-        return;
-      }
       sendMessageToViewer(
         webViewRef.current,
         ViewerMapper.selectPoiCategory(categoryId),
@@ -297,12 +282,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     const _selectFloor = useCallback(
       (floorId: number, options?: CartographySelectionOptions) => {
         if (!webViewRef.current) {
-          return;
-        }
-        if (SitumPlugin.navigationIsRunning()) {
-          console.error(
-            "Situm > hook > Navigation on course, floor selection is unavailable",
-          );
           return;
         }
         sendMessageToViewer(
@@ -412,7 +391,7 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
           webViewRef.current &&
             sendMessageToViewer(
               webViewRef.current,
-              ViewerMapper.selectPoi(null),
+              ViewerMapper.deselectPoi(),
             );
         },
         navigateToPoi(payload): void {
@@ -424,12 +403,8 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         navigateToPoint(payload: NavigateToPointPayload): void {
           _navigateToPoint(payload);
         },
-        setOnDirectionsRequestInterceptor(directionRequestInterceptor): void {
-          setInterceptor(() => directionRequestInterceptor);
-        },
         cancelNavigation(): void {
           if (!webViewRef.current) return;
-          stopNavigation();
           sendMessageToViewer(
             webViewRef.current,
             ViewerMapper.cancelNavigation(),
@@ -450,7 +425,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         },
       };
     }, [
-      stopNavigation,
       _navigateToPoi,
       _followUser,
       _navigateToCar,
@@ -516,23 +490,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
       setError(null);
     }, [error, mapLoaded]);
 
-    // Updated SDK navigation
-    useEffect(() => {
-      if (!webViewRef.current || !navigation || !mapLoaded) return;
-
-      sendMessageToViewer(
-        webViewRef.current,
-        ViewerMapper.navigation(navigation),
-      );
-    }, [navigation, mapLoaded]);
-
-    // Updated SDK route
-    useEffect(() => {
-      if (!webViewRef.current || !directions || !mapLoaded) return;
-
-      sendMessageToViewer(webViewRef.current, ViewerMapper.route(directions));
-    }, [directions, mapLoaded]);
-
     // Update language
     useEffect(() => {
       if (!webViewRef.current || !configuration.language || !mapLoaded) return;
@@ -580,15 +537,6 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "app.ready_for_auth":
           sendEffectiveAuth();
           break;
-        case "directions.requested":
-          calculateRoute(payload, _onDirectionsRequestInterceptor);
-          break;
-        case "navigation.requested":
-          startNavigation(payload, _onDirectionsRequestInterceptor);
-          break;
-        case "navigation.stopped":
-          stopNavigation();
-          break;
         case "cartography.poi_selected":
           onPoiSelected(payload);
           break;
@@ -620,6 +568,10 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
         case "viewer.navigation.started":
         case "viewer.navigation.updated":
         case "viewer.navigation.stopped":
+          // Forward Viewer navigation events to the existing SDK callbacks.
+          // This avoids introducing a separate set of callbacks just for the Viewer.
+          // Warning: running SDK and MapView navigations at the same time may mix
+          // events because both navigations use the same public SDK callbacks.
           SitumPlugin.updateNavigationState(payload);
           break;
         case "share_location.uploading_locations_started":

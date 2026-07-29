@@ -100,8 +100,8 @@ let exitGeofencesCallback = (_: any) => {};
 
 // Internal callbacks:
 // These callback functions will be added as listeners to SitumPluginEventEmitter as soon as possible and will be
-// listening events for all the plugin lifecycle. They will forward calls to both client callbacks and the MapView
-// internal callback.
+// listening events for all the plugin lifecycle. Location and geofence events will forward calls to both client
+// callbacks and the MapView internal callback. Navigation events are forwarded only to the client callbacks.
 
 const _internalLocationCallback = (loc: Location) => {
   DelegatedStateManager.getInstance().updateLocation(loc);
@@ -143,56 +143,6 @@ const _internalLocationErrorCallback = (error: Error) => {
   locationErrorCallback?.(adaptedError);
 };
 
-const _internalNavigationStartedCallback = (route: Route) => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_START, route),
-  );
-  navigationStartedCallback?.(route);
-};
-
-const _internalNavigationProgressCallback = (progress: NavigationProgress) => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_PROGRESS, progress),
-  );
-  navigationProgressCallback?.(progress);
-};
-
-const _internalNavigationDestinationReachedCallback = (route: Route) => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_DESTINATION_REACHED, route),
-  );
-  navigationDestinationReachedCallback?.(route);
-};
-
-const _internalNavigationOutOfRouteCallback = () => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_OUT_OF_ROUTE, undefined),
-  );
-  navigationOutOfRouteCallback?.();
-};
-
-const _internalNavigationFinishedCallback = () => {
-  // Deprecated!
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_CANCELLATION, undefined),
-  );
-  navigationFinishedCallback?.();
-};
-
-const _internalNavigationCancellationCallback = () => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_CANCELLATION, undefined),
-  );
-  navigationCancellationCallback?.();
-};
-
-const _internalNavigationErrorCallback = (error: any) => {
-  internalMethodCallMapDelegate(
-    new InternalCall(InternalCallType.NAVIGATION_ERROR, error),
-  );
-  navigationErrorCallback?.(error);
-};
-
 const _internalEnterGeofencesCallback = (data: any) => {
   internalMethodCallMapDelegate(
     new InternalCall(InternalCallType.GEOFENCES_ENTER, data),
@@ -213,16 +163,30 @@ const _registerCallbacks = () => {
     statusChanged: _internalLocationStatusCallback,
     locationStopped: _internalLocationStoppedCallback,
     locationError: _internalLocationErrorCallback,
-    [SdkNavigationUpdateType.START]: _internalNavigationStartedCallback,
-    [SdkNavigationUpdateType.PROGRESS]: _internalNavigationProgressCallback,
-    [SdkNavigationUpdateType.DESTINATION_REACHED]:
-      _internalNavigationDestinationReachedCallback,
-    [SdkNavigationUpdateType.OUTSIDE_ROUTE]:
-      _internalNavigationOutOfRouteCallback,
-    [SdkNavigationUpdateType.FINISHED]: _internalNavigationFinishedCallback,
-    [SdkNavigationUpdateType.CANCELLATION]:
-      _internalNavigationCancellationCallback,
-    [SdkNavigationUpdateType.ERROR]: _internalNavigationErrorCallback,
+    [SdkNavigationUpdateType.START]: (route: Route) => {
+      navigationStartedCallback(route);
+    },
+    [SdkNavigationUpdateType.PROGRESS]: (progress: NavigationProgress) => {
+      navigationProgressCallback(progress);
+    },
+    [SdkNavigationUpdateType.DESTINATION_REACHED]: (route: Route) => {
+      navigationDestinationReachedCallback(route);
+      navigationRunning = false;
+    },
+    [SdkNavigationUpdateType.OUTSIDE_ROUTE]: () => {
+      navigationOutOfRouteCallback();
+    },
+    [SdkNavigationUpdateType.FINISHED]: () => {
+      navigationFinishedCallback();
+      navigationRunning = false;
+    },
+    [SdkNavigationUpdateType.CANCELLATION]: () => {
+      navigationCancellationCallback();
+      navigationRunning = false;
+    },
+    [SdkNavigationUpdateType.ERROR]: (error: any) => {
+      navigationErrorCallback(error);
+    },
     onEnterGeofences: _internalEnterGeofencesCallback,
     onExitGeofences: _internalExitGeofencesCallback,
   };
@@ -685,8 +649,11 @@ export default class SitumPlugin {
    *
    */
   static removeNavigationUpdates = () => {
-    return promiseWrapper<void>(({ onCallback }) => {
-      if (!SitumPlugin.navigationIsRunning()) return;
+    return promiseWrapper<void>(({ resolve, onCallback }) => {
+      if (!SitumPlugin.navigationIsRunning()) {
+        resolve();
+        return;
+      }
 
       navigationRunning = false;
       RNCSitumPlugin.removeNavigationUpdates((response) => {

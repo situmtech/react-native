@@ -1,3 +1,8 @@
+/**
+ * @deprecated This enum was used by the legacy navigation bridge between the native SDK and the MapView.
+ * That bridge has been removed.
+ * It is kept for backward compatibility and is no longer used or emitted by the plugin.
+ */
 export enum NavigationStatus {
   START = "start",
   STOP = "stop",
@@ -5,6 +10,11 @@ export enum NavigationStatus {
   UPDATE = "update",
 }
 
+/**
+ * @deprecated This enum was used by the legacy navigation bridge between the native SDK and the MapView.
+ * That bridge has been removed.
+ * It is kept for backward compatibility and is no longer used or emitted by the plugin.
+ */
 export enum NavigationUpdateType {
   PROGRESS = "PROGRESS",
   OUT_OF_ROUTE = "OUT_OF_ROUTE",
@@ -33,7 +43,7 @@ export enum LocationStatusName {
 }
 
 /**
- * Available accessibility modes used in the {@link DirectionsRequest}.
+ * Available accessibility modes used in the {@link DirectionsOptions}.
  *
  * @property CHOOSE_SHORTEST The route should choose the best route, without taking into account if it is accessible or not.
  * This option is the default so you don't have to do anything in order to use it
@@ -51,12 +61,6 @@ export enum InternalCallType {
   LOCATION_STATUS = "LOCATION_STATUS",
   LOCATION_ERROR = "LOCATION_ERROR",
   LOCATION_STOPPED = "LOCATION_STOPPED", // TODO: Exists only in RN, delete!
-  NAVIGATION_START = "NAVIGATION_START",
-  NAVIGATION_DESTINATION_REACHED = "NAVIGATION_DESTINATION_REACHED",
-  NAVIGATION_PROGRESS = "NAVIGATION_PROGRESS",
-  NAVIGATION_OUT_OF_ROUTE = "NAVIGATION_OUT_OF_ROUTE",
-  NAVIGATION_CANCELLATION = "NAVIGATION_CANCELLATION",
-  NAVIGATION_ERROR = "NAVIGATION_ERROR",
   GEOFENCES_ENTER = "GEOFENCES_ENTER",
   GEOFENCES_EXIT = "GEOFENCES_EXIT",
 }

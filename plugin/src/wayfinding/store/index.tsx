@@ -38,7 +38,15 @@ export interface State {
   buildings: Building[] | null;
   currentBuilding: Building | undefined;
   pois: Poi[];
+  /**
+   * @deprecated Routes are now calculated and managed by the MapView.
+   * This property is kept for backward compatibility and will always be undefined.
+   */
   directions?: Directions;
+  /**
+   * @deprecated Navigation is now calculated and managed by the MapView.
+   * This property is kept for backward compatibility and will always be undefined.
+   */
   navigation?: NavigationProgress;
   destinationPoiID?: number;
   error?: Error;
@@ -92,12 +100,6 @@ const store = createStore<State>({
     },
     setPois: (state: State, payload: State["pois"]) => {
       return { ...state, pois: payload };
-    },
-    setDirections: (state: State, payload: State["directions"]) => {
-      return { ...state, directions: payload };
-    },
-    setNavigation: (state: State, payload: State["navigation"]) => {
-      return { ...state, navigation: payload };
     },
     setDestinationPoiID: (state: State, payload: State["destinationPoiID"]) => {
       return { ...state, destinationPoiID: payload };
@@ -162,10 +164,18 @@ export const selectPois = (state: State) => {
   return state.pois;
 };
 
+/**
+ * @deprecated Routes are now calculated and managed by the MapView.
+ * This selector is kept for backward compatibility and will always return undefined.
+ */
 export const selectDirections = (state: State) => {
   return state.directions;
 };
 
+/**
+ * @deprecated Navigation is now calculated and managed by the MapView.
+ * This selector is kept for backward compatibility and will always return undefined.
+ */
 export const selectNavigation = (state: State) => {
   return state.navigation;
 };
@@ -190,8 +200,6 @@ export const {
   setBuildings,
   setCurrentBuilding,
   setPois,
-  setDirections,
-  setNavigation,
   setDestinationPoiID,
   setError,
   setBuildingIdentifier,
