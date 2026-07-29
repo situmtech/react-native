@@ -90,6 +90,7 @@ steps:
         displayName: Initial Vars & Configs
 
       - bash: |
+          set -euo pipefail
 
           if [ -d "react-native" ];then
             cd react-native
@@ -99,13 +100,10 @@ steps:
           corepack enable
           corepack prepare yarn@$(yarnVersion) --activate
 
-          echo -e "\n[+] Fetch branches \n"
-          git fetch origin master
-
           # Important: ensure we are working at plugin folder when setting the NPM version.
           cd plugin
           echo -e "\n[+] Setting NPM version to $(version)"
-          yarn version $(version)
+          yarn version --immediate "$(version)"
           cd ..
 
           echo -e "\n[+] Setting git to push NPM version\n"
