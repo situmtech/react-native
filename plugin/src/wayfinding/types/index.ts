@@ -79,6 +79,11 @@ export interface MapViewRef {
    * Cancels the current navigation, if any.
    */
   cancelNavigation: () => void;
+
+  /**
+   * @deprecated Routes are now calculated and managed by the MapView, so direction requests are no longer intercepted by the plugin.
+   * This method is kept for backward compatibility and has no effect.
+   */
   setOnDirectionsRequestInterceptor: (params: {
     onDirectionsRequestInterceptor: OnDirectionsRequestInterceptor;
   }) => void;
@@ -176,8 +181,8 @@ export interface MapViewDirectionsOptions {
 }
 
 /**
- * This interface allows you to modify all the parameters in the DirectionRequest used by the MapViewer to calculate the route.
- * To use this you will need to load the MapView and once it ends loading use the MapViewRef that you obtain an call setOnDirectionsRequestInterceptor(interceptor)
+ * @deprecated Routes are now calculated and managed by the MapView, so direction requests are no longer intercepted by the plugin.
+ * This interface is kept for backward compatibility and is no longer used internally.
  */
 export interface OnDirectionsRequestInterceptor {
   (directionRequest: DirectionsRequest): void;
@@ -205,6 +210,10 @@ export interface OnFavoritePoisUpdatedResult {
   currentPoisIdentifiers: number[];
 }
 
+/**
+ * @deprecated Navigation is now calculated and managed by the MapView.
+ * This interface is kept for backward compatibility and is no longer used internally.
+ */
 export interface Destination {
   category: string;
   identifier?: string;
@@ -212,11 +221,19 @@ export interface Destination {
   point: Point;
 }
 
+/**
+ * @deprecated Navigation is now calculated and managed by the MapView.
+ * This interface is kept for backward compatibility and is no longer used internally.
+ */
 export interface Navigation {
   status: string;
   destination?: Destination;
 }
 
+/**
+ * @deprecated Navigation results are no longer produced by the native SDK bridge.
+ * This interface is kept for backward compatibility and is no longer used internally.
+ */
 export interface OnNavigationResult {
   navigation?: Navigation;
   error?: Error;
@@ -243,6 +260,10 @@ export type ShareLiveLocationSessionPayload = {
   identifier: string;
 };
 
+/**
+ * @deprecated Direction requests are no longer forwarded from the MapView to the native SDK.
+ * This type is kept for backward compatibility and is no longer used internally.
+ */
 export type DirectionsMessage = {
   buildingIdentifier: string;
   originIdentifier: string;
