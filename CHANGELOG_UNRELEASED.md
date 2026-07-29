@@ -9,6 +9,7 @@
 - `SitumProvider.apiKey` is now optional. If no credentials are available when the MapView loads, it waits until authentication is provided.
 - Updated the example application React Native from 0.79.1 to 0.83.10 to fix an issue that prevented the app from compiling on iOS.
 - Updated Android example application targetSdkVersion from 35 to 37.
+- Aligned the `react-native-webview` versions in the plugin's `peerDependencies` and the example app so that changes to `react-native-webview` are picked up during testing.
 
 ### Removed
 
