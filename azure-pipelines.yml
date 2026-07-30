@@ -129,10 +129,11 @@ steps:
           fi
 
           echo -e "\n[+] Setting NPM version to $newVersion"
-          npm pkg set version="$newVersion"
+          npm pkg set version="$newVersion" --no-workspaces
 
-          # `npm pkg set` exits 0 even if it did not do what we expect, so read the value back
-          writtenVersion=$(npm pkg get version | tr -d '"')
+          # Read the value back from the file itself: `npm pkg get` returns an object keyed by
+          # package name when run inside a workspace, and exits 0 even when nothing was written
+          writtenVersion=$(node -p "require('./package.json').version")
           if [ "$writtenVersion" != "$newVersion" ];then
             echo -e "\n[!] IMPORTANT: failed to set the version in plugin/package.json (found '$writtenVersion')\n"
             exit 1
