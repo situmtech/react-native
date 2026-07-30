@@ -105,8 +105,39 @@ steps:
 
           # Important: ensure we are working at plugin folder when setting the NPM version.
           cd plugin
-          echo -e "\n[+] Setting NPM version to $(version)"
-          yarn version --immediate "$(version)"
+
+          #
+          # IMPORTANT: why npm and not yarn here.
+          #
+          # The version is already known: it comes from the release/x.y.z branch name, so nothing
+          # needs to be computed. `yarn version` cannot be used because it always routes through
+          # `yarn version apply`, which reads the deferred version file and needs a git merge-base
+          # against master. Our clone is shallow (fetchDepth: 1) to keep the pipeline fast, so there
+          # is no common ancestor and the command fails. The --immediate flag does NOT avoid this.
+          #
+          # `npm pkg set` is a plain JSON edit: no network, no dependency resolution, no install and
+          # no lifecycle scripts (unlike `npm version`, which runs preversion/version/postversion).
+          # Yarn remains the package manager for this project: lockfile, install and publish are
+          # untouched. This single line only rewrites the "version" field of plugin/package.json.
+          #
+          newVersion="$(version)"
+
+          # The version comes from a branch name, so validate it before writing it anywhere
+          if ! [[ "$newVersion" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]];then
+            echo -e "\n[!] IMPORTANT: '$newVersion' is not a valid semver version\n"
+            exit 1
+          fi
+
+          echo -e "\n[+] Setting NPM version to $newVersion"
+          npm pkg set version="$newVersion"
+
+          # `npm pkg set` exits 0 even if it did not do what we expect, so read the value back
+          writtenVersion=$(npm pkg get version | tr -d '"')
+          if [ "$writtenVersion" != "$newVersion" ];then
+            echo -e "\n[!] IMPORTANT: failed to set the version in plugin/package.json (found '$writtenVersion')\n"
+            exit 1
+          fi
+
           cd ..
 
           echo -e "\n[+] Setting git to push NPM version\n"
