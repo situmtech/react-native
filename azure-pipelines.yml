@@ -100,6 +100,9 @@ steps:
           corepack enable
           corepack prepare yarn@$(yarnVersion) --activate
 
+          echo -e "\n[+] Fetch branches \n"
+          git fetch origin master
+
           # Important: ensure we are working at plugin folder when setting the NPM version.
           cd plugin
           echo -e "\n[+] Setting NPM version to $(version)"
