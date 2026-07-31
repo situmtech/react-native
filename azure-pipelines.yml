@@ -188,8 +188,9 @@ steps:
           echo -e "\n[+] Configure NPM login"
           echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > ~/.npmrc
 
-          echo -e "\n[+] Copy README.MD to plugin folder to display it at npm.js\n"
+          echo -e "\n[+] Copy README.MD & LICENSE to plugin folder to display it at npm.js\n"
           cp README.md plugin/
+          cp LICENSE plugin/
 
           # Important: ensure we are working at plugin folder before publishing.
           cd plugin

@@ -1,0 +1,53 @@
+Situm React Native Plugin
+Copyright (c) 2023 Situm Technologies
+
+This notice describes the direct runtime and native dependencies declared by
+the @situm/react-native package. The plugin source code is licensed under the
+MIT License; see LICENSE.
+
+SitumSDK for iOS and Android
+Copyright (c) Situm Technologies
+
+This plugin requires SitumSDK 3.40.0 on iOS and Situm SDK 3.38.0 on Android.
+SitumSDK is a separate product of Situm Technologies and is provided under
+the applicable Situm terms and conditions. The MIT License for this plugin
+does not grant rights to SitumSDK beyond those terms.
+
+JTS Topology Suite (jts-core) 1.16.1
+Copyright (c) LocationTech JTS contributors
+
+The Android integration declares org.locationtech.jts:jts-core:1.16.1. JTS is
+dual-licensed under the Eclipse Public License 1.0 (EPL-1.0) and the Eclipse
+Distribution License 1.0 (EDL-1.0). The EDL-1.0 option applies to this
+distribution. License information is available at:
+https://github.com/locationtech/jts/blob/jts-1.16.1/LICENSES.md
+
+React
+Copyright (c) Meta Platforms, Inc. and affiliates
+License: MIT
+
+React DOM
+Copyright (c) Meta Platforms, Inc. and affiliates
+License: MIT
+
+React Native
+Copyright (c) Meta Platforms, Inc. and affiliates
+License: MIT
+
+react-native-webview
+Copyright (c) 2015-present Facebook, Inc.
+License: MIT
+
+React, React DOM, React Native, and react-native-webview are peer
+dependencies. They are installed and version-selected by the consuming
+application; they are not bundled in the published npm package.
+
+The iOS SitumSDK pod declares SSZipArchive as a transitive dependency.
+SSZipArchive is licensed under the MIT License. Its exact resolved version,
+and all other transitive native dependencies, are determined by the consuming
+application's CocoaPods and Gradle lockfiles.
+
+Development-only dependencies used to build, test, lint, or release this
+package are not part of the published runtime artifact. A release SBOM and
+the consuming application's dependency lockfiles are the authoritative source
+for the complete dependency inventory of a delivered application.
