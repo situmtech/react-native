@@ -1,53 +1,67 @@
-Situm React Native Plugin
+# Notices for @situm/react-native
+
 Copyright (c) 2023 Situm Technologies
 
-This notice describes the direct runtime and native dependencies declared by
-the @situm/react-native package. The plugin source code is licensed under the
-MIT License; see LICENSE.
+The plugin source code is licensed under the MIT License. The complete license
+text is provided in the accompanying LICENSE file in the published package.
 
-SitumSDK for iOS and Android
-Copyright (c) Situm Technologies
+## Declared native dependencies
 
-This plugin requires SitumSDK 3.40.0 on iOS and Situm SDK 3.38.0 on Android.
-SitumSDK is a separate product of Situm Technologies and is provided under
-the applicable Situm terms and conditions. The MIT License for this plugin
-does not grant rights to SitumSDK beyond those terms.
+| Component | Platform | Version | License or terms |
+| --- | --- | --- | --- |
+| SitumSDK | iOS | 3.40.0 | Applicable Situm terms and conditions |
+| SitumSDK | Android | 3.38.0@aar | Applicable Situm terms and conditions |
+| JTS Topology Suite (`org.locationtech.jts:jts-core`) | Android | 1.16.1 | EDL-1.0 |
 
-JTS Topology Suite (jts-core) 1.16.1
+SitumSDK is a separate product of Situm Technologies. The MIT License for this
+plugin does not grant rights to SitumSDK beyond its applicable terms and
+conditions.
+
+### JTS Topology Suite
+
 Copyright (c) LocationTech JTS contributors
 
-The Android integration declares org.locationtech.jts:jts-core:1.16.1. JTS is
-dual-licensed under the Eclipse Public License 1.0 (EPL-1.0) and the Eclipse
-Distribution License 1.0 (EDL-1.0). The EDL-1.0 option applies to this
-distribution. License information is available at:
+JTS 1.16.1 is dual-licensed under the Eclipse Public License 1.0 (EPL-1.0)
+and the Eclipse Distribution License 1.0 (EDL-1.0). This distribution uses the
+EDL-1.0 option.
+
+JTS includes content sourced from the GeoTools project. That content was
+licensed to JTS under the OSGeo BSD License. The applicable JTS license and
+third-party notice are available at:
+
 https://github.com/locationtech/jts/blob/jts-1.16.1/LICENSES.md
 
-React
-Copyright (c) Meta Platforms, Inc. and affiliates
-License: MIT
+## Peer dependencies
 
-React DOM
-Copyright (c) Meta Platforms, Inc. and affiliates
-License: MIT
+The following peer dependencies are installed and version-selected by the
+consuming application. They are not bundled in the published npm package.
 
-React Native
-Copyright (c) Meta Platforms, Inc. and affiliates
-License: MIT
+| Component | Version range | License |
+| --- | --- | --- |
+| React | >=17.0.0 | MIT |
+| React Native | Any version | MIT |
+| react-native-webview | >=11.0.0 | MIT |
 
-react-native-webview
-Copyright (c) 2015-present Facebook, Inc.
-License: MIT
+React is Copyright (c) Meta Platforms, Inc. and affiliates.
+React Native is Copyright (c) Meta Platforms, Inc. and affiliates.
+react-native-webview is Copyright (c) 2015-present Facebook, Inc.
 
-React, React DOM, React Native, and react-native-webview are peer
-dependencies. They are installed and version-selected by the consuming
-application; they are not bundled in the published npm package.
+## Transitive native dependencies
 
 The iOS SitumSDK pod declares SSZipArchive as a transitive dependency.
 SSZipArchive is licensed under the MIT License. Its exact resolved version,
 and all other transitive native dependencies, are determined by the consuming
-application's CocoaPods and Gradle lockfiles.
+application's CocoaPods and Gradle resolution.
+
+This notice documents dependencies declared by this package; it is not a
+complete software bill of materials for a delivered application. The release
+SBOM, when provided, and the consuming application's dependency lockfiles are
+the authoritative dependency inventory.
+
+## Source manifests
+
+Dependency declarations are maintained in `package.json`,
+`ReactNativeSitumPlugin.podspec`, and `android/build.gradle`.
 
 Development-only dependencies used to build, test, lint, or release this
-package are not part of the published runtime artifact. A release SBOM and
-the consuming application's dependency lockfiles are the authoritative source
-for the complete dependency inventory of a delivered application.
+package are not part of the published runtime artifact.
