@@ -33,7 +33,7 @@
     "*.podspec",
     "README.md",
     "LICENSE",
-    "NOTICE",
+    "NOTICE.md",
     "SECURITY-POLICY.md",
     "security.txt",
     "!lib/typescript/example",

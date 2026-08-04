@@ -46,18 +46,6 @@ React is Copyright (c) Meta Platforms, Inc. and affiliates.
 React Native is Copyright (c) Meta Platforms, Inc. and affiliates.
 react-native-webview is Copyright (c) 2015-present Facebook, Inc.
 
-## Transitive native dependencies
-
-The iOS SitumSDK pod declares SSZipArchive as a transitive dependency.
-SSZipArchive is licensed under the MIT License. Its exact resolved version,
-and all other transitive native dependencies, are determined by the consuming
-application's CocoaPods and Gradle resolution.
-
-This notice documents dependencies declared by this package; it is not a
-complete software bill of materials for a delivered application. The release
-SBOM, when provided, and the consuming application's dependency lockfiles are
-the authoritative dependency inventory.
-
 ## Source manifests
 
 Dependency declarations are maintained in `package.json`,
