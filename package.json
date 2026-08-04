@@ -7,10 +7,12 @@
   },
   "resolutions": {
     "@react-native/gradle-plugin": "0.83.10",
-    "brace-expansion@npm:^1.1.7": "1.1.17",
-    "brace-expansion@npm:^2.0.1": "2.1.3",
+    "brace-expansion@^1.1.7": "1.1.18",
+    "brace-expansion@^2.0.1": "2.1.4",
+    "brace-expansion@^5.0.5": "5.0.9",
     "eslint-plugin-prettier": "^5.4.1",
-    "fast-xml-parser": "5.7.0"
+    "fast-xml-parser@^4.0.12": "5.7.0",
+    "fast-xml-parser@^4.4.1": "5.7.0"
   },
   "description": "Situm React Native plugin monorepo.",
   "private": true,

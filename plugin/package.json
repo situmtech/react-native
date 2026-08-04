@@ -87,9 +87,6 @@
     "react-native": "*",
     "react-native-webview": ">=11.0.0"
   },
-  "resolutions": {
-    "@types/react": "19.0.0"
-  },
   "engines": {
     "node": ">= 16.0.0"
   },
