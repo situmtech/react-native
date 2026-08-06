@@ -29,7 +29,6 @@
     "lib",
     "android",
     "ios",
-    "cpp",
     "*.podspec",
     "README.md",
     "LICENSE",
@@ -54,7 +53,9 @@
     "typescript": "tsc --noEmit",
     "prepare": "yarn bob build; yarn doc",
     "doc": "typedoc --readme ../README.md --out ./docs/types ./src  --tsconfig ./tsconfig.json && mkdir -p ./docs/types/docs/assets && cp -r ./docs/assets/* ./docs/types/docs/assets/",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build"
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
+    "prepack": "node scripts/prepack.js && bob build && yarn doc && node scripts/verify-pack.js",
+    "postpack": "node scripts/postpack.js"
   },
   "keywords": [
     "react-native",
