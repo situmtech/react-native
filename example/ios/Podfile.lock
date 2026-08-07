@@ -2616,7 +2616,7 @@ PODS:
     - React-perflogger (= 0.83.10)
     - React-utils (= 0.83.10)
     - SocketRocket
-  - ReactNativeSitumPlugin (3.18.27):
+  - ReactNativeSitumPlugin (3.19.1):
     - boost
     - DoubleConversion
     - fast_float
@@ -3008,7 +3008,7 @@ SPEC CHECKSUMS:
   FBLazyVector: 07433c4ab85da44d0b5ceac374ff4e1d57c7aa23
   fmt: 530618a01105dae0fa3a2f27c81ae11fa8f67eac
   glog: 0456694f3aaf09460b660ea327cfc11defbeea4c
-  hermes-engine: 5bc5db41131a9d77115ac7e0a10ca8311901f60a
+  hermes-engine: f37e1d6f1eb198649a60b3f17b6f685a6ac12470
   RCT-Folly: 121436bcc4611f6bde5c09bf35f0a7a82cef1969
   RCTDeprecation: f05668eea7b0e209e77e8ab1dc6a5e3b342f6f65
   RCTRequired: c1ddbcb9ab4d51c36bda2a96556d064cb8825357
@@ -3081,7 +3081,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 38aa49711b58e4f7e27033cb218bb804eadc7356
   ReactCodegen: d90f4973af8a40c3bd7c17a5f1ba9267ef27d744
   ReactCommon: ddccb5fdac38485ab6cf9e2a5099b31d96a42328
-  ReactNativeSitumPlugin: 42899a97b93abddf78379f5b6428061cd36553fa
+  ReactNativeSitumPlugin: aa10a88b926969763c56b80342780728afa7bbe9
   RNScreens: 7179cc1ba31b4e18ed29f10abf20c24a7961cf4c
   RNVectorIcons: 6acc19c833be864e9c70894e101a587fe491150a
   SitumSDK: 172f2a95374f51d19ee33abc86b870a227043b1d
