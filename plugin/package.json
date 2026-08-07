@@ -54,8 +54,9 @@
     "prepare": "yarn bob build; yarn doc",
     "doc": "typedoc --readme ../README.md --out ./docs/types ./src  --tsconfig ./tsconfig.json && mkdir -p ./docs/types/docs/assets && cp -r ./docs/assets/* ./docs/types/docs/assets/",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
-    "prepack": "node scripts/prepack.js && bob build && yarn doc && node scripts/verify-pack.js",
-    "postpack": "node scripts/postpack.js"
+    "verify:licenses": "node scripts/verify-licenses.js",
+    "prepack": "cp ../README.md ../LICENSE ../SECURITY-POLICY.md ../security.txt . && bob build && yarn doc && node scripts/verify-pack.js",
+    "postpack": "rm README.md LICENSE SECURITY-POLICY.md security.txt"
   },
   "keywords": [
     "react-native",
