@@ -45,6 +45,12 @@ const warn = (message) =>
 const header = (message) =>
   console.log(`\n${color.bold}${message}${color.reset}`);
 const normalize = (value) => value.toLowerCase().replace(/[\s._-]/g, "");
+const isSafePackagePath = (value) =>
+  typeof value === "string" &&
+  value.length > 0 &&
+  !path.isAbsolute(value) &&
+  !path.win32.isAbsolute(value) &&
+  !value.split(/[\\/]+/).includes("..");
 const run = (command, args, options = {}) =>
   execFileSync(command, args, {
     encoding: "utf8",
@@ -64,7 +70,10 @@ function latestTarball(directory) {
   return fs
     .readdirSync(directory)
     .filter((name) => name.endsWith(".tgz"))
-    .map((name) => path.join(directory, name))
+    .map(
+      (name) =>
+        path.join(directory, name), // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- name comes from the supplied directory listing.
+    )
     .sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)[0];
 }
 
@@ -88,8 +97,10 @@ function packageToAudit(root, workDirectory, mode, argument) {
   }
 
   const tarball = argument
-    ? path.resolve(argument)
-    : latestTarball(path.join(root, "plugin"));
+    ? path.resolve(argument) // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- the documented CLI contract intentionally accepts a tarball path.
+    : latestTarball(
+        path.join(root, "plugin"), // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- root is obtained from Git and plugin is a constant.
+      );
   if (!tarball || !fs.existsSync(tarball)) {
     throw new Error("No hay tarball. Genera uno con: cd plugin && yarn pack");
   }
@@ -98,11 +109,15 @@ function packageToAudit(root, workDirectory, mode, argument) {
 }
 
 function extractPackage(tarball, workDirectory) {
-  const extractDirectory = path.join(workDirectory, "extract");
+  const extractDirectory = path.join(workDirectory, "extract"); // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- workDirectory is created by mkdtempSync and extract is a constant.
   fs.mkdirSync(extractDirectory);
   run("tar", ["xzf", tarball, "-C", extractDirectory]);
-  const packageDirectory = path.join(extractDirectory, "package");
-  if (!fs.existsSync(path.join(packageDirectory, "package.json"))) {
+  const packageDirectory = path.join(extractDirectory, "package"); // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- both path components are fixed local values.
+  if (
+    !fs.existsSync(
+      path.join(packageDirectory, "package.json"), // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- package.json is a constant filename.
+    )
+  ) {
     throw new Error("El tarball no contiene package/package.json");
   }
   return packageDirectory;
@@ -111,29 +126,37 @@ function extractPackage(tarball, workDirectory) {
 function validatePackageFiles(packageDirectory, packageJson) {
   header("1. Ficheros legales en el paquete distribuido");
   for (const file of LEGAL_FILES) {
-    fs.existsSync(path.join(packageDirectory, file))
+    fs.existsSync(
+      path.join(packageDirectory, file), // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- file comes from the fixed LEGAL_FILES list.
+    )
       ? ok(file)
       : bad(`${file} AUSENTE`);
   }
 
-  const missing = (packageJson.files || []).filter(
-    (file) =>
-      !file.startsWith("!") &&
-      !file.includes("*") &&
-      !fs.existsSync(path.join(packageDirectory, file)),
-  );
+  const missing = (packageJson.files || []).filter((file) => {
+    if (typeof file !== "string") return true;
+    if (file.startsWith("!") || file.includes("*")) return false;
+    return (
+      !isSafePackagePath(file) ||
+      !fs.existsSync(
+        path.join(packageDirectory, file), // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- isSafePackagePath rejects absolute and parent-directory paths.
+      )
+    );
+  });
   missing.length
     ? bad(`declarado en "files" pero ausente: ${missing.join(", ")}`)
     : ok('todo lo declarado en "files" está presente');
 
-  fs.existsSync(path.join(packageDirectory, "lib"))
+  fs.existsSync(
+    path.join(packageDirectory, "lib"), // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- lib is a constant directory name.
+  )
     ? ok("lib/ presente (el build corrió en prepack)")
     : bad("lib/ AUSENTE — el build no corrió; revisa el script prepack");
 }
 
 function validateNotice(packageDirectory) {
   header("2. Contenido del NOTICE");
-  const noticePath = path.join(packageDirectory, "NOTICE.md");
+  const noticePath = path.join(packageDirectory, "NOTICE.md"); // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- NOTICE.md is a constant filename.
   if (!fs.existsSync(noticePath)) {
     bad("sin NOTICE.md, no se puede validar el contenido");
     return null;

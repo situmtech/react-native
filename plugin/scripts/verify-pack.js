@@ -9,10 +9,25 @@ const path = require("path");
 
 const PKG_DIR = path.resolve(__dirname, "..");
 const pkg = JSON.parse(fs.readFileSync(path.join(PKG_DIR, "package.json"), "utf8"));
+const isSafePackagePath = (value) =>
+  typeof value === "string" &&
+  value.length > 0 &&
+  !path.isAbsolute(value) &&
+  !path.win32.isAbsolute(value) &&
+  !value.split(/[\\/]+/).includes("..");
 
 const missing = (pkg.files || [])
-  .filter((p) => !p.startsWith("!") && !p.includes("*"))
-  .filter((p) => !fs.existsSync(path.join(PKG_DIR, p)));
+  .filter(
+    (p) =>
+      typeof p !== "string" || (!p.startsWith("!") && !p.includes("*")),
+  )
+  .filter(
+    (p) =>
+      !isSafePackagePath(p) ||
+      !fs.existsSync(
+        path.join(PKG_DIR, p), // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal -- isSafePackagePath rejects absolute and parent-directory paths.
+      ),
+  );
 
 if (missing.length) {
   console.error(`\n[verify-pack] ERROR: declarados en "files" pero ausentes:`);
