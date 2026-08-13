@@ -2616,7 +2616,7 @@ PODS:
     - React-perflogger (= 0.83.10)
     - React-utils (= 0.83.10)
     - SocketRocket
-  - ReactNativeSitumPlugin (3.18.27):
+  - ReactNativeSitumPlugin (3.19.2):
     - boost
     - DoubleConversion
     - fast_float
@@ -2643,7 +2643,7 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - SitumSDK (= 3.40.0)
+    - SitumSDK (= 3.41.0)
     - SocketRocket
     - Yoga
   - RNScreens (4.24.0):
@@ -2733,10 +2733,10 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - SitumSDK (3.40.0):
-    - SSZipArchive (~> 2.4)
+  - SitumSDK (3.41.0):
+    - SSZipArchive (~> 2.6)
   - SocketRocket (0.7.1)
-  - SSZipArchive (2.4.3)
+  - SSZipArchive (2.6.0)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -3081,14 +3081,14 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 38aa49711b58e4f7e27033cb218bb804eadc7356
   ReactCodegen: d90f4973af8a40c3bd7c17a5f1ba9267ef27d744
   ReactCommon: ddccb5fdac38485ab6cf9e2a5099b31d96a42328
-  ReactNativeSitumPlugin: 42899a97b93abddf78379f5b6428061cd36553fa
+  ReactNativeSitumPlugin: 79d7c5977811570cad80ba95bf0aab8b08c3ab30
   RNScreens: 7179cc1ba31b4e18ed29f10abf20c24a7961cf4c
   RNVectorIcons: 6acc19c833be864e9c70894e101a587fe491150a
-  SitumSDK: 172f2a95374f51d19ee33abc86b870a227043b1d
+  SitumSDK: fe0a19961b5c7d921974240ae48b7e7ebed4bef5
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
+  SSZipArchive: 8a6ee5677c8e304bebc109e39cf0da91ccef22ea
   Yoga: d2ed98551adb569fc38be0148666854e1ff60692
 
-PODFILE CHECKSUM: ccf256bddbc5dbd001d4f827bde93b65c59ad8ed
+PODFILE CHECKSUM: 55590a215e78f59463e982b54c5045aaa8c23d0c
 
 COCOAPODS: 1.16.2
