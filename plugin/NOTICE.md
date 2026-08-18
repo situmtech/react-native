@@ -7,12 +7,12 @@ text is provided in the accompanying LICENSE file in the published package.
 
 ## Declared native dependencies
 
-| Component                                            | Platform | Version    | License or terms                      |
-| ---------------------------------------------------- | -------- | ---------- | ------------------------------------- |
-| SitumSDK                                             | iOS      | 3.40.0     | Applicable Situm terms and conditions |
-| SitumSDK                                             | Android  | 3.38.0@aar | Applicable Situm terms and conditions |
-| React Native (`com.facebook.react:react-native`)     | Android  | matches installed peer | MIT                     |
-| JTS Topology Suite (`org.locationtech.jts:jts-core`) | Android  | 1.16.1     | EDL-1.0                               |
+| Component                                            | Platform | License or terms                      |
+| ---------------------------------------------------- | -------- | ------------------------------------- |
+| SitumSDK                                             | iOS      | Applicable Situm terms and conditions |
+| SitumSDK                                             | Android  | Applicable Situm terms and conditions |
+| React Native (`com.facebook.react:react-native`)     | Android  | MIT                                   |
+| JTS Topology Suite (`org.locationtech.jts:jts-core`) | Android  | EDL-1.0                               |
 
 SitumSDK is a separate product of Situm Technologies. The MIT License for this
 plugin does not grant rights to SitumSDK beyond its applicable terms and
