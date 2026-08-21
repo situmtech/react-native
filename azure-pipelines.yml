@@ -188,18 +188,9 @@ steps:
           echo -e "\n[+] Configure NPM login"
           echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > ~/.npmrc
 
-          echo -e "\n[+] Copy README.MD to plugin folder to display it at npm.js\n"
-          cp README.md plugin/
-
-          # Important: ensure we are working at plugin folder before publishing.
-          cd plugin
-
-          # Publish!
           echo -e "\n[+] Publish NPM packages"
+          cd plugin
           YARN_NPM_AUTH_TOKEN=$NPM_TOKEN yarn npm publish --access public
-
-          echo -e "\n[+] Delete README.MD from plugin folder\n"
-          rm -rf README.md
 
         displayName: NPM publish
 

@@ -6,7 +6,8 @@ Pod::Spec.new do |s|
   s.version      = package['version']
   s.summary      = package["description"]
   s.homepage     = package["homepage"]
-  s.license      = "../LICENSE"
+  s.license = { :type => 'MIT', :file => 'LICENSE' }
+  s.preserve_paths = "NOTICE.md"
   s.authors      = package["author"]
   s.platform     = :ios, "8.0"
   s.source       = { :http => 'file:' + __dir__ + '/' }
