@@ -186,3 +186,10 @@ DerivedData/
 
 # Yarn
 **/.yarn
+
+# Files copied from monorepo root folder by scripts/prepack.js
+plugin/README.md
+plugin/LICENSE
+plugin/SECURITY-POLICY.md
+plugin/security.txt
+plugin/.packed-root-files.json

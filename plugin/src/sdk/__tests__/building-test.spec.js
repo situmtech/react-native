@@ -1,5 +1,4 @@
 // /* eslint-disable @typescript-eslint/no-empty-function */
-// import { mock } from "jest-mock-extended";
 // import { NativeModules } from "react-native";
 // import type { Building, Floor } from "..";
 // import SitumPlugin from "..";
