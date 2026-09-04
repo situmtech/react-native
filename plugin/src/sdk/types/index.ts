@@ -471,7 +471,6 @@ export type OutdoorLocationOptions = {
   userDefinedThreshold?: boolean;
   /** Interval to scan for GPS and detect the environment (in seconds) */
   burstInterval?: number;
-  averageSnrThreshold?: number;
 };
 
 /**
