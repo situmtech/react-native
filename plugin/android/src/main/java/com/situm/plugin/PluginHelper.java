@@ -220,8 +220,10 @@ public class PluginHelper {
         try {
             JSONObject jsonBuilding = ReactNativeUtils.convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
-
-            getCommunicationManagerInstance().fetchBuildingInfo(building, new Handler<BuildingInfo>() {
+            if (building == null) {
+                invokeCallback(error, "Error fetching Building Info: failed mapping Building object from Json.");
+            }
+            getCommunicationManagerInstance().fetchBuildingInfo(building.getIdentifier(), new Handler<BuildingInfo>() {
                 @Override
                 public void onSuccess(BuildingInfo object) {
                     try {
@@ -254,8 +256,10 @@ public class PluginHelper {
         try {
             JSONObject jsonBuilding = ReactNativeUtils.convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonBuilding);
-
-            getCommunicationManagerInstance().fetchFloorsFromBuilding(building, new Handler<Collection<Floor>>() {
+            if (building == null) {
+                invokeCallback(error, "Error fetching Floors from Building: failed mapping Building object from Json.");
+            }
+            getCommunicationManagerInstance().fetchFloorsFromBuilding(building.getIdentifier(), new Handler<Collection<Floor>>() {
                 @Override
                 public void onSuccess(Collection<Floor> floors) {
                     try {
@@ -500,7 +504,7 @@ public class PluginHelper {
         try {
             JSONObject jsonoCategory = convertMapToJson(categoryMap);
             PoiCategory category = SitumMapper.poiCategoryFromJsonObject(jsonoCategory);
-            getCommunicationManagerInstance().fetchPoiCategoryIconNormal(category, new Handler<Bitmap>() {
+            getCommunicationManagerInstance().fetchPoiCategoryIcon(category, false, new Handler<Bitmap>() {
                 @Override
                 public void onSuccess(Bitmap bitmap) {
                     try {
@@ -531,7 +535,7 @@ public class PluginHelper {
         try {
             JSONObject jsonoCategory = convertMapToJson(categoryMap);
             PoiCategory category = SitumMapper.poiCategoryFromJsonObject(jsonoCategory);
-            getCommunicationManagerInstance().fetchPoiCategoryIconSelected(category, new Handler<Bitmap>() {
+            getCommunicationManagerInstance().fetchPoiCategoryIcon(category, true, new Handler<Bitmap>() {
                 @Override
                 public void onSuccess(Bitmap bitmap) {
                     try {
@@ -689,7 +693,10 @@ public class PluginHelper {
         try {
             JSONObject jsonoBuilding = convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonoBuilding);
-            getCommunicationManagerInstance().fetchIndoorPOIsFromBuilding(building, new HashMap<String, Object>(),
+            if (building == null) {
+                invokeCallback(error, "Error fetching Indoor POIs from Building: failed mapping Building object from Json.");
+            }
+            getCommunicationManagerInstance().fetchIndoorPOIsFromBuilding(building.getIdentifier(),
                     new Handler<Collection<Poi>>() {
                         @Override
                         public void onSuccess(Collection<Poi> pois) {
@@ -732,7 +739,10 @@ public class PluginHelper {
         try {
             JSONObject jsonoBuilding = convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonoBuilding);
-            getCommunicationManagerInstance().fetchOutdoorPOIsFromBuilding(building, new HashMap<String, Object>(),
+            if (building == null) {
+                invokeCallback(error, "Error fetching Outdoor POIs from Building: failed mapping Building object from Json.");
+            }
+            getCommunicationManagerInstance().fetchOutdoorPOIsFromBuilding(building.getIdentifier(),
                     new Handler<Collection<Poi>>() {
                         @Override
                         public void onSuccess(Collection<Poi> pois) {
@@ -772,7 +782,10 @@ public class PluginHelper {
         try {
             JSONObject jsonoBuilding = convertMapToJson(buildingMap);
             Building building = SitumMapper.buildingJsonObjectToBuilding(jsonoBuilding);
-            getCommunicationManagerInstance().fetchEventsFromBuilding(building, new HashMap<String, Object>(),
+            if (building == null) {
+              invokeCallback(error, "Error fetching Outdoor POIs from Building: failed mapping Building object from Json.");
+            }
+            getCommunicationManagerInstance().fetchEventsFromBuilding(building.getIdentifier(),
                     new Handler<Collection<SitumEvent>>() {
                         @Override
                         public void onSuccess(Collection<SitumEvent> situmEvents) {

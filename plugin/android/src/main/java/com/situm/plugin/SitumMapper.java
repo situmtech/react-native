@@ -73,9 +73,6 @@ import es.situm.sdk.userhelper.UserHelperColorScheme;
 
 class SitumMapper {
 
-    public static final float MIN_SNR = 10;
-    public static final float MAX_SNR = 40;
-
     public static final String ADDRESS = "address";
     public static final String BOUNDS = "bounds";
     public static final String BOUNDS_ROTATED = "boundsRotated";
@@ -194,8 +191,6 @@ class SitumMapper {
 
     public static final String OUTDOOR_LOCATION_OPTIONS = "outdoorLocationOptions";
     public static final String OUTDOOR_BUILDING_DETECTOR = "buildingDetector";
-    public static final String USER_DEFINED_THRESHOLD = "userDefinedThreshold";
-    public static final String AVERAGE_SNR_THRESHOLD = "averageSnrThreshold";
     public static final String ENABLE_OUTDOOR_POSITIONS = "enableOutdoorPositions";
     public static final String OUTDOOR_BUILDING_DETECTOR_BLE = "BLE";
     public static final String OUTDOOR_BUILDING_DETECTOR_GPS_PROXIMITY = "GPS";
@@ -206,7 +201,6 @@ class SitumMapper {
     public static final String OUTDOOR_COMPUTE_USE_GEOFENCES_IN_BUILDING_SELECTOR = "useGeofencesinBuildingSelector";
     public static final String OUTDOOR_MINIMUM_OUTDOOR_LOCATION_ACCURACY = "minimumOutdoorLocationAccuracy";
     public static final String OUTDOOR_SCAN_BASE_DETECTOR_ALWAYS_ON = "scansBasedDetectorAlwaysOn";
-    public static final String OUTDOOR_ENABLE_OPEN_SKY_DETECTOR = "enableOpenSkyDetector";
 
     public static final String BEACON_FILTERS = "beaconFilters";
     public static final String UUID = "uuid";
@@ -1110,12 +1104,6 @@ class SitumMapper {
     static OutdoorLocationOptions buildOutdoorLocationOptions(JSONObject outdoorLocationOptions) throws JSONException {
         OutdoorLocationOptions.Builder optionsBuilder = new OutdoorLocationOptions.Builder();
 
-        if (outdoorLocationOptions.has(SitumMapper.USER_DEFINED_THRESHOLD)) {
-            Boolean userDefinedThreshold = outdoorLocationOptions.getBoolean(SitumMapper.USER_DEFINED_THRESHOLD);
-            optionsBuilder.userDefinedThreshold(userDefinedThreshold);
-            Log.i(TAG, "userDefinedThreshold: " + userDefinedThreshold);
-        }
-
         if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_UPDATE_INTERVAL)) {
             Integer updateInterval = outdoorLocationOptions.getInt(SitumMapper.OUTDOOR_UPDATE_INTERVAL);
             if (updateInterval != null && updateInterval >= 1) {
@@ -1129,15 +1117,6 @@ class SitumMapper {
             if (computeInterval != null && computeInterval >= 1) {
                 optionsBuilder.computeInterval(computeInterval);
                 Log.i(TAG, "computeInterval: " + computeInterval);
-            }
-        }
-
-        if (outdoorLocationOptions.has(SitumMapper.AVERAGE_SNR_THRESHOLD)) {
-            Float averageSnrThreshold = new Float(outdoorLocationOptions.getDouble(SitumMapper.AVERAGE_SNR_THRESHOLD));
-
-            if (averageSnrThreshold != null && averageSnrThreshold >= MIN_SNR && averageSnrThreshold <= MAX_SNR) {
-                optionsBuilder.averageSnrThreshold(averageSnrThreshold);
-                Log.i(TAG, "averageSnrThreshold: " + averageSnrThreshold);
             }
         }
 
@@ -1158,10 +1137,6 @@ class SitumMapper {
         if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_SCAN_BASE_DETECTOR_ALWAYS_ON)) {
             optionsBuilder.scansBasedDetectorAlwaysOn(
                     outdoorLocationOptions.getBoolean(OUTDOOR_SCAN_BASE_DETECTOR_ALWAYS_ON));
-        }
-
-        if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_ENABLE_OPEN_SKY_DETECTOR)) {
-            optionsBuilder.enableOpenSkyDetector(outdoorLocationOptions.getBoolean(OUTDOOR_ENABLE_OPEN_SKY_DETECTOR));
         }
 
         if (outdoorLocationOptions.has(SitumMapper.OUTDOOR_BUILDING_DETECTOR)) {

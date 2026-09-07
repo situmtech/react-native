@@ -468,10 +468,8 @@ export type DirectionsOptions = {
 export type OutdoorLocationOptions = {
   /** Environment detection continuous mode (true) or burst mode (false) */
   continuousMode?: boolean;
-  userDefinedThreshold?: boolean;
   /** Interval to scan for GPS and detect the environment (in seconds) */
   burstInterval?: number;
-  averageSnrThreshold?: number;
 };
 
 /**
