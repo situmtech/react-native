@@ -23,7 +23,6 @@ Situm React Native Plugin is a set of utilities that allow any developer to buil
 This plugin has two parts:
 
 - The base SDK, the building blocks that allow you to:
-
   - obtain information related to buildings where Situm's positioning system is already configured: floorplans, points of interest, geotriggered events, etc.
   - retrieve the location of the smartphone inside these buildings (position, orientation, and floor where the smartphone is).
   - compute a route from a point A (e.g. where the smartphone is) to a point B (e.g. any point of interest within the building).
@@ -166,9 +165,9 @@ Docs will be available in the _docs/_ folder.
 
 ## Versioning
 
-Please refer to [CHANGELOG.md](./CHANGELOG.md) for a list of notable changes for each version of the plugin.
+Please refer to [CHANGELOG.md](https://situm.com/docs/react-native-sdk-changelog) for a list of notable changes for each version of the plugin.
 
-You can also see the [tags on this repository](https://github.com/situmtech/situm-react-native/tags).
+You can also see the [tags on this repository](https://github.com/situmtech/react-native/tags).
 
 ## Submitting contributions
 
