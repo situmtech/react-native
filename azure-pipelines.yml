@@ -168,6 +168,7 @@ steps:
             - "develop"
 
       - bash: |
+          set -euo pipefail
 
           if [ -d "react-native" ];then
             cd react-native
@@ -185,14 +186,18 @@ steps:
           echo -e "\n[+] Installing yarn dependencies\n"
           yarn install --immutable
 
-          echo -e "\n[+] Configure NPM login"
-          echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > ~/.npmrc
-
           echo -e "\n[+] Publish NPM packages"
           cd plugin
-          YARN_NPM_AUTH_TOKEN=$NPM_TOKEN yarn npm publish --access public
+          if [ -z "${YARN_NPM_AUTH_TOKEN:-}" ]; then
+            echo "[!] NPM_TOKEN is not available to this pipeline."
+            exit 1
+          fi
+          yarn npm whoami --publish
+          yarn npm publish --access public
 
         displayName: NPM publish
+        env:
+          YARN_NPM_AUTH_TOKEN: $(NPM_TOKEN)
 
       - template: azure-templates/commit-doc.yaml@sys_kubernetes_templates
         parameters:
