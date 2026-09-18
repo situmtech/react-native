@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/situmtech/situm-sdk-spm",
       "state" : {
-        "revision" : "76164785b405b4626a31d3d147dd66729709b9e1",
-        "version" : "3.41.2"
+        "revision" : "7abc08ee9f9d43b85b085164f90ef0ca1e612eab",
+        "version" : "3.41.0"
       }
     },
     {

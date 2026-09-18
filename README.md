@@ -114,7 +114,17 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
   $(SRCROOT)/../node_modules/@situm/react-native/lib/ios
 ```
 
-2. Declare the following permissions in your app's `Info.plist` file to successfully start positioning:
+And make sure that you activate the flag for dynamic frameworks.
+
+```bash
+  use_frameworks! :linkage => :dynamic
+```
+
+2. Add the SDK dependency with Swift Package Manager.
+You will need to open the xcworkspace in XCode and in your app project add the dependency https://github.com/situmtech/situm-sdk-spm with the exact version. You can check which version you need to add in plugin/package.json. After that make sure that SitumSDK is in the target Framework, Libraries and Embedded Content
+
+
+3. Declare the following permissions in your app's `Info.plist` file to successfully start positioning:
 
 ```
 <key>NSLocationWhenInUseUsageDescription</key>
@@ -125,7 +135,7 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
 <string>We use your phone sensors (giroscope, accelerometer and altimeter) to improve location quality</string>
 ```
 
-3. For offline support you will have to add the underlying web application's domain inside the entry `WKAppBoundDomains` on `Info.plist` as follows:
+4. For offline support you will have to add the underlying web application's domain inside the entry `WKAppBoundDomains` on `Info.plist` as follows:
 
 ```
 <key>WKAppBoundDomains</key>

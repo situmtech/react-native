@@ -8,27 +8,27 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		6E2A029856957CE6C52D82A3 /* Pods_SitumReactNativeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9113667140F15315627BFF4 /* Pods_SitumReactNativeExample.framework */; };
+		501AA309D559FCCE01455ACF /* Pods_SitumReactNativeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD13D6834AF2CF90AB6E68FF /* Pods_SitumReactNativeExample.framework */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		97E23819305C127F0000464C /* SitumSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 97E23818305C127F0000464C /* SitumSDK */; };
+		97220C17305D4B35002699B7 /* SitumSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 97220C16305D4B35002699B7 /* SitumSDK */; };
 		97F1027F305AE4E50015C517 /* ReactNativeSitumPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9745D26D305AADF200837416 /* ReactNativeSitumPlugin.framework */; };
 		FCB631348B825A779C6022C1 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0D8495956A2D62AAB915FD5C /* Pods-SitumReactNativeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SitumReactNativeExample.release.xcconfig"; path = "Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* SitumReactNativeExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SitumReactNativeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SitumReactNativeExample/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SitumReactNativeExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = SitumReactNativeExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		4667924FFE306D9DCF0B30A0 /* Pods-SitumReactNativeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SitumReactNativeExample.debug.xcconfig"; path = "Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = SitumReactNativeExample/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = SitumReactNativeExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8EEEFE1D706603C357194E64 /* Pods-SitumReactNativeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SitumReactNativeExample.release.xcconfig"; path = "Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample.release.xcconfig"; sourceTree = "<group>"; };
+		94A8E146F5CD95C1E1787289 /* Pods-SitumReactNativeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SitumReactNativeExample.debug.xcconfig"; path = "Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		9745D26D305AADF200837416 /* ReactNativeSitumPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ReactNativeSitumPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		976FD9C430582E5F00FC1F21 /* ReactNativeSitumPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ReactNativeSitumPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		976FD9C83058358000FC1F21 /* ReactNativeSitumPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ReactNativeSitumPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D9113667140F15315627BFF4 /* Pods_SitumReactNativeExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SitumReactNativeExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD13D6834AF2CF90AB6E68FF /* Pods_SitumReactNativeExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SitumReactNativeExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -37,9 +37,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				97E23819305C127F0000464C /* SitumSDK in Frameworks */,
+				97220C17305D4B35002699B7 /* SitumSDK in Frameworks */,
 				97F1027F305AE4E50015C517 /* ReactNativeSitumPlugin.framework in Frameworks */,
-				6E2A029856957CE6C52D82A3 /* Pods_SitumReactNativeExample.framework in Frameworks */,
+				501AA309D559FCCE01455ACF /* Pods_SitumReactNativeExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,7 +65,7 @@
 				976FD9C83058358000FC1F21 /* ReactNativeSitumPlugin.framework */,
 				976FD9C430582E5F00FC1F21 /* ReactNativeSitumPlugin.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				D9113667140F15315627BFF4 /* Pods_SitumReactNativeExample.framework */,
+				CD13D6834AF2CF90AB6E68FF /* Pods_SitumReactNativeExample.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -102,8 +102,8 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				4667924FFE306D9DCF0B30A0 /* Pods-SitumReactNativeExample.debug.xcconfig */,
-				0D8495956A2D62AAB915FD5C /* Pods-SitumReactNativeExample.release.xcconfig */,
+				94A8E146F5CD95C1E1787289 /* Pods-SitumReactNativeExample.debug.xcconfig */,
+				8EEEFE1D706603C357194E64 /* Pods-SitumReactNativeExample.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -115,13 +115,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "SitumReactNativeExample" */;
 			buildPhases = (
-				1947D242121122C4B1800B40 /* [CP] Check Pods Manifest.lock */,
+				E82EB094DBF684A9829AE65C /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				8CB324172F450C1E5CC90FC8 /* [CP] Embed Pods Frameworks */,
-				3F3964FDC3587C3DB6743784 /* [CP] Copy Pods Resources */,
+				C08DFF572A583270BC1FF833 /* [CP] Embed Pods Frameworks */,
+				71CA16150DB562DDB35CE8F9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -155,7 +155,7 @@
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			packageReferences = (
-				97E23817305C127F0000464C /* XCRemoteSwiftPackageReference "situm-sdk-spm" */,
+				97220C15305D4B35002699B7 /* XCRemoteSwiftPackageReference "situm-sdk-spm" */,
 			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
@@ -196,7 +196,49 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		1947D242121122C4B1800B40 /* [CP] Check Pods Manifest.lock */ = {
+		71CA16150DB562DDB35CE8F9 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C08DFF572A583270BC1FF833 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E82EB094DBF684A9829AE65C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -218,48 +260,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3F3964FDC3587C3DB6743784 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8CB324172F450C1E5CC90FC8 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SitumReactNativeExample/Pods-SitumReactNativeExample-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -276,7 +276,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4667924FFE306D9DCF0B30A0 /* Pods-SitumReactNativeExample.debug.xcconfig */;
+			baseConfigurationReference = 94A8E146F5CD95C1E1787289 /* Pods-SitumReactNativeExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -305,7 +305,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0D8495956A2D62AAB915FD5C /* Pods-SitumReactNativeExample.release.xcconfig */;
+			baseConfigurationReference = 8EEEFE1D706603C357194E64 /* Pods-SitumReactNativeExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -532,20 +532,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		97E23817305C127F0000464C /* XCRemoteSwiftPackageReference "situm-sdk-spm" */ = {
+		97220C15305D4B35002699B7 /* XCRemoteSwiftPackageReference "situm-sdk-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/situmtech/situm-sdk-spm";
 			requirement = {
 				kind = exactVersion;
-				version = 3.41.2;
+				version = 3.41.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		97E23818305C127F0000464C /* SitumSDK */ = {
+		97220C16305D4B35002699B7 /* SitumSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 97E23817305C127F0000464C /* XCRemoteSwiftPackageReference "situm-sdk-spm" */;
+			package = 97220C15305D4B35002699B7 /* XCRemoteSwiftPackageReference "situm-sdk-spm" */;
 			productName = SitumSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
