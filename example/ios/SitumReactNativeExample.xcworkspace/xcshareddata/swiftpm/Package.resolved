@@ -1,0 +1,24 @@
+{
+  "originHash" : "fe87417d8c43b34e9ee56d33892fd03edb3f47f56db7ec8d9089252e9eaaca89",
+  "pins" : [
+    {
+      "identity" : "situm-sdk-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/situmtech/situm-sdk-spm",
+      "state" : {
+        "revision" : "7abc08ee9f9d43b85b085164f90ef0ca1e612eab",
+        "version" : "3.41.0"
+      }
+    },
+    {
+      "identity" : "ziparchive",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ZipArchive/ZipArchive.git",
+      "state" : {
+        "revision" : "df35718ea19a94e015b91dc4881dee028ce4cdba",
+        "version" : "2.6.0"
+      }
+    }
+  ],
+  "version" : 3
+}
