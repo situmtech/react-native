@@ -1,5 +1,5 @@
 ## Changelog
 
-## Removed
+## Fixed
 
-- Removed the SNR/Open Sky configuration. This obsolete configuration was removed in version 3.39.0 of the Android SDK.
+- Fixed an issue that prevented MapView's spoken navigation instructions from being heard when an iOS device was in silent mode.
