@@ -58,12 +58,15 @@ yarn install && yarn workspace example install
 ```
 
 - **iOS**
-  In case you are using iOS, the last step is to install de dependencies specified in [`example/ios/Podfile`](./ios/Podfile) with:
+  In case you are using iOS, install the dependencies specified in [`example/ios/Podfile`](./ios/Podfile) with:
 
 ```bash
 cd ios/
 pod install
 ```
+
+After that, add the SDK dependency with Swift Package Manager.
+You will need to open the xcworkspace in XCode and in your app project add the dependency https://github.com/situmtech/situm-sdk-spm with the exact version. You can check which version you need to add in plugin/package.json. After that make sure that SitumSDK is in the target Framework, Libraries and Embedded Content
 
 ### Step 2: Set your credentials <a name="config"/>
 
