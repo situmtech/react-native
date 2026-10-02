@@ -103,7 +103,7 @@ RCT_EXPORT_METHOD(initSitumSDK)
 RCT_EXPORT_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig withCallback:(RCTResponseSenderBlock)callback) {
     [SITServices setUseRemoteConfig:([useRemoteConfig isEqualToString:@"true"] ? YES: NO)];
     if (callback) {
-        NSDictionary *response = @{@"success": @"true"};
+        NSDictionary *response = @{@"success": @YES};
         callback(@[response]);
     }
 }
@@ -112,7 +112,7 @@ RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCall
 {
     BOOL success = [SITServices provideAPIKey:apiKey forEmail:email];
 
-    NSDictionary *response = @{@"success":success ? @"true" : @"false"};
+    NSDictionary *response = @{@"success": @(success)};
     if(callback)
         callback(@[response]);
 
@@ -145,7 +145,7 @@ RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass withCallba
 {
     BOOL success =[SITServices provideUser:email password:pass];
 
-    NSDictionary *response = @{@"success":success ? @"true" : @"false"};
+    NSDictionary *response = @{@"success": @(success)};
     if(callback)
         callback(@[response]);
 }
@@ -159,7 +159,7 @@ RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url withCallback:(RCTResponseSende
     }
 
     if (callback) {
-        NSDictionary *response = @{@"success":success ? @"true" : @"false"};
+        NSDictionary *response = @{@"success": @(success)};
         callback(@[response]);
     }
 }
