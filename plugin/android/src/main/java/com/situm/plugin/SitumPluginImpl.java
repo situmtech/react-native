@@ -134,7 +134,12 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     @Override
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableMap setCacheMaxAge(int cacheAge) {
-        boolean isSuccess = SitumSdk.configuration().setCacheMaxAge(cacheAge, TimeUnit.SECONDS);
+        boolean isSuccess = false;
+        try {
+            isSuccess = SitumSdk.configuration().setCacheMaxAge(cacheAge, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            isSuccess = false;
+        }
 
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", isSuccess);
