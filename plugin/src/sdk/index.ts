@@ -244,10 +244,9 @@ export default class SitumPlugin {
    */
   static setApiKey = (apiKey: string) => {
     return exceptionWrapper<void>(({ onCallback }) => {
-      RNCSitumPlugin.setApiKey("email@email.com", apiKey, (response) => {
-        onCallback(response, "Failed to set API key.");
-        authStore.setAuth({ type: "apiKey", value: apiKey });
-      });
+      const response = RNCSitumPlugin.setApiKey("email@email.com", apiKey);
+      onCallback(response, "Failed to set API key.");
+      authStore.setAuth({ type: "apiKey", value: apiKey });
     });
   };
 
@@ -275,10 +274,9 @@ export default class SitumPlugin {
    */
   static setToken = (token: string) => {
     return exceptionWrapper(({ onCallback }) => {
-      RNCSitumPlugin.setToken(token, (response) => {
-        onCallback(response, "Failed to set JWT token.");
-        authStore.setAuth({ type: "jwt", value: token });
-      });
+      const response = RNCSitumPlugin.setToken(token);
+      onCallback(response, "Failed to set JWT token.");
+      authStore.setAuth({ type: "jwt", value: token });
     });
   };
 
@@ -296,9 +294,8 @@ export default class SitumPlugin {
    */
   static setUserPass = (email: string, password: string) => {
     return exceptionWrapper<void>(({ onCallback }) => {
-      RNCSitumPlugin.setUserPass(email, password, (response) => {
-        onCallback(response, "Failed to set user credentials.");
-      });
+      const response = RNCSitumPlugin.setUserPass(email, password);
+      onCallback(response, "Failed to set user credentials.");
     });
   };
 
@@ -320,9 +317,8 @@ export default class SitumPlugin {
     }
 
     return exceptionWrapper<void>(({ onCallback }) => {
-      RNCSitumPlugin.setDashboardURL(url, (response: { success: boolean }) => {
-        onCallback(response, "Failed to set dashboard URL.");
-      });
+      const response = RNCSitumPlugin.setDashboardURL(url);
+      onCallback(response, "Failed to set dashboard URL.");
     });
   };
 
@@ -338,12 +334,10 @@ export default class SitumPlugin {
    */
   static setUseRemoteConfig = (useRemoteConfig: boolean) => {
     return exceptionWrapper<void>(({ onCallback }) => {
-      RNCSitumPlugin.setUseRemoteConfig(
+      const response = RNCSitumPlugin.setUseRemoteConfig(
         useRemoteConfig ? "true" : "false",
-        (response) => {
-          onCallback(response, "Failed to set remote config");
-        },
       );
+      onCallback(response, "Failed to set remote config");
     });
   };
 
@@ -355,9 +349,8 @@ export default class SitumPlugin {
    */
   private static setMaxCacheAge = (cacheAge: number) => {
     return exceptionWrapper<void>(({ onCallback }) => {
-      RNCSitumPlugin.setCacheMaxAge(cacheAge, (response) => {
-        onCallback(response, "Failed to set cache max age");
-      });
+      const response = RNCSitumPlugin.setCacheMaxAge(cacheAge);
+      onCallback(response, "Failed to set cache max age");
     });
   };
 
@@ -574,18 +567,20 @@ export default class SitumPlugin {
 
   /**
    * Stops positioning, removing all location updates
+   *
+   * @returns void
+   * @throws Exception if the native positioning stop operation fails.
    */
   static removeLocationUpdates = () => {
     return exceptionWrapper<void>(() => {
       if (!SitumPlugin.positioningIsRunning()) return;
 
-      RNCSitumPlugin.stopPositioning((response) => {
-        if (response.success) {
-          positioningRunning = false;
-        } else {
-          throw "Situm > hook > Could not stop positioning";
-        }
-      });
+      const response = RNCSitumPlugin.stopPositioning();
+      if (response.success) {
+        positioningRunning = false;
+      } else {
+        throw "Situm > hook > Could not stop positioning";
+      }
     });
   };
 

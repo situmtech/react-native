@@ -100,21 +100,16 @@ RCT_EXPORT_METHOD(initSitumSDK)
     [self registerAppLifecycleCallbacks];
 }
 
-RCT_EXPORT_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig withCallback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig) {
     [SITServices setUseRemoteConfig:([useRemoteConfig isEqualToString:@"true"] ? YES: NO)];
-    if (callback) {
-        NSDictionary *response = @{@"success": @YES};
-        callback(@[response]);
-    }
+    return @{@"success": @YES};
 }
 
-RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCallback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey)
 {
     BOOL success = [SITServices provideAPIKey:apiKey forEmail:email];
 
     NSDictionary *response = @{@"success": @(success)};
-    if(callback)
-        callback(@[response]);
 
     if (IS_LOG_ENABLED) {
         NSArray *allPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -124,9 +119,10 @@ RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCall
 
         NSLog(@"%@", [NSString stringWithFormat: @"%@ Logging ios calls", DEFAULT_SITUM_LOG]);
     }
+    return response;
 }
 
-RCT_EXPORT_METHOD(setToken:(NSString *)token withCallback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setToken:(NSString *)token)
 {
     BOOL success = NO;
 
@@ -136,21 +132,18 @@ RCT_EXPORT_METHOD(setToken:(NSString *)token withCallback:(RCTResponseSenderBloc
 
     NSDictionary *response = @{@"success": @(success)};
 
-    if (callback) {
-        callback(@[response]);
-    }
+    return response;
 }
 
-RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass withCallback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass)
 {
     BOOL success =[SITServices provideUser:email password:pass];
 
     NSDictionary *response = @{@"success": @(success)};
-    if(callback)
-        callback(@[response]);
+    return response;
 }
 
-RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url withCallback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setDashboardURL:(NSString *)url) {
     BOOL success = NO;
     
     if (url && url.length) {
@@ -158,13 +151,10 @@ RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url withCallback:(RCTResponseSende
         [SITServices setDashboardURL:url];
     }
 
-    if (callback) {
-        NSDictionary *response = @{@"success": @(success)};
-        callback(@[response]);
-    }
+    return @{@"success": @(success)};
 }
 
-RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge)
 {
     [[SITCommunicationManager sharedManager] setCacheMaxAge:[cacheMaxAge integerValue]];
     NSString *operation = [NSString stringWithFormat:@"Setting cache max age to :%@ seconds", cacheMaxAge];
@@ -175,9 +165,7 @@ RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(R
     }
 
     // return operation, because iOS SDK doesn't return a boolean value when setting max cache
-    NSDictionary *response = @{@"success": operation};
-    if(callback)
-        callback(@[response]);
+    return @{@"success": @YES};
 }
 
 RCT_EXPORT_METHOD(validateMapViewProjectSettings)
@@ -379,15 +367,15 @@ RCT_EXPORT_METHOD(startPositioning:(NSDictionary *)request)
     [[SITLocationManager sharedInstance] requestLocationUpdates:locationRequest];
 }
 
-RCT_EXPORT_METHOD(stopPositioning:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(stopPositioning)
 {
     _positioningUpdates = NO;
     [[SITLocationManager sharedInstance] removeUpdates];
 
     NSDictionary *response = @{@"success": @YES, @"message": @"Stopped Successfully"};
-    callback(@[response]);
 
     [self sendEventWithName:@"locationStopped" body:@{}];
+    return response;
 }
 
 RCT_EXPORT_METHOD(requestDirections: (NSArray *)requestArray withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)

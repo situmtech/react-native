@@ -3,6 +3,7 @@ package com.situm.plugin;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 
 public interface SitumPlugin {
     String EVENT_LOCATION_CHANGED = "locationChanged";
@@ -26,17 +27,17 @@ public interface SitumPlugin {
 
     void initSitumSDK();
 
-    void setUseRemoteConfig(String useRemoteConfig, Callback callback);
+    WritableMap setUseRemoteConfig(String useRemoteConfig);
 
-    void setApiKey(String email, String apiKey, Callback callback);
+    WritableMap setApiKey(String email, String apiKey);
 
-    void setToken(String token, Callback callback);
+    WritableMap setToken(String token);
 
-    void setUserPass(String email, String password, Callback callback);
+    WritableMap setUserPass(String email, String password);
 
-    void setDashboardURL(String url, Callback callback);
+    WritableMap setDashboardURL(String url);
 
-    void setCacheMaxAge(int cacheAge, Callback callback);
+    WritableMap setCacheMaxAge(int cacheAge);
 
     void fetchBuildings(Callback success, Callback error);
 
@@ -52,7 +53,7 @@ public interface SitumPlugin {
 
     void startPositioning(ReadableMap map);
 
-    void stopPositioning(Callback callback);
+    WritableMap stopPositioning();
 
     void requestDirections(ReadableArray requestArray, Callback success, Callback error);
 
