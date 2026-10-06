@@ -93,9 +93,9 @@ interface CartographyAPI {
 
 interface LocationAPI {
   startPositioning: (locationRequest?: LocationRequest) => void;
-  stopPositioning: () => NativeOperationResult & {
-    message?: string;
-  };
+  stopPositioning: (
+    callback: (response: NativeOperationResult) => void,
+  ) => void;
   startShareLiveLocation: (options: any) => void;
   stopShareLiveLocation: () => void;
 }
@@ -126,8 +126,7 @@ interface DirectionsAPI {
 interface UserHelperManagerAPI {
   configureUserHelper: (
     userHelperOptions: UserHelperOptions,
-    success: (response: any) => void,
-    error: (response: any) => void,
+    callback: (response: NativeOperationResult) => void,
   ) => void;
 }
 
@@ -145,12 +144,26 @@ export interface SitumPluginInterface
     UserHelperManagerAPI,
     TextToSpeechAPI {
   initSitumSDK: () => void;
-  setApiKey: (email: string, apiKey: string) => NativeOperationResult;
-  setToken: (token: string) => NativeOperationResult;
-  setUserPass: (email: string, password: string) => NativeOperationResult;
+  setApiKey: (
+    email: string,
+    apiKey: string,
+    callback: (response: NativeOperationResult) => void,
+  ) => void;
+  setToken: (
+    token: string,
+    callback: (response: NativeOperationResult) => void,
+  ) => void;
+  setUserPass: (
+    email: string,
+    password: string,
+    callback: (response: NativeOperationResult) => void,
+  ) => void;
   setDashboardURL: (url: string) => NativeOperationResult;
   setUseRemoteConfig: (useRemoteConfig: string) => NativeOperationResult;
-  setCacheMaxAge: (cacheAge: number) => NativeOperationResult;
+  setCacheMaxAge: (
+    cacheAge: number,
+    callback: (response: NativeOperationResult) => void,
+  ) => void;
   invalidateCache: () => void;
   getDeviceId: (callback: (response: string) => void) => void;
   requestRealTimeUpdates: (options: any) => void;

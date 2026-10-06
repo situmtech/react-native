@@ -66,20 +66,20 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     }
 
     @Override
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap setApiKey(String email, String apiKey) {
+    @ReactMethod
+    public void setApiKey(String email, String apiKey, Callback callback) {
         boolean isSuccess = !email.isEmpty() && !apiKey.isEmpty()
                 && SitumSdk.configuration().setApiKey(email, apiKey);
 
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", isSuccess);
 
-        return response;
+        callback.invoke(response);
     }
 
     @Override
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap setToken(String token) {
+    @ReactMethod
+    public void setToken(String token, Callback callback) {
         boolean isSuccess = false;
         try {
             if (token != null && !token.isEmpty()) {
@@ -92,7 +92,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", isSuccess);
 
-        return response;
+        callback.invoke(response);
     }
 
     @Override
@@ -105,15 +105,15 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     }
 
     @Override
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap setUserPass(String email, String password) {
+    @ReactMethod
+    public void setUserPass(String email, String password, Callback callback) {
         boolean isSuccess = !email.isEmpty() && !password.isEmpty()
                 && SitumSdk.configuration().setUserPass(email, password);
 
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", isSuccess);
 
-        return response;
+        callback.invoke(response);
     }
 
     @Override
@@ -132,8 +132,8 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     }
 
     @Override
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap setCacheMaxAge(int cacheAge) {
+    @ReactMethod
+    public void setCacheMaxAge(int cacheAge, Callback callback) {
         boolean isSuccess = false;
         try {
             isSuccess = SitumSdk.configuration().setCacheMaxAge(cacheAge, TimeUnit.SECONDS);
@@ -144,7 +144,7 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", isSuccess);
 
-        return response;
+        callback.invoke(response);
 
     }
 
@@ -192,9 +192,9 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     }
 
     @Override
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap stopPositioning() {
-       return getPluginInstance().stopPositioning(getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
+    @ReactMethod
+    public void stopPositioning(Callback callback) {
+       getPluginInstance().stopPositioning(callback, getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class));
     }
 
     @Override
@@ -327,8 +327,8 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
-    public void configureUserHelper(ReadableMap map, Callback success, Callback error) {
-        getPluginInstance().configureUserHelper(map, success, error);
+    public void configureUserHelper(ReadableMap map, Callback callback) {
+        callback.invoke(getPluginInstance().configureUserHelper(map));
     }
 
     @Override

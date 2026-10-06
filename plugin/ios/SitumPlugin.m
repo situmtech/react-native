@@ -105,7 +105,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setUseRemoteConfig:(NSString *)useRemoteC
     return @{@"success": @YES};
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey)
+RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCallback:(RCTResponseSenderBlock)callback)
 {
     BOOL success = [SITServices provideAPIKey:apiKey forEmail:email];
 
@@ -119,10 +119,10 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setApiKey:(NSString *)email apiKey:(NSStr
 
         NSLog(@"%@", [NSString stringWithFormat: @"%@ Logging ios calls", DEFAULT_SITUM_LOG]);
     }
-    return response;
+    callback(@[response]);
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setToken:(NSString *)token)
+RCT_EXPORT_METHOD(setToken:(NSString *)token withCallback:(RCTResponseSenderBlock)callback)
 {
     BOOL success = NO;
 
@@ -132,15 +132,15 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setToken:(NSString *)token)
 
     NSDictionary *response = @{@"success": @(success)};
 
-    return response;
+    callback(@[response]);
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass)
+RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass withCallback:(RCTResponseSenderBlock)callback)
 {
     BOOL success =[SITServices provideUser:email password:pass];
 
     NSDictionary *response = @{@"success": @(success)};
-    return response;
+    callback(@[response]);
 }
 
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setDashboardURL:(NSString *)url) {
@@ -154,7 +154,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setDashboardURL:(NSString *)url) {
     return @{@"success": @(success)};
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge)
+RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(RCTResponseSenderBlock)callback)
 {
     [[SITCommunicationManager sharedManager] setCacheMaxAge:[cacheMaxAge integerValue]];
     NSString *operation = [NSString stringWithFormat:@"Setting cache max age to :%@ seconds", cacheMaxAge];
@@ -164,8 +164,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheM
         NSLog(@"%@", [NSString stringWithFormat: @"%@ Cache max age is %ld seconds", DEFAULT_SITUM_LOG, (long)[[SITCommunicationManager sharedManager] cacheMaxAge]]);
     }
 
-    // return operation, because iOS SDK doesn't return a boolean value when setting max cache
-    return @{@"success": @YES};
+    callback(@[@{@"success": @YES}]);
 }
 
 RCT_EXPORT_METHOD(validateMapViewProjectSettings)
@@ -367,15 +366,15 @@ RCT_EXPORT_METHOD(startPositioning:(NSDictionary *)request)
     [[SITLocationManager sharedInstance] requestLocationUpdates:locationRequest];
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(stopPositioning)
+RCT_EXPORT_METHOD(stopPositioning:(RCTResponseSenderBlock)callback)
 {
     _positioningUpdates = NO;
     [[SITLocationManager sharedInstance] removeUpdates];
 
     NSDictionary *response = @{@"success": @YES, @"message": @"Stopped Successfully"};
+    callback(@[response]);
 
     [self sendEventWithName:@"locationStopped" body:@{}];
-    return response;
 }
 
 RCT_EXPORT_METHOD(requestDirections: (NSArray *)requestArray withSuccessCallback:(RCTResponseSenderBlock)successBlock errorCallback:(RCTResponseSenderBlock)errorBlock)
@@ -795,10 +794,10 @@ RCT_EXPORT_METHOD(onExitGeofences){
     SITLocationManager.sharedInstance.geofenceDelegate = self;    
 }
 
-RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options
-                  withSuccessCallback:(RCTResponseSenderBlock)successBlock
-                  errorCallback:(RCTResponseSenderBlock)errorBlock)
+RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options withCallback:(RCTResponseSenderBlock)callback)
 {
+    NSDictionary *response;
+
     @try {
         BOOL enabled = NO;
 
@@ -829,11 +828,13 @@ RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options
             }
         }
 
-        successBlock(@[@"User helper configured"]);
+        response = @{@"success": @YES};
     }
     @catch (NSException *exception) {
-        errorBlock(@[exception.reason]);
+        response = @{@"success": @NO, @"error": exception.reason ?: @""};
     }
+
+    callback(@[response]);
 }
 
 // SITRealtimeDelegate methods

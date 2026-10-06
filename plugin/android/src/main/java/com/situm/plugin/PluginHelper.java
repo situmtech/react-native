@@ -420,19 +420,19 @@ public class PluginHelper {
         }
     }
 
-    public WritableMap stopPositioning(DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
+    public void stopPositioning(Callback callback, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
         try {
             SitumSdk.locationManager().removeUpdates();
             WritableMap response = Arguments.createMap();
             response.putBoolean("success", true);
             response.putString("message", "Stopped Successfully");
+            invokeCallback(callback, response);
             eventEmitter.emit(EVENT_LOCATION_STOPPED, null);
-            return response;
         } catch (Exception e) {
             WritableMap response = Arguments.createMap();
             response.putBoolean("success", false);
             response.putString("error", e.getMessage());
-            return response;
+            invokeCallback(callback, response);
         }
     }
 
@@ -1045,7 +1045,7 @@ public class PluginHelper {
         };
     }
 
-    public void configureUserHelper(ReadableMap map, Callback success, Callback error) {
+    public WritableMap configureUserHelper(ReadableMap map) {
         try {
             JSONObject jsonUserHelperOptions = ReactNativeUtils.convertMapToJson(map);
             boolean enabled = false;
@@ -1060,14 +1060,16 @@ public class PluginHelper {
             SitumSdk.userHelperManager().autoManage(enabled);
 
             WritableMap response = Arguments.createMap();
-            invokeCallback(success, response);
+            response.putBoolean("success", true);
+            return response;
 
           } catch (Exception e) {
             Log.d(TAG, "exception: " + e);
 
             WritableMap response = Arguments.createMap();
+            response.putBoolean("success", false);
             response.putString("error", e.getMessage());
-            invokeCallback(error, response);
+            return response;
           }
     }
 

@@ -29,15 +29,15 @@ public interface SitumPlugin {
 
     WritableMap setUseRemoteConfig(String useRemoteConfig);
 
-    WritableMap setApiKey(String email, String apiKey);
+    void setApiKey(String email, String apiKey, Callback callback);
 
-    WritableMap setToken(String token);
+    void setToken(String token, Callback callback);
 
-    WritableMap setUserPass(String email, String password);
+    void setUserPass(String email, String password, Callback callback);
 
     WritableMap setDashboardURL(String url);
 
-    WritableMap setCacheMaxAge(int cacheAge);
+    void setCacheMaxAge(int cacheAge, Callback callback);
 
     void fetchBuildings(Callback success, Callback error);
 
@@ -53,7 +53,7 @@ public interface SitumPlugin {
 
     void startPositioning(ReadableMap map);
 
-    WritableMap stopPositioning();
+    void stopPositioning(Callback callback);
 
     void requestDirections(ReadableArray requestArray, Callback success, Callback error);
 
@@ -95,7 +95,7 @@ public interface SitumPlugin {
 
     void onExitGeofences();
 
-    void configureUserHelper(ReadableMap map, Callback success, Callback error);
+    void configureUserHelper(ReadableMap map, Callback callback);
 
     void speakAloudText(ReadableMap map);
 }

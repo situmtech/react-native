@@ -52,38 +52,23 @@ export const handleSyncCallback = (
   }
 };
 
+type ExceptionWrapperCallbacks = {
+  onCallback: typeof handleSyncCallback;
+};
+
 /**
- * Wraps all SDK API methods with a exception handling code, and defines helper functions.
- *
- * @param fn
- * @returns
+ * Executes fn, logging and rethrowing synchronous errors.
+ * Returns the value returned by fn.
  */
 export const exceptionWrapper = <T>(
-  fn: ({
-    onCallback,
-  }: {
-    onCallback: (r: { success: boolean }, errorMessage: string) => void;
-    onSuccess: PromiseResolve<T>;
-    onError: PromiseReject;
-  }) => void,
-) => {
-  let returnValue: T | undefined;
+  fn: (callbacks: ExceptionWrapperCallbacks) => T,
+): T => {
   try {
-    fn({
-      onCallback: handleSyncCallback,
-      onSuccess: (response) => {
-        returnValue = response;
-      },
-      onError: (error) => {
-        logError(error);
-        throw error;
-      },
-    });
+    return fn({ onCallback: handleSyncCallback });
   } catch (error) {
     logError(error);
     throw error;
   }
-  return returnValue;
 };
 
 /**
