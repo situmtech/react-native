@@ -100,9 +100,9 @@ RCT_EXPORT_METHOD(initSitumSDK)
     [self registerAppLifecycleCallbacks];
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig) {
+RCT_EXPORT_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig withCallback:(RCTResponseSenderBlock)callback) {
     [SITServices setUseRemoteConfig:([useRemoteConfig isEqualToString:@"true"] ? YES: NO)];
-    return @{@"success": @YES};
+    callback(@[@{@"success": @YES}]);
 }
 
 RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCallback:(RCTResponseSenderBlock)callback)
@@ -143,15 +143,8 @@ RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass withCallba
     callback(@[response]);
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setDashboardURL:(NSString *)url) {
-    BOOL success = NO;
-    
-    if (url && url.length) {
-        success = YES;
-        [SITServices setDashboardURL:url];
-    }
-
-    return @{@"success": @(success)};
+RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url) {
+    [SITServices setDashboardURL:url];
 }
 
 RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(RCTResponseSenderBlock)callback)

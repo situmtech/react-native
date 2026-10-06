@@ -309,23 +309,26 @@ export default class SitumPlugin {
   /**
    * Sets the API's base URL to retrieve the data.
    *
-   * @param url user's email.
+   * @param url Base URL of the Situm API, including the protocol and the domain.
    *
    * @returns void
-   * @throws Exception
+   * @throws Exception if the URL is empty.
    */
 
   static setDashboardURL = (url: string) => {
-    if (!url.startsWith("https://")) {
-      url = "https://" + url;
-    }
-    if (url.endsWith("/")) {
-      url = url.substring(0, url.length - 1);
-    }
+    return exceptionWrapper<void>(() => {
+      if (!url) {
+        throw { code: -1, message: "Failed to set dashboard URL." };
+      }
 
-    return exceptionWrapper<void>(({ onCallback }) => {
-      const response = RNCSitumPlugin.setDashboardURL(url);
-      onCallback(response, "Failed to set dashboard URL.");
+      if (!url.startsWith("https://")) {
+        url = "https://" + url;
+      }
+      if (url.endsWith("/")) {
+        url = url.substring(0, url.length - 1);
+      }
+
+      RNCSitumPlugin.setDashboardURL(url);
     });
   };
 
@@ -336,15 +339,16 @@ export default class SitumPlugin {
    *
    * @param useRemoteConfig
    *
-   * @returns void
-   * @throws Exception
+   * @returns Promise that resolves when the setting is applied.
    */
   static setUseRemoteConfig = (useRemoteConfig: boolean) => {
-    return exceptionWrapper<void>(({ onCallback }) => {
-      const response = RNCSitumPlugin.setUseRemoteConfig(
+    return promiseWrapper<void>(({ onCallback }) => {
+      RNCSitumPlugin.setUseRemoteConfig(
         useRemoteConfig ? "true" : "false",
+        (response) => {
+          onCallback(response, "Failed to set remote config");
+        },
       );
-      onCallback(response, "Failed to set remote config");
     });
   };
 
@@ -372,16 +376,18 @@ export default class SitumPlugin {
    */
   static setConfiguration = (options: ConfigurationOptions) => {
     return promiseWrapper<void>(({ resolve, reject }) => {
+      const operations: Promise<void>[] = [];
       if (options.useRemoteConfig !== undefined) {
-        SitumPlugin.setUseRemoteConfig(options.useRemoteConfig);
+        operations.push(
+          SitumPlugin.setUseRemoteConfig(options.useRemoteConfig),
+        );
       }
       if (options.cacheMaxAge !== undefined) {
-        SitumPlugin.setMaxCacheAge(options.cacheMaxAge).then(resolve, reject);
-        return;
+        operations.push(SitumPlugin.setMaxCacheAge(options.cacheMaxAge));
       }
 
       // Handle rest of configuration options
-      resolve();
+      Promise.all(operations).then(() => resolve(), reject);
     });
   };
 

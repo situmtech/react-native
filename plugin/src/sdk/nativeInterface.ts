@@ -158,8 +158,11 @@ export interface SitumPluginInterface
     password: string,
     callback: (response: NativeOperationResult) => void,
   ) => void;
-  setDashboardURL: (url: string) => NativeOperationResult;
-  setUseRemoteConfig: (useRemoteConfig: string) => NativeOperationResult;
+  setDashboardURL: (url: string) => void;
+  setUseRemoteConfig: (
+    useRemoteConfig: string,
+    callback: (response: NativeOperationResult) => void,
+  ) => void;
   setCacheMaxAge: (
     cacheAge: number,
     callback: (response: NativeOperationResult) => void,

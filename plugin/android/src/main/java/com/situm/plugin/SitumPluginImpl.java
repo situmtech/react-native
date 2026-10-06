@@ -96,12 +96,12 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     }
 
     @Override
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap setUseRemoteConfig(String useRemoteConfig) {
+    @ReactMethod
+    public void setUseRemoteConfig(String useRemoteConfig, Callback callback) {
         SitumSdk.configuration().setUseRemoteConfig(useRemoteConfig.equalsIgnoreCase("true") ? true : false);
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", true);
-        return response;
+        callback.invoke(response);
     }
 
     @Override
@@ -117,18 +117,9 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
     }
 
     @Override
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap setDashboardURL(String url) {
-        boolean success = false;
-
-        if (url != null && !url.isEmpty()) {
-            success = true;
-            SitumSdk.configuration().setDashboardURL(url);
-        }
-
-        WritableMap response = Arguments.createMap();
-        response.putBoolean("success", success);
-        return response;
+    @ReactMethod
+    public void setDashboardURL(String url) {
+        SitumSdk.configuration().setDashboardURL(url);
     }
 
     @Override

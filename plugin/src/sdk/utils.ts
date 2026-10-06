@@ -32,39 +32,12 @@ export const handleAsyncCallback = (
 };
 
 /**
- * Handles callbacks coming from SDKs synchronously
- *
- * @param response
- * @param errorMessage
- */
-
-export const handleSyncCallback = (
-  r: { success: boolean },
-  errorMessage: string,
-) => {
-  if (r?.success) {
-    return;
-  } else {
-    throw {
-      code: -1,
-      message: errorMessage || "Unknown error.",
-    };
-  }
-};
-
-type ExceptionWrapperCallbacks = {
-  onCallback: typeof handleSyncCallback;
-};
-
-/**
  * Executes fn, logging and rethrowing synchronous errors.
  * Returns the value returned by fn.
  */
-export const exceptionWrapper = <T>(
-  fn: (callbacks: ExceptionWrapperCallbacks) => T,
-): T => {
+export const exceptionWrapper = <T>(fn: () => T): T => {
   try {
-    return fn({ onCallback: handleSyncCallback });
+    return fn();
   } catch (error) {
     logError(error);
     throw error;
