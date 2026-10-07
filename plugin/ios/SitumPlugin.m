@@ -102,19 +102,14 @@ RCT_EXPORT_METHOD(initSitumSDK)
 
 RCT_EXPORT_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig withCallback:(RCTResponseSenderBlock)callback) {
     [SITServices setUseRemoteConfig:([useRemoteConfig isEqualToString:@"true"] ? YES: NO)];
-    if (callback) {
-        NSDictionary *response = @{@"success": @"true"};
-        callback(@[response]);
-    }
+    callback(@[@{@"success": @YES}]);
 }
 
 RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCallback:(RCTResponseSenderBlock)callback)
 {
     BOOL success = [SITServices provideAPIKey:apiKey forEmail:email];
 
-    NSDictionary *response = @{@"success":success ? @"true" : @"false"};
-    if(callback)
-        callback(@[response]);
+    NSDictionary *response = @{@"success": @(success)};
 
     if (IS_LOG_ENABLED) {
         NSArray *allPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -124,6 +119,7 @@ RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCall
 
         NSLog(@"%@", [NSString stringWithFormat: @"%@ Logging ios calls", DEFAULT_SITUM_LOG]);
     }
+    callback(@[response]);
 }
 
 RCT_EXPORT_METHOD(setToken:(NSString *)token withCallback:(RCTResponseSenderBlock)callback)
@@ -136,32 +132,19 @@ RCT_EXPORT_METHOD(setToken:(NSString *)token withCallback:(RCTResponseSenderBloc
 
     NSDictionary *response = @{@"success": @(success)};
 
-    if (callback) {
-        callback(@[response]);
-    }
+    callback(@[response]);
 }
 
 RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass withCallback:(RCTResponseSenderBlock)callback)
 {
     BOOL success =[SITServices provideUser:email password:pass];
 
-    NSDictionary *response = @{@"success":success ? @"true" : @"false"};
-    if(callback)
-        callback(@[response]);
+    NSDictionary *response = @{@"success": @(success)};
+    callback(@[response]);
 }
 
-RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url withCallback:(RCTResponseSenderBlock)callback) {
-    BOOL success = NO;
-    
-    if (url && url.length) {
-        success = YES;
-        [SITServices setDashboardURL:url];
-    }
-
-    if (callback) {
-        NSDictionary *response = @{@"success":success ? @"true" : @"false"};
-        callback(@[response]);
-    }
+RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url) {
+    [SITServices setDashboardURL:url];
 }
 
 RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(RCTResponseSenderBlock)callback)
@@ -174,10 +157,7 @@ RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(R
         NSLog(@"%@", [NSString stringWithFormat: @"%@ Cache max age is %ld seconds", DEFAULT_SITUM_LOG, (long)[[SITCommunicationManager sharedManager] cacheMaxAge]]);
     }
 
-    // return operation, because iOS SDK doesn't return a boolean value when setting max cache
-    NSDictionary *response = @{@"success": operation};
-    if(callback)
-        callback(@[response]);
+    callback(@[@{@"success": @YES}]);
 }
 
 RCT_EXPORT_METHOD(validateMapViewProjectSettings)

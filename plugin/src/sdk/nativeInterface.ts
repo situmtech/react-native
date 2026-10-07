@@ -23,6 +23,12 @@ import type {
   UserHelperOptions,
 } from "./types";
 
+type NativeOperationResult = {
+  success: boolean;
+  error?: string;
+  message?: string;
+};
+
 interface CartographyAPI {
   fetchBuildings: (
     onSuccess: (response: Building[]) => void,
@@ -87,7 +93,9 @@ interface CartographyAPI {
 
 interface LocationAPI {
   startPositioning: (locationRequest?: LocationRequest) => void;
-  stopPositioning: (callback: (response: { success: boolean }) => void) => void;
+  stopPositioning: (
+    callback: (response: NativeOperationResult) => void,
+  ) => void;
   startShareLiveLocation: (options: any) => void;
   stopShareLiveLocation: () => void;
 }
@@ -104,16 +112,14 @@ interface NavigationAPI {
 interface DirectionsAPI {
   requestDirections: (
     directionsParameters: (
-      | Building
-      | (Point | Location | Poi)
-      | DirectionsOptions
+      Building | (Point | Location | Poi) | DirectionsOptions
     )[],
     onSuccess: (response: Directions) => void,
     onError: (error: Error) => void,
   ) => void;
   requestNavigationUpdates: (navigationOptions: NavigationRequest) => void;
   removeNavigationUpdates: (
-    callback: (response: { success: boolean }) => void,
+    callback: (response: NativeOperationResult) => void,
   ) => void;
 }
 
@@ -130,39 +136,37 @@ interface TextToSpeechAPI {
 }
 
 export interface SitumPluginInterface
-  extends NativeModule,
-  CartographyAPI,
-  LocationAPI,
-  NavigationAPI,
-  DirectionsAPI,
-  UserHelperManagerAPI,
-  TextToSpeechAPI {
+  extends
+    NativeModule,
+    CartographyAPI,
+    LocationAPI,
+    NavigationAPI,
+    DirectionsAPI,
+    UserHelperManagerAPI,
+    TextToSpeechAPI {
   initSitumSDK: () => void;
   setApiKey: (
     email: string,
     apiKey: string,
-    callback: (response: { success: boolean }) => void,
+    callback: (response: NativeOperationResult) => void,
   ) => void;
   setToken: (
     token: string,
-    callback: (response: { success: boolean }) => void,
+    callback: (response: NativeOperationResult) => void,
   ) => void;
   setUserPass: (
     email: string,
     password: string,
-    callback: (response: { success: boolean }) => void,
+    callback: (response: NativeOperationResult) => void,
   ) => void;
-  setDashboardURL: (
-    url: string,
-    callback: (response: { success: boolean }) => void,
-  ) => void;
+  setDashboardURL: (url: string) => void;
   setUseRemoteConfig: (
     useRemoteConfig: string,
-    callback: (response: { success: boolean }) => void,
+    callback: (response: NativeOperationResult) => void,
   ) => void;
   setCacheMaxAge: (
     cacheAge: number,
-    callback: (response: { success: boolean }) => void,
+    callback: (response: NativeOperationResult) => void,
   ) => void;
   invalidateCache: () => void;
   getDeviceId: (callback: (response: string) => void) => void;

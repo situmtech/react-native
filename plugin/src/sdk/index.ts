@@ -239,14 +239,16 @@ export default class SitumPlugin {
    *
    * @param apiKey user's apikey.
    *
-   * @returns void
-   * @throws Exception
+   * @returns Promise that resolves when the API key is set, and rejects if the
+   * native SDK rejects it.
    */
   static setApiKey = (apiKey: string) => {
-    return exceptionWrapper<void>(({ onCallback }) => {
+    return promiseWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setApiKey("email@email.com", apiKey, (response) => {
+        if (response?.success) {
+          authStore.setAuth({ type: "apiKey", value: apiKey });
+        }
         onCallback(response, "Failed to set API key.");
-        authStore.setAuth({ type: "apiKey", value: apiKey });
       });
     });
   };
@@ -270,14 +272,16 @@ export default class SitumPlugin {
    * The expected format is a base64-encoded JWT with header, payload and signature sections.
    * This token can be retrieved from [a REST endpoint](https://developers.situm.com/pages/rest/openapi/#tag/jwt/POST/api/v1/auth/access_tokens).
    *
-   * @returns void
-   * @throws Exception
+   * @returns Promise that resolves when the token is set, and rejects if the
+   * native SDK rejects it.
    */
   static setToken = (token: string) => {
-    return exceptionWrapper(({ onCallback }) => {
+    return promiseWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setToken(token, (response) => {
+        if (response?.success) {
+          authStore.setAuth({ type: "jwt", value: token });
+        }
         onCallback(response, "Failed to set JWT token.");
-        authStore.setAuth({ type: "jwt", value: token });
       });
     });
   };
@@ -291,11 +295,11 @@ export default class SitumPlugin {
    * @param email user's email.
    * @param password user's password.
    *
-   * @returns void
-   * @throws Exception
+   * @returns Promise that resolves when the credentials are set, and rejects if
+   * the native SDK rejects them.
    */
   static setUserPass = (email: string, password: string) => {
-    return exceptionWrapper<void>(({ onCallback }) => {
+    return promiseWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setUserPass(email, password, (response) => {
         onCallback(response, "Failed to set user credentials.");
       });
@@ -305,24 +309,26 @@ export default class SitumPlugin {
   /**
    * Sets the API's base URL to retrieve the data.
    *
-   * @param url user's email.
+   * @param url Base URL of the Situm API, including the protocol and the domain.
    *
    * @returns void
-   * @throws Exception
+   * @throws Exception if the URL is empty.
    */
 
   static setDashboardURL = (url: string) => {
-    if (!url.startsWith("https://")) {
-      url = "https://" + url;
-    }
-    if (url.endsWith("/")) {
-      url = url.substring(0, url.length - 1);
-    }
+    return exceptionWrapper<void>(() => {
+      if (!url) {
+        throw { code: -1, message: "Failed to set dashboard URL." };
+      }
 
-    return exceptionWrapper<void>(({ onCallback }) => {
-      RNCSitumPlugin.setDashboardURL(url, (response: { success: boolean }) => {
-        onCallback(response, "Failed to set dashboard URL.");
-      });
+      if (!url.startsWith("https://")) {
+        url = "https://" + url;
+      }
+      if (url.endsWith("/")) {
+        url = url.substring(0, url.length - 1);
+      }
+
+      RNCSitumPlugin.setDashboardURL(url);
     });
   };
 
@@ -333,11 +339,10 @@ export default class SitumPlugin {
    *
    * @param useRemoteConfig
    *
-   * @returns void
-   * @throws Exception
+   * @returns Promise that resolves when the setting is applied.
    */
   static setUseRemoteConfig = (useRemoteConfig: boolean) => {
-    return exceptionWrapper<void>(({ onCallback }) => {
+    return promiseWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setUseRemoteConfig(
         useRemoteConfig ? "true" : "false",
         (response) => {
@@ -350,11 +355,11 @@ export default class SitumPlugin {
   /**
    * Sets the max seconds the cache is valid
    *
-   * @returns void
-   * @throws Exception
+   * @returns Promise that resolves when the cache max age is set, and rejects if
+   * the native SDK rejects it.
    */
   private static setMaxCacheAge = (cacheAge: number) => {
-    return exceptionWrapper<void>(({ onCallback }) => {
+    return promiseWrapper<void>(({ onCallback }) => {
       RNCSitumPlugin.setCacheMaxAge(cacheAge, (response) => {
         onCallback(response, "Failed to set cache max age");
       });
@@ -366,19 +371,23 @@ export default class SitumPlugin {
    *
    * @param options {@link ConfigurationOptions}
    *
-   * @returns void
-   * @throws Exception
+   * @returns Promise that resolves when the configuration is applied, and rejects
+   * if the native SDK rejects any of the options.
    */
   static setConfiguration = (options: ConfigurationOptions) => {
-    return exceptionWrapper<void>(() => {
+    return promiseWrapper<void>(({ resolve, reject }) => {
+      const operations: Promise<void>[] = [];
       if (options.useRemoteConfig !== undefined) {
-        SitumPlugin.setUseRemoteConfig(options.useRemoteConfig);
+        operations.push(
+          SitumPlugin.setUseRemoteConfig(options.useRemoteConfig),
+        );
       }
       if (options.cacheMaxAge !== undefined) {
-        SitumPlugin.setMaxCacheAge(options.cacheMaxAge);
+        operations.push(SitumPlugin.setMaxCacheAge(options.cacheMaxAge));
       }
 
       // Handle rest of configuration options
+      Promise.all(operations).then(() => resolve(), reject);
     });
   };
 
@@ -404,14 +413,14 @@ export default class SitumPlugin {
    * @throws Exception
    */
   static sdkVersion = () => {
-    return exceptionWrapper<SdkVersion>(({ onSuccess }) => {
+    return exceptionWrapper<SdkVersion>(() => {
       const versions: { react_native: string; ios?: string; android?: string } =
         {
           react_native: "",
           ios: "",
           android: "",
         };
-      onSuccess(versions);
+      return versions;
     });
   };
 
@@ -574,17 +583,22 @@ export default class SitumPlugin {
 
   /**
    * Stops positioning, removing all location updates
+   *
+   * @returns Promise that resolves when positioning is stopped, and rejects if
+   * the native positioning stop operation fails.
    */
   static removeLocationUpdates = () => {
-    return exceptionWrapper<void>(() => {
-      if (!SitumPlugin.positioningIsRunning()) return;
+    return promiseWrapper<void>(({ resolve, onCallback }) => {
+      if (!SitumPlugin.positioningIsRunning()) {
+        resolve();
+        return;
+      }
 
       RNCSitumPlugin.stopPositioning((response) => {
-        if (response.success) {
+        if (response?.success) {
           positioningRunning = false;
-        } else {
-          throw "Situm > hook > Could not stop positioning";
         }
+        onCallback(response, "Situm > hook > Could not stop positioning");
       });
     });
   };
@@ -631,14 +645,23 @@ export default class SitumPlugin {
    * Informs NavigationManager object the change of the user's location
    *
    * @param location new {@link Location} of the user. If null, nothing is done
+   * @returns Promise that resolves when the navigation is updated, and rejects if
+   * the native SDK fails to update it.
+   * @throws Exception if there is no active navigation.
    */
   static updateNavigationWithLocation = (location: Location) => {
-    return exceptionWrapper<void>(({ onSuccess, onError }) => {
+    return exceptionWrapper(() => {
       if (!SitumPlugin.navigationIsRunning()) {
         throw "Situm > hook > No active navigation";
       }
 
-      RNCSitumPlugin.updateNavigationWithLocation(location, onSuccess, onError);
+      return promiseWrapper<void>(({ onSuccess, onError }) => {
+        RNCSitumPlugin.updateNavigationWithLocation(
+          location,
+          onSuccess,
+          onError,
+        );
+      });
     });
   };
 
@@ -729,10 +752,12 @@ export default class SitumPlugin {
    * Call {@link disableUserHelper} as a shortcut to disable the user helper.
    *
    * @param {UserHelperOptions} userHelperOptions - Options for the user helper.
+   * @returns Promise that resolves when the user helper is configured, and rejects
+   * if the native SDK fails to configure it.
    */
   static configureUserHelper = (userHelperOptions: UserHelperOptions) => {
     _registerCallbacks();
-    return exceptionWrapper<void>(({ onSuccess, onError }) => {
+    return promiseWrapper<void>(({ onSuccess, onError }) => {
       RNCSitumPlugin.configureUserHelper(userHelperOptions, onSuccess, onError);
     });
   };
@@ -741,9 +766,14 @@ export default class SitumPlugin {
    * Enables the user helper.
    *
    * Shortcut for {@link configureUserHelper} with <code>{enabled: true}</code>.
+   *
+   * @returns The Promise returned by {@link configureUserHelper}.
    */
   static enableUserHelper = () => {
-    SitumPlugin.configureUserHelper({ enabled: true, colorScheme: undefined });
+    return SitumPlugin.configureUserHelper({
+      enabled: true,
+      colorScheme: undefined,
+    });
   };
 
   /**
@@ -751,9 +781,13 @@ export default class SitumPlugin {
    *
    * Shortcut for {@link configureUserHelper} with <code>{enabled: false}</code>.
    *
+   * @returns The Promise returned by {@link configureUserHelper}.
    */
   static disableUserHelper = () => {
-    SitumPlugin.configureUserHelper({ enabled: false, colorScheme: undefined });
+    return SitumPlugin.configureUserHelper({
+      enabled: false,
+      colorScheme: undefined,
+    });
   };
 
   /**

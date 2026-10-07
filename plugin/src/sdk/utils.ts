@@ -32,58 +32,16 @@ export const handleAsyncCallback = (
 };
 
 /**
- * Handles callbacks coming from SDKs synchronously
- *
- * @param response
- * @param errorMessage
+ * Executes fn, logging and rethrowing synchronous errors.
+ * Returns the value returned by fn.
  */
-
-export const handleSyncCallback = (
-  r: { success: boolean },
-  errorMessage: string,
-) => {
-  if (r?.success) {
-    return;
-  } else {
-    throw {
-      code: -1,
-      message: errorMessage || "Unknown error.",
-    };
-  }
-};
-
-/**
- * Wraps all SDK API methods with a exception handling code, and defines helper functions.
- *
- * @param fn
- * @returns
- */
-export const exceptionWrapper = <T>(
-  fn: ({
-    onCallback,
-  }: {
-    onCallback: (r: { success: boolean }, errorMessage: string) => void;
-    onSuccess: PromiseResolve<T>;
-    onError: PromiseReject;
-  }) => void,
-) => {
-  let returnValue: T | undefined;
+export const exceptionWrapper = <T>(fn: () => T): T => {
   try {
-    fn({
-      onCallback: handleSyncCallback,
-      onSuccess: (response) => {
-        returnValue = response;
-      },
-      onError: (error) => {
-        logError(error);
-        throw error;
-      },
-    });
+    return fn();
   } catch (error) {
     logError(error);
     throw error;
   }
-  return returnValue;
 };
 
 /**
