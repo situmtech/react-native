@@ -318,8 +318,8 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
-    public void configureUserHelper(ReadableMap map, Callback callback) {
-        callback.invoke(getPluginInstance().configureUserHelper(map));
+    public void configureUserHelper(ReadableMap map, Callback success, Callback error) {
+        getPluginInstance().configureUserHelper(map, success, error);
     }
 
     @Override

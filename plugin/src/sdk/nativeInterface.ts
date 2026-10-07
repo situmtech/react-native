@@ -126,7 +126,8 @@ interface DirectionsAPI {
 interface UserHelperManagerAPI {
   configureUserHelper: (
     userHelperOptions: UserHelperOptions,
-    callback: (response: NativeOperationResult) => void,
+    success: (response: any) => void,
+    error: (response: any) => void,
   ) => void;
 }
 

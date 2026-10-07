@@ -787,10 +787,10 @@ RCT_EXPORT_METHOD(onExitGeofences){
     SITLocationManager.sharedInstance.geofenceDelegate = self;    
 }
 
-RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options withCallback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options
+                  withSuccessCallback:(RCTResponseSenderBlock)successBlock
+                  errorCallback:(RCTResponseSenderBlock)errorBlock)
 {
-    NSDictionary *response;
-
     @try {
         BOOL enabled = NO;
 
@@ -821,13 +821,11 @@ RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options withCallback:(RCTR
             }
         }
 
-        response = @{@"success": @YES};
+        successBlock(@[@"User helper configured"]);
     }
     @catch (NSException *exception) {
-        response = @{@"success": @NO, @"error": exception.reason ?: @""};
+        errorBlock(@[exception.reason]);
     }
-
-    callback(@[response]);
 }
 
 // SITRealtimeDelegate methods

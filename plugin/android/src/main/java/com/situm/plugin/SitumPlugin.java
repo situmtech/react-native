@@ -94,7 +94,7 @@ public interface SitumPlugin {
 
     void onExitGeofences();
 
-    void configureUserHelper(ReadableMap map, Callback callback);
+    void configureUserHelper(ReadableMap map, Callback success, Callback error);
 
     void speakAloudText(ReadableMap map);
 }

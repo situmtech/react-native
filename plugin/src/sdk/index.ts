@@ -757,10 +757,8 @@ export default class SitumPlugin {
    */
   static configureUserHelper = (userHelperOptions: UserHelperOptions) => {
     _registerCallbacks();
-    return promiseWrapper<void>(({ onCallback }) => {
-      RNCSitumPlugin.configureUserHelper(userHelperOptions, (response) => {
-        onCallback(response, "Failed to configure user helper.");
-      });
+    return promiseWrapper<void>(({ onSuccess, onError }) => {
+      RNCSitumPlugin.configureUserHelper(userHelperOptions, onSuccess, onError);
     });
   };
 

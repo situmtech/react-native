@@ -1045,7 +1045,7 @@ public class PluginHelper {
         };
     }
 
-    public WritableMap configureUserHelper(ReadableMap map) {
+    public void configureUserHelper(ReadableMap map, Callback success, Callback error) {
         try {
             JSONObject jsonUserHelperOptions = ReactNativeUtils.convertMapToJson(map);
             boolean enabled = false;
@@ -1060,16 +1060,14 @@ public class PluginHelper {
             SitumSdk.userHelperManager().autoManage(enabled);
 
             WritableMap response = Arguments.createMap();
-            response.putBoolean("success", true);
-            return response;
+            invokeCallback(success, response);
 
           } catch (Exception e) {
             Log.d(TAG, "exception: " + e);
 
             WritableMap response = Arguments.createMap();
-            response.putBoolean("success", false);
             response.putString("error", e.getMessage());
-            return response;
+            invokeCallback(error, response);
           }
     }
 
