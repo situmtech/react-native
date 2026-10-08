@@ -1,6 +1,6 @@
 {
   "name": "@situm/react-native",
-  "version": "3.19.7",
+  "version": "3.19.8",
   "description": "Situm Wayfinding for React Native. Integrate plug&play navigation experience with indoor maps, routes and turn-by-turn directions in no time. With the power of Situm.",
   "repository": "https://github.com/situmtech/react-native",
   "author": "Situm Technologies <mobile@situm.com>",
@@ -25,6 +25,7 @@
   "react-native": "src/index",
   "source": "src/index",
   "files": [
+    "app.plugin.js",
     "src",
     "lib",
     "android",
@@ -85,9 +86,15 @@
     "typescript": "^5.5.2"
   },
   "peerDependencies": {
+    "expo": "*",
     "react": ">=17.0.0",
     "react-native": "*",
     "react-native-webview": ">=11.0.0"
+  },
+  "peerDependenciesMeta": {
+    "expo": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">= 16.0.0"

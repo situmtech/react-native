@@ -3061,9 +3061,13 @@ __metadata:
     typedoc: "npm:^0.28.2"
     typescript: "npm:^5.5.2"
   peerDependencies:
+    expo: "*"
     react: ">=17.0.0"
     react-native: "*"
     react-native-webview: ">=11.0.0"
+  peerDependenciesMeta:
+    expo:
+      optional: true
   languageName: unknown
   linkType: soft
 
