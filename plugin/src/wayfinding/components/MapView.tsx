@@ -653,6 +653,9 @@ const MapView = React.forwardRef<MapViewRef, MapViewProps>(
     }, []);
 
     const _onShouldStartLoadWithRequest = (request: any) => {
+      if (request?.url === "about:blank") {
+        return false;
+      }
       if (
         request &&
         request.url &&
