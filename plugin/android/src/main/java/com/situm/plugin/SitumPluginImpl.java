@@ -67,14 +67,15 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
 
     @Override
     @ReactMethod
-    public void setApiKey(String email, String apiKey, Callback callback) {
-        boolean isSuccess = !email.isEmpty() && !apiKey.isEmpty()
-                && SitumSdk.configuration().setApiKey(email, apiKey);
+    public void setApiKey(String apiKey, Callback callback) {
+        boolean isSuccess = !apiKey.isEmpty() && SitumSdk.configuration().setApiKey(apiKey);
 
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", isSuccess);
 
-        callback.invoke(response);
+        if (callback != null) {
+            callback.invoke(response);
+        }
     }
 
     @Override
@@ -92,7 +93,9 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", isSuccess);
 
-        callback.invoke(response);
+        if (callback != null) {
+            callback.invoke(response);
+        }
     }
 
     @Override
@@ -101,7 +104,9 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         SitumSdk.configuration().setUseRemoteConfig(useRemoteConfig.equalsIgnoreCase("true") ? true : false);
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", true);
-        callback.invoke(response);
+        if (callback != null) {
+            callback.invoke(response);
+        }
     }
 
     @Override
@@ -113,7 +118,9 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", isSuccess);
 
-        callback.invoke(response);
+        if (callback != null) {
+            callback.invoke(response);
+        }
     }
 
     @Override
@@ -135,7 +142,9 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         WritableMap response = Arguments.createMap();
         response.putBoolean("success", isSuccess);
 
-        callback.invoke(response);
+        if (callback != null) {
+            callback.invoke(response);
+        }
 
     }
 
@@ -299,7 +308,9 @@ public class SitumPluginImpl extends ReactContextBaseJavaModule implements Situm
         WritableMap response = Arguments.createMap();
         response.putDouble("deviceId", SitumSdk.getDeviceID());
 
-        callback.invoke(response);
+        if (callback != null) {
+            callback.invoke(response);
+        }
     }
 
     @Override

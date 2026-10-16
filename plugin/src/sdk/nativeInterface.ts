@@ -146,7 +146,6 @@ export interface SitumPluginInterface
     TextToSpeechAPI {
   initSitumSDK: () => void;
   setApiKey: (
-    email: string,
     apiKey: string,
     callback: (response: NativeOperationResult) => void,
   ) => void;

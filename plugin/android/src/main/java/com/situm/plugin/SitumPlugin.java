@@ -28,7 +28,7 @@ public interface SitumPlugin {
 
     void setUseRemoteConfig(String useRemoteConfig, Callback callback);
 
-    void setApiKey(String email, String apiKey, Callback callback);
+    void setApiKey(String apiKey, Callback callback);
 
     void setToken(String token, Callback callback);
 

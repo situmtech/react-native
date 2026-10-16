@@ -244,7 +244,7 @@ export default class SitumPlugin {
    */
   static setApiKey = (apiKey: string) => {
     return promiseWrapper<void>(({ onCallback }) => {
-      RNCSitumPlugin.setApiKey("email@email.com", apiKey, (response) => {
+      RNCSitumPlugin.setApiKey(apiKey, (response) => {
         if (response?.success) {
           authStore.setAuth({ type: "apiKey", value: apiKey });
         }
