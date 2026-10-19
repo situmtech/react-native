@@ -759,6 +759,9 @@ RCT_EXPORT_METHOD(updateNavigationState:(NSDictionary *)arguments)
 RCT_EXPORT_METHOD(removeNavigationUpdates:(RCTResponseSenderBlock)callbackBlock)
 {
     [[SITNavigationManager sharedManager] removeUpdates];
+    if (callbackBlock) {
+        callbackBlock(@[@{@"success": @YES}]);
+    }
 }
 
 RCT_EXPORT_METHOD(requestRealTimeUpdates:(NSDictionary *)realtimeRequest)
