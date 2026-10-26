@@ -12,6 +12,9 @@ import { TabNavigator } from "./navigation/TabNavigator";
 import { SitumProvider } from "@situm/react-native";
 import { StatusBar } from "react-native";
 import { SITUM_API_KEY, SITUM_API_DOMAIN } from "./situm";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+MaterialCommunityIcons.loadFont();
 
 function App(): React.JSX.Element {
   return (
