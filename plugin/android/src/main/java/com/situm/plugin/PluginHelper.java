@@ -423,13 +423,16 @@ public class PluginHelper {
     public void stopPositioning(Callback callback, DeviceEventManagerModule.RCTDeviceEventEmitter eventEmitter) {
         try {
             SitumSdk.locationManager().removeUpdates();
-            WritableMap map = Arguments.createMap();
-            map.putBoolean("success", true);
-            map.putString("message", "Stopped Successfully");
-            invokeCallback(callback, map);
+            WritableMap response = Arguments.createMap();
+            response.putBoolean("success", true);
+            response.putString("message", "Stopped Successfully");
+            invokeCallback(callback, response);
             eventEmitter.emit(EVENT_LOCATION_STOPPED, null);
         } catch (Exception e) {
-            invokeCallback(callback, e.getMessage());
+            WritableMap response = Arguments.createMap();
+            response.putBoolean("success", false);
+            response.putString("error", e.getMessage());
+            invokeCallback(callback, response);
         }
     }
 
