@@ -24,7 +24,3 @@ export const authStore = {
     };
   },
 };
-
-export const areSameAuth = (a?: SitumAuth, b?: SitumAuth) => {
-  return a?.type === b?.type && a?.value === b?.value;
-};

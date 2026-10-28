@@ -103,18 +103,15 @@ RCT_EXPORT_METHOD(initSitumSDK)
 RCT_EXPORT_METHOD(setUseRemoteConfig:(NSString *)useRemoteConfig withCallback:(RCTResponseSenderBlock)callback) {
     [SITServices setUseRemoteConfig:([useRemoteConfig isEqualToString:@"true"] ? YES: NO)];
     if (callback) {
-        NSDictionary *response = @{@"success": @"true"};
-        callback(@[response]);
+        callback(@[@{@"success": @YES}]);
     }
 }
 
-RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCallback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(setApiKey:(NSString *)apiKey withCallback:(RCTResponseSenderBlock)callback)
 {
-    BOOL success = [SITServices provideAPIKey:apiKey forEmail:email];
+    BOOL success = [SITServices setApiKey:apiKey];
 
-    NSDictionary *response = @{@"success":success ? @"true" : @"false"};
-    if(callback)
-        callback(@[response]);
+    NSDictionary *response = @{@"success": @(success)};
 
     if (IS_LOG_ENABLED) {
         NSArray *allPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -123,6 +120,9 @@ RCT_EXPORT_METHOD(setApiKey:(NSString *)email apiKey:(NSString *)apiKey withCall
         freopen([pathForLog cStringUsingEncoding:NSASCIIStringEncoding],"a+",stderr);
 
         NSLog(@"%@", [NSString stringWithFormat: @"%@ Logging ios calls", DEFAULT_SITUM_LOG]);
+    }
+    if (callback) {
+        callback(@[response]);
     }
 }
 
@@ -145,23 +145,14 @@ RCT_EXPORT_METHOD(setUserPass:(NSString *)email pass:(NSString *)pass withCallba
 {
     BOOL success =[SITServices provideUser:email password:pass];
 
-    NSDictionary *response = @{@"success":success ? @"true" : @"false"};
-    if(callback)
+    NSDictionary *response = @{@"success": @(success)};
+    if (callback) {
         callback(@[response]);
+    }
 }
 
-RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url withCallback:(RCTResponseSenderBlock)callback) {
-    BOOL success = NO;
-    
-    if (url && url.length) {
-        success = YES;
-        [SITServices setDashboardURL:url];
-    }
-
-    if (callback) {
-        NSDictionary *response = @{@"success":success ? @"true" : @"false"};
-        callback(@[response]);
-    }
+RCT_EXPORT_METHOD(setDashboardURL:(NSString *)url) {
+    [SITServices setDashboardURL:url];
 }
 
 RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(RCTResponseSenderBlock)callback)
@@ -174,10 +165,9 @@ RCT_EXPORT_METHOD(setCacheMaxAge:(nonnull NSNumber *)cacheMaxAge withCallback:(R
         NSLog(@"%@", [NSString stringWithFormat: @"%@ Cache max age is %ld seconds", DEFAULT_SITUM_LOG, (long)[[SITCommunicationManager sharedManager] cacheMaxAge]]);
     }
 
-    // return operation, because iOS SDK doesn't return a boolean value when setting max cache
-    NSDictionary *response = @{@"success": operation};
-    if(callback)
-        callback(@[response]);
+    if (callback) {
+        callback(@[@{@"success": @YES}]);
+    }
 }
 
 RCT_EXPORT_METHOD(validateMapViewProjectSettings)
@@ -218,7 +208,9 @@ RCT_EXPORT_METHOD(fetchBuildings: (RCTResponseSenderBlock)successBlock errorCall
             if (IS_LOG_ENABLED) {
                 NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ Retrieved the following buildings: %@", DEFAULT_SITUM_LOG, operation, buildings]);
             }
-            successBlock(@[ja.copy]);
+            if (successBlock) {
+                successBlock(@[ja.copy]);
+            }
         }
     }
                                                                failure:^(NSError *error) {
@@ -245,7 +237,9 @@ RCT_EXPORT_METHOD(fetchTilesFromBuilding:(NSDictionary *)buildingJO withSuccessC
             NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ retrieved tiles from building: %@ with result: %@", DEFAULT_SITUM_LOG, operation, buildingJO, mapping]);
         }
 
-        successBlock(@[mapping]);
+        if (successBlock) {
+            successBlock(@[mapping]);
+        }
 
     } failure:^(NSError * _Nullable error) {
         if (IS_LOG_ENABLED) {
@@ -281,7 +275,9 @@ RCT_EXPORT_METHOD(fetchBuildingInfo:(NSDictionary *)buildingJO withSuccessCallba
             NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ retrieved building info: %@ of building: %@", DEFAULT_SITUM_LOG, operation, buildingInfoJson, buildingJO]);
         }
 
-        successBlock(@[buildingInfoJson.copy]);
+        if (successBlock) {
+            successBlock(@[buildingInfoJson.copy]);
+        }
 
     } failure:^(NSError * _Nullable error) {
         if (IS_LOG_ENABLED) {
@@ -342,7 +338,9 @@ RCT_EXPORT_METHOD(fetchFloorsFromBuilding:(NSDictionary *)buildingJO withSuccess
                 NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ retrieved floors: %@ on building: %@", DEFAULT_SITUM_LOG, operation, floors, buildingJO]);
             }
             if(!success){
-                successBlock(@[ja.copy]);
+                if (successBlock) {
+                    successBlock(@[ja.copy]);
+                }
                 success = YES;
             }
         }
@@ -366,7 +364,9 @@ RCT_EXPORT_METHOD(fetchMapFromFloor:(NSDictionary *)floorJO withSuccessCallback:
     [[SITCommunicationManager sharedManager] fetchMapFromFloor: floor withCompletion:^(NSData *imageData) {
         NSMutableDictionary *jaMap = [[NSMutableDictionary alloc] init];
         NSString *imageBase64Encoded = [imageData base64EncodedStringWithOptions:0];
-        successBlock(@[imageBase64Encoded]);
+        if (successBlock) {
+            successBlock(@[imageBase64Encoded]);
+        }
     }];
 }
 
@@ -385,7 +385,9 @@ RCT_EXPORT_METHOD(stopPositioning:(RCTResponseSenderBlock)callback)
     [[SITLocationManager sharedInstance] removeUpdates];
 
     NSDictionary *response = @{@"success": @YES, @"message": @"Stopped Successfully"};
-    callback(@[response]);
+    if (callback) {
+        callback(@[response]);
+    }
 
     [self sendEventWithName:@"locationStopped" body:@{}];
 }
@@ -401,7 +403,9 @@ RCT_EXPORT_METHOD(requestDirections: (NSArray *)requestArray withSuccessCallback
 
 
     if (directionsRequest == nil) {
-        errorBlock(@[@"Unable to parse request"]);
+        if (errorBlock) {
+            errorBlock(@[@"Unable to parse request"]);
+        }
         return;
     }
     if (IS_LOG_ENABLED) {
@@ -471,7 +475,9 @@ RCT_EXPORT_METHOD(fetchGeofencesFromBuilding:(NSDictionary *)buildingJO withSucc
         if (IS_LOG_ENABLED) {
             NSLog(@"%@", [NSString stringWithFormat: @"%@ %@ retrieved geofences: %@ on building: %@", DEFAULT_SITUM_LOG, operation, array, buildingJO]);
         }
-        successBlock(@[ja.copy]);
+        if (successBlock) {
+            successBlock(@[ja.copy]);
+        }
     }];
 }
 
@@ -492,7 +498,9 @@ RCT_EXPORT_METHOD(fetchPoiCategories:(RCTResponseSenderBlock)successBlock errorC
                 if(errorBlock)
                     errorBlock(@[@"You have no categories"]);
             } else {
-                successBlock(@[ja.copy]);
+                if (successBlock) {
+                    successBlock(@[ja.copy]);
+                }
             }
         } else {
             if(errorBlock)
@@ -519,7 +527,9 @@ RCT_EXPORT_METHOD(fetchPoiCategoryIconNormal:(NSDictionary *)categoryJO withSucc
             } else {
                 UIImage *icon = [UIImage imageWithData:data];
                 NSDictionary * dict = [[SitumLocationWrapper shared] bitmapToJsonObject:icon];
-                successBlock(@[dict]);
+                if (successBlock) {
+                    successBlock(@[dict]);
+                }
             }
         } else {
             if(errorBlock){
@@ -546,7 +556,9 @@ RCT_EXPORT_METHOD(fetchPoiCategoryIconSelected:(NSDictionary *)categoryJO withSu
             } else {
                 UIImage *icon = [UIImage imageWithData:data];
                 NSDictionary * dict = [[SitumLocationWrapper shared] bitmapToJsonObject:icon];
-                successBlock(@[dict]);
+                if (successBlock) {
+                    successBlock(@[dict]);
+                }
             }
         } else {
             if(errorBlock){
@@ -571,12 +583,18 @@ RCT_EXPORT_METHOD(fetchIndoorPOIsFromBuilding:(NSDictionary *)buildingJO withSuc
             [poisStored setObject:obj forKey:obj.name];
         }
         if (list.count == 0) {
-            errorBlock(@[@"You have no poi. Create one in the Dashboard"]);
+            if (errorBlock) {
+                errorBlock(@[@"You have no poi. Create one in the Dashboard"]);
+            }
         } else {
-            successBlock(@[ja.copy]);
+            if (successBlock) {
+                successBlock(@[ja.copy]);
+            }
         }
     } failure:^(NSError *error) {
-        errorBlock(@[error.description]);
+        if (errorBlock) {
+            errorBlock(@[error.description]);
+        }
     }];
 }
 
@@ -595,12 +613,18 @@ RCT_EXPORT_METHOD(fetchOutdoorPOIsFromBuilding:(NSDictionary *)buildingJO withSu
             [poisStored setObject:obj forKey:obj.name];
         }
         if (list.count == 0) {
-            errorBlock(@[@"You have no poi. Create one in the Dashboard"]);
+            if (errorBlock) {
+                errorBlock(@[@"You have no poi. Create one in the Dashboard"]);
+            }
         } else {
-            successBlock(@[ja.copy]);
+            if (successBlock) {
+                successBlock(@[ja.copy]);
+            }
         }
     } failure:^(NSError *error) {
-        errorBlock(@[error.description]);
+        if (errorBlock) {
+            errorBlock(@[error.description]);
+        }
     }];
 }
 
@@ -622,12 +646,18 @@ RCT_EXPORT_METHOD(fetchEventsFromBuilding:(NSDictionary *)buildingJO withSuccess
                 [eventStored setObject:obj forKey:[NSString stringWithFormat:@"%@", obj.name]];
             }
             if (events.count == 0) {
-                errorBlock(@[@"You have no events. Create one in the Dashboard"]);
+                if (errorBlock) {
+                    errorBlock(@[@"You have no events. Create one in the Dashboard"]);
+                }
             } else {
-                successBlock(@[ja.copy]);
+                if (successBlock) {
+                    successBlock(@[ja.copy]);
+                }
             }
         } else {
-            errorBlock(@[error.description]);
+            if (errorBlock) {
+                errorBlock(@[error.description]);
+            }
         }
         return false;
     }];
@@ -707,7 +737,9 @@ RCT_EXPORT_METHOD(updateNavigationWithLocation:(NSDictionary *)location  withSuc
     @try {
         [[SITNavigationManager sharedManager] updateWithLocation:[SitumLocationWrapper.shared locationJsonObjectToLocation:location]];
         
-        successBlock(@[@"Navigation updated"]);
+        if (successBlock) {
+            successBlock(@[@"Navigation updated"]);
+        }
     }
     @catch (NSException *exception) {
         if(errorBlock){
@@ -727,6 +759,9 @@ RCT_EXPORT_METHOD(updateNavigationState:(NSDictionary *)arguments)
 RCT_EXPORT_METHOD(removeNavigationUpdates:(RCTResponseSenderBlock)callbackBlock)
 {
     [[SITNavigationManager sharedManager] removeUpdates];
+    if (callbackBlock) {
+        callbackBlock(@[@{@"success": @YES}]);
+    }
 }
 
 RCT_EXPORT_METHOD(requestRealTimeUpdates:(NSDictionary *)realtimeRequest)
@@ -792,7 +827,9 @@ RCT_EXPORT_METHOD(requestAuthorization){
 
 RCT_EXPORT_METHOD(getDeviceId:(RCTResponseSenderBlock)callbackBlock)
 {
-    callbackBlock(@[@{@"deviceId": SITServices.deviceID}]);
+    if (callbackBlock) {
+        callbackBlock(@[@{@"deviceId": SITServices.deviceID}]);
+    }
 }
 
 RCT_EXPORT_METHOD(onEnterGeofences) {
@@ -841,10 +878,14 @@ RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options
             }
         }
 
-        successBlock(@[@"User helper configured"]);
+        if (successBlock) {
+            successBlock(@[@"User helper configured"]);
+        }
     }
     @catch (NSException *exception) {
-        errorBlock(@[exception.reason]);
+        if (errorBlock) {
+            errorBlock(@[exception.reason]);
+        }
     }
 }
 
@@ -924,9 +965,9 @@ RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options
 
     self.computedRoute = nil; // if something fails then the previous computedRoute is clean
 
-    //    if(directionRequest.errorBlock){
-    routeRequest.errorBlock(@[error.description]);
-    //    }
+    if (routeRequest.errorBlock) {
+        routeRequest.errorBlock(@[error.description]);
+    }
 }
 
 - (void)directionsManager:(id<SITDirectionsInterface>)manager
@@ -940,7 +981,9 @@ RCT_EXPORT_METHOD(configureUserHelper:(NSDictionary *)options
 
     self.computedRoute = route; // We store the computed route in order to insert it into the navigation component if neccessary
 
-    routeRequest.successBlock(@[routeJO.copy]);
+    if (routeRequest.successBlock) {
+        routeRequest.successBlock(@[routeJO.copy]);
+    }
 }
 
 // SITNavigationDelegate

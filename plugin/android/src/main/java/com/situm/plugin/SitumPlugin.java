@@ -28,13 +28,13 @@ public interface SitumPlugin {
 
     void setUseRemoteConfig(String useRemoteConfig, Callback callback);
 
-    void setApiKey(String email, String apiKey, Callback callback);
+    void setApiKey(String apiKey, Callback callback);
 
     void setToken(String token, Callback callback);
 
     void setUserPass(String email, String password, Callback callback);
 
-    void setDashboardURL(String url, Callback callback);
+    void setDashboardURL(String url);
 
     void setCacheMaxAge(int cacheAge, Callback callback);
 
