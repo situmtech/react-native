@@ -1,5 +1,8 @@
-// Expo config plugin that adds the Situm Maven repository to Android projects.
-const { withGradleProperties } = require("expo/config-plugins");
+// Expo config plugin: Situm Maven repository on Android and dynamic frameworks on iOS.
+const {
+  withGradleProperties,
+  withPodfileProperties,
+} = require("expo/config-plugins");
 
 const EXTRA_MAVEN_REPOS_PROPERTY = "android.extraMavenRepos";
 const SITUM_MAVEN_REPOSITORY =
@@ -72,4 +75,32 @@ const withSitumMavenRepository = (config) =>
     return config;
   });
 
-module.exports = withSitumMavenRepository;
+const USE_FRAMEWORKS_PROPERTY = "ios.useFrameworks";
+const PRECOMPILED_MODULES_PROPERTY = "EXPO_USE_PRECOMPILED_MODULES";
+
+// Builds the pods as dynamic frameworks and without Expo's precompiled modules, which are static.
+const withSitumDynamicFrameworks = (config) =>
+  withPodfileProperties(config, (config) => {
+    const useFrameworks = config.modResults[USE_FRAMEWORKS_PROPERTY];
+
+    if (useFrameworks === undefined) {
+      config.modResults[USE_FRAMEWORKS_PROPERTY] = "dynamic";
+    } else if (useFrameworks !== "dynamic") {
+      // Do not override a value chosen by the developer, just warn about it.
+      console.warn(
+        `[Situm] ${USE_FRAMEWORKS_PROPERTY} is "${useFrameworks}", but the Situm SDK requires "dynamic".`,
+      );
+    }
+
+    config.modResults[PRECOMPILED_MODULES_PROPERTY] = "false";
+
+    return config;
+  });
+
+const withSitum = (config) => {
+  config = withSitumMavenRepository(config);
+  config = withSitumDynamicFrameworks(config);
+  return config;
+};
+
+module.exports = withSitum;
