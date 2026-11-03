@@ -10,3 +10,7 @@ This version changes how the iOS SDK is installed: the plugin now gets it with S
 
 - The iOS SDK is now installed with Swift Package Manager (SPM) through the plugin pod, so it keeps receiving updates after the CocoaPods trunk becomes read-only. You keep installing the plugin with `pod install`, without adding any package in Xcode.
 - The plugin now requires React Native 0.75 or later and dynamic frameworks on iOS. In React Native CLI projects, add `use_frameworks! :linkage => :dynamic` to your `Podfile`, otherwise `pod install` stops with an error.
+
+## Fixed
+
+- Fixed `npx expo prebuild` stopping with `ERR_UNSUPPORTED_DIR_IMPORT` in older Expo SDK versions, such as SDK 53, when `@situm/react-native` is listed in `plugins`.
