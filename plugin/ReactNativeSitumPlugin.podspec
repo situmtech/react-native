@@ -2,10 +2,6 @@ require "json"
 require_relative "ios/situm_spm"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
-unless respond_to?(:spm_dependency, true)
-  raise Pod::Informative, "[Situm] The iOS SDK requires React Native 0.75 or later, which provides spm_dependency."
-end
-
 Pod::Spec.new do |s|
   s.name         = SitumSPM::POD_NAME
   s.version      = package['version']
