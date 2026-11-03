@@ -2,7 +2,6 @@
 # which requires the pod to be a dynamic framework.
 module SitumSPM
   POD_NAME = "ReactNativeSitumPlugin".freeze
-  PACKAGE_URL = "https://github.com/situmtech/situm-sdk-spm".freeze
   PRODUCT = "SitumSDK".freeze
   # The build phase links the framework here, so the embed phase finds it wherever Xcode builds it.
   FRAMEWORK_PATH = "${PODS_CONFIGURATION_BUILD_DIR}/#{POD_NAME}-SPM/#{PRODUCT}.framework".freeze
@@ -11,14 +10,9 @@ module SitumSPM
   class << self
     attr_reader :react_native_embeds_sdk
 
-    def configure(spec, spm_dependency, version)
+    def configure(spec)
       # React Native embeds the frameworks of Swift packages itself when spm_dependency accepts embed_frameworks.
-      @react_native_embeds_sdk = spm_dependency.parameters.any? { |_kind, name| name == :embed_frameworks }
-      spm_dependency.call(spec,
-        url: PACKAGE_URL,
-        requirement: { kind: "exactVersion", version: version },
-        products: [PRODUCT]
-      )
+      @react_native_embeds_sdk = method(:spm_dependency).parameters.any? { |_kind, name| name == :embed_frameworks }
       return if react_native_embeds_sdk
 
       build_phase_script = File.read(File.join(__dir__, "situm_spm_build_phase.sh"))

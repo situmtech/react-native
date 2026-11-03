@@ -24,6 +24,11 @@ Pod::Spec.new do |s|
     install_modules_dependencies(s)
   end
   s.dependency "React"
-  SitumSPM.configure(s, method(:spm_dependency), package["sdkVersions"]["ios"])
+  spm_dependency(s,
+    url: "https://github.com/situmtech/situm-sdk-spm",
+    requirement: { kind: "exactVersion", version: package["sdkVersions"]["ios"] },
+    products: [SitumSPM::PRODUCT]
+  )
+  SitumSPM.configure(s)
 
 end
