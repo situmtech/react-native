@@ -1,5 +1,4 @@
-# Embeds the SitumSDK framework of the situm-sdk-spm Swift package with the CocoaPods embed frameworks phase,
-# which requires the pod to be a dynamic framework.
+# Embeds the SitumSDK framework of the situm-sdk-spm Swift package with the CocoaPods embed frameworks phase.
 module SitumSPM
   POD_NAME = "ReactNativeSitumPlugin".freeze
   PRODUCT = "SitumSDK".freeze
@@ -29,14 +28,7 @@ module SitumSPM
     def framework_paths_by_config
       paths_by_config = super
       plugin = pod_targets.find { |pod| pod.pod_name == SitumSPM::POD_NAME }
-      return paths_by_config if plugin.nil?
-
-      # Release builds crash with static pods, because the SDK does not find ZipArchive in the app executable.
-      unless plugin.build_as_dynamic_framework?
-        raise Pod::Informative, "[Situm] The Situm SDK requires dynamic frameworks. " \
-          "Add `use_frameworks! :linkage => :dynamic` to your Podfile and run `pod install` again."
-      end
-      return paths_by_config if SitumSPM.react_native_embeds_sdk || requires_host_target?
+      return paths_by_config if plugin.nil? || SitumSPM.react_native_embeds_sdk || requires_host_target?
 
       paths_by_config.to_h do |configuration, paths|
         next [configuration, paths] unless pod_targets_for_build_configuration(configuration).include?(plugin)
