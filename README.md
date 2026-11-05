@@ -113,7 +113,13 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
   $(SRCROOT)/../node_modules/@situm/react-native/lib/ios
 ```
 
-2. Declare the following permissions in your app's `Info.plist` file to successfully start positioning:
+2. The plugin requires your pods to be built as dynamic frameworks. Add this line to your `Podfile`, before the `target` block:
+
+```
+  use_frameworks!
+```
+
+3. Declare the following permissions in your app's `Info.plist` file to successfully start positioning:
 
 ```
 <key>NSLocationWhenInUseUsageDescription</key>
@@ -124,7 +130,7 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
 <string>We use your phone sensors (giroscope, accelerometer and altimeter) to improve location quality</string>
 ```
 
-3. For offline support you will have to add the underlying web application's domain inside the entry `WKAppBoundDomains` on `Info.plist` as follows:
+4. For offline support you will have to add the underlying web application's domain inside the entry `WKAppBoundDomains` on `Info.plist` as follows:
 
 ```
 <key>WKAppBoundDomains</key>
