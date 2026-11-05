@@ -1,4 +1,4 @@
-// Expo config plugin: Situm Maven repository on Android and dynamic frameworks on iOS.
+// Expo config plugin: Situm Maven repository on Android and dynamic frameworks warning on iOS.
 const {
   withGradleProperties,
   withPodfileProperties,
@@ -75,31 +75,25 @@ const withSitumMavenRepository = (config) =>
     return config;
   });
 
-const USE_FRAMEWORKS_PROPERTY = "ios.useFrameworks";
-const PRECOMPILED_MODULES_PROPERTY = "EXPO_USE_PRECOMPILED_MODULES";
-
-// Builds the pods as dynamic frameworks and without Expo's precompiled modules, which are static.
-const withSitumDynamicFrameworks = (config) =>
+// Warns when the pods are not built as dynamic frameworks. ZipArchive, a dependency of the iOS SDK, is compiled
+// on the integrator's machine, so we need it to be a dynamic framework to find it.
+const withSitumDynamicFrameworksWarning = (config) =>
   withPodfileProperties(config, (config) => {
-    const useFrameworks = config.modResults[USE_FRAMEWORKS_PROPERTY];
-
-    if (useFrameworks === undefined) {
-      config.modResults[USE_FRAMEWORKS_PROPERTY] = "dynamic";
-    } else if (useFrameworks !== "dynamic") {
-      // Do not override a value chosen by the developer, just warn about it.
+    const USE_FRAMEWORKS_PROPERTY = "ios.useFrameworks";
+    if (config.modResults[USE_FRAMEWORKS_PROPERTY] !== "dynamic") {
       console.warn(
-        `[Situm] ${USE_FRAMEWORKS_PROPERTY} is "${useFrameworks}", but the Situm SDK requires "dynamic".`,
+        "[Situm] On iOS, the Situm SDK requires dynamic frameworks without precompiled modules. Enable them with either:\n" +
+          '- expo-build-properties in app.json: "ios": { "useFrameworks": "dynamic", "usePrecompiledModules": false }\n' +
+          '- ios/Podfile.properties.json, edited by hand: "ios.useFrameworks": "dynamic", "EXPO_USE_PRECOMPILED_MODULES": "false"',
       );
     }
-
-    config.modResults[PRECOMPILED_MODULES_PROPERTY] = "false";
 
     return config;
   });
 
 const withSitum = (config) => {
   config = withSitumMavenRepository(config);
-  config = withSitumDynamicFrameworks(config);
+  config = withSitumDynamicFrameworksWarning(config);
   return config;
 };
 

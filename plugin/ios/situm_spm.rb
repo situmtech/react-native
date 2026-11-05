@@ -1,4 +1,5 @@
-# Embeds the SitumSDK framework of the situm-sdk-spm Swift package with the CocoaPods embed frameworks phase.
+# React Native's spm_dependency only works properly with static frameworks in earlier versions.
+# Until it is fixed in every version this plugin supports, this script applies a patch that solves it.
 module SitumSPM
   POD_NAME = "ReactNativeSitumPlugin".freeze
   PRODUCT = "SitumSDK".freeze
@@ -10,7 +11,8 @@ module SitumSPM
     attr_reader :react_native_embeds_sdk
 
     def configure(spec)
-      # React Native embeds the frameworks of Swift packages itself when spm_dependency accepts embed_frameworks.
+      # Checks whether this React Native version already fixed that bug: if its spm_dependency accepts
+      # embed_frameworks, React Native embeds the frameworks itself and this file does nothing.
       @react_native_embeds_sdk = method(:spm_dependency).parameters.any? { |_kind, name| name == :embed_frameworks }
       return if react_native_embeds_sdk
 
