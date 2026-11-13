@@ -93,7 +93,7 @@ SitumPlugin.setApiKey("YOUR_SITUM_API_KEY");
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 ```
 
-3. Set the `minSdkVersion` to 21 or later on your app's `build.gradle` file.
+2. Set the `minSdkVersion` to 21 or later on your app's `build.gradle` file.
 
 #### iOS
 
@@ -113,7 +113,13 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
   $(SRCROOT)/../node_modules/@situm/react-native/lib/ios
 ```
 
-2. Declare the following permissions in your app's `Info.plist` file to successfully start positioning:
+2. The plugin requires your pods to be built as dynamic frameworks. In your `Podfile`, add this line before `linkage = ENV['USE_FRAMEWORKS']`:
+
+```
+  ENV['USE_FRAMEWORKS'] = 'dynamic'
+```
+
+3. Declare the following permissions in your app's `Info.plist` file to successfully start positioning:
 
 ```
 <key>NSLocationWhenInUseUsageDescription</key>
@@ -124,7 +130,7 @@ You may need to add a Header Search Path: ([screenshot](https://reactnative.dev/
 <string>We use your phone sensors (giroscope, accelerometer and altimeter) to improve location quality</string>
 ```
 
-3. For offline support you will have to add the underlying web application's domain inside the entry `WKAppBoundDomains` on `Info.plist` as follows:
+4. For offline support you will have to add the underlying web application's domain inside the entry `WKAppBoundDomains` on `Info.plist` as follows:
 
 ```
 <key>WKAppBoundDomains</key>
@@ -165,7 +171,7 @@ Docs will be available in the _docs/_ folder.
 
 ## Versioning
 
-Please refer to [CHANGELOG.md](https://situm.com/docs/react-native-sdk-changelog) for a list of notable changes for each version of the plugin.
+Please refer to the [changelog](https://situm.com/docs/react-native-sdk-changelog) for a list of notable changes for each version of the plugin.
 
 You can also see the [tags on this repository](https://github.com/situmtech/react-native/tags).
 

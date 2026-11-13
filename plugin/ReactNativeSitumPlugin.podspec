@@ -1,15 +1,16 @@
 require "json"
+require_relative "ios/situm_spm"
 package = JSON.parse(File.read('package.json'))
 
 Pod::Spec.new do |s|
-  s.name         = "ReactNativeSitumPlugin"
+  s.name         = SitumSPM::POD_NAME
   s.version      = package['version']
   s.summary      = package["description"]
   s.homepage     = package["homepage"]
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.preserve_paths = "NOTICE.md"
   s.authors      = package["author"]
-  s.platform     = :ios, "8.0"
+  s.platform     = :ios, "16.0"
   s.source       = { :http => 'file:' + __dir__ + '/' }
 
   s.source_files  = "ios/*.{h,m,mm}"
@@ -21,6 +22,11 @@ Pod::Spec.new do |s|
     install_modules_dependencies(s)
   end
   s.dependency "React"
-  s.dependency "SitumSDK", package['sdkVersions']["ios"]
+  spm_dependency(s,
+    url: "https://github.com/situmtech/situm-sdk-spm",
+    requirement: { kind: "exactVersion", version: package["sdkVersions"]["ios"] },
+    products: [SitumSPM::PRODUCT]
+  )
+  SitumSPM.configure(s)
 
 end
